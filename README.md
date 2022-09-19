@@ -1,0 +1,106 @@
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/6702424/80216211-00ef5280-863e-11ea-81de-59f3a3d4b8e4.png">  
+</p>
+<p align="center">
+    <i></i>
+    <br>
+    <br>
+    <a href="https://github.com/InseeFrLab/lunatic-edt/actions">
+      <img src="https://github.com/InseeFrLab/lunatic-edt/workflows/ci/badge.svg?branch=main">
+    </a>
+    <a href="https://bundlephobia.com/package/lunatic-edt">
+      <img src="https://img.shields.io/bundlephobia/minzip/lunatic-edt">
+    </a>
+    <a href="https://www.npmjs.com/package/lunatic-edt">
+      <img src="https://img.shields.io/npm/dw/lunatic-edt">
+    </a>
+    <a href="https://github.com/InseeFrLab/lunatic-edt/blob/main/LICENSE">
+      <img src="https://img.shields.io/npm/l/lunatic-edt">
+    </a>
+</p>
+<p align="center">
+  <a href="https://inseefrlab.github.io/lunatic-edt/" target="_blank"><img src="https://raw.githubusercontent.com/storybooks/brand/master/badge/badge-storybook.svg"></a>
+</p>
+
+# Install / Import
+
+```bash
+$ yarn add react lunatic lunatic-edt
+```
+
+```typescriptimport React from "react";
+import * as lunatic from "@inseefr/lunatic";
+import * as lunaticEDT from "@inseefrlab/lunatic-edt";
+
+const { Button } = lunatic;
+const { ThemeProvider, ...edtComponents } = lunaticEDT;
+
+export type Props = {
+    goPrevious: () => void;
+    goNext: () => void;
+    isLast: boolean;
+    isFirst: boolean;
+};
+const Pager = (props: Props) => {
+    const { goPrevious, goNext, isLast, isFirst } = props;
+
+    return (
+        <div className="pagination">
+            <Button onClick={goPrevious} disabled={isFirst}>
+                Previous
+            </Button>
+            <Button onClick={goNext} disabled={isLast}>
+                Next
+            </Button>
+        </div>
+    );
+};
+
+const onLogChange = (e: React.ChangeEvent<HTMLInputElement>) => console.log("onChange", { ...e });
+
+export type OrchestratorProps = {
+    source: object;
+    data?: object;
+};
+
+export const OrchestratorForStories = (props: OrchestratorProps) => {
+    const { source, data } = props;
+
+    const { getComponents, goPreviousPage, goNextPage, isFirstPage, isLastPage, getCurrentErrors } =
+        lunatic.useLunatic(source, data, {
+            onChange: onLogChange,
+        });
+
+    const components = getComponents();
+    const currentErrors = getCurrentErrors();
+
+    return (
+        <ThemeProvider>
+            <div className="components">
+                {components.map(function (component: any) {
+                    const { id, componentType, response, ...other } = component;
+                    const Component = lunatic[componentType];
+                    return (
+                        <div className="lunatic lunatic-component" key={`component-${id}`}>
+                            <Component
+                                id={id}
+                                response={response}
+                                {...other}
+                                {...component}
+                                errors={currentErrors}
+                                custom={edtComponents}
+                            />
+                        </div>
+                    );
+                })}
+            </div>
+            <Pager
+                goPrevious={goPreviousPage}
+                goNext={goNextPage}
+                isLast={isLastPage}
+                isFirst={isFirstPage}
+            />
+        </ThemeProvider>
+    );
+};
+```
