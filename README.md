@@ -25,7 +25,7 @@
 # Install / Import
 
 ```bash
-$ yarn add react lunatic lunatic-edt
+$ yarn add react @inseefr/lunatic @inseefrlab/lunatic-edt
 ```
 
 ```typescriptimport React from "react";

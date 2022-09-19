@@ -1,5 +1,5 @@
 {
-    "name": "lunatic-edt",
+    "name": "@inseefrlab/lunatic-edt",
     "version": "0.0.1",
     "description": "Library of questionnaire components for EDT survey",
     "repository": {
@@ -17,7 +17,8 @@
         "format": "npm run _format -- --write",
         "format:check": "npm run _format -- --list-different",
         "storybook": "start-storybook -p 6006",
-        "build-storybook": "build-storybook"
+        "build-storybook": "build-storybook",
+        "prepare": "husky install"
     },
     "lint-staged": {
         "*.{ts,tsx}": [
@@ -51,6 +52,8 @@
     "homepage": "https://github.com/InseeFrLab/lunatic-edt",
     "devDependencies": {
         "@babel/core": "^7.18.13",
+        "@commitlint/cli": "^17.0.3",
+        "@commitlint/config-conventional": "^17.0.3",
         "@inseefr/lunatic": "^0.4.24-v2",
         "@storybook/addon-actions": "^6.5.12",
         "@storybook/addon-essentials": "^6.5.12",
@@ -70,7 +73,7 @@
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-storybook": "^0.6.4",
         "eslint-plugin-tss-unused-classes": "^0.0.4",
-        "husky": "^4.3.8",
+        "husky": "^8.0.1",
         "lint-staged": "^11.1.1",
         "prettier": "^2.3.2",
         "react": "^18.2.0",
