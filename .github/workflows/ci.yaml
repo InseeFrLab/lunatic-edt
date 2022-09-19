@@ -1,4 +1,4 @@
-name: ci
+name: Lunatic EDT CI
 on:
     push:
         branches:
