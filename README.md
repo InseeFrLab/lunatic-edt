@@ -11,8 +11,8 @@
     <a href="https://bundlephobia.com/package/lunatic-edt">
       <img src="https://img.shields.io/bundlephobia/minzip/lunatic-edt">
     </a>
-    <a href="https://www.npmjs.com/package/@inseefrlab/lunatic-edt">
-      <img src="https://img.shields.io/npm/dw/@inseefrlab/lunatic-edt">
+    <a href="https://www.npmjs.com/package/lunatic-edt">
+      <img src="https://img.shields.io/npm/dw/lunatic-edt">
     </a>
     <a href="https://opensource.org/licenses/MIT">
       <img src="https://img.shields.io/badge/license-MIT-blue">
@@ -25,13 +25,13 @@
 # Install / Import
 
 ```bash
-$ yarn add react @inseefr/lunatic @inseefrlab/lunatic-edt
+$ yarn add react @inseefr/lunatic lunatic-edt
 ```
 
 ```typescript
 import React from "react";
 import * as lunatic from "@inseefr/lunatic";
-import * as lunaticEDT from "@inseefrlab/lunatic-edt";
+import * as lunaticEDT from "lunatic-edt";
 
 const { Button } = lunatic;
 const { ThemeProvider, ...edtComponents } = lunaticEDT;
