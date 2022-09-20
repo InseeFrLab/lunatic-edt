@@ -3409,6 +3409,14 @@
   dependencies:
     "@types/istanbul-lib-report" "*"
 
+"@types/jest@^29.0.3":
+  version "29.0.3"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-29.0.3.tgz#b61a5ed100850686b8d3c5e28e3a1926b2001b59"
+  integrity sha512-F6ukyCTwbfsEX5F2YmVYmM5TcTHy1q9P5rWlRbrk56KyMh3v9xRGUO3aa8+SkvMi0SHXtASJv1283enXimC0Og==
+  dependencies:
+    expect "^29.0.0"
+    pretty-format "^29.0.0"
+
 "@types/json-schema@*", "@types/json-schema@^7.0.4", "@types/json-schema@^7.0.5", "@types/json-schema@^7.0.7", "@types/json-schema@^7.0.8", "@types/json-schema@^7.0.9":
   version "7.0.11"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.11.tgz#d421b6c527a3037f7c84433fd2c4229e016863d3"
@@ -6602,7 +6610,7 @@ expand-brackets@^2.1.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-expect@^29.0.3:
+expect@^29.0.0, expect@^29.0.3:
   version "29.0.3"
   resolved "https://registry.yarnpkg.com/expect/-/expect-29.0.3.tgz#6be65ddb945202f143c4e07c083f4f39f3bd326f"
   integrity sha512-t8l5DTws3212VbmPL+tBFXhjRHLmctHB0oQbL8eUc6S7NzZtYUhycrFO9mkxA0ZUC6FAWdNi7JchJSkODtcu1Q==
@@ -10617,7 +10625,7 @@ pretty-format@^27.0.2:
     ansi-styles "^5.0.0"
     react-is "^17.0.1"
 
-pretty-format@^29.0.3:
+pretty-format@^29.0.0, pretty-format@^29.0.3:
   version "29.0.3"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-29.0.3.tgz#23d5f8cabc9cbf209a77d49409d093d61166a811"
   integrity sha512-cHudsvQr1K5vNVLbvYF/nv3Qy/F/BcEKxGuIeMiVMRHxPOO1RxXooP8g/ZrwAp7Dx+KdMZoOc7NxLHhMrP2f9Q==
