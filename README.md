@@ -22,7 +22,7 @@
   <a href="https://inseefrlab.github.io/lunatic-edt/" target="_blank"><img src="https://raw.githubusercontent.com/storybooks/brand/master/badge/badge-storybook.svg"></a>
 </p>
 
-[![Lunatic EDT CI](https://github.com/InseeFrLab/lunatic-edt/actions/workflows/ci.yml/badge.svg)](https://github.com/InseeFrLab/lunatic-edt/actions/workflows/ci.yml)
+[![Lunatic EDT CI](https://github.com/InseeFrLab/lunatic-edt/actions/workflows/ci.yaml/badge.svg)](https://github.com/InseeFrLab/lunatic-edt/actions/workflows/ci.yaml)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=InseeFrLab_lunatic-edt&metric=coverage)](https://sonarcloud.io/dashboard?id=InseeFrLab_lunatic-edt)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=InseeFrLab_lunatic-edt&metric=alert_status)](https://sonarcloud.io/dashboard?id=InseeFrLab_lunatic-edt)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=InseeFrLab_lunatic-edt&metric=alert_status)](https://sonarcloud.io/dashboard?id=InseeFrLab_lunatic-edt)
