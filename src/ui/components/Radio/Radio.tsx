@@ -1,6 +1,16 @@
-const Radio = (props: any) => {
+import { Radio as RadioMaterial } from "@mui/material";
+
+export type RadioProps = {
+    id?: string;
+    value?: string;
+    disabled?: boolean;
+};
+const Radio = (props: RadioProps) => {
+    console.log("Radio");
     console.log(props);
-    return <div>This is not a Lunatic Radio, it's an EDT custom one</div>;
+    const { id, value, disabled } = props;
+
+    return <RadioMaterial id={id} value={value} disabled={disabled}></RadioMaterial>;
 };
 
 export default Radio;

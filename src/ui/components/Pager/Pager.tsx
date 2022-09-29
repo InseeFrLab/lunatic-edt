@@ -6,10 +6,10 @@ export type PagerProps = {
     goNext: () => void;
     isLast: boolean;
     isFirst: boolean;
-    previousIcon: React.ReactNode;
-    nextIcon: React.ReactNode;
-    previousButtonText: string;
-    nextButtonText: string;
+    previousIcon?: React.ReactNode;
+    nextIcon?: React.ReactNode;
+    previousButtonText?: string;
+    nextButtonText?: string;
 };
 
 export const Pager = memo((props: PagerProps) => {
@@ -26,10 +26,10 @@ export const Pager = memo((props: PagerProps) => {
     return (
         <div className="pagination">
             <Button onClick={goPrevious} disabled={isFirst} startIcon={previousIcon}>
-                {previousButtonText}
+                {previousButtonText ?? "Previous"}
             </Button>
             <Button onClick={goNext} disabled={isLast} endIcon={nextIcon}>
-                {nextButtonText}
+                {nextButtonText ?? "Next"}
             </Button>
         </div>
     );

@@ -9,23 +9,26 @@ export type InputProps = {
     labelledBy?: string;
     placeholder?: string;
     onChange(value: string): void;
-    required?: boolean;
+    mandatory?: boolean;
     maxLength?: number;
     errors?: { errorMessage: string };
 };
 
 export const Input = memo((props: InputProps) => {
-    const { id, value, disabled, placeholder, required, errors } = props;
-
+    console.log("Input");
+    console.log(props);
+    const { id, value, disabled, placeholder, mandatory, errors, maxLength, onChange } = props;
     return (
         <TextField
             id={id}
             disabled={disabled}
             placeholder={placeholder}
-            required={required}
+            required={mandatory}
             value={value}
             error={errors ? true : false}
             helperText={errors?.errorMessage}
+            inputProps={{ maxLength: maxLength ?? 100 }}
+            onChange={event => onChange(event.target.value)}
             size="small"
             variant="outlined"
         />

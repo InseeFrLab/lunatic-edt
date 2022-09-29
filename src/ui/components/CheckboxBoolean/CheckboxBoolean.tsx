@@ -1,6 +1,24 @@
-const CheckboxBoolean = (props: any) => {
-    console.log(props);
-    return <div>This is not a Lunatic checkboxBoolean, it's an EDT custom one</div>;
+import { memo } from "react";
+
+export type CheckboxBooleanProps = {
+    onClick(valueOption: any): void;
+    id?: string;
+    checked?: boolean;
+    disabled?: boolean;
+    label?: string;
 };
+
+const CheckboxBoolean = memo((props: CheckboxBooleanProps) => {
+    console.log("CheckboxBoolean");
+    console.log(props);
+    const { label } = props;
+    return (
+        <div>
+            {label}
+            <div></div>
+            <div></div>
+        </div>
+    );
+});
 
 export default CheckboxBoolean;
