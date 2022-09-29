@@ -18,7 +18,8 @@
         "format:check": "npm run _format -- --list-different",
         "storybook": "start-storybook -p 6006",
         "build-storybook": "build-storybook",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "start": "tsc-watch"
     },
     "lint-staged": {
         "*.{ts,tsx}": [
@@ -86,7 +87,8 @@
         "react-dom": "^18.2.0",
         "sass-loader": "^13.0.2",
         "storybook-dark-mode": "^1.1.2",
-        "typescript": "^4.3.5"
+        "typescript": "^4.3.5",
+        "tsc-watch": "^5.0.3"
     },
     "dependencies": {
         "@emotion/react": "^11.10.4",

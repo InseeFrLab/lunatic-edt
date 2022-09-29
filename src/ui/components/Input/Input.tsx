@@ -1,8 +1,35 @@
-// Lunatic default Input: https://github.com/InseeFr/Lunatic/blob/v2-master/src/components/input/input.js
+import { memo } from "react";
+import { TextField } from "@mui/material";
 
-const Input = (props: any) => {
-    console.log(props);
-    return <div>This is not a Lunatic Input, it's an EDT custom one</div>;
+export type InputProps = {
+    id?: string;
+    value?: string;
+    disabled?: boolean;
+    label?: string;
+    labelledBy?: string;
+    placeholder?: string;
+    onChange(value: string): void;
+    required?: boolean;
+    maxLength?: number;
+    errors?: { errorMessage: string };
 };
+
+export const Input = memo((props: InputProps) => {
+    const { id, value, disabled, placeholder, required, errors } = props;
+
+    return (
+        <TextField
+            id={id}
+            disabled={disabled}
+            placeholder={placeholder}
+            required={required}
+            value={value}
+            error={errors ? true : false}
+            helperText={errors?.errorMessage}
+            size="small"
+            variant="outlined"
+        />
+    );
+});
 
 export default Input;
