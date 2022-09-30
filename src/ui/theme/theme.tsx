@@ -22,6 +22,9 @@ const theme = createTheme({
         text: {
             primary: "#1F4076",
         },
+        action: {
+            hover: "#5C6F99",
+        },
     },
 });
 

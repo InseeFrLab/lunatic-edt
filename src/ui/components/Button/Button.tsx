@@ -2,11 +2,32 @@
 
 import { memo } from "react";
 import { Button as ButtonMaterial } from "@mui/material";
+import { makeStyles } from "tss-react/mui";
+
+export type ButtonProps = {
+    id?: string;
+    label?: string;
+    className?: string;
+};
 
 const Button = memo((props: any) => {
     console.log("Button");
     console.log(props);
-    return <ButtonMaterial>This is not a Lunatic Button, it's an EDT custom one</ButtonMaterial>;
+    const { id, label, className } = props;
+
+    const { classes, cx } = useStyles();
+
+    return (
+        <ButtonMaterial id={id} className={cx(classes.MuiButton, className)}>
+            {label}
+        </ButtonMaterial>
+    );
 });
+
+const useStyles = makeStyles({ "name": { Button } })(() => ({
+    "MuiButton": {
+        textDecoration: "none",
+    },
+}));
 
 export default Button;
