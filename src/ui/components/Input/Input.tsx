@@ -24,7 +24,7 @@ export const Input = memo((props: InputProps) => {
             disabled={disabled}
             placeholder={placeholder}
             required={mandatory}
-            value={value}
+            value={value ?? ""}
             error={errors ? true : false}
             helperText={errors?.errorMessage}
             inputProps={{ maxLength: maxLength ?? 100 }}
