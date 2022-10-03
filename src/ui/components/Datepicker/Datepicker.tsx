@@ -4,7 +4,6 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import React from "react";
 import { memo } from "react";
-import { makeStyles } from "tss-react/mui";
 
 export type DatepickerProps = {
     disabled: boolean;
@@ -20,16 +19,14 @@ export type DatepickerProps = {
 const Datepicker = memo((props: DatepickerProps) => {
     console.log("Datepicker");
     console.log(props);
-    const { id, labelId, onChange, value, readOnly, disabled } = props;
+    const { id, onChange, value, readOnly, disabled } = props;
 
-    const [valueTest, setValue] = React.useState<Dayjs | null>(dayjs("2022-04-07"));
+    const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
 
     function setValueLunatic(newValue: any) {
         setValue(newValue);
         onChange(newValue);
     }
-
-    const { classes } = useStyles();
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -40,7 +37,7 @@ const Datepicker = memo((props: DatepickerProps) => {
                 readOnly={readOnly}
                 openTo="year"
                 views={["day", "month", "year"]}
-                value={valueTest}
+                value={valueLocal}
                 onChange={newValue => {
                     setValueLunatic(newValue);
                 }}
@@ -49,7 +46,5 @@ const Datepicker = memo((props: DatepickerProps) => {
         </LocalizationProvider>
     );
 });
-
-const useStyles = makeStyles({ "name": { Datepicker } })(theme => ({}));
 
 export default Datepicker;
