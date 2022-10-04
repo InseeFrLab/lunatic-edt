@@ -1,5 +1,5 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { CheckboxGroupOption } from "interface/CheckboxGroupOptions";
+import { CheckboxOption } from "interface/CheckboxOptions";
 import React from "react";
 import { memo } from "react";
 import { makeStyles } from "tss-react/mui";
@@ -8,7 +8,7 @@ export type CheckboxGroupProps = {
     handleChange(value: any): void;
     id?: string;
     label?: string;
-    options: CheckboxGroupOption[];
+    options: CheckboxOption[];
     value: { [key: string]: boolean };
     className?: string;
 };
