@@ -5,7 +5,7 @@ import { memo } from "react";
 import { makeStyles } from "tss-react/mui";
 
 export type CheckboxGroupProps = {
-    handleChange(value: any): void;
+    handleChange(response: { [name: string]: string }, value: boolean): void;
     id?: string;
     label?: string;
     options: CheckboxGroupOption[];
@@ -20,38 +20,37 @@ const CheckboxGroup = memo((props: CheckboxGroupProps) => {
 
     const { classes } = useStyles();
 
-    const optionsValues = options.map(option => option.response.name);
-    const [currentOptions, setCurrentOptions] = React.useState(() => optionsValues);
-    const handleOptions = (event: any, newOptions: string[]) => {
-        setCurrentOptions(newOptions);
-        //update value
-        value[event.target.value] = !value[event.target.value];
-        console.log(value);
-        console.log(newOptions);
-        handleChange(value);
-    };
+    const optionsValues: string[] = options.map(option => option.response.name);
+    const [currentOptions, setCurrentOptions] = React.useState<string[]>(() => optionsValues);
 
-    return (
-        <ToggleButtonGroup
-            orientation="vertical"
-            value={currentOptions}
-            onChange={handleOptions}
-            id={id}
-            aria-label={label}
-            className={className}
-        >
-            {options.map(option => (
-                <ToggleButton
-                    className={classes.MuiToggleButton}
-                    key={option.id}
-                    selected={value[option.response.name] ?? false}
-                    value={option.response.name}
-                >
-                    {option.label}
-                </ToggleButton>
-            ))}
-        </ToggleButtonGroup>
-    );
+const handleOptions = (event: any, newOptions: string[]) => {
+    setCurrentOptions(newOptions);
+    // update value with the opposite of its current value
+    value[event.target.value] = !value[event.target.value];
+    handleChange({ name: event.target.value }, value[event.target.value]);
+};
+
+return (
+    <ToggleButtonGroup
+        orientation="vertical"
+        value={currentOptions}
+        onChange={handleOptions}
+        id={id}
+        aria-label={label}
+        className={className}
+    >
+        {options.map(option => (
+            <ToggleButton
+                className={classes.MuiToggleButton}
+                key={option.id}
+                selected={value[option.response.name] ?? false}
+                value={option.response.name}
+            >
+                {option.label}
+            </ToggleButton>
+        ))}
+    </ToggleButtonGroup>
+);
 });
 
 const useStyles = makeStyles({ "name": { CheckboxGroup } })(theme => ({
