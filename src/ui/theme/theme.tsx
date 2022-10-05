@@ -3,6 +3,9 @@ import { ThemeProvider as MuiProvider, createTheme } from "@mui/material/styles"
 import { CssBaseline } from "@mui/material";
 
 const theme = createTheme({
+    variables: {
+        neutral: "#DCE7F9",
+    },
     palette: {
         primary: {
             main: "#4973d2",
@@ -18,6 +21,9 @@ const theme = createTheme({
         },
         info: {
             main: "#1f4076",
+        },
+        warning: {
+            main: "#F4E289",
         },
         text: {
             primary: "#1F4076",
