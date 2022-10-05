@@ -3,6 +3,7 @@ import { CheckboxGroupOption } from "interface/CheckboxGroupOptions";
 import React from "react";
 import { memo } from "react";
 import { makeStyles } from "tss-react/mui";
+import { important } from "../../utils/utils";
 
 export type CheckboxGroupProps = {
     handleChange(response: { [name: string]: string }, value: boolean): void;
@@ -68,10 +69,5 @@ const useStyles = makeStyles({ "name": { CheckboxGroup } })(theme => ({
         },
     },
 }));
-
-// TODO : To move to global utils folder (issues when tried)
-function important(str: string): string {
-    return (str + " !important") as string;
-}
 
 export default CheckboxGroup;
