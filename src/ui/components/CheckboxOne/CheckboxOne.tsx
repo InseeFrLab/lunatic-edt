@@ -3,6 +3,7 @@ import { CheckboxOption } from "interface/CheckboxOptions";
 import React from "react";
 import { memo } from "react";
 import { makeStyles } from "tss-react/mui";
+import { important } from "../../utils";
 
 export type CheckboxOneProps = {
     handleChange(response: { [name: string]: string }, value: boolean): void;
@@ -20,7 +21,7 @@ const CheckboxOne = memo((props: CheckboxOneProps) => {
 
     const { classes } = useStyles();
 
-    const preSelectedValue: string | undefined = Object.keys(value).find((i) => value[i] === true);
+    const preSelectedValue: string | undefined = Object.keys(value).find(i => value[i] === true);
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(preSelectedValue);
 
     const handleOptions = (event: any, selectedOption: string) => {
@@ -68,10 +69,5 @@ const useStyles = makeStyles({ "name": { CheckboxOne } })(theme => ({
         },
     },
 }));
-
-// TODO : To move to global utils folder (issues when tried)
-function important(str: string): string {
-    return (str + " !important") as string;
-}
 
 export default CheckboxOne;
