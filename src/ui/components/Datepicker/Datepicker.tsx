@@ -35,7 +35,7 @@ const Datepicker = memo((props: DatepickerProps) => {
                 disableFuture
                 disabled={disabled}
                 readOnly={readOnly}
-                openTo="year"
+                openTo="day"
                 views={["day", "month", "year"]}
                 value={valueLocal}
                 onChange={newValue => {
