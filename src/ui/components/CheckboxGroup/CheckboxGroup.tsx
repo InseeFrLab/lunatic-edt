@@ -1,6 +1,5 @@
 import { Checkbox, Paper, Typography } from "@mui/material";
 import { CheckboxGroupOption } from "interface/CheckboxGroupOptions";
-import React from "react";
 import { memo } from "react";
 import { makeStyles } from "tss-react/mui";
 
