@@ -6,14 +6,14 @@ import React from "react";
 import { memo } from "react";
 
 export type DatepickerProps = {
-    disabled: boolean;
-    readOnly: boolean;
-    value: string;
-    onChange(value: string): void;
-    labelId: string;
-    id: string;
-    min: string;
-    max: string;
+    disabled?: boolean;
+    readOnly?: boolean;
+    value?: string;
+    onChange(value: string | null): void;
+    labelId?: string;
+    id?: string;
+    min?: string;
+    max?: string;
 };
 
 const Datepicker = memo((props: DatepickerProps) => {
@@ -23,16 +23,15 @@ const Datepicker = memo((props: DatepickerProps) => {
 
     const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
 
-    function setValueLunatic(newValue: any) {
+    function setValueLunatic(newValue: Dayjs | null) {
         setValue(newValue);
-        onChange(newValue);
+        onChange(newValue?.format("YYYY-MM-DD") || null);
     }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
                 key={id}
-                disableFuture
                 disabled={disabled}
                 readOnly={readOnly}
                 openTo="day"
