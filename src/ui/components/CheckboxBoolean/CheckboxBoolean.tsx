@@ -1,24 +1,75 @@
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import React from "react";
 import { memo } from "react";
+import { makeStyles } from "tss-react/mui";
+import { important } from "../../utils";
 
 export type CheckboxBooleanProps = {
-    onClick(valueOption: any): void;
+    onClick(value: boolean): void;
     id?: string;
+    label?: string;
     checked?: boolean;
     disabled?: boolean;
-    label?: string;
+    className?: string;
 };
 
 const CheckboxBoolean = memo((props: CheckboxBooleanProps) => {
     console.log("CheckboxBoolean");
     console.log(props);
-    const { label } = props;
+    const { onClick, id, label, checked, disabled, className } = props;
+    const { classes, cx } = useStyles();
+    const valAsString = checked === null ? "" : checked + "";
+    const [localValue, setLocalValue] = React.useState(valAsString);
+
+    const handleOptions = (event: any, val: string) => {
+        console.log(val);
+        setLocalValue(val);
+        const valAsBool = val === "true" ? true : false;
+        onClick(valAsBool);
+    };
+
     return (
-        <div>
-            {label}
-            <div></div>
-            <div></div>
-        </div>
+        <ToggleButtonGroup
+            orientation="horizontal"
+            value={localValue}
+            exclusive
+            onChange={handleOptions}
+            id={id}
+            aria-label={label}
+            className={className}
+            disabled={disabled}
+        >
+            <ToggleButton className={classes.MuiToggleButton} value="false" aria-label="no">
+                Non
+            </ToggleButton>
+            <ToggleButton
+                className={cx(classes.MuiToggleButton, classes.separator)}
+                value="true"
+                aria-label="yes"
+            >
+                Oui
+            </ToggleButton>
+        </ToggleButtonGroup>
     );
 });
+
+const useStyles = makeStyles({ "name": { CheckboxBoolean } })(theme => ({
+    "MuiToggleButton": {
+        border: important("2px solid white"),
+        borderRadius: important("6px"),
+        padding: "0.5rem 3rem",
+        backgroundColor: "white",
+        color: theme.palette.primary.main,
+        "&.Mui-selected": {
+            borderColor: important(theme.palette.primary.main),
+            fontWeight: "bold",
+            backgroundColor: "white",
+            color: theme.palette.primary.main,
+        },
+    },
+    "separator": {
+        marginLeft: important("1rem"),
+    },
+}));
 
 export default CheckboxBoolean;
