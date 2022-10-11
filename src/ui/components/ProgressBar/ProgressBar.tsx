@@ -28,8 +28,6 @@ export type ProgressBarProps = {
 
 const ProgressBar = memo((props: ProgressBarProps) => {
     //TODO : to complete when we know how to override/use it from lunatic
-    //console.log("ProgressBar");
-    //console.log(props);
     const { id } = props;
 
     const [progress, setProgress] = React.useState(10);
