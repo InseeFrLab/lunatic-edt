@@ -15,8 +15,6 @@ export type CheckboxOneProps = {
 };
 
 const CheckboxOne = memo((props: CheckboxOneProps) => {
-    console.log("CheckboxOne");
-    console.log(props);
     const { id, value, label, options, className, handleChange } = props;
 
     const { classes } = useStyles();
@@ -26,7 +24,6 @@ const CheckboxOne = memo((props: CheckboxOneProps) => {
 
     const handleOptions = (event: any, selectedOption: string) => {
         setCurrentOption(selectedOption);
-        // update value with the opposite of its current value
         value[event.target.value] = !value[event.target.value];
         handleChange({ name: selectedOption }, value[selectedOption]);
     };
