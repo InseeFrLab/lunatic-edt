@@ -17,8 +17,6 @@ export type DatepickerProps = {
 };
 
 const Datepicker = memo((props: DatepickerProps) => {
-    console.log("Datepicker");
-    console.log(props);
     const { id, onChange, value, readOnly, disabled } = props;
 
     const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
