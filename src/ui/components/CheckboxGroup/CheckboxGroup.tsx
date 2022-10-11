@@ -11,14 +11,11 @@ export type CheckboxGroupProps = {
 };
 
 const CheckboxGroup = memo((props: CheckboxGroupProps) => {
-    console.log("CheckboxGroup");
-    console.log(props);
     const { id, value, options, handleChange } = props;
 
     const { classes } = useStyles();
 
     const handleOptions = (event: any) => {
-        // update value with the opposite of its current value
         value[event.target.value] = !value[event.target.value];
         handleChange({ name: event.target.value }, value[event.target.value]);
     };
