@@ -13,8 +13,6 @@ export type ButtonProps = {
 };
 
 const Button = memo((props: any) => {
-    console.log("Button");
-    console.log(props);
     const { id, label, disabled, className, onClick } = props;
 
     const { classes, cx } = useStyles();

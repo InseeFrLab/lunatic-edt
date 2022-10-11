@@ -15,8 +15,6 @@ export type CheckboxGroupProps = {
 };
 
 const CheckboxGroup = memo((props: CheckboxGroupProps) => {
-    console.log("CheckboxGroup");
-    console.log(props);
     const { id, value, label, options, className, handleChange } = props;
 
     const { classes } = useStyles();
@@ -25,10 +23,7 @@ const CheckboxGroup = memo((props: CheckboxGroupProps) => {
     const [currentOptions, setCurrentOptions] = React.useState(() => optionsValues);
     const handleOptions = (event: any, newOptions: string[]) => {
         setCurrentOptions(newOptions);
-        //update value
         value[event.target.value] = !value[event.target.value];
-        console.log(value);
-        console.log(newOptions);
         handleChange(value);
     };
 
