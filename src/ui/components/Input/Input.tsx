@@ -15,7 +15,6 @@ export type InputProps = {
 };
 
 export const Input = memo((props: InputProps) => {
-    console.log(props);
     const { id, value, disabled, labelledBy, placeholder, mandatory, errors, maxLength, onChange } =
         props;
     return (

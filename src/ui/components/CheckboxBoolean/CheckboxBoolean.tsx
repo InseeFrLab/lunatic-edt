@@ -9,8 +9,6 @@ export type CheckboxBooleanProps = {
 };
 
 const CheckboxBoolean = memo((props: CheckboxBooleanProps) => {
-    console.log("CheckboxBoolean");
-    console.log(props);
     const { label } = props;
     return (
         <div>
