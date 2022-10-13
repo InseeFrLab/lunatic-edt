@@ -18,7 +18,8 @@
         "format:check": "npm run _format -- --list-different",
         "storybook": "start-storybook -p 6006",
         "build-storybook": "build-storybook",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "start": "tsc-watch"
     },
     "lint-staged": {
         "*.{ts,tsx}": [
@@ -57,7 +58,8 @@
         "@babel/core": "^7.18.13",
         "@commitlint/cli": "^17.0.3",
         "@commitlint/config-conventional": "^17.0.3",
-        "@inseefr/lunatic": "^0.4.24-v2",
+        "@inseefr/lunatic": "^0.4.31-v2",
+        "@storybook/addon-a11y": "^6.5.12",
         "@storybook/addon-actions": "^6.5.12",
         "@storybook/addon-essentials": "^6.5.12",
         "@storybook/addon-interactions": "^6.5.12",
@@ -86,12 +88,17 @@
         "react-dom": "^18.2.0",
         "sass-loader": "^13.0.2",
         "storybook-dark-mode": "^1.1.2",
+        "tsafe": "^1.0.1",
+        "tsc-watch": "^5.0.3",
         "typescript": "^4.3.5"
     },
     "dependencies": {
+        "@date-io/dayjs": "^2.16.0",
         "@emotion/react": "^11.10.4",
         "@emotion/styled": "^11.10.4",
         "@mui/material": "^5.10.3",
+        "@mui/x-date-pickers": "^5.0.3",
+        "dayjs": "^1.11.5",
         "tss-react": "^4.0.0"
     }
 }

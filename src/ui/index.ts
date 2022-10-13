@@ -1,2 +1,3 @@
 export * from "./components";
-export { ThemeProvider } from "./theme";
+export * from "./theme";
+export * from "./utils";
