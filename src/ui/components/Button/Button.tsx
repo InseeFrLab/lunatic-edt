@@ -8,17 +8,24 @@ export type ButtonProps = {
     id?: string;
     label?: string;
     className?: string;
+    disabled?: boolean;
+    onClick(): void;
 };
 
-const Button = memo((props: any) => {
-    console.log("Button");
-    console.log(props);
-    const { id, label, className } = props;
+const Button = memo((props: ButtonProps) => {
+    const { id, label, disabled, className, onClick } = props;
 
     const { classes, cx } = useStyles();
 
     return (
-        <ButtonMaterial id={id} className={cx(classes.MuiButton, className)}>
+        <ButtonMaterial
+            id={id}
+            className={cx(classes.MuiButton, className)}
+            variant="contained"
+            disabled={disabled}
+            onClick={onClick}
+            disableElevation
+        >
             {label}
         </ButtonMaterial>
     );
@@ -26,7 +33,7 @@ const Button = memo((props: any) => {
 
 const useStyles = makeStyles({ "name": { Button } })(() => ({
     "MuiButton": {
-        textDecoration: "none",
+        textTransform: "none",
     },
 }));
 
