@@ -9,7 +9,7 @@ export type ButtonProps = {
     label?: string;
     className?: string;
     disabled?: boolean;
-    onClick(): void;
+    onClick?(): void;
 };
 
 const Button = memo((props: ButtonProps) => {
