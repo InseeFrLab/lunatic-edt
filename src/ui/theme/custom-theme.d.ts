@@ -5,16 +5,22 @@ declare module "@mui/material/styles" {
     interface CustomTheme {
         variables: {
             neutral: string;
+            iconRounding: string;
+            white: string;
         };
     }
     interface Theme {
         variables: {
             neutral: string;
+            iconRounding: string;
+            white: string;
         };
     }
     interface ThemeOptions {
         variables: {
             neutral: string;
+            iconRounding: string;
+            white: string;
         };
     }
 }

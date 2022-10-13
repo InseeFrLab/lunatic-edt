@@ -5,6 +5,8 @@ import { CssBaseline } from "@mui/material";
 const theme = createTheme({
     variables: {
         neutral: "#DCE7F9",
+        iconRounding: "#DEE2EB",
+        white: "#FFFFFF",
     },
     palette: {
         primary: {
