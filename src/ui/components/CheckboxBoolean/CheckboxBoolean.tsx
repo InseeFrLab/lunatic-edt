@@ -24,7 +24,6 @@ const CheckboxBoolean = memo((props: CheckboxBooleanProps) => {
         const valAsBool = value === "true" ? true : false;
         onClick(valAsBool);
     };
-
     return (
         <ToggleButtonGroup
             orientation="horizontal"
