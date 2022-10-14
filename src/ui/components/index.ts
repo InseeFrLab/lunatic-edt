@@ -4,4 +4,5 @@ export { default as CheckboxGroup } from "./CheckboxGroup";
 export { default as CheckboxOne } from "./CheckboxOne";
 export { default as Datepicker } from "./Datepicker";
 export { default as Input } from "./Input";
+export { default as ProgressBar } from "./ProgressBar";
 export { default as Radio } from "./Radio";
