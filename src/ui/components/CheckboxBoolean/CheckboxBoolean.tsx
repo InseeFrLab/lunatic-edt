@@ -14,17 +14,14 @@ export type CheckboxBooleanProps = {
 };
 
 const CheckboxBoolean = memo((props: CheckboxBooleanProps) => {
-    console.log("CheckboxBoolean");
-    console.log(props);
     const { onClick, id, label, checked, disabled, className } = props;
     const { classes, cx } = useStyles();
     const valAsString = checked === null ? "" : checked + "";
     const [localValue, setLocalValue] = React.useState(valAsString);
 
-    const handleOptions = (event: any, val: string) => {
-        console.log(val);
-        setLocalValue(val);
-        const valAsBool = val === "true" ? true : false;
+    const handleOptions = (event: React.MouseEvent<HTMLElement>, value: string) => {
+        setLocalValue(value);
+        const valAsBool = value === "true" ? true : false;
         onClick(valAsBool);
     };
 
