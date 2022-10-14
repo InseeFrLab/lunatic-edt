@@ -1,12 +1,12 @@
 import { Checkbox, Paper, Typography } from "@mui/material";
-import { CheckboxGroupOption } from "interface/CheckboxGroupOptions";
+import { CheckboxOption } from "interface/CheckboxOptions";
 import { memo } from "react";
 import { makeStyles } from "tss-react/mui";
 
 export type CheckboxGroupProps = {
     handleChange(response: { [name: string]: string }, value: boolean): void;
     id?: string;
-    options: CheckboxGroupOption[];
+    options: CheckboxOption[];
     value: { [key: string]: boolean };
 };
 
