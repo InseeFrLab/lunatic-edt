@@ -6,8 +6,6 @@ export type RadioProps = {
     disabled?: boolean;
 };
 const Radio = (props: RadioProps) => {
-    console.log("Radio");
-    console.log(props);
     const { id, value, disabled } = props;
 
     return <RadioMaterial id={id} value={value} disabled={disabled}></RadioMaterial>;

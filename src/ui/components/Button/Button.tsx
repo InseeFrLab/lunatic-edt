@@ -9,12 +9,10 @@ export type ButtonProps = {
     label?: string;
     className?: string;
     disabled?: boolean;
-    onClick(): void;
+    onClick?(): void;
 };
 
-const Button = memo((props: any) => {
-    console.log("Button");
-    console.log(props);
+const Button = memo((props: ButtonProps) => {
     const { id, label, disabled, className, onClick } = props;
 
     const { classes, cx } = useStyles();

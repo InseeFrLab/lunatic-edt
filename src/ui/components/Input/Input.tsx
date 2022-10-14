@@ -15,16 +15,17 @@ export type InputProps = {
 };
 
 export const Input = memo((props: InputProps) => {
-    console.log("Input");
-    console.log(props);
-    const { id, value, disabled, placeholder, mandatory, errors, maxLength, onChange } = props;
+    const { id, value, disabled, labelledBy, placeholder, mandatory, errors, maxLength, onChange } =
+        props;
     return (
         <TextField
             id={id}
+            aria-required={mandatory}
+            labelled-by={labelledBy}
             disabled={disabled}
             placeholder={placeholder}
             required={mandatory}
-            value={value}
+            value={value ?? ""}
             error={errors ? true : false}
             helperText={errors?.errorMessage}
             inputProps={{ maxLength: maxLength ?? 100 }}
