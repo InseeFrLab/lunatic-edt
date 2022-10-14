@@ -27,11 +27,13 @@ const theme = createTheme({
         },
         text: {
             primary: "#1F4076",
+            secondary: "#2E384D",
         },
         action: {
             hover: "#5C6F99",
         },
     },
+    typography: {},
 });
 
 const ThemeProvider = (props: { children: ReactNode }) => {
