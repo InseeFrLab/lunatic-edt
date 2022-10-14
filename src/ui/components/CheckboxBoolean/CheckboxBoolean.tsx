@@ -1,6 +1,5 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import React from "react";
-import { memo } from "react";
+import React, { memo } from "react";
 import { makeStyles } from "tss-react/mui";
 import { important } from "../../utils";
 
