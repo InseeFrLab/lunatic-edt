@@ -22,9 +22,9 @@ const CheckboxOne = memo((props: CheckboxOneProps) => {
     const preSelectedValue: string | undefined = Object.keys(value).find(i => value[i] === true);
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(preSelectedValue);
 
-    const handleOptions = (event: any, selectedOption: string) => {
+    const handleOptions = (event: React.MouseEvent<HTMLElement>, selectedOption: string) => {
         setCurrentOption(selectedOption);
-        value[event.target.value] = !value[event.target.value];
+        value[selectedOption] = !value[selectedOption];
         handleChange({ name: selectedOption }, value[selectedOption]);
     };
 

@@ -15,7 +15,7 @@ const CheckboxGroup = memo((props: CheckboxGroupProps) => {
 
     const { classes } = useStyles();
 
-    const handleOptions = (event: any) => {
+    const handleOptions = (event: React.ChangeEvent<HTMLInputElement>) => {
         value[event.target.value] = !value[event.target.value];
         handleChange({ name: event.target.value }, value[event.target.value]);
     };
@@ -23,7 +23,7 @@ const CheckboxGroup = memo((props: CheckboxGroupProps) => {
     return (
         <div id={id}>
             {options.map(option => (
-                <Paper className={classes.root} elevation={0}>
+                <Paper className={classes.root} elevation={0} key={"paper-" + option.id}>
                     <div style={{ display: "flex" }}>
                         {/* TODO : replace when we know in which way we send icons label */}
                         <span>IC&nbsp;&nbsp;</span>
