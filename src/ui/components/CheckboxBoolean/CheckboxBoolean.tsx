@@ -19,7 +19,7 @@ const CheckboxBoolean = memo((props: CheckboxBooleanProps) => {
     const valAsString = checked === null ? "" : checked + "";
     const [localValue, setLocalValue] = React.useState(valAsString);
 
-    const handleOptions = (event: React.MouseEvent<HTMLElement>, value: string) => {
+    const handleOptions = (_event: React.MouseEvent<HTMLElement>, value: string) => {
         setLocalValue(value);
         const valAsBool = value === "true" ? true : false;
         onClick(valAsBool);
