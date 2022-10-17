@@ -132,10 +132,13 @@ const useStyles = makeStyles<{ width: string }>({ "name": { HourChecker } })((th
         textTransform: "none",
         color: theme.palette.action.hover,
         backgroundColor: theme.variables.white,
-        border: "none",
+        borderColor: theme.variables.white,
         "&.Mui-selected": {
             backgroundColor: theme.palette.action.hover,
             color: theme.variables.white,
+        },
+        "&:hover": {
+            color: theme.palette.action.hover,
         },
     },
     iconRounder: {
