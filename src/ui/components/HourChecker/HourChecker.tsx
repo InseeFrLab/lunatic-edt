@@ -72,7 +72,10 @@ const HourChecker = memo((props: HourCheckerProps) => {
             >
                 {options.map((option, index) => (
                     <ToggleButton
-                        className={classes.MuiToggleButton}
+                        className={cx(
+                            classes.MuiToggleButton,
+                            index === 0 || index === options.length - 1 ? classes.toggleWithIcon : "",
+                        )}
                         key={option.id}
                         value={option.response.name}
                         selected={value[option.response.name] ?? false}
@@ -81,7 +84,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
                             <div className={classes.noIconSpacer}></div>
                         )}
                         {index === 0 && <ExpandMoreIcon onClick={toggleHourChecker}></ExpandMoreIcon>}
-                        {option.label}
+                        {index !== options.length - 1 ? option.label : <span>&nbsp;</span>}
                         {index === options.length - 1 && (
                             <div className={classes.iconRounder}>
                                 <WorkIcon fontSize="small"></WorkIcon>
@@ -130,6 +133,7 @@ const useStyles = makeStyles<{ width: string }>({ "name": { HourChecker } })((th
     MuiToggleButton: {
         padding: "0.25rem 0.25rem 1.5rem 0.25rem",
         textTransform: "none",
+        width: "75px",
         color: theme.palette.action.hover,
         backgroundColor: theme.variables.white,
         borderColor: theme.variables.white,
@@ -140,6 +144,10 @@ const useStyles = makeStyles<{ width: string }>({ "name": { HourChecker } })((th
         "&:hover": {
             color: theme.palette.action.hover,
         },
+    },
+    toggleWithIcon: {
+        display: "flex",
+        justifyContent: "space-between",
     },
     iconRounder: {
         border: "1px solid transparent",
