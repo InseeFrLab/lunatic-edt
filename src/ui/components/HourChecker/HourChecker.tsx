@@ -1,11 +1,10 @@
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import WorkIcon from "@mui/icons-material/Work";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { HourCheckerOption } from "interface/HourCheckerOptions";
-import React from "react";
-import { memo } from "react";
+import React, { memo } from "react";
 import { makeStyles } from "tss-react/mui";
-import WorkIcon from "@mui/icons-material/Work";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
 
 export type HourCheckerProps = {
@@ -25,20 +24,50 @@ const HourChecker = memo((props: HourCheckerProps) => {
     const optionsValues = options.map(option => option.response.name);
     const [currentOption, setCurrentOption] = React.useState(optionsValues);
 
-    const toggleHourChecker = () => {
+    const getSelectAllValue = (): boolean => {
+        let selectOrUnselectAllValue = true;
+        optionsValues.forEach((key: string) => {
+            selectOrUnselectAllValue = selectOrUnselectAllValue && value[key];
+        });
+        return selectOrUnselectAllValue;
+    };
+
+    const [selectAll, setSelectAll] = React.useState(getSelectAllValue);
+
+    const calculateSelectAllValue = () => {
+        setSelectAll(getSelectAllValue);
+    };
+
+    const selectOrUnselectAll = (currentlySelected: boolean) => {
+        let selectedOptions: string[] = [];
+        optionsValues.forEach((key: string) => {
+            value[key] = !currentlySelected;
+            selectedOptions.push(key);
+        });
+        setCurrentOption(selectedOptions);
+        setSelectAll(!selectAll);
+    };
+
+    const toggleHourChecker = (e: any) => {
+        e.stopPropagation();
         setIsOpen(!isOpen);
     };
 
     const handleOptions = (event: any, selectedOption: string[]) => {
         setCurrentOption(selectedOption);
         value[event.target.value] = !value[event.target.value];
+        calculateSelectAllValue();
         // TODO : transmit to lunatic or parent after knowing wished format for Semainier
         //handleChange({ name: selectedOption }, value[selectedOption]);
     };
 
     return (
         <Box component="div">
-            <Box sx={{ display: "flex" }} className={!isOpen ? classes.visible : classes.hidden}>
+            <Box
+                sx={{ display: "flex", cursor: "pointer" }}
+                className={!isOpen ? classes.visible : classes.hidden}
+                onClick={() => selectOrUnselectAll(selectAll)}
+            >
                 {options.map((option, index) => (
                     <Box
                         className={cx(
@@ -68,13 +97,16 @@ const HourChecker = memo((props: HourCheckerProps) => {
                 onChange={handleOptions}
                 id={id}
                 aria-label={label}
+                sx={{ width: "100%" }}
                 className={isOpen ? classes.visible : classes.hidden}
             >
                 {options.map((option, index) => (
                     <ToggleButton
                         className={cx(
                             classes.MuiToggleButton,
-                            index === 0 || index === options.length - 1 ? classes.toggleWithIcon : "",
+                            index === 0 || index === options.length - 1
+                                ? classes.toggleWithIcon
+                                : classes.toggleWithoutIcon,
                         )}
                         key={option.id}
                         value={option.response.name}
@@ -105,6 +137,7 @@ const useStyles = makeStyles<{ width: string }>({ "name": { HourChecker } })((th
     },
     clickable: {
         cursor: "pointer",
+        index: "1",
     },
     hourSelected: {
         color: theme.variables.white,
@@ -131,9 +164,10 @@ const useStyles = makeStyles<{ width: string }>({ "name": { HourChecker } })((th
         justifyContent: "end",
     },
     MuiToggleButton: {
+        display: "flex",
         padding: "0.25rem 0.25rem 1.5rem 0.25rem",
         textTransform: "none",
-        width: "75px",
+        width,
         color: theme.palette.action.hover,
         backgroundColor: theme.variables.white,
         borderColor: theme.variables.white,
@@ -146,8 +180,10 @@ const useStyles = makeStyles<{ width: string }>({ "name": { HourChecker } })((th
         },
     },
     toggleWithIcon: {
-        display: "flex",
         justifyContent: "space-between",
+    },
+    toggleWithoutIcon: {
+        justifyContent: "flex-end",
     },
     iconRounder: {
         border: "1px solid transparent",
@@ -167,4 +203,4 @@ const useStyles = makeStyles<{ width: string }>({ "name": { HourChecker } })((th
     },
 }));
 
-export default createCustomizableLunaticField(HourChecker);
+export default createCustomizableLunaticField(HourChecker, "HourChecker");
