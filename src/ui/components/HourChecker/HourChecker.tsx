@@ -5,7 +5,7 @@ import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { HourCheckerOption } from "interface/HourCheckerOptions";
 import React, { memo } from "react";
 import { makeStyles } from "tss-react/mui";
-import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
+import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type HourCheckerProps = {
     handleChange(response: { [name: string]: string }, value: boolean): void;
