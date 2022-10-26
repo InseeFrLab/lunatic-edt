@@ -10,18 +10,18 @@ import { createCustomizableLunaticField } from "../../utils/create-customizable-
 export type HourCheckerProps = {
     handleChange(response: { [name: string]: string }, value: boolean): void;
     id?: string;
-    options: HourCheckerOption[];
+    responses: HourCheckerOption[];
     value: { [key: string]: boolean };
     label?: string;
 };
 
 const HourChecker = memo((props: HourCheckerProps) => {
-    const { id, value, label, options } = props;
+    const { id, value, label, responses, handleChange } = props;
     const [isOpen, setIsOpen] = React.useState(false);
 
-    const { classes, cx } = useStyles({ "width": `calc(100% / ${options.length})` });
+    const { classes, cx } = useStyles({ "width": `calc(100% / ${responses.length})` });
 
-    const optionsValues = options.map(option => option.response.name);
+    const optionsValues = responses.map(option => option.response.name);
     const [currentOption, setCurrentOption] = React.useState(optionsValues);
 
     const getSelectAllValue = (): boolean => {
@@ -46,6 +46,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
         });
         setCurrentOption(selectedOptions);
         setSelectAll(!selectAll);
+        saveLunaticData();
     };
 
     const toggleHourChecker = (e: any) => {
@@ -57,8 +58,13 @@ const HourChecker = memo((props: HourCheckerProps) => {
         setCurrentOption(selectedOption);
         value[event.target.value] = !value[event.target.value];
         calculateSelectAllValue();
-        // TODO : transmit to lunatic or parent after knowing wished format for Semainier
-        //handleChange({ name: selectedOption }, value[selectedOption]);
+        saveLunaticData();
+    };
+
+    const saveLunaticData = function () {
+        for (let responseName of Object.keys(value)) {
+            handleChange({ name: responseName }, value[responseName]);
+        }
     };
 
     return (
@@ -68,13 +74,14 @@ const HourChecker = memo((props: HourCheckerProps) => {
                 className={!isOpen ? classes.visible : classes.hidden}
                 onClick={() => selectOrUnselectAll(selectAll)}
             >
-                {options.map((option, index) => (
+                {responses.map((option, index) => (
                     <Box
+                        key={option.id}
                         className={cx(
                             classes.hourCheckerBox,
                             value[option.response.name] ? classes.hourSelected : classes.hourNotSelected,
                             index === 0 ? classes.leftOption : "",
-                            index === options.length - 1 ? classes.rightOption : "",
+                            index === responses.length - 1 ? classes.rightOption : "",
                         )}
                     >
                         {index === 0 && (
@@ -83,7 +90,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
                                 onClick={toggleHourChecker}
                             ></ExpandLessIcon>
                         )}
-                        {index === options.length - 1 && (
+                        {index === responses.length - 1 && (
                             <div className={classes.iconRounder}>
                                 <WorkIcon fontSize="small"></WorkIcon>
                             </div>
@@ -100,11 +107,11 @@ const HourChecker = memo((props: HourCheckerProps) => {
                 sx={{ width: "100%" }}
                 className={isOpen ? classes.visible : classes.hidden}
             >
-                {options.map((option, index) => (
+                {responses.map((option, index) => (
                     <ToggleButton
                         className={cx(
                             classes.MuiToggleButton,
-                            index === 0 || index === options.length - 1
+                            index === 0 || index === responses.length - 1
                                 ? classes.toggleWithIcon
                                 : classes.toggleWithoutIcon,
                         )}
@@ -112,12 +119,12 @@ const HourChecker = memo((props: HourCheckerProps) => {
                         value={option.response.name}
                         selected={value[option.response.name] ?? false}
                     >
-                        {index !== 0 && index !== options.length - 1 && (
+                        {index !== 0 && index !== responses.length - 1 && (
                             <div className={classes.noIconSpacer}></div>
                         )}
                         {index === 0 && <ExpandMoreIcon onClick={toggleHourChecker}></ExpandMoreIcon>}
-                        {index !== options.length - 1 ? option.label : <span>&nbsp;</span>}
-                        {index === options.length - 1 && (
+                        {index !== responses.length - 1 ? option.label : <span>&nbsp;</span>}
+                        {index === responses.length - 1 && (
                             <div className={classes.iconRounder}>
                                 <WorkIcon fontSize="small"></WorkIcon>
                             </div>
