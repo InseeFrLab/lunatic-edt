@@ -1,13 +1,15 @@
 import React from "react";
 
-function createCustomizableLunaticField(LunaticField: any) {
+const notLunaticComponents: Map<string, React.MemoExoticComponent<any>> = new Map();
+
+function createCustomizableLunaticField(LunaticField: React.MemoExoticComponent<any>, name: string) {
     const Memoized = React.memo(LunaticField);
-    const { name } = LunaticField;
+    notLunaticComponents.set(name, Memoized);
 
     return function OverlayField(props: any) {
         const { custom, ...rest } = props;
         if (typeof custom === "object" && name in custom) {
-            const CustomComponent: any = custom[name];
+            const CustomComponent = custom[name];
             return <CustomComponent {...rest} />;
         }
 
@@ -15,4 +17,4 @@ function createCustomizableLunaticField(LunaticField: any) {
     };
 }
 
-export default createCustomizableLunaticField;
+export { createCustomizableLunaticField, notLunaticComponents };
