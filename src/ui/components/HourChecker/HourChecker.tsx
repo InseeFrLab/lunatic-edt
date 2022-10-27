@@ -21,12 +21,12 @@ const HourChecker = memo((props: HourCheckerProps) => {
 
     const { classes, cx } = useStyles({ "width": `calc(100% / ${responses.length})` });
 
-    const responsesValues = responses.map(option => option.response.name);
+    const responsesValues = responses.map((option: HourCheckerOption) => option.response.name);
     const [currentOption, setCurrentOption] = React.useState(responsesValues);
 
     const getSelectAllValue = (): boolean => {
         let selectOrUnselectAllValue = true;
-        responsesValues.forEach((key: string) => {
+        responsesValues.map((key: string) => {
             selectOrUnselectAllValue = selectOrUnselectAllValue && value[key];
         });
         return selectOrUnselectAllValue;
@@ -40,7 +40,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
 
     const selectOrUnselectAll = (currentlySelected: boolean) => {
         let selectedOptions: string[] = [];
-        responsesValues.forEach((name: string) => {
+        responsesValues.map((name: string) => {
             value[name] = !currentlySelected;
             selectedOptions.push(name);
         });
@@ -122,11 +122,11 @@ const HourChecker = memo((props: HourCheckerProps) => {
                         {index !== 0 && index !== responses.length - 1 && (
                             <div className={classes.noIconSpacer}></div>
                         )}
-                        {index === 0 && <ExpandMoreIcon onClick={toggleHourChecker}></ExpandMoreIcon>}
+                        {index === 0 && <ExpandMoreIcon onClick={toggleHourChecker} />}
                         {index !== responses.length - 1 ? option.label : <span>&nbsp;</span>}
                         {index === responses.length - 1 && (
                             <div className={classes.iconRounder}>
-                                <WorkIcon fontSize="small"></WorkIcon>
+                                <WorkIcon fontSize="small" />
                             </div>
                         )}
                     </ToggleButton>
