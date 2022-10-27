@@ -26,7 +26,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
 
     const getSelectAllValue = (): boolean => {
         let selectOrUnselectAllValue = true;
-        responsesValues.map((key: string) => {
+        responsesValues.forEach((key: string) => {
             selectOrUnselectAllValue = selectOrUnselectAllValue && value[key];
         });
         return selectOrUnselectAllValue;
@@ -40,7 +40,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
 
     const selectOrUnselectAll = (currentlySelected: boolean) => {
         let selectedOptions: string[] = [];
-        responsesValues.map((name: string) => {
+        responsesValues.forEach((name: string) => {
             value[name] = !currentlySelected;
             selectedOptions.push(name);
         });
@@ -62,9 +62,9 @@ const HourChecker = memo((props: HourCheckerProps) => {
     };
 
     const saveLunaticData = () => {
-        for (let responseName of Object.keys(value)) {
-            handleChange({ name: responseName }, value[responseName]);
-        }
+        responsesValues.forEach((name: string) => {
+            handleChange({ name: name }, value[name]);
+        });
     };
 
     return (
