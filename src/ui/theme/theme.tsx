@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
-import { ThemeProvider as MuiProvider, createTheme } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
+import { createTheme, ThemeProvider as MuiProvider } from "@mui/material/styles";
+import type { ReactNode } from "react";
 
 const theme = createTheme({
     variables: {
@@ -11,6 +11,7 @@ const theme = createTheme({
     palette: {
         primary: {
             main: "#4973d2",
+            light: "#2C70DE",
         },
         secondary: {
             main: "#f50057",
