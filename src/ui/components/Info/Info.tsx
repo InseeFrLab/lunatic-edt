@@ -1,26 +1,24 @@
 import { Box } from "@mui/system";
 import { memo } from "react";
 import { makeStyles } from "tss-react/mui";
+import { InfoIcon } from "ui/assets/icons";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import LightbulbIcon from '@mui/icons-material/Lightbulb';
 
 export type InfoProps = {
-    normalText: string,
-    boldText: string
+    normalText: string;
+    boldText: string;
+    infoIconAlt: string;
 };
 
 const Info = memo((props: InfoProps) => {
-
-    const { normalText, boldText } = props;
+    const { normalText, boldText, infoIconAlt } = props;
     const { classes } = useStyles();
 
     return (
-        <Box
-            className={classes.root}
-        >
+        <Box className={classes.root}>
             <Box className={classes.titleWithIcon}>
                 <Box className={classes.iconContainer}>
-                    <LightbulbIcon/>
+                    <img src={InfoIcon} alt={infoIconAlt} />
                 </Box>
                 <Box className={classes.title}>
                     <p className={classes.text}>{normalText}</p>
@@ -35,7 +33,6 @@ const Info = memo((props: InfoProps) => {
     );
 });
 
-
 const useStyles = makeStyles({ "name": { Info } })(_theme => ({
     root: {
         backgroundColor: "#FFFFFF",
@@ -46,7 +43,7 @@ const useStyles = makeStyles({ "name": { Info } })(_theme => ({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "1rem"
+        padding: "1rem 1rem 1rem 0",
     },
     titleWithIcon: {
         width: "100%",
@@ -57,7 +54,7 @@ const useStyles = makeStyles({ "name": { Info } })(_theme => ({
     iconContainer: {
         width: "15%",
         display: "flex",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     title: {
         width: "85%",
@@ -68,7 +65,7 @@ const useStyles = makeStyles({ "name": { Info } })(_theme => ({
         justifyContent: "flex-end",
     },
     tips: {
-        width: "85%"
+        width: "85%",
     },
     text: {
         color: "#5C6F99",
@@ -77,8 +74,8 @@ const useStyles = makeStyles({ "name": { Info } })(_theme => ({
     textBold: {
         color: "#5C6F99",
         fontSize: "12px",
-        fontWeight: "bold"
-    }
+        fontWeight: "bold",
+    },
 }));
 
 export default createCustomizableLunaticField(Info, "Info");
