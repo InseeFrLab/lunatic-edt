@@ -6,7 +6,7 @@ const { meta, getStory } = getStoryFactory({
     "wrappedComponent": { HourChecker },
 });
 
-const options = [
+const responses = [
     {
         id: "1",
         label: "16h15",
@@ -40,6 +40,6 @@ export default meta;
 
 export const Default = getStory({
     handleChange: (value: string) => console.log(value),
-    options: options,
+    responses: responses,
     value: value,
 });
