@@ -1,24 +1,38 @@
-import React from "react";
-import { Autocomplete, AutocompleteRenderInputParams, Button, FilterOptionsState, Icon, TextField } from "@mui/material";
+import { Add, Extension, Search } from "@mui/icons-material";
+import {
+    Autocomplete,
+    AutocompleteRenderInputParams,
+    Button,
+    FilterOptionsState,
+    Icon,
+    TextField,
+} from "@mui/material";
 import { RawActiviteOption } from "interface/RawActiviteOption";
-import { memo } from "react";
+import React, { memo } from "react";
 import { makeStyles } from "tss-react/mui";
-import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
-import activites from "../../../activites.json";
-import { Search, Add, Extension } from "@mui/icons-material";
+import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type ClickableListProps = {
-    options: RawActiviteOption[],
-    selectedId: string,
-    handleChange(value: RawActiviteOption | null): void,
-    createActivity(value: string | undefined): void
+    placeholder: string;
+    options: RawActiviteOption[];
+    selectedId?: string;
+    handleChange(value: RawActiviteOption | null): void;
+    createActivity(value: string | undefined): void;
+    notFoundLabel: string;
+    notFoundComment: string;
+    addActivityButtonLabel: string;
 };
 
 const ClickableList = memo((props: ClickableListProps) => {
-    let { options, selectedId, createActivity } = props;
-    // For now fill options with activites.json file
-    options = activites;
-    createActivity = (value) => console.log("Ajout activité :" + value);
+    let {
+        placeholder,
+        options,
+        selectedId,
+        createActivity,
+        notFoundLabel,
+        notFoundComment,
+        addActivityButtonLabel,
+    } = props;
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
     const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
@@ -29,20 +43,23 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     /**
      * Remove accents from string
-     * @param value 
-     * @returns 
+     * @param value
+     * @returns
      */
     const removeAccents = (value: string): string => {
-        return value.normalize('NFD').replace(/\p{Diacritic}/gu, "");
-    }
+        return value.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+    };
 
     /**
      * Filter options to be returned according to user search input
-     * @param options 
-     * @param state 
-     * @returns 
+     * @param options
+     * @param state
+     * @returns
      */
-    const filterOptions = (options: RawActiviteOption[], state: FilterOptionsState<RawActiviteOption>) => {
+    const filterOptions = (
+        options: RawActiviteOption[],
+        state: FilterOptionsState<RawActiviteOption>,
+    ) => {
         let newOptions: RawActiviteOption[] = [];
 
         if (state.inputValue.length > 1) {
@@ -53,15 +70,15 @@ const ClickableList = memo((props: ClickableListProps) => {
         }
 
         options.forEach((element: RawActiviteOption) => {
-            const stateInput = state.inputValue;
-            const deaccentedLabel = removeAccents(element.label.toLowerCase());
-            const deaccentedSynonymes = removeAccents(element.synonymes.toLowerCase()).replace(",", "");
-            const deaccentedStateInput = removeAccents(stateInput.toLowerCase());
+            const stateInputValue = state.inputValue;
+            const label = removeAccents(element.label.toLowerCase());
+            const synonymes = removeAccents(element.synonymes.toLowerCase()).replace(",", "");
+            const stateInput = removeAccents(stateInputValue.toLowerCase());
 
-            if (stateInput.length > 1 && (
-                deaccentedLabel.includes(deaccentedStateInput) ||
-                deaccentedSynonymes.includes(deaccentedStateInput)
-            )) {
+            if (
+                stateInputValue.length > 1 &&
+                (label.includes(stateInput) || synonymes.includes(stateInput))
+            ) {
                 newOptions.push(element);
             }
         });
@@ -70,57 +87,49 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     /**
      * Render icon next to textfield
-     * @returns 
+     * @returns
      */
     const renderIcon = () => {
-        return displayAddIcon ? (<Add />) : (<Search />)
-    }
+        return displayAddIcon ? <Add /> : <Search />;
+    };
 
     /**
      * Render textfield + icon
-     * @param params 
-     * @returns 
+     * @param params
+     * @returns
      */
     const renderTextField = (params: AutocompleteRenderInputParams) => {
         return (
             <>
-                <TextField {...params}
-                    placeholder="Saisissez une activité"
-                />
-                <Icon
-                    children={renderIcon()}
-                    onClick={createActivity.bind(this, currentInputValue)}
-                />
+                <TextField {...params} placeholder={placeholder} />
             </>
         );
-    }
+    };
 
     /**
      * Render no result component
-     * @returns 
+     * @returns
      */
     const renderNoResults = () => {
         return (
             <div className={classes.noResults}>
                 <Extension />
-                <h3>Aucun résultat trouvé</h3>
-                Vous pourrez l'ajouter en cliquant sur le bouton ci-dessous, ou le bouton + ci-dessus
-                <Button
-                    onClick={createActivity.bind(this, currentInputValue)}
-                >Ajouter l'activité</Button>
+                <h3>{notFoundLabel}</h3>
+                {notFoundComment}
+                <Button onClick={createActivity.bind(this, currentInputValue)}>
+                    {addActivityButtonLabel}
+                </Button>
             </div>
-        )
-    }
+        );
+    };
 
     /**
      * Render no option component
-     * @returns 
+     * @returns
      */
     const renderNoOption = () => {
-        return displayAddIcon ?
-            renderNoResults() :
-            (<></>)
-    }
+        return displayAddIcon ? renderNoResults() : <></>;
+    };
 
     return (
         <Autocomplete
@@ -128,17 +137,19 @@ const ClickableList = memo((props: ClickableListProps) => {
             options={options}
             defaultValue={selectedvalue}
             onChange={(_event, value) => console.log(value)}
-            renderInput={(params) => renderTextField(params)}
-            getOptionLabel={(option) => option.label}
+            renderInput={params => renderTextField(params)}
+            getOptionLabel={option => option.label}
             filterOptions={filterOptions}
-            popupIcon={<></>}
             noOptionsText={renderNoOption()}
             onClose={() => setDisplayAddIcon(false)}
             fullWidth={true}
+            popupIcon={
+                <Icon children={renderIcon()} onClick={createActivity.bind(this, currentInputValue)} />
+            }
+            classes={{ popupIndicator: classes.popupIndicator }}
         />
     );
 });
-
 
 const useStyles = makeStyles({ "name": { ClickableList } })(_theme => ({
     root: {
@@ -150,13 +161,16 @@ const useStyles = makeStyles({ "name": { ClickableList } })(_theme => ({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        borderRadius: "4px"
+        borderRadius: "4px",
+    },
+    popupIndicator: {
+        transform: "none",
     },
     noResults: {
         display: "flex",
         flexDirection: "column",
-        alignItems: "center"
-    }
+        alignItems: "center",
+    },
 }));
 
-export default createCustomizableLunaticField(ClickableList);
+export default createCustomizableLunaticField(ClickableList, "ClickableList");
