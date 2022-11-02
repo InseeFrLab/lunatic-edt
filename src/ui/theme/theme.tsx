@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
-import { ThemeProvider as MuiProvider, createTheme } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
+import { createTheme, ThemeProvider as MuiProvider } from "@mui/material/styles";
+import type { ReactNode } from "react";
 
 const theme = createTheme({
     variables: {
@@ -20,6 +20,7 @@ const theme = createTheme({
         },
         error: {
             main: "#d8765f",
+            light: "#FCE7D8",
         },
         info: {
             main: "#1f4076",
