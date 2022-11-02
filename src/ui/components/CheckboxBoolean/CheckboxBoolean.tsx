@@ -4,10 +4,10 @@ import { makeStyles } from "tss-react/mui";
 import { important } from "../../utils";
 
 export type CheckboxBooleanProps = {
-    onClick(value: boolean): void;
+    onClick(value: Boolean): void;
     id?: string;
     label?: string;
-    checked?: boolean;
+    checked?: Boolean;
     disabled?: boolean;
     className?: string;
 };
@@ -15,31 +15,28 @@ export type CheckboxBooleanProps = {
 const CheckboxBoolean = memo((props: CheckboxBooleanProps) => {
     const { onClick, id, label, checked, disabled, className } = props;
     const { classes, cx } = useStyles();
-    const valAsString = checked === null ? "" : checked + "";
-    const [localValue, setLocalValue] = React.useState(valAsString);
 
-    const handleOptions = (_event: React.MouseEvent<HTMLElement>, value: string) => {
-        setLocalValue(value);
-        const valAsBool = value === "true" ? true : false;
-        onClick(valAsBool);
+    const handleClick = (_event: React.MouseEvent<HTMLElement>, value: Boolean) => {
+        onClick(value);
     };
+
     return (
         <ToggleButtonGroup
             orientation="horizontal"
-            value={localValue}
+            value={checked}
             exclusive
-            onChange={handleOptions}
+            onChange={handleClick}
             id={id}
             aria-label={label}
             className={className}
             disabled={disabled}
         >
-            <ToggleButton className={classes.MuiToggleButton} value="false" aria-label="no">
+            <ToggleButton className={classes.MuiToggleButton} value={false} aria-label="no">
                 Non
             </ToggleButton>
             <ToggleButton
                 className={cx(classes.MuiToggleButton, classes.separator)}
-                value="true"
+                value={true}
                 aria-label="yes"
             >
                 Oui
