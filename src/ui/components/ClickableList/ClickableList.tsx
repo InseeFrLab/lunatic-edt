@@ -151,10 +151,10 @@ const ClickableList = memo((props: ClickableListProps) => {
     );
 });
 
-const useStyles = makeStyles({ "name": { ClickableList } })(_theme => ({
+const useStyles = makeStyles({ "name": { ClickableList } })(theme => ({
     root: {
-        backgroundColor: "#FFFFFF",
-        borderColor: "#DCE7F9",
+        backgroundColor: theme.variables.white,
+        borderColor: theme.variables.neutral,
         borderWidth: "3",
         width: 300,
         margin: "1rem",
