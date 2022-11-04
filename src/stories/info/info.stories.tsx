@@ -1,6 +1,8 @@
+/* eslint @typescript-eslint/no-var-requires: "off" */
 import { getStoryFactory } from "stories/getStory";
 import { Info } from "ui";
-import iconInfo from "./info.svg";
+
+const iconInfo = require("./info.svg") as string;
 
 const { meta, getStory } = getStoryFactory({
     sectionName: "Composants",

@@ -1,10 +1,11 @@
+/* eslint @typescript-eslint/no-var-requires: "off" */
 import { RawActiviteOption } from "interface/RawActiviteOption";
 import { getStoryFactory } from "stories/getStory";
 import { ClickableList } from "ui";
 import activites from "./activites.json";
-import iconNoResult from "./puzzle.svg";
 
 const options: RawActiviteOption[] = activites;
+const iconNoResult = require("./puzzle.svg") as string;
 
 const { meta, getStory } = getStoryFactory({
     sectionName: "Composants",
