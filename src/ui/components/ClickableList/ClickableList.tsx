@@ -2,6 +2,7 @@ import { Add, Extension, Search } from "@mui/icons-material";
 import {
     Autocomplete,
     AutocompleteRenderInputParams,
+    Box,
     Button,
     FilterOptionsState,
     Icon,
@@ -21,6 +22,8 @@ export type ClickableListProps = {
     notFoundLabel: string;
     notFoundComment: string;
     addActivityButtonLabel: string;
+    iconNoResult: string;
+    iconNoResultAlt: string;
 };
 
 const ClickableList = memo((props: ClickableListProps) => {
@@ -32,6 +35,8 @@ const ClickableList = memo((props: ClickableListProps) => {
         notFoundLabel,
         notFoundComment,
         addActivityButtonLabel,
+        iconNoResult,
+        iconNoResultAlt,
     } = props;
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
@@ -112,14 +117,18 @@ const ClickableList = memo((props: ClickableListProps) => {
      */
     const renderNoResults = () => {
         return (
-            <div className={classes.noResults}>
-                <Extension />
+            <Box className={classes.noResults}>
+                <img src={iconNoResult} alt={iconNoResultAlt} />
                 <h3>{notFoundLabel}</h3>
                 {notFoundComment}
-                <Button onClick={createActivity.bind(this, currentInputValue)}>
+                <Button
+                    variant="contained"
+                    startIcon={<Add />}
+                    onClick={createActivity.bind(this, currentInputValue)}
+                >
                     {addActivityButtonLabel}
                 </Button>
-            </div>
+            </Box>
         );
     };
 
@@ -138,6 +147,12 @@ const ClickableList = memo((props: ClickableListProps) => {
             defaultValue={selectedvalue}
             onChange={(_event, value) => console.log(value)}
             renderInput={params => renderTextField(params)}
+            renderOption={(properties, option) => (
+                <li {...properties} className={classes.option}>
+                    <Extension className={classes.optionIcon} />
+                    {option.label}
+                </li>
+            )}
             getOptionLabel={option => option.label}
             filterOptions={filterOptions}
             noOptionsText={renderNoOption()}
@@ -170,6 +185,20 @@ const useStyles = makeStyles({ "name": { ClickableList } })(theme => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+    },
+    option: {
+        display: "flex",
+        alignItems: "center",
+        padding: "0.5rem",
+        cursor: "pointer",
+        color: theme.palette.text.secondary,
+        "&:hover": {
+            backgroundColor: "ghostwhite",
+        },
+    },
+    optionIcon: {
+        marginRight: "0.5rem",
+        color: theme.palette.primary.main,
     },
 }));
 
