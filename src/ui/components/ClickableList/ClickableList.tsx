@@ -122,6 +122,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                 <h3>{notFoundLabel}</h3>
                 {notFoundComment}
                 <Button
+                    className={classes.addActivityButton}
                     variant="contained"
                     startIcon={<Add />}
                     onClick={createActivity.bind(this, currentInputValue)}
@@ -185,6 +186,9 @@ const useStyles = makeStyles({ "name": { ClickableList } })(theme => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+    },
+    addActivityButton: {
+        marginTop: "1rem",
     },
     option: {
         display: "flex",
