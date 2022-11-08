@@ -2,6 +2,7 @@ import { RawActiviteOption } from "interface/RawActiviteOption";
 import { getStoryFactory } from "stories/getStory";
 import { ClickableList } from "ui";
 import activites from "./activites.json";
+import iconNoResult from "./puzzle.svg";
 
 const options: RawActiviteOption[] = activites;
 
@@ -21,4 +22,6 @@ export const Default = getStory({
     notFoundComment:
         "Vous pourrez l'ajouter en cliquant sur le bouton ci-dessous, ou le bouton + ci-dessus",
     addActivityButtonLabel: "Ajouter l'activité",
+    iconNoResult: iconNoResult,
+    iconNoResultAlt: "alt pour icon no result",
 });

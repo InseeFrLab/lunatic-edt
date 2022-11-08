@@ -1,24 +1,24 @@
 import { Box } from "@mui/system";
 import { memo } from "react";
 import { makeStyles } from "tss-react/mui";
-import { InfoIcon } from "ui/assets/icons";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type InfoProps = {
     normalText: string;
     boldText: string;
+    infoIcon: string;
     infoIconAlt: string;
 };
 
 const Info = memo((props: InfoProps) => {
-    const { normalText, boldText, infoIconAlt } = props;
+    const { normalText, boldText, infoIcon, infoIconAlt } = props;
     const { classes } = useStyles();
 
     return (
         <Box className={classes.root}>
             <Box className={classes.titleWithIcon}>
                 <Box className={classes.iconContainer}>
-                    <img src={InfoIcon} alt={infoIconAlt} />
+                    <img src={infoIcon} alt={infoIconAlt} />
                 </Box>
                 <Box className={classes.title}>
                     <p className={classes.text}>{normalText}</p>
@@ -33,10 +33,10 @@ const Info = memo((props: InfoProps) => {
     );
 });
 
-const useStyles = makeStyles({ "name": { Info } })(_theme => ({
+const useStyles = makeStyles({ "name": { Info } })(theme => ({
     root: {
-        backgroundColor: "#FFFFFF",
-        border: "1px dashed #DCE7F9",
+        backgroundColor: theme.variables.white,
+        border: "1px dashed " + theme.variables.neutral,
         borderRadius: "13px",
         margin: "1rem",
         display: "flex",
@@ -68,11 +68,11 @@ const useStyles = makeStyles({ "name": { Info } })(_theme => ({
         width: "85%",
     },
     text: {
-        color: "#5C6F99",
+        color: theme.palette.action.hover,
         fontSize: "12px",
     },
     textBold: {
-        color: "#5C6F99",
+        color: theme.palette.action.hover,
         fontSize: "12px",
         fontWeight: "bold",
     },
