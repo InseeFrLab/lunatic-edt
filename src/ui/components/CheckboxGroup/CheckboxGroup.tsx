@@ -1,7 +1,7 @@
 import { Checkbox, Paper, Typography } from "@mui/material";
 import { CheckboxOption } from "interface/CheckboxOptions";
 import { memo } from "react";
-import { makeStyles } from "tss-react/mui";
+import { makeStylesEdt } from "../../theme";
 
 export type CheckboxGroupProps = {
     handleChange(response: { [name: string]: string }, value: boolean): void;
@@ -43,7 +43,7 @@ const CheckboxGroup = memo((props: CheckboxGroupProps) => {
     );
 });
 
-const useStyles = makeStyles({ "name": { CheckboxGroup } })(theme => ({
+const useStyles = makeStylesEdt({ "name": { CheckboxGroup } })(theme => ({
     root: {
         maxWidth: "100%",
         margin: "1rem",

@@ -4,7 +4,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { HourCheckerOption } from "interface/HourCheckerOptions";
 import React, { memo } from "react";
-import { makeStyles } from "tss-react/mui";
+import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type HourCheckerProps = {
@@ -136,7 +136,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
     );
 });
 
-const useStyles = makeStyles<{ width: string }>({ "name": { HourChecker } })((theme, { width }) => ({
+const useStyles = makeStylesEdt<{ width: string }>({ "name": { HourChecker } })((theme, { width }) => ({
     visible: {},
     hidden: {
         visibility: "hidden",

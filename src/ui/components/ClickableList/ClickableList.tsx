@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { RawActiviteOption } from "interface/RawActiviteOption";
 import React, { memo } from "react";
-import { makeStyles } from "tss-react/mui";
+import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type ClickableListProps = {
@@ -167,7 +167,7 @@ const ClickableList = memo((props: ClickableListProps) => {
     );
 });
 
-const useStyles = makeStyles({ "name": { ClickableList } })(theme => ({
+const useStyles = makeStylesEdt({ "name": { ClickableList } })(theme => ({
     root: {
         backgroundColor: theme.variables.white,
         borderColor: theme.variables.neutral,

@@ -1,9 +1,8 @@
-import React from "react";
-import { memo } from "react";
-import { makeStyles } from "tss-react/mui";
+import Box from "@mui/material/Box";
 import LinearProgress, { LinearProgressProps } from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
+import React, { memo } from "react";
+import { makeStylesEdt } from "../../theme";
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
     let labelTranslateX = props.value - 2;
@@ -50,7 +49,7 @@ const ProgressBar = memo((props: ProgressBarProps) => {
     );
 });
 
-const useStyles = makeStyles({ "name": { ProgressBar } })(theme => ({
+const useStyles = makeStylesEdt({ "name": { ProgressBar } })(theme => ({
     root: {
         "& .MuiLinearProgress-colorPrimary": {
             backgroundColor: theme.variables.neutral,

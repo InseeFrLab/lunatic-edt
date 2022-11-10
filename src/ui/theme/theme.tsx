@@ -1,6 +1,8 @@
 import { CssBaseline } from "@mui/material";
 import { createTheme, ThemeProvider as MuiProvider } from "@mui/material/styles";
 import type { ReactNode } from "react";
+import { EdtThemeOptions } from "./edt-theme";
+import { EdtTheme } from "./make-style-edt";
 
 const theme = createTheme({
     variables: {
@@ -14,7 +16,7 @@ const theme = createTheme({
             light: "#2C70DE",
         },
         secondary: {
-            main: "#f50057",
+            main: "#1f4076",
         },
         background: {
             default: "#f2f1f7",
@@ -22,6 +24,9 @@ const theme = createTheme({
         error: {
             main: "#d8765f",
             light: "#FCE7D8",
+        },
+        success: {
+            main: "#C1EDC3",
         },
         info: {
             main: "#1f4076",
@@ -38,7 +43,7 @@ const theme = createTheme({
         },
     },
     typography: {},
-});
+} as EdtThemeOptions) as EdtTheme;
 
 const ThemeProvider = (props: { children: ReactNode }) => {
     const { children } = props;
