@@ -49,7 +49,6 @@ export const generateStringInputFromDate = (date: Date): string => {
     return date.getFullYear() + "-" + (date.getMonth() +1) + "-" + date.getDate();
 }
 
-
 /**
  * Sets hours, minutes, seconds and milliseconds to 0 to allow comparison at date level
  * @param date 

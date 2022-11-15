@@ -67,7 +67,8 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 date={dayOverviewSelectedDate}
                 rawTimeLineData={generateDayOverviewTimelineRowData()}
                 activityData={activityData}
-                setActivityData={setActivityData}></DayOverview>
+                setActivityData={setActivityData}
+            ></DayOverview>
             <Box display={displayDayOverview ? "none" : "inline"}>
                 <Typography className={classes.title}>Planning de votre semaine</Typography>
                 <List className={classes.listContainer}>
@@ -77,7 +78,8 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                             key={uuidv4()}
                             setDisplayDayOverview={setDisplayDayOverview}
                             setDayOverviewSelectedDate={setDayOverviewSelectedDate}
-                            activityData={activityData}></DayPlanner>
+                            activityData={activityData}
+                        ></DayPlanner>
                     ))}
                 </List>
             </Box>
