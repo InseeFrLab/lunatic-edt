@@ -16,11 +16,6 @@ export type WeeklyPlannerProps = {
     data: WeeklyPlannerDataType[]
 };
 
-// TODO general,
-// Sum of working hours for one day
-// 
-
-
 /**
  * Generates a week of date starting from the startDate 
  * @param startDate 
@@ -63,9 +58,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         });
         setActivityData(temp);
     }, []);
-
-
-    console.log("activityData", activityData);
 
     return (
         <Box>
