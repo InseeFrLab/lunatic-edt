@@ -8,6 +8,7 @@ type MakeStylesParams =
           uniqId?: string | undefined;
       }
     | undefined;
+    
 type MakeStyleEdt<Params = void, RuleNameSubsetReferencableInNestedSelectors extends string = never> = <
     RuleName extends string,
 >(

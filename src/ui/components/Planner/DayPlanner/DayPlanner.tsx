@@ -1,6 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import React, { useEffect } from "react";
-import { makeStyles } from "tss-react/mui";
+import { makeStylesEdt } from "../../../theme";
 import { formateDateToFrenchFormat, setDateTimeToZero, generateDateFromStringInput } from "../../../utils";
 import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
@@ -78,7 +78,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     );
 });
 
-const useStyles = makeStyles({ "name": { DayPlanner } })(theme => ({
+const useStyles = makeStylesEdt({ "name": { DayPlanner } })(theme => ({
     mainContainer: {
         marginTop: "20px",
         width: "50%",

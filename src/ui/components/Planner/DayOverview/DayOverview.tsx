@@ -3,7 +3,7 @@ import { Box, List, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { memo } from "react";
-import { makeStyles } from "tss-react/mui";
+import { makeStylesEdt } from "../../../theme";
 import { formateDateToFrenchFormat, generateDateFromStringInput, setDateTimeToZero, convertTime } from "../../../utils";
 import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
 import { LunaticMultiSelectionValues } from "../../../../interface/LunaticMultiSelectionValues";
@@ -163,7 +163,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
     );
 });
 
-const useStyles = makeStyles({ "name": { DayOverview } })(theme => ({
+const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     mainContainer: {
         width: "50%",
         height: "100%",

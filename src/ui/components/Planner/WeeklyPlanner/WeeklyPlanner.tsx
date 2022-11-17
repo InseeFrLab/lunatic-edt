@@ -2,7 +2,7 @@ import { List, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect } from "react";
 import { memo } from "react";
-import { makeStyles } from "tss-react/mui";
+import { makeStylesEdt } from "../../../theme";
 import { v4 as uuidv4 } from 'uuid';
 import { createCustomizableLunaticField } from "../../../utils/create-customizable-lunatic-field";
 import DayOverview from "../DayOverview/DayOverview";
@@ -87,7 +87,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     );
 });
 
-const useStyles = makeStyles({ "name": { WeeklyPlanner } })(_theme => ({
+const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(_theme => ({
     listContainer: {
         display: "flex",
         flexDirection: "column",
