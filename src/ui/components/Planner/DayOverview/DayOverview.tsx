@@ -1,39 +1,42 @@
 import { Close } from "@mui/icons-material";
 import { Box, List, Typography } from "@mui/material";
-import React, { useEffect } from "react";
-import { v4 as uuidv4 } from 'uuid';
-import { memo } from "react";
-import { makeStylesEdt } from "../../../theme";
-import { formateDateToFrenchFormat, generateDateFromStringInput, setDateTimeToZero, convertTime } from "../../../utils";
+import React, { memo, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
 import { LunaticMultiSelectionValues } from "../../../../interface/LunaticMultiSelectionValues";
-import { WeeklyPlannerDataType, DayDetailType } from "../../../../interface/WeeklyPlannerTypes";
-import HourChecker from "../../HourChecker"
+import { DayDetailType, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
+import { makeStylesEdt } from "../../../theme";
+import {
+    convertTime,
+    formateDateToFrenchFormat,
+    generateDateFromStringInput,
+    setDateTimeToZero,
+} from "../../../utils";
+import HourChecker from "../../HourChecker";
 
 export type DayOverviewProps = {
-    date: Date,
-    isDisplayed: boolean,
-    setDisplayComponent(display: boolean): void,
-    rawTimeLineData: TimeLineRowType[],
-    activityData: WeeklyPlannerDataType[],
-    setActivityData(data: WeeklyPlannerDataType[]): void
+    date: Date;
+    isDisplayed: boolean;
+    setDisplayComponent(display: boolean): void;
+    rawTimeLineData: TimeLineRowType[];
+    activityData: WeeklyPlannerDataType[];
+    setActivityData(data: WeeklyPlannerDataType[]): void;
 };
 
 /**
  * Returns a formated string from Date
- * @param date 
- * @returns 
+ * @param date
+ * @returns
  */
 const formateDateLabel = (date: Date): string => {
     const formatedDate = formateDateToFrenchFormat(date);
     return formatedDate.toUpperCase();
-}
-
+};
 
 /**
  * Converts DayDetail array to values as LunaticMultiSelectionValues
- * @param details 
- * @returns 
+ * @param details
+ * @returns
  */
 const fromDayDetailsToValues = (details: DayDetailType[]): LunaticMultiSelectionValues => {
     const values: LunaticMultiSelectionValues = {};
@@ -53,11 +56,12 @@ const fromDayDetailsToValues = (details: DayDetailType[]): LunaticMultiSelection
         }
     });
     return values;
-}
+};
 
 const DayOverview = memo((props: DayOverviewProps) => {
     const { classes } = useStyles();
-    const { date, isDisplayed, setDisplayComponent, rawTimeLineData, activityData, setActivityData } = props;
+    const { date, isDisplayed, setDisplayComponent, rawTimeLineData, activityData, setActivityData } =
+        props;
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
     const [timeLineData, setTimeLineData] = React.useState<TimeLineRowType[]>(rawTimeLineData);
@@ -69,21 +73,23 @@ const DayOverview = memo((props: DayOverviewProps) => {
     // Update timeLineData for HourCheckers from activityData
     useEffect(() => {
         const temp: TimeLineRowType[] = JSON.parse(JSON.stringify(timeLineData));
-        const dayBloc: WeeklyPlannerDataType | undefined = activityData.find(d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime());
+        const dayBloc: WeeklyPlannerDataType | undefined = activityData.find(
+            d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
+        );
         let values: LunaticMultiSelectionValues = {};
 
         if (dayBloc) {
             values = fromDayDetailsToValues(dayBloc.detail);
         }
 
-        Object.entries(values).forEach((v) => {
+        Object.entries(values).forEach(v => {
             const row: TimeLineRowType | undefined = temp.find((t: TimeLineRowType) => {
-                return t.options.find(o => o.response.name === v[0])
+                return t.options.find(o => o.response.name === v[0]);
             });
             if (row) {
                 row.value[v[0]] = v[1];
             }
-        })
+        });
         setTimeLineData(temp);
     }, [date]);
 
@@ -93,7 +99,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
     const closeComponent = () => {
         setTimeLineData(rawTimeLineData);
         setDisplayComponent(false);
-    }
+    };
 
     /**
      * Callback triggered when a value is changed in one HourChecker
@@ -101,21 +107,25 @@ const DayOverview = memo((props: DayOverviewProps) => {
      */
     const updateValue = () => {
         const temp: WeeklyPlannerDataType[] = [...activityData];
-        let dayBloc: WeeklyPlannerDataType = temp.filter(d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime())[0];
+        let dayBloc: WeeklyPlannerDataType = temp.filter(
+            d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
+        )[0];
         let valuesList: LunaticMultiSelectionValues = {};
 
         // Create list of all LunaticMultiSelectionValues for this day
-        timeLineData.map(t => t.value).forEach(t => {
-            Object.entries(t).forEach(([key, value]) => {
-                valuesList[key] = value;
-            })
-        });
+        timeLineData
+            .map(t => t.value)
+            .forEach(t => {
+                Object.entries(t).forEach(([key, value]) => {
+                    valuesList[key] = value;
+                });
+            });
 
         let details: DayDetailType[] = [];
 
-        let startHour: string = "start";
-        let endHour: string = "end";
-        let durationTime: number = 0;
+        let startHour = "start";
+        let endHour = "end";
+        let durationTime = 0;
 
         Object.entries(valuesList).forEach(([key, value]) => {
             if (value && startHour === "start") {
@@ -130,7 +140,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
                 details.push({
                     start: startHour,
                     end: endHour,
-                    duration: durationTime
+                    duration: durationTime,
                 });
                 startHour = "start";
                 endHour = "end";
@@ -140,15 +150,23 @@ const DayOverview = memo((props: DayOverviewProps) => {
 
         dayBloc.detail = details;
         setActivityData(temp);
-    }
+    };
 
     const renderRow = (h: TimeLineRowType): any => {
-        return (<Box className={classes.rowContainer} key={uuidv4()}>
-            <Typography className={classes.rowLabel}>{h.label}</Typography>
-            <HourChecker responses={h.options} value={h.value} handleChange={() => updateValue()}></HourChecker>
-        </Box>
+        return (
+            <Box className={classes.rowContainer} key={uuidv4()}>
+                <Box className={classes.rowLabel}>
+                    <Typography className={classes.hourLabel}>{h.label}</Typography>
+                </Box>
+
+                <HourChecker
+                    responses={h.options}
+                    value={h.value}
+                    handleChange={() => updateValue()}
+                ></HourChecker>
+            </Box>
         );
-    }
+    };
 
     return (
         <Box className={classes.mainContainer} display={componentDisplay}>
@@ -156,24 +174,20 @@ const DayOverview = memo((props: DayOverviewProps) => {
                 <Typography className={classes.dayLabel}>{formateDateLabel(date)}</Typography>
                 <Close onClick={closeComponent}></Close>
             </Box>
-            <List className={classes.listContainer}>
-                {timeLineData.map((l => renderRow(l)))}
-            </List>
+            <List className={classes.listContainer}>{timeLineData.map(l => renderRow(l))}</List>
         </Box>
     );
 });
 
 const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     mainContainer: {
-        width: "50%",
-        height: "100%",
         flexDirection: "column",
     },
     headerContainer: {
         backgroundColor: theme.variables.white,
         width: "100%",
         display: "flex",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
     },
     dayLabel: {
         color: theme.palette.info.main,
@@ -185,16 +199,16 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     },
     rowContainer: {
         display: "flex",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
     },
     rowLabel: {
+        width: "40px",
+        marginRight: "1rem",
+    },
+    hourLabel: {
         color: theme.palette.info.main,
         fontSize: "12px",
     },
-    rowHourChecker: {
-        // TODO set width correctly
-        width: "80%"
-    }
 }));
 
 export default DayOverview;

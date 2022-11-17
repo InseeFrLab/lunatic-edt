@@ -1,25 +1,29 @@
 import { List, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useEffect } from "react";
-import { memo } from "react";
+import React, { memo, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
-import { v4 as uuidv4 } from 'uuid';
+import {
+    generateDateFromStringInput,
+    generateDayOverviewTimelineRowData,
+    generateStringInputFromDate,
+    getFrenchDayFromDate,
+    setDateTimeToZero,
+} from "../../../utils";
 import { createCustomizableLunaticField } from "../../../utils/create-customizable-lunatic-field";
 import DayOverview from "../DayOverview/DayOverview";
 import DayPlanner from "../DayPlanner/DayPlanner";
-import { generateDayOverviewTimelineRowData, generateDateFromStringInput, setDateTimeToZero, generateStringInputFromDate, getFrenchDayFromDate } from "../../../utils";
-import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes"
 
 export type WeeklyPlannerProps = {
-    // french format: dd/mm/yyyy
-    startDate: string,
-    data: WeeklyPlannerDataType[]
+    startDate: string;
+    data: WeeklyPlannerDataType[];
 };
 
 /**
- * Generates a week of date starting from the startDate 
- * @param startDate 
- * @returns 
+ * Generates a week of date starting from the startDate
+ * @param startDate
+ * @returns
  */
 const generateDayList = (startDate: Date): Date[] => {
     const dayList: Date[] = [startDate];
@@ -29,7 +33,7 @@ const generateDayList = (startDate: Date): Date[] => {
         dayList.push(newDate);
     }
     return dayList;
-}
+};
 
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const { classes } = useStyles();
@@ -39,20 +43,23 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const dayList = generateDayList(startDateFormated);
 
     const [displayDayOverview, setDisplayDayOverview] = React.useState<boolean>(false);
-    const [dayOverviewSelectedDate, setDayOverviewSelectedDate] = React.useState<Date>(startDateFormated);
+    const [dayOverviewSelectedDate, setDayOverviewSelectedDate] =
+        React.useState<Date>(startDateFormated);
     const [activityData, setActivityData] = React.useState<WeeklyPlannerDataType[]>([]);
 
     // Complete activity data with default values for all days of the week if it was not the case in data input
     useEffect(() => {
         const temp: WeeklyPlannerDataType[] = [...data];
         dayList.forEach(date => {
-            let dayBloc: WeeklyPlannerDataType | undefined = temp.find(d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime());
+            let dayBloc: WeeklyPlannerDataType | undefined = temp.find(
+                d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
+            );
             if (!dayBloc) {
                 dayBloc = {
                     date: generateStringInputFromDate(date),
                     day: getFrenchDayFromDate(date),
-                    detail: []
-                }
+                    detail: [],
+                };
                 temp.push(dayBloc);
             }
         });
@@ -72,7 +79,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
             <Box display={displayDayOverview ? "none" : "inline"}>
                 <Typography className={classes.title}>Planning de votre semaine</Typography>
                 <List className={classes.listContainer}>
-                    {dayList.map((d =>
+                    {dayList.map(d => (
                         <DayPlanner
                             date={d}
                             key={uuidv4()}
@@ -93,6 +100,7 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(_theme => ({
         flexDirection: "column",
     },
     title: {
+        marginTop: "2rem",
         fontSize: "14px",
     },
 }));

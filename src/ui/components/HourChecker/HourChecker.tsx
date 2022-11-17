@@ -68,7 +68,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
     };
 
     return (
-        <Box sx={{ maxWidth: "1024px" }} component="div">
+        <Box className={classes.globalBox} component="div">
             <Box
                 sx={{ display: "flex", cursor: "pointer" }}
                 className={!isOpen ? classes.visible : classes.hidden}
@@ -137,6 +137,10 @@ const HourChecker = memo((props: HourCheckerProps) => {
 });
 
 const useStyles = makeStylesEdt<{ width: string }>({ "name": { HourChecker } })((theme, { width }) => ({
+    globalBox: {
+        maxWidth: "1024px",
+        width: "100%",
+    },
     visible: {},
     hidden: {
         visibility: "hidden",
