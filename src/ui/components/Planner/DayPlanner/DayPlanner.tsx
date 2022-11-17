@@ -1,18 +1,16 @@
 import { Box, Button, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { makeStyles } from "tss-react/mui";
-import { formateDate } from "../../../utils";
+import { formateDateToFrenchFormat, setDateTimeToZero, generateDateFromStringInput } from "../../../utils";
+import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 export type DayPlannerProps = {
     date: Date,
     setDisplayDayOverview(display: boolean): void,
-    setDayOverviewSelectedDate(date: Date): void
+    setDayOverviewSelectedDate(date: Date): void,
+    activityData: WeeklyPlannerDataType[]
 };
-
-// TODO temp to have past, present and future together for dev
-const todayDay: Date = new Date();
-todayDay.setDate(todayDay.getDate() + 2);
 
 enum DayRelativeTimeEnum {
     Past = -1,
@@ -20,36 +18,47 @@ enum DayRelativeTimeEnum {
     Future = 1
 }
 
-const renderDateLabel = (date: Date) => {
-    const formatedDate = formateDate(date);
+const renderDateLabel = (date: Date): string => {
+    const formatedDate: string = formateDateToFrenchFormat(date);
     return formatedDate.charAt(0).toUpperCase() + formatedDate.slice(1);
 }
 
 const DayPlanner = React.memo((props: DayPlannerProps) => {
-    const { date, setDisplayDayOverview, setDayOverviewSelectedDate } = props;
     const { classes } = useStyles();
-    const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
+    const { date, setDisplayDayOverview, setDayOverviewSelectedDate, activityData } = props;
 
+    const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
+    const [workedHoursSum, setWorkedHoursSum] = React.useState<number>(0);
+
+    const todayDate: Date = setDateTimeToZero(new Date());
+
+    // Define DayRelativeTime for each day of the week regarding the current day
     useEffect(() => {
-        date.getDate() >= todayDay.getDate()
-            ? date.getDate() === todayDay.getDate()
+        date.getTime() >= todayDate.getTime()
+            ? date.getTime() === todayDate.getTime()
                 ? setDayRelativeTime(DayRelativeTimeEnum.Today)
                 : setDayRelativeTime(DayRelativeTimeEnum.Future)
             : setDayRelativeTime(DayRelativeTimeEnum.Past);
     }, [date]);
 
+    useEffect(() => {
+        const dayBloc: WeeklyPlannerDataType = activityData.filter(d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime())[0];
+        const sum: number = dayBloc?.detail.reduce((sum, val) => sum + val.duration, 0);
+        setWorkedHoursSum(sum);
+    }, [activityData])
+
     /**
      * Callback for buttons and three dots icon
      */
-    const buttonsOnClick = () => {
+    const buttonsOnClick = (): void => {
         setDisplayDayOverview(true);
         setDayOverviewSelectedDate(date);
     }
 
     const renderBottomPart = () => {
         return dayRelativeTime === -1
-            ? (<Typography>Durée totale travaillée :</Typography>)
-            : dayRelativeTime === 0
+            ? (<Typography>Durée totale travaillée : {workedHoursSum} minutes</Typography>)
+            : dayRelativeTime === 0 || workedHoursSum !== 0
                 ? (<Button className={classes.buttonPresent} onClick={buttonsOnClick}>Continuer</Button>)
                 : (<Button className={classes.buttonFuture} onClick={buttonsOnClick}>Commencer</Button>)
     }
