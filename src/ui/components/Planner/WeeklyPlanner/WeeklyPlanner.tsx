@@ -2,7 +2,7 @@ import { List, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
+import { WeeklyPlannerDataType, WeeklyPlannerValue } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
 import {
     generateDateFromStringInput,
@@ -16,8 +16,8 @@ import DayOverview from "../DayOverview/DayOverview";
 import DayPlanner from "../DayPlanner/DayPlanner";
 
 export type WeeklyPlannerProps = {
-    startDate: string;
-    data: WeeklyPlannerDataType[];
+    onChange(value: WeeklyPlannerValue): void;
+    value: WeeklyPlannerValue;
 };
 
 /**
@@ -37,7 +37,9 @@ const generateDayList = (startDate: Date): Date[] => {
 
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const { classes } = useStyles();
-    let { startDate, data } = props;
+    let { value, onChange } = props;
+    const startDate = value?.startDate || "2022-11-17";
+    const data = value?.data;
 
     const startDateFormated: Date = setDateTimeToZero(generateDateFromStringInput(startDate));
     const dayList = generateDayList(startDateFormated);
@@ -49,7 +51,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
 
     // Complete activity data with default values for all days of the week if it was not the case in data input
     useEffect(() => {
-        const temp: WeeklyPlannerDataType[] = [...data];
+        const temp: WeeklyPlannerDataType[] = data ? [...data] : [];
         dayList.forEach(date => {
             let dayBloc: WeeklyPlannerDataType | undefined = temp.find(
                 d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
@@ -65,6 +67,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         });
         setActivityData(temp);
     }, []);
+
+    useEffect(() => {
+        onChange({ startDate: startDate, data: activityData });
+    }, [activityData]);
 
     return (
         <Box>
