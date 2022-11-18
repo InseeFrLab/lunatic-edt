@@ -3,7 +3,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 
 export type DatepickerProps = {
@@ -21,6 +21,10 @@ const Datepicker = memo((props: DatepickerProps) => {
     const { id, onChange, value, readOnly, disabled } = props;
     const { classes } = useStyles();
     const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
+
+    useEffect(() => {
+        onChange(valueLocal?.format("YYYY-MM-DD") || null);
+    }, []);
 
     function setValueLunatic(newValue: Dayjs | null) {
         setValue(newValue);
