@@ -49,7 +49,6 @@ const Datepicker = memo((props: DatepickerProps) => {
 const useStyles = makeStylesEdt({ "name": { Datepicker } })(() => ({
     input: {
         width: "100%",
-        maxWidth: "300px",
     },
 }));
 

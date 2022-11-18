@@ -42,7 +42,6 @@ export const Input = memo((props: InputProps) => {
 const useStyles = makeStylesEdt({ "name": { Input } })(() => ({
     input: {
         width: "100%",
-        maxWidth: "300px",
     },
 }));
 
