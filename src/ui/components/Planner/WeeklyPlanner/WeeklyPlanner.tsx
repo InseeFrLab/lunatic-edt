@@ -16,8 +16,9 @@ import DayOverview from "../DayOverview/DayOverview";
 import DayPlanner from "../DayPlanner/DayPlanner";
 
 export type WeeklyPlannerProps = {
-    onChange(value: WeeklyPlannerValue): void;
-    value: WeeklyPlannerValue;
+    handleChange(response: { [name: string]: string }, value: string): void;
+    value: string;
+    surveyDate: string
 };
 
 /**
@@ -37,9 +38,11 @@ const generateDayList = (startDate: Date): Date[] => {
 
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const { classes } = useStyles();
-    let { value, onChange } = props;
-    const startDate = value?.startDate || "2022-11-17";
-    const data = value?.data;
+    let { value, handleChange, surveyDate } = props;
+
+    const values : WeeklyPlannerValue = JSON.parse(value);
+    const startDate: string = surveyDate;
+    const data: WeeklyPlannerDataType[] | undefined = values?.data;
 
     const startDateFormated: Date = setDateTimeToZero(generateDateFromStringInput(startDate));
     const dayList = generateDayList(startDateFormated);
@@ -69,7 +72,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     }, []);
 
     useEffect(() => {
-        onChange({ startDate: startDate, data: activityData });
+        handleChange({name: "WEEKLYPLANNER"}, JSON.stringify({"startDate": startDate, "data": activityData}));
     }, [activityData]);
 
     return (
