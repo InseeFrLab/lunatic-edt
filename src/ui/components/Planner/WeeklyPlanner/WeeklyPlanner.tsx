@@ -18,7 +18,7 @@ import DayPlanner from "../DayPlanner/DayPlanner";
 export type WeeklyPlannerProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
     value: string;
-    surveyDate: string
+    surveyDate: string;
 };
 
 /**
@@ -40,7 +40,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const { classes } = useStyles();
     let { value, handleChange, surveyDate } = props;
 
-    const values : WeeklyPlannerValue = JSON.parse(value);
+    const values: WeeklyPlannerValue = JSON.parse(value);
     const startDate: string = surveyDate;
     const data: WeeklyPlannerDataType[] | undefined = values?.data;
 
@@ -72,7 +72,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     }, []);
 
     useEffect(() => {
-        handleChange({name: "WEEKLYPLANNER"}, JSON.stringify({"startDate": startDate, "data": activityData}));
+        handleChange(
+            { name: "WEEKLYPLANNER" },
+            JSON.stringify({ "startDate": startDate, "data": activityData }),
+        );
     }, [activityData]);
 
     return (
@@ -103,7 +106,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     );
 });
 
-const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(_theme => ({
+const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(() => ({
     listContainer: {
         display: "flex",
         flexDirection: "column",
