@@ -200,6 +200,7 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     rowContainer: {
         display: "flex",
         justifyContent: "space-between",
+        marginBottom: "0.25rem",
     },
     rowLabel: {
         width: "40px",
