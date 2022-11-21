@@ -31,7 +31,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     const { classes, cx } = useStyles();
     const { date, setDisplayDayOverview, setDayOverviewSelectedDate, activityData } = props;
 
-    const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
+    const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>(-1);
     const [workedHoursSum, setWorkedHoursSum] = React.useState<number>(0);
 
     const todayDate: Date = setDateTimeToZero(new Date());

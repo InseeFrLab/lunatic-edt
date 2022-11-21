@@ -1,4 +1,3 @@
-import { Close } from "@mui/icons-material";
 import { Box, List, Typography } from "@mui/material";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -17,7 +16,6 @@ import HourChecker from "../../HourChecker";
 export type DayOverviewProps = {
     date: Date;
     isDisplayed: boolean;
-    setDisplayComponent(display: boolean): void;
     rawTimeLineData: TimeLineRowType[];
     activityData: WeeklyPlannerDataType[];
     setActivityData(data: WeeklyPlannerDataType[]): void;
@@ -60,19 +58,17 @@ const fromDayDetailsToValues = (details: DayDetailType[]): LunaticMultiSelection
 
 const DayOverview = memo((props: DayOverviewProps) => {
     const { classes } = useStyles();
-    const { date, isDisplayed, setDisplayComponent, rawTimeLineData, activityData, setActivityData } =
+    const { date, isDisplayed, rawTimeLineData, activityData, setActivityData } =
         props;
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
     const [timeLineData, setTimeLineData] = React.useState<TimeLineRowType[]>(rawTimeLineData);
 
-    useEffect(() => {
-        isDisplayed ? setComponentDisplay("flex") : setComponentDisplay("none");
-    }, [isDisplayed]);
+    
 
     // Update timeLineData for HourCheckers from activityData
     useEffect(() => {
-        const temp: TimeLineRowType[] = JSON.parse(JSON.stringify(timeLineData));
+        const temp: TimeLineRowType[] = JSON.parse(JSON.stringify(rawTimeLineData));
         const dayBloc: WeeklyPlannerDataType | undefined = activityData.find(
             d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
         );
@@ -93,13 +89,12 @@ const DayOverview = memo((props: DayOverviewProps) => {
         setTimeLineData(temp);
     }, [date]);
 
-    /**
-     * callBack on component close
-     */
-    const closeComponent = () => {
-        setTimeLineData(rawTimeLineData);
-        setDisplayComponent(false);
-    };
+    useEffect(() => {
+        if (activityData.length !== 0 && !isDisplayed) {
+            updateValue();
+        }
+        isDisplayed ? setComponentDisplay("flex") : setComponentDisplay("none");
+    }, [isDisplayed]);
 
     /**
      * Callback triggered when a value is changed in one HourChecker
@@ -162,7 +157,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
                 <HourChecker
                     responses={h.options}
                     value={h.value}
-                    handleChange={() => updateValue()}
+                    handleChange={() => {}}
                 ></HourChecker>
             </Box>
         );
@@ -172,7 +167,6 @@ const DayOverview = memo((props: DayOverviewProps) => {
         <Box className={classes.mainContainer} display={componentDisplay}>
             <Box className={classes.headerContainer}>
                 <Typography className={classes.dayLabel}>{formateDateLabel(date)}</Typography>
-                <Close onClick={closeComponent}></Close>
             </Box>
             <List className={classes.listContainer}>{timeLineData.map(l => renderRow(l))}</List>
         </Box>
@@ -200,7 +194,7 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     rowContainer: {
         display: "flex",
         justifyContent: "space-between",
-        marginBottom: "0.25rem",
+        marginBottom: "0.5rem",
     },
     rowLabel: {
         width: "40px",

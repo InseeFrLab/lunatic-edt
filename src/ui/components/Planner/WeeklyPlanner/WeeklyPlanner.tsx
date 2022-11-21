@@ -19,6 +19,8 @@ export type WeeklyPlannerProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
     value: string;
     surveyDate: string;
+    isSubChildDisplayed: boolean;
+    setIsSubChildDisplayed(value: boolean): void;
 };
 
 /**
@@ -38,7 +40,7 @@ const generateDayList = (startDate: Date): Date[] => {
 
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const { classes } = useStyles();
-    let { value, handleChange, surveyDate } = props;
+    let { value, handleChange, surveyDate, isSubChildDisplayed, setIsSubChildDisplayed } = props;
 
     const values: WeeklyPlannerValue = JSON.parse(value);
     const startDate: string = surveyDate;
@@ -47,7 +49,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const startDateFormated: Date = setDateTimeToZero(generateDateFromStringInput(startDate));
     const dayList = generateDayList(startDateFormated);
 
-    const [displayDayOverview, setDisplayDayOverview] = React.useState<boolean>(false);
     const [dayOverviewSelectedDate, setDayOverviewSelectedDate] =
         React.useState<Date>(startDateFormated);
     const [activityData, setActivityData] = React.useState<WeeklyPlannerDataType[]>([]);
@@ -81,21 +82,20 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     return (
         <Box>
             <DayOverview
-                isDisplayed={displayDayOverview}
-                setDisplayComponent={setDisplayDayOverview}
+                isDisplayed={isSubChildDisplayed}
                 date={dayOverviewSelectedDate}
                 rawTimeLineData={generateDayOverviewTimelineRowData()}
                 activityData={activityData}
                 setActivityData={setActivityData}
             ></DayOverview>
-            <Box display={displayDayOverview ? "none" : "inline"}>
+            <Box display={isSubChildDisplayed ? "none" : "inline"}>
                 <Typography className={classes.title}>Planning de votre semaine</Typography>
                 <List className={classes.listContainer}>
                     {dayList.map(d => (
                         <DayPlanner
                             date={d}
                             key={uuidv4()}
-                            setDisplayDayOverview={setDisplayDayOverview}
+                            setDisplayDayOverview={setIsSubChildDisplayed}
                             setDayOverviewSelectedDate={setDayOverviewSelectedDate}
                             activityData={activityData}
                         ></DayPlanner>
