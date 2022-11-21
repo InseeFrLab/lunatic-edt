@@ -91,7 +91,8 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         return dayRelativeTime === -1 ? (
             <Box className={classes.textBox}>
                 <Typography className={classes.workTimeText}>
-                    {workSumLabel}<span className={classes.bold}>{getFormatedWorkedSum()}</span>
+                    {workSumLabel}
+                    <span className={classes.bold}>{getFormatedWorkedSum()}</span>
                 </Typography>
             </Box>
         ) : dayRelativeTime === 0 || workedHoursSum !== 0 ? (
