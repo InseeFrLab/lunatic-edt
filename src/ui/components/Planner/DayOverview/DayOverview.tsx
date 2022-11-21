@@ -151,7 +151,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
                     <Typography className={classes.hourLabel}>{h.label}</Typography>
                 </Box>
 
-                <HourChecker responses={h.options} value={h.value}></HourChecker>
+                <HourChecker responses={h.options} value={h.value} />
             </Box>
         );
     };
