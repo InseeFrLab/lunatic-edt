@@ -8,4 +8,4 @@ const { meta, getStory } = getStoryFactory({
 
 export default meta;
 
-export const Default = getStory({});
+export const Default = getStory({value: 20});

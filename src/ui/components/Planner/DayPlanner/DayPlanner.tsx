@@ -1,6 +1,7 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Box, Button, Typography } from "@mui/material";
 import React, { useEffect } from "react";
+import ProgressBar from "../../ProgressBar";
 import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
 import {
@@ -97,6 +98,9 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
             </Box>
         ) : dayRelativeTime === 0 || workedHoursSum !== 0 ? (
             <Box className={classes.buttonBox}>
+                {dayRelativeTime === 0 && 
+                    <ProgressBar className={classes.progressBar} value={Math.round(new Date().getHours()/24*100)}/>
+                }
                 <Button className={classes.button} onClick={buttonsOnClick}>
                     {presentButtonLabel}
                 </Button>
@@ -164,16 +168,20 @@ const useStyles = makeStylesEdt({ "name": { DayPlanner } })(theme => ({
     buttonBox: {
         width: "100%",
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
-        marginTop: "2rem",
     },
     button: {
+        marginTop: "1.5rem",
         color: theme.variables.white,
         width: "100%",
         backgroundColor: theme.palette.primary.main,
     },
     buttonFuture: {
         backgroundColor: theme.palette.action.hover,
+    },
+    progressBar: {
+        marginTop: "1rem",
     },
     clickable: {
         cursor: "pointer",

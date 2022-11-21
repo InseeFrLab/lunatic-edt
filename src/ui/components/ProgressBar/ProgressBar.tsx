@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import React, { memo } from "react";
 import { makeStylesEdt } from "../../theme";
 
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number, displayValue?: boolean }) {
     let labelTranslateX = props.value - 2;
     return (
         <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -12,45 +12,42 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
                 <LinearProgress variant="determinate" {...props} />
             </Box>
             <Box sx={{ minWidth: 35, ml: 1 }}>
-                <Typography
-                    style={{ transform: "translateX(" + labelTranslateX + "%)" }}
-                    color="primary"
-                >{`${Math.round(props.value)}%`}</Typography>
+                {props.displayValue && (
+                    <Typography
+                        style={{ fontSize: "12px", transform: "translateX(" + labelTranslateX + "%)" }}
+                        color="primary"
+                    >{props.value}%</Typography>
+                )}
             </Box>
         </Box>
     );
 }
 
 export type ProgressBarProps = {
+    value: number;
+    displayValue?: boolean;
     id?: string;
+    className?: string;
 };
 
 const ProgressBar = memo((props: ProgressBarProps) => {
     //TODO : to complete when we know how to override/use it from lunatic
-    const { id } = props;
+    const { value, displayValue, id, className } = props;
 
-    const [progress, setProgress] = React.useState(10);
+    const [progress, setProgress] = React.useState(value);
 
-    React.useEffect(() => {
-        const timer = setInterval(() => {
-            setProgress(prevProgress => (prevProgress >= 100 ? 10 : prevProgress + 10));
-        }, 800);
-        return () => {
-            clearInterval(timer);
-        };
-    }, []);
-
-    const { classes } = useStyles();
+    const { classes, cx } = useStyles();
 
     return (
-        <Box sx={{ width: "100%" }} className={classes.root}>
-            <LinearProgressWithLabel id={id} value={progress} />
+        <Box className={cx(className, classes.root)}>
+            <LinearProgressWithLabel id={id} value={progress} displayValue={displayValue} />
         </Box>
     );
 });
 
 const useStyles = makeStylesEdt({ "name": { ProgressBar } })(theme => ({
     root: {
+        width: "100%",
         "& .MuiLinearProgress-colorPrimary": {
             backgroundColor: theme.variables.neutral,
             borderRadius: "10px",

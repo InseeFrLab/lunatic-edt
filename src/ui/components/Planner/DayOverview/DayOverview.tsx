@@ -1,5 +1,6 @@
 import { Box, List, Typography } from "@mui/material";
 import React, { memo, useEffect } from "react";
+import ProgressBar from "../../ProgressBar";
 import { v4 as uuidv4 } from "uuid";
 import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
 import { LunaticMultiSelectionValues } from "../../../../interface/LunaticMultiSelectionValues";
@@ -160,6 +161,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
         <Box className={classes.mainContainer} display={componentDisplay}>
             <Box className={classes.headerContainer}>
                 <Typography className={classes.dayLabel}>{formateDateLabel(date)}</Typography>
+                <ProgressBar className={classes.progressBar} value={Math.round(new Date().getHours()/24*100)}/>
             </Box>
             <List className={classes.listContainer}>{timeLineData.map(l => renderRow(l))}</List>
         </Box>
@@ -174,11 +176,20 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
         backgroundColor: theme.variables.white,
         width: "100%",
         display: "flex",
+        flexDirection: "column",
         justifyContent: "space-between",
     },
     dayLabel: {
         color: theme.palette.info.main,
         fontSize: "14px",
+        paddingLeft: "1rem",
+        paddingTop: "1rem",
+    },
+    progressBar: {
+        marginTop: "1rem",
+        marginBottom: "2rem",
+        paddingLeft: "1rem",
+        paddingRight: "1rem"
     },
     listContainer: {
         display: "flex",

@@ -3,6 +3,7 @@ import { Box } from "@mui/system";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { WeeklyPlannerDataType, WeeklyPlannerValue } from "../../../../interface/WeeklyPlannerTypes";
+import ProgressBar from "../../ProgressBar";
 import { makeStylesEdt } from "../../../theme";
 import {
     generateDateFromStringInput,
@@ -103,6 +104,11 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 setActivityData={setActivityData}
             ></DayOverview>
             <Box display={isSubChildDisplayed ? "none" : "inline"}>
+                <ProgressBar 
+                    className={classes.progressBar} 
+                    value={25}
+                    displayValue={true}
+                />
                 <Typography className={classes.title}>{title}</Typography>
                 <List className={classes.listContainer}>
                     {dayList.map(d => (
@@ -123,7 +129,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     );
 });
 
-const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(() => ({
+const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })((theme) => ({
     listContainer: {
         display: "flex",
         flexDirection: "column",
@@ -131,6 +137,12 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(() => ({
     title: {
         marginTop: "2rem",
         fontSize: "14px",
+    },
+    progressBar: {
+        marginTop: "1rem",
+        marginBottom: "1rem",
+        padding: "1rem",
+        backgroundColor: theme.variables.white,
     },
 }));
 
