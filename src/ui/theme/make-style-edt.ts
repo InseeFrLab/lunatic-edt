@@ -2,6 +2,11 @@ import { makeStyles } from "tss-react/mui";
 import { Css, CSSObject, Cx } from "tss-react/types";
 import { EdtTheme } from "./edt-theme";
 
+/*
+ *     MakeStylesEdt is an extension that was made from makeStyles.
+ *     It does exactly the same thing except the returned theme from the function is typed as EdtTheme
+ *     that is the custom theme of the app.
+ */
 type MakeStylesParams =
     | {
           name?: string | Record<string, unknown> | undefined;
