@@ -1,1 +1,1 @@
-export {default as WeeklyPlanner} from "./WeeklyPlanner";
+export { default as WeeklyPlanner } from "./WeeklyPlanner";

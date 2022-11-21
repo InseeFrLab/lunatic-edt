@@ -58,13 +58,10 @@ const fromDayDetailsToValues = (details: DayDetailType[]): LunaticMultiSelection
 
 const DayOverview = memo((props: DayOverviewProps) => {
     const { classes } = useStyles();
-    const { date, isDisplayed, rawTimeLineData, activityData, setActivityData } =
-        props;
+    const { date, isDisplayed, rawTimeLineData, activityData, setActivityData } = props;
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
     const [timeLineData, setTimeLineData] = React.useState<TimeLineRowType[]>(rawTimeLineData);
-
-    
 
     // Update timeLineData for HourCheckers from activityData
     useEffect(() => {
@@ -154,11 +151,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
                     <Typography className={classes.hourLabel}>{h.label}</Typography>
                 </Box>
 
-                <HourChecker
-                    responses={h.options}
-                    value={h.value}
-                    handleChange={() => {}}
-                ></HourChecker>
+                <HourChecker responses={h.options} value={h.value}></HourChecker>
             </Box>
         );
     };

@@ -1,3 +1,3 @@
 export type LunaticMultiSelectionValues = {
-    [key: string]: boolean
-}
+    [key: string]: boolean;
+};

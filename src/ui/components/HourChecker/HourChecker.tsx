@@ -8,7 +8,7 @@ import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type HourCheckerProps = {
-    handleChange(response: { [name: string]: string }, value: boolean): void;
+    handleChange?(response: { [name: string]: string }, value: boolean): void;
     id?: string;
     responses: HourCheckerOption[];
     value: { [key: string]: boolean };
@@ -62,9 +62,11 @@ const HourChecker = memo((props: HourCheckerProps) => {
     };
 
     const saveLunaticData = () => {
-        responsesValues.forEach((name: string) => {
-            handleChange({ name: name }, value[name]);
-        });
+        if (handleChange) {
+            responsesValues.forEach((name: string) => {
+                handleChange({ name: name }, value[name]);
+            });
+        }
     };
 
     return (
