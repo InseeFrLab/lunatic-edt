@@ -65,7 +65,8 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         return dayRelativeTime === -1 ? (
             <Box className={classes.textBox}>
                 <Typography className={classes.workTimeText}>
-                    Durée totale travaillée : <b>{workedHoursSum}</b> minutes
+                    Durée totale travaillée : <span className={classes.bold}>{workedHoursSum}</span>{" "}
+                    minutes
                 </Typography>
             </Box>
         ) : dayRelativeTime === 0 || workedHoursSum !== 0 ? (
@@ -92,7 +93,9 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                 )}
             >
                 <Box className={dayRelativeTime === -1 ? classes.dayAndDotsContainer : ""}>
-                    <Typography className={classes.dayLabel}>{renderDateLabel(date)}</Typography>
+                    <Typography className={cx(classes.dayLabel, classes.bold)}>
+                        {renderDateLabel(date)}
+                    </Typography>
                     {dayRelativeTime === -1 ? (
                         <MoreHorizIcon
                             className={classes.clickable}
@@ -125,7 +128,6 @@ const useStyles = makeStylesEdt({ "name": { DayPlanner } })(theme => ({
     },
     dayLabel: {
         fontSize: "16px",
-        fontWeight: "bold",
     },
     textBox: {
         marginTop: "1rem",
@@ -149,6 +151,9 @@ const useStyles = makeStylesEdt({ "name": { DayPlanner } })(theme => ({
     },
     clickable: {
         cursor: "pointer",
+    },
+    bold: {
+        fontWeight: "bold",
     },
 }));
 
