@@ -21,6 +21,10 @@ export type WeeklyPlannerProps = {
     surveyDate: string;
     isSubChildDisplayed: boolean;
     setIsSubChildDisplayed(value: boolean): void;
+    title: string;
+    workSumLabel?: string;
+    presentButtonLabel?: string;
+    pastButtonLabel?: string;
 };
 
 /**
@@ -40,7 +44,17 @@ const generateDayList = (startDate: Date): Date[] => {
 
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const { classes } = useStyles();
-    let { value, handleChange, surveyDate, isSubChildDisplayed, setIsSubChildDisplayed } = props;
+    let {
+        value,
+        handleChange,
+        surveyDate,
+        isSubChildDisplayed,
+        setIsSubChildDisplayed,
+        title,
+        workSumLabel,
+        presentButtonLabel,
+        pastButtonLabel,
+    } = props;
 
     const values: WeeklyPlannerValue = JSON.parse(value);
     const startDate: string = surveyDate;
@@ -89,7 +103,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 setActivityData={setActivityData}
             ></DayOverview>
             <Box display={isSubChildDisplayed ? "none" : "inline"}>
-                <Typography className={classes.title}>Planning de votre semaine</Typography>
+                <Typography className={classes.title}>{title}</Typography>
                 <List className={classes.listContainer}>
                     {dayList.map(d => (
                         <DayPlanner
@@ -98,6 +112,9 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                             setDisplayDayOverview={setIsSubChildDisplayed}
                             setDayOverviewSelectedDate={setDayOverviewSelectedDate}
                             activityData={activityData}
+                            workSumLabel={workSumLabel}
+                            presentButtonLabel={presentButtonLabel}
+                            pastButtonLabel={pastButtonLabel}
                         ></DayPlanner>
                     ))}
                 </List>

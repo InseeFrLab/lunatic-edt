@@ -14,6 +14,9 @@ export type DayPlannerProps = {
     setDisplayDayOverview(display: boolean): void;
     setDayOverviewSelectedDate(date: Date): void;
     activityData: WeeklyPlannerDataType[];
+    workSumLabel?: string;
+    presentButtonLabel?: string;
+    pastButtonLabel?: string;
 };
 
 enum DayRelativeTimeEnum {
@@ -29,7 +32,15 @@ const renderDateLabel = (date: Date): string => {
 
 const DayPlanner = React.memo((props: DayPlannerProps) => {
     const { classes, cx } = useStyles();
-    const { date, setDisplayDayOverview, setDayOverviewSelectedDate, activityData } = props;
+    const {
+        date,
+        setDisplayDayOverview,
+        setDayOverviewSelectedDate,
+        activityData,
+        workSumLabel,
+        presentButtonLabel,
+        pastButtonLabel,
+    } = props;
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>(-1);
     const [workedHoursSum, setWorkedHoursSum] = React.useState<number>(0);
@@ -54,6 +65,21 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     }, [activityData]);
 
     /**
+     * Returns total sum of work for the day formatted as h:mm
+     * @returns
+     */
+    const getFormatedWorkedSum = (): string => {
+        const tempDate = new Date();
+        tempDate.setHours(0);
+        tempDate.setMinutes(workedHoursSum);
+        return (
+            tempDate.getHours() +
+            ":" +
+            (tempDate.getMinutes() === 0 ? "00" : tempDate.getMinutes().toString())
+        );
+    };
+
+    /**
      * Callback for buttons and three dots icon
      */
     const buttonsOnClick = (): void => {
@@ -65,20 +91,19 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         return dayRelativeTime === -1 ? (
             <Box className={classes.textBox}>
                 <Typography className={classes.workTimeText}>
-                    Durée totale travaillée : <span className={classes.bold}>{workedHoursSum}</span>{" "}
-                    minutes
+                    {workSumLabel}<span className={classes.bold}>{getFormatedWorkedSum()}</span>
                 </Typography>
             </Box>
         ) : dayRelativeTime === 0 || workedHoursSum !== 0 ? (
             <Box className={classes.buttonBox}>
                 <Button className={classes.button} onClick={buttonsOnClick}>
-                    Continuer
+                    {presentButtonLabel}
                 </Button>
             </Box>
         ) : (
             <Box className={classes.buttonBox}>
                 <Button className={cx(classes.button, classes.buttonFuture)} onClick={buttonsOnClick}>
-                    Commencer
+                    {pastButtonLabel}
                 </Button>
             </Box>
         );
