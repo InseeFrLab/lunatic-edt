@@ -12,25 +12,25 @@ const theme = createTheme({
     },
     palette: {
         primary: {
-            main: "#4973d2",
+            main: "#4973D2",
             light: "#2C70DE",
         },
         secondary: {
-            main: "#1f4076",
+            main: "#1F4076",
         },
         background: {
-            default: "#f2f1f7",
-            paper: "#e4e5ef",
+            default: "#F2F1F7",
+            paper: "#E4E5EF",
         },
         error: {
-            main: "#d8765f",
+            main: "#D8765F",
             light: "#FCE7D8",
         },
         success: {
             main: "#C1EDC3",
         },
         info: {
-            main: "#1f4076",
+            main: "#1F4076",
         },
         warning: {
             main: "#F4E289",
