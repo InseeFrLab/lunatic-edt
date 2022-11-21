@@ -72,8 +72,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
     return (
         <Box className={classes.globalBox} component="div">
             <Box
-                sx={{ display: "flex", cursor: "pointer" }}
-                className={!isOpen ? classes.visible : classes.hidden}
+                className={cx(classes.closedBox, !isOpen ? classes.visible : classes.hidden)}
                 onClick={() => selectOrUnselectAll(selectAll)}
             >
                 {responses.map((option, index) => (
@@ -106,8 +105,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
                 onChange={handleOptions}
                 id={id}
                 aria-label={label}
-                sx={{ width: "100%" }}
-                className={isOpen ? classes.visible : classes.hidden}
+                className={cx(classes.openedBox, isOpen ? classes.visible : classes.hidden)}
             >
                 {responses.map((option, index) => (
                     <ToggleButton
@@ -141,6 +139,13 @@ const HourChecker = memo((props: HourCheckerProps) => {
 const useStyles = makeStylesEdt<{ width: string }>({ "name": { HourChecker } })((theme, { width }) => ({
     globalBox: {
         maxWidth: "1024px",
+        width: "100%",
+    },
+    closedBox: {
+        display: "flex",
+        cursor: "pointer",
+    },
+    openedBox: {
         width: "100%",
     },
     visible: {},
