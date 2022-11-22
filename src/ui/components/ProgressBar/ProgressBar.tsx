@@ -5,7 +5,7 @@ import React, { memo } from "react";
 import { makeStylesEdt } from "../../theme";
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number; showlabel: boolean }) {
-    let labelTranslateX = props.value - 2;
+    let labelTranslateX = props.value === 0 ? props.value : props.value - 2;
     const { classes } = useStyles();
     return (
         <Box className={classes.linearProgressBox}>

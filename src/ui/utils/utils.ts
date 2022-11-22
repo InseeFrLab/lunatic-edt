@@ -76,7 +76,7 @@ export const convertTime = (t: Date): string => {
  * Returns a TimeLineRowType for each timeline interval
  * @returns
  */
-export const generateDayOverviewTimelineRowData = (): TimeLineRowType[] => {
+export const generateDayOverviewTimelineRawData = (): TimeLineRowType[] => {
     const rowData: TimeLineRowType[] = [];
     for (let h = 0; h < 24; h++) {
         const date = new Date();

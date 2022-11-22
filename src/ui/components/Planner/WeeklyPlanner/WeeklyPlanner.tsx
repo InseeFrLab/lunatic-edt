@@ -6,7 +6,7 @@ import { WeeklyPlannerDataType, WeeklyPlannerValue } from "../../../../interface
 import { makeStylesEdt } from "../../../theme";
 import {
     generateDateFromStringInput,
-    generateDayOverviewTimelineRowData,
+    generateDayOverviewTimelineRawData,
     generateStringInputFromDate,
     getFrenchDayFromDate,
     setDateTimeToZero,
@@ -82,6 +82,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
             );
             if (!dayBloc) {
                 dayBloc = {
+                    hasBeenStarted: false,
                     date: generateStringInputFromDate(date),
                     day: getFrenchDayFromDate(date),
                     detail: [],
@@ -100,18 +101,36 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         setNeedSpinner(true);
     }, [activityData]);
 
+    /**
+     * Returns number between 0 and 100 depending on how many days of the week for which editing has been started
+     * at the end discrete values between 1/7 and 7/7 rounded as %
+     * @returns
+     */
+    const getProgressBarValue = (): number => {
+        // Previously asked computation, kept if needed : Returns number between 0 and 100 depending of the situation of the current day regarding the startDate
+        /* const ratio = Math.ceil((new Date().getTime() - startDateFormated.getTime()) / (1000 * 3600 * 24)) / 7
+        const result = (ratio <= 0) ? 0 : (ratio >= 1) ? 100 : ratio * 100;
+        return Math.round(result); */
+
+        return Math.round((activityData.filter(a => a.hasBeenStarted === true).length / 7) * 100);
+    };
+
     return (
         <Box>
             <DayOverview
                 isDisplayed={isSubChildDisplayed}
                 date={dayOverviewSelectedDate}
-                rawTimeLineData={generateDayOverviewTimelineRowData()}
+                rawTimeLineData={generateDayOverviewTimelineRawData()}
                 activityData={activityData}
                 setActivityData={setActivityData}
             ></DayOverview>
             {activityData.length !== 0 && needSpinner ? (
                 <Box display={isSubChildDisplayed ? "none" : "inline"}>
-                    <ProgressBar className={classes.progressBar} value={25} showlabel={true} />
+                    <ProgressBar
+                        className={classes.progressBar}
+                        value={getProgressBarValue()}
+                        showlabel={true}
+                    />
                     <Typography className={classes.title}>{title}</Typography>
                     <List className={classes.listContainer}>
                         {dayList.map(d => (
@@ -121,6 +140,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                                 setDisplayDayOverview={setIsSubChildDisplayed}
                                 setDayOverviewSelectedDate={setDayOverviewSelectedDate}
                                 activityData={activityData}
+                                setActivityData={setActivityData}
                                 workSumLabel={workSumLabel}
                                 presentButtonLabel={presentButtonLabel}
                                 pastButtonLabel={pastButtonLabel}

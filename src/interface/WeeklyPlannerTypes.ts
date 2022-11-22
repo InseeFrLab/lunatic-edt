@@ -1,4 +1,5 @@
 export type WeeklyPlannerDataType = {
+    hasBeenStarted: boolean;
     date: string;
     day: string;
     detail: DayDetailType[];

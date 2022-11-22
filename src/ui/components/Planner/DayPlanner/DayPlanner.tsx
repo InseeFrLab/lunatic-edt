@@ -15,6 +15,7 @@ export type DayPlannerProps = {
     setDisplayDayOverview(display: boolean): void;
     setDayOverviewSelectedDate(date: Date): void;
     activityData: WeeklyPlannerDataType[];
+    setActivityData(data: WeeklyPlannerDataType[]): void;
     workSumLabel?: string;
     presentButtonLabel?: string;
     pastButtonLabel?: string;
@@ -38,6 +39,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         setDisplayDayOverview,
         setDayOverviewSelectedDate,
         activityData,
+        setActivityData,
         workSumLabel,
         presentButtonLabel,
         pastButtonLabel,
@@ -45,6 +47,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
     const [workedHoursSum, setWorkedHoursSum] = React.useState<number>(0);
+    const [hasBeenStarted, setHasBeenStarted] = React.useState<boolean>();
 
     const todayDate: Date = setDateTimeToZero(new Date());
 
@@ -63,6 +66,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         )[0];
         const sum: number = dayBloc?.detail.reduce((sum, val) => sum + val.duration, 0);
         setWorkedHoursSum(sum);
+        setHasBeenStarted(dayBloc.hasBeenStarted);
     }, [activityData]);
 
     /**
@@ -84,6 +88,13 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
      * Callback for buttons and three dots icon
      */
     const buttonsOnClick = (): void => {
+        const temp = [...activityData];
+        const dayBloc: WeeklyPlannerDataType = temp.filter(
+            d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
+        )[0];
+        dayBloc.hasBeenStarted = true;
+        setActivityData(temp);
+
         setDisplayDayOverview(true);
         setDayOverviewSelectedDate(date);
     };
@@ -96,7 +107,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                     <span className={classes.bold}>{getFormatedWorkedSum()}</span>
                 </Typography>
             </Box>
-        ) : dayRelativeTime === 0 || workedHoursSum !== 0 ? (
+        ) : dayRelativeTime === 0 || hasBeenStarted ? (
             <Box className={classes.buttonBox}>
                 {dayRelativeTime === 0 && (
                     <ProgressBar
