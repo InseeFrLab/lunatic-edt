@@ -98,9 +98,12 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
             </Box>
         ) : dayRelativeTime === 0 || workedHoursSum !== 0 ? (
             <Box className={classes.buttonBox}>
-                {dayRelativeTime === 0 &&
-                    <ProgressBar className={classes.progressBar} value={Math.round(new Date().getHours() / 24 * 100)} />
-                }
+                {dayRelativeTime === 0 && (
+                    <ProgressBar
+                        className={classes.progressBar}
+                        value={Math.round((new Date().getHours() / 24) * 100)}
+                    />
+                )}
                 <Button className={classes.button} onClick={buttonsOnClick}>
                     {presentButtonLabel}
                 </Button>
@@ -116,7 +119,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
 
     return (
         <>
-            {(dayRelativeTime !== undefined) ?
+            {dayRelativeTime !== undefined ? (
                 <Box
                     className={cx(
                         classes.mainContainer,
@@ -138,12 +141,11 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                     </Box>
                     {renderBottomPart()}
                 </Box>
-                :
-                <Box
-                    className={classes.mainContainer}>
+            ) : (
+                <Box className={classes.mainContainer}>
                     <CircularProgress></CircularProgress>
                 </Box>
-            }
+            )}
         </>
     );
 });
