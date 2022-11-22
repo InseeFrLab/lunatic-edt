@@ -1,6 +1,6 @@
 {
     "name": "lunatic-edt",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "Library of questionnaire components for EDT survey",
     "repository": {
         "type": "git",
