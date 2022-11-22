@@ -1,4 +1,4 @@
-import { List, Typography } from "@mui/material";
+import { List, Typography, CircularProgress } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -67,6 +67,11 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const [dayOverviewSelectedDate, setDayOverviewSelectedDate] =
         React.useState<Date>(startDateFormated);
     const [activityData, setActivityData] = React.useState<WeeklyPlannerDataType[]>([]);
+    const [needSpinner, setNeedSpinner] = React.useState<boolean>(true);
+
+    useEffect(() => {
+        setNeedSpinner(false);
+    }, [isSubChildDisplayed]);
 
     // Complete activity data with default values for all days of the week if it was not the case in data input
     useEffect(() => {
@@ -92,6 +97,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
             { name: "WEEKLYPLANNER" },
             JSON.stringify({ "startDate": startDate, "data": activityData }),
         );
+        setNeedSpinner(true);
     }, [activityData]);
 
     return (
@@ -103,28 +109,30 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 activityData={activityData}
                 setActivityData={setActivityData}
             ></DayOverview>
-            <Box display={isSubChildDisplayed ? "none" : "inline"}>
-                <ProgressBar 
-                    className={classes.progressBar} 
-                    value={25}
-                    displayValue={true}
-                />
-                <Typography className={classes.title}>{title}</Typography>
-                <List className={classes.listContainer}>
-                    {dayList.map(d => (
-                        <DayPlanner
-                            date={d}
-                            key={uuidv4()}
-                            setDisplayDayOverview={setIsSubChildDisplayed}
-                            setDayOverviewSelectedDate={setDayOverviewSelectedDate}
-                            activityData={activityData}
-                            workSumLabel={workSumLabel}
-                            presentButtonLabel={presentButtonLabel}
-                            pastButtonLabel={pastButtonLabel}
-                        ></DayPlanner>
-                    ))}
-                </List>
-            </Box>
+            {(activityData.length !== 0 && needSpinner) ?
+                <Box display={isSubChildDisplayed ? "none" : "inline"}>
+                    <ProgressBar
+                        className={classes.progressBar}
+                        value={25}
+                        displayValue={true}
+                    />
+                    <Typography className={classes.title}>{title}</Typography>
+                    <List className={classes.listContainer}>
+                        {dayList.map(d => (
+                            <DayPlanner
+                                date={d}
+                                key={uuidv4()}
+                                setDisplayDayOverview={setIsSubChildDisplayed}
+                                setDayOverviewSelectedDate={setDayOverviewSelectedDate}
+                                activityData={activityData}
+                                workSumLabel={workSumLabel}
+                                presentButtonLabel={presentButtonLabel}
+                                pastButtonLabel={pastButtonLabel}
+                            ></DayPlanner>
+                        ))}
+                    </List>
+                </Box>
+                : <CircularProgress></CircularProgress>}
         </Box>
     );
 });
@@ -143,6 +151,9 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })((theme) => ({
         marginBottom: "1rem",
         padding: "1rem",
         backgroundColor: theme.variables.white,
+        position: "absolute",
+        top: "4.25rem",
+        left: "0rem"
     },
 }));
 

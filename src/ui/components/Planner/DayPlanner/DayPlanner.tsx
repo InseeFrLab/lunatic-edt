@@ -1,5 +1,5 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import ProgressBar from "../../ProgressBar";
 import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
@@ -43,7 +43,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         pastButtonLabel,
     } = props;
 
-    const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>(-1);
+    const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
     const [workedHoursSum, setWorkedHoursSum] = React.useState<number>(0);
 
     const todayDate: Date = setDateTimeToZero(new Date());
@@ -98,8 +98,8 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
             </Box>
         ) : dayRelativeTime === 0 || workedHoursSum !== 0 ? (
             <Box className={classes.buttonBox}>
-                {dayRelativeTime === 0 && 
-                    <ProgressBar className={classes.progressBar} value={Math.round(new Date().getHours()/24*100)}/>
+                {dayRelativeTime === 0 &&
+                    <ProgressBar className={classes.progressBar} value={Math.round(new Date().getHours() / 24 * 100)} />
                 }
                 <Button className={classes.button} onClick={buttonsOnClick}>
                     {presentButtonLabel}
@@ -116,27 +116,34 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
 
     return (
         <>
-            <Box
-                className={cx(
-                    classes.mainContainer,
-                    dayRelativeTime === 0 ? classes.mainContainerPresent : "",
-                )}
-            >
-                <Box className={dayRelativeTime === -1 ? classes.dayAndDotsContainer : ""}>
-                    <Typography className={cx(classes.dayLabel, classes.bold)}>
-                        {renderDateLabel(date)}
-                    </Typography>
-                    {dayRelativeTime === -1 ? (
-                        <MoreHorizIcon
-                            className={classes.clickable}
-                            onClick={buttonsOnClick}
-                        ></MoreHorizIcon>
-                    ) : (
-                        <></>
+            {(dayRelativeTime !== undefined) ?
+                <Box
+                    className={cx(
+                        classes.mainContainer,
+                        dayRelativeTime === 0 ? classes.mainContainerPresent : "",
                     )}
+                >
+                    <Box className={dayRelativeTime === -1 ? classes.dayAndDotsContainer : ""}>
+                        <Typography className={cx(classes.dayLabel, classes.bold)}>
+                            {renderDateLabel(date)}
+                        </Typography>
+                        {dayRelativeTime === -1 ? (
+                            <MoreHorizIcon
+                                className={classes.clickable}
+                                onClick={buttonsOnClick}
+                            ></MoreHorizIcon>
+                        ) : (
+                            <></>
+                        )}
+                    </Box>
+                    {renderBottomPart()}
                 </Box>
-                {renderBottomPart()}
-            </Box>
+                :
+                <Box
+                    className={classes.mainContainer}>
+                    <CircularProgress></CircularProgress>
+                </Box>
+            }
         </>
     );
 });
