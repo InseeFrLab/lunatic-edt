@@ -182,9 +182,10 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     absoluteBox: {
         position: "absolute",
         left: "0",
-        top: "4.1rem",
+        top: "0",
         overflowX: "hidden",
         width: "100%",
+        zIndex: "1",
     },
     headerContainer: {
         backgroundColor: theme.variables.white,
@@ -203,7 +204,7 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     listContainer: {
         display: "flex",
         flexDirection: "column",
-        paddingTop: "5.75rem",
+        paddingTop: "2rem",
     },
     rowContainer: {
         display: "flex",

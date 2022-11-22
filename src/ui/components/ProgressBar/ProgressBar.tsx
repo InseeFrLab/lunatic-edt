@@ -4,19 +4,19 @@ import Typography from "@mui/material/Typography";
 import React, { memo } from "react";
 import { makeStylesEdt } from "../../theme";
 
-function LinearProgressWithLabel(
-    props: LinearProgressProps & { value: number; displayValue?: boolean },
-) {
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number; showlabel: boolean }) {
     let labelTranslateX = props.value - 2;
+    const { classes } = useStyles();
     return (
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-            <Box sx={{ width: "100%", mr: 1 }}>
+        <Box className={classes.linearProgressBox}>
+            <Box className={classes.barBox}>
                 <LinearProgress variant="determinate" {...props} />
             </Box>
-            <Box sx={{ minWidth: 35, ml: 1 }}>
-                {props.displayValue && (
+            <Box className={classes.labelBox}>
+                {props.showlabel && (
                     <Typography
-                        style={{ fontSize: "12px", transform: "translateX(" + labelTranslateX + "%)" }}
+                        className={classes.label}
+                        sx={{ transform: "translateX(" + labelTranslateX + "%)" }}
                         color="primary"
                     >
                         {props.value}%
@@ -29,7 +29,7 @@ function LinearProgressWithLabel(
 
 export type ProgressBarProps = {
     value: number;
-    displayValue?: boolean;
+    showlabel?: boolean;
     id?: string;
     className?: string;
     isPrimaryMainColor?: boolean;
@@ -37,9 +37,9 @@ export type ProgressBarProps = {
 
 const ProgressBar = memo((props: ProgressBarProps) => {
     //TODO : to complete when we know how to override/use it from lunatic
-    const { value, displayValue, id, className, isPrimaryMainColor = false } = props;
+    const { value, showlabel = false, id, className, isPrimaryMainColor = false } = props;
 
-    const [progress, setProgress] = React.useState(value);
+    const [progress] = React.useState(value);
 
     const { classes, cx } = useStyles();
 
@@ -51,7 +51,7 @@ const ProgressBar = memo((props: ProgressBarProps) => {
                 isPrimaryMainColor ? classes.primaryMainColor : classes.primaryWarningColor,
             )}
         >
-            <LinearProgressWithLabel id={id} value={progress} displayValue={displayValue} />
+            <LinearProgressWithLabel id={id} value={progress} showlabel={showlabel} />
         </Box>
     );
 });
@@ -77,6 +77,21 @@ const useStyles = makeStylesEdt({ "name": { ProgressBar } })(theme => ({
         "& .MuiLinearProgress-barColorPrimary": {
             backgroundColor: theme.palette.warning.main,
         },
+    },
+    linearProgressBox: {
+        display: "flex",
+        flexDirection: "column",
+    },
+    barBox: {
+        width: "100%",
+        mr: 1,
+    },
+    labelBox: {
+        minWidth: 35,
+        ml: 1,
+    },
+    label: {
+        fontSize: "12px",
     },
 }));
 

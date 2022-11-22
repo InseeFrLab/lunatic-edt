@@ -111,7 +111,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
             ></DayOverview>
             {activityData.length !== 0 && needSpinner ? (
                 <Box display={isSubChildDisplayed ? "none" : "inline"}>
-                    <ProgressBar className={classes.progressBar} value={25} displayValue={true} />
+                    <ProgressBar className={classes.progressBar} value={25} showlabel={true} />
                     <Typography className={classes.title}>{title}</Typography>
                     <List className={classes.listContainer}>
                         {dayList.map(d => (
@@ -129,7 +129,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                     </List>
                 </Box>
             ) : (
-                <CircularProgress></CircularProgress>
+                <CircularProgress />
             )}
         </Box>
     );
@@ -141,7 +141,7 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
         flexDirection: "column",
     },
     title: {
-        marginTop: "2rem",
+        marginTop: "5rem",
         fontSize: "14px",
     },
     progressBar: {
