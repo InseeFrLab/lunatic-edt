@@ -129,7 +129,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                     </List>
                 </Box>
             ) : (
-                <CircularProgress />
+                !isSubChildDisplayed && <CircularProgress />
             )}
         </Box>
     );
