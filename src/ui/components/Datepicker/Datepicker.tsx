@@ -38,7 +38,7 @@ const Datepicker = memo((props: DatepickerProps) => {
                 disabled={disabled}
                 readOnly={readOnly}
                 openTo="day"
-                views={["day", "month", "year"]}
+                views={["day"]}
                 value={valueLocal}
                 onChange={newValue => {
                     setValueLunatic(newValue);
