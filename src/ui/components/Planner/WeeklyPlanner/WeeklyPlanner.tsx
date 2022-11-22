@@ -1,9 +1,8 @@
-import { List, Typography, CircularProgress } from "@mui/material";
+import { CircularProgress, List, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { WeeklyPlannerDataType, WeeklyPlannerValue } from "../../../../interface/WeeklyPlannerTypes";
-import ProgressBar from "../../ProgressBar";
 import { makeStylesEdt } from "../../../theme";
 import {
     generateDateFromStringInput,
@@ -13,6 +12,7 @@ import {
     setDateTimeToZero,
 } from "../../../utils";
 import { createCustomizableLunaticField } from "../../../utils/create-customizable-lunatic-field";
+import ProgressBar from "../../ProgressBar";
 import DayOverview from "../DayOverview/DayOverview";
 import DayPlanner from "../DayPlanner/DayPlanner";
 
@@ -109,13 +109,9 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 activityData={activityData}
                 setActivityData={setActivityData}
             ></DayOverview>
-            {(activityData.length !== 0 && needSpinner) ?
+            {activityData.length !== 0 && needSpinner ? (
                 <Box display={isSubChildDisplayed ? "none" : "inline"}>
-                    <ProgressBar
-                        className={classes.progressBar}
-                        value={25}
-                        displayValue={true}
-                    />
+                    <ProgressBar className={classes.progressBar} value={25} displayValue={true} />
                     <Typography className={classes.title}>{title}</Typography>
                     <List className={classes.listContainer}>
                         {dayList.map(d => (
@@ -132,12 +128,14 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                         ))}
                     </List>
                 </Box>
-                : <CircularProgress></CircularProgress>}
+            ) : (
+                <CircularProgress></CircularProgress>
+            )}
         </Box>
     );
 });
 
-const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })((theme) => ({
+const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
     listContainer: {
         display: "flex",
         flexDirection: "column",
@@ -147,13 +145,12 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })((theme) => ({
         fontSize: "14px",
     },
     progressBar: {
-        marginTop: "1rem",
-        marginBottom: "1rem",
         padding: "1rem",
         backgroundColor: theme.variables.white,
         position: "absolute",
-        top: "4.25rem",
-        left: "0rem"
+        left: "0",
+        top: "4.1rem",
+        overflowX: "hidden",
     },
 }));
 

@@ -4,7 +4,9 @@ import Typography from "@mui/material/Typography";
 import React, { memo } from "react";
 import { makeStylesEdt } from "../../theme";
 
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number, displayValue?: boolean }) {
+function LinearProgressWithLabel(
+    props: LinearProgressProps & { value: number; displayValue?: boolean },
+) {
     let labelTranslateX = props.value - 2;
     return (
         <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -16,7 +18,9 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number, d
                     <Typography
                         style={{ fontSize: "12px", transform: "translateX(" + labelTranslateX + "%)" }}
                         color="primary"
-                    >{props.value}%</Typography>
+                    >
+                        {props.value}%
+                    </Typography>
                 )}
             </Box>
         </Box>
@@ -28,18 +32,25 @@ export type ProgressBarProps = {
     displayValue?: boolean;
     id?: string;
     className?: string;
+    isPrimaryMainColor?: boolean;
 };
 
 const ProgressBar = memo((props: ProgressBarProps) => {
     //TODO : to complete when we know how to override/use it from lunatic
-    const { value, displayValue, id, className } = props;
+    const { value, displayValue, id, className, isPrimaryMainColor = false } = props;
 
     const [progress, setProgress] = React.useState(value);
 
     const { classes, cx } = useStyles();
 
     return (
-        <Box className={cx(className, classes.root)}>
+        <Box
+            className={cx(
+                className,
+                classes.root,
+                isPrimaryMainColor ? classes.primaryMainColor : classes.primaryWarningColor,
+            )}
+        >
             <LinearProgressWithLabel id={id} value={progress} displayValue={displayValue} />
         </Box>
     );
@@ -54,8 +65,17 @@ const useStyles = makeStylesEdt({ "name": { ProgressBar } })(theme => ({
             height: "8px",
         },
         "& .MuiLinearProgress-barColorPrimary": {
-            backgroundColor: theme.palette.warning.main,
             borderRadius: "10px",
+        },
+    },
+    primaryMainColor: {
+        "& .MuiLinearProgress-barColorPrimary": {
+            backgroundColor: theme.palette.primary.main,
+        },
+    },
+    primaryWarningColor: {
+        "& .MuiLinearProgress-barColorPrimary": {
+            backgroundColor: theme.palette.warning.main,
         },
     },
 }));

@@ -1,6 +1,5 @@
 import { Box, List, Typography } from "@mui/material";
 import React, { memo, useEffect } from "react";
-import ProgressBar from "../../ProgressBar";
 import { v4 as uuidv4 } from "uuid";
 import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
 import { LunaticMultiSelectionValues } from "../../../../interface/LunaticMultiSelectionValues";
@@ -13,6 +12,7 @@ import {
     setDateTimeToZero,
 } from "../../../utils";
 import HourChecker from "../../HourChecker";
+import ProgressBar from "../../ProgressBar";
 
 export type DayOverviewProps = {
     date: Date;
@@ -159,10 +159,17 @@ const DayOverview = memo((props: DayOverviewProps) => {
 
     return (
         <Box className={classes.mainContainer} display={componentDisplay}>
-            <Box className={classes.headerContainer}>
-                <Typography className={classes.dayLabel}>{formateDateLabel(date)}</Typography>
-                <ProgressBar className={classes.progressBar} value={Math.round(new Date().getHours()/24*100)}/>
+            <Box className={classes.absoluteBox}>
+                <Box className={classes.headerContainer}>
+                    <Typography className={classes.dayLabel}>{formateDateLabel(date)}</Typography>
+                    <ProgressBar
+                        className={classes.progressBar}
+                        value={Math.round((new Date().getHours() / 24) * 100)}
+                        isPrimaryMainColor={true}
+                    />
+                </Box>
             </Box>
+
             <List className={classes.listContainer}>{timeLineData.map(l => renderRow(l))}</List>
         </Box>
     );
@@ -172,28 +179,31 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     mainContainer: {
         flexDirection: "column",
     },
+    absoluteBox: {
+        position: "absolute",
+        left: "0",
+        top: "4.1rem",
+        overflowX: "hidden",
+        width: "100%",
+    },
     headerContainer: {
         backgroundColor: theme.variables.white,
         width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
+        paddingBottom: "1rem",
     },
     dayLabel: {
         color: theme.palette.info.main,
         fontSize: "14px",
-        paddingLeft: "1rem",
-        paddingTop: "1rem",
+        padding: "1rem",
     },
     progressBar: {
-        marginTop: "1rem",
-        marginBottom: "2rem",
         paddingLeft: "1rem",
-        paddingRight: "1rem"
+        paddingRight: "1rem",
     },
     listContainer: {
         display: "flex",
         flexDirection: "column",
+        paddingTop: "5.75rem",
     },
     rowContainer: {
         display: "flex",
