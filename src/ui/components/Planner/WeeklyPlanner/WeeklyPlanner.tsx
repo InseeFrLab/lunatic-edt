@@ -25,7 +25,7 @@ export type WeeklyPlannerProps = {
     title: string;
     workSumLabel?: string;
     presentButtonLabel?: string;
-    pastButtonLabel?: string;
+    futureButtonLabel?: string;
 };
 
 /**
@@ -54,7 +54,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         title,
         workSumLabel,
         presentButtonLabel,
-        pastButtonLabel,
+        futureButtonLabel,
     } = props;
 
     const values: WeeklyPlannerValue = JSON.parse(value);
@@ -96,7 +96,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     useEffect(() => {
         handleChange(
             { name: "WEEKLYPLANNER" },
-            JSON.stringify({ "startDate": startDate, "data": activityData }),
+            JSON.stringify({ "data": activityData }),
         );
         setNeedSpinner(true);
     }, [activityData]);
@@ -143,7 +143,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                                 setActivityData={setActivityData}
                                 workSumLabel={workSumLabel}
                                 presentButtonLabel={presentButtonLabel}
-                                pastButtonLabel={pastButtonLabel}
+                                futureButtonLabel={futureButtonLabel}
                             ></DayPlanner>
                         ))}
                     </List>
@@ -171,7 +171,7 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
         left: "0",
         top: "4.1rem",
         overflowX: "hidden",
-    },
+    }
 }));
 
 export default createCustomizableLunaticField(WeeklyPlanner, "WeeklyPlanner");

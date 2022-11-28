@@ -9,7 +9,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "test": "jest",
+        "test": "jest --env=jsdom ",
         "build": "tsc",
         "lint:check": "eslint . --ext .ts,.tsx",
         "lint": "npm run lint:check -- --fix",
@@ -52,6 +52,9 @@
     ],
     "homepage": "https://github.com/InseeFrLab/lunatic-edt",
     "jest": {
+        "transform": {
+            "^.+\\.(ts|tsx|js|jsx)$": "ts-jest"
+        },
         "testResultsProcessor": "jest-sonar-reporter"
     },
     "devDependencies": {
@@ -68,6 +71,10 @@
         "@storybook/manager-webpack5": "^6.5.12",
         "@storybook/react": "^6.5.12",
         "@storybook/testing-library": "^0.0.13",
+        "@testing-library/react": "^13.4.0",
+        "@testing-library/jest-dom": "^5.16.5",
+        "jest-environment-jsdom": "^29.3.1",
+        "ts-jest": "^29.0.3",
         "@types/jest": "^29.0.3",
         "@types/node": "^16.4.9",
         "@types/react": "^18.0.17",

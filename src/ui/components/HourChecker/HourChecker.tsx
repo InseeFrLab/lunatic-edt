@@ -70,10 +70,11 @@ const HourChecker = memo((props: HourCheckerProps) => {
     };
 
     return (
-        <Box className={classes.globalBox} component="div">
+        <Box className={classes.globalBox} component="div" aria-label="hourchecker">
             <Box
                 className={cx(classes.closedBox, !isOpen ? classes.visible : classes.hidden)}
                 onClick={() => selectOrUnselectAll(selectAll)}
+                aria-label={isOpen ? "hourcheckeropen" : "hourcheckerclosed"}
             >
                 {responses.map((option, index) => (
                     <Box
@@ -84,11 +85,13 @@ const HourChecker = memo((props: HourCheckerProps) => {
                             index === 0 ? classes.leftOption : "",
                             index === responses.length - 1 ? classes.rightOption : "",
                         )}
+                        aria-label={value[option.response.name] ? "hourselected" : "hournotselected"}
                     >
                         {index === 0 && (
                             <ExpandLessIcon
                                 className={classes.clickable}
                                 onClick={toggleHourChecker}
+                                aria-label="hourcheckertoogle"
                             ></ExpandLessIcon>
                         )}
                         {index === responses.length - 1 && (
