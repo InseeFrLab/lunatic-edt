@@ -107,11 +107,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
      * @returns
      */
     const getProgressBarValue = (): number => {
-        // Previously asked computation, kept if needed : Returns number between 0 and 100 depending of the situation of the current day regarding the startDate
-        /* const ratio = Math.ceil((new Date().getTime() - startDateFormated.getTime()) / (1000 * 3600 * 24)) / 7
-        const result = (ratio <= 0) ? 0 : (ratio >= 1) ? 100 : ratio * 100;
-        return Math.round(result); */
-
         return Math.round((activityData.filter(a => a.hasBeenStarted === true).length / 7) * 100);
     };
 

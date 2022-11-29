@@ -9,8 +9,8 @@ import { EdtTheme } from "./edt-theme";
  */
 type MakeStylesParams =
     | {
-          name?: string | Record<string, unknown> | undefined;
-          uniqId?: string | undefined;
+          name?: string | Record<string, unknown>;
+          uniqId?: string;
       }
     | undefined;
 
@@ -29,9 +29,9 @@ type MakeStyleEdt<Params = void, RuleNameSubsetReferencableInNestedSelectors ext
     styleOverrides?:
         | {
               props: {
-                  classes?: Record<string, string> | undefined;
+                  classes?: Record<string, string>;
               } & Record<string, unknown>;
-              ownerState?: Record<string, unknown> | undefined;
+              ownerState?: Record<string, unknown>;
           }
         | undefined,
 ) => {
