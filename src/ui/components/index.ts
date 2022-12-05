@@ -11,3 +11,4 @@ export { default as ClickableList } from "./ClickableList";
 export { default as Info } from "./Info";
 export { default as WeeklyPlanner } from "./Planner/WeeklyPlanner";
 export { default as ActivitySelecter } from "./ActivitySelecter";
+export { default as Timepicker } from "./Timepicker";
