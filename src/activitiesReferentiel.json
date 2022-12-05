@@ -1,0 +1,106 @@
+[
+    {
+        "label": "Temps personnel (dormir, se laver, manger …)",
+        "rang": 1,
+        "id": "1",
+        "subs": [
+            {
+                "label": "Etre au lit",
+                "rang": 2,
+                "subs": [
+                    {
+                        "label": "Dormir (hors sieste)",
+                        "rang": 3
+                    },
+                    {
+                        "label": "Sieste",
+                        "rang": 3
+                    },
+                    {
+                        "label": "Au lit et malade",
+                        "rang": 3
+                    },
+                    {
+                        "label": "Etre au lit sans dormir, insomnies",
+                        "rang": 3
+                    }
+                ]
+            },
+            {
+                "label": "Prendre soin de son corps",
+                "rang": 2,
+                "subs": [
+                    {
+                        "label": "se laver, hygiène (se maquiller, se raser)",
+                        "rang": 3
+                    },
+                    {
+                        "label": "s’habiller, se déshabiller",
+                        "rang": 3
+                    },
+                    {
+                        "label": "soins professionnels  (coiffeur, esthétique)",
+                        "rang": 3
+                    }
+                ]
+            },
+            {
+                "label": "Soins médicaux",
+                "rang": 2,
+                "subs": [
+                    {
+                        "label": "Se soigner à domicile, prendre un médicament",
+                        "rang": 3
+                    },
+                    {
+                        "label": "Soins par un médecin ou autre professionnel de santé",
+                        "rang": 3
+                    }
+                ]
+            },
+            {
+                "label": "Manger",
+                "rang": 2
+            },
+            {
+                "label": "Autres activités personnelles",
+                "rang": 2
+            }
+        ]
+    },
+    {
+        "label": "Travail et études (recherche d’emploi, formations)",
+        "rang": 1,
+        "id": "2"
+    },
+    {
+        "label": "Tâches domestiques (ménage, cuisine, courses …)",
+        "rang": 1,
+        "id": "3"
+    },
+    {
+        "label": "Soins aux enfants ou aux adultes de son logement",
+        "rang": 1,
+        "id": "4"
+    },
+    {
+        "label": "Aide non rémunérée à ses voisins, ses amis, bénévolat",
+        "rang": 1,
+        "id": "5"
+    },
+    {
+        "label": "Interaction sociale (communication, fêtes, religion, vote …)",
+        "rang": 1,
+        "id": "6"
+    },
+    {
+        "label": "Sorties (culture, évènements, parc d’attraction)",
+        "rang": 1,
+        "id": "7"
+    },
+    {
+        "label": "Loisirs (sports, medias, arts, jeux)",
+        "rang": 1,
+        "id": "8"
+    }
+]
