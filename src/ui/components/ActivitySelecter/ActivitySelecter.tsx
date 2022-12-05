@@ -37,13 +37,13 @@ const categoriesAndActivitesNomenclature: ActivitySelection[] = activityReferent
 
 const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     let { handleChange, componentSpecificProps } = props;
-    const backClickEvent: React.MouseEvent = componentSpecificProps.backClickEvent;
-    const nextClickEvent: React.MouseEvent = componentSpecificProps.nextClickEvent;
-    const backClickCallback = componentSpecificProps.backClickCallback;
-    const nextClickCallback = componentSpecificProps.nextClickCallback;
-    const categoriesIcons: string[] = componentSpecificProps.categoriesIcons;
-    const activitiesRef: RawActiviteOption[] = componentSpecificProps.activitiesRef;
-    const clickableListIconNoResult: string = componentSpecificProps.clickableListIconNoResult;
+    const backClickEvent: React.MouseEvent = componentSpecificProps?.backClickEvent;
+    const nextClickEvent: React.MouseEvent = componentSpecificProps?.nextClickEvent;
+    const backClickCallback = componentSpecificProps?.backClickCallback;
+    const nextClickCallback = componentSpecificProps?.nextClickCallback;
+    const categoriesIcons: string[] = componentSpecificProps?.categoriesIcons;
+    const activitiesRef: RawActiviteOption[] = componentSpecificProps?.activitiesRef;
+    const clickableListIconNoResult: string = componentSpecificProps?.clickableListIconNoResult;
 
     const [selectedCategories, setSelectedCategories] = useState<ActivitySelection[]>([]);
     const [createActivityValue, setCreateActivityValue] = useState<string | undefined>();
@@ -115,7 +115,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 } else {
                     selection.id = selectedId || selectedCategories[selectedCategories.length - 1]?.id;
                     selection.isFullyCompleted = !continueWithUncompleted;
-                    handleChange({ name: "ACTIVITYSELECTER" }, JSON.stringify({ "data": selection }));
+                    handleChange({ name: "MAINACTIVITY" }, JSON.stringify(selection));
                     nextClickCallback();
                 }
                 break;
@@ -132,7 +132,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                     }
                     selection.label = createActivityValue;
                     selection.isFullyCompleted = !continueWithUncompleted;
-                    handleChange({ name: "ACTIVITYSELECTER" }, JSON.stringify({ "data": selection }));
+                    handleChange({ name: "MAINACTIVITY" }, JSON.stringify(selection));
                 }
                 break;
             default:
@@ -147,9 +147,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             if (selectedCategories.length === 0) {
                 return "Que faisiez-vous ?";
             } else {
-                return `Sélectionnez une activité dans la catégorie «${
-                    selectedCategories[selectedCategories.length - 1].label
-                } »`;
+                return `Sélectionnez une activité dans la catégorie «${selectedCategories[selectedCategories.length - 1].label
+                    } »`;
             }
         }
     };
@@ -218,89 +217,94 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
 
     return (
         <>
-            <Dialog
-                open={displayAlert}
-                onClose={handleAlertClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Attention ! Vous n’avez pas été au bout de cette étape. Souhaitez-vous la
-                        compléter ?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => next(true)}>Ignorer</Button>
-                    <Button onClick={handleAlertClose} autoFocus>
-                        Compléter
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            {componentSpecificProps &&
+                <>
+                    <Dialog
+                        open={displayAlert}
+                        onClose={handleAlertClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                Attention ! Vous n’avez pas été au bout de cette étape. Souhaitez-vous la
+                                compléter ?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => next(true)}>Ignorer</Button>
+                            <Button onClick={handleAlertClose} autoFocus>
+                                Compléter
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
 
-            {fullScreenComponent === FullScreenComponent.ClickableList ? (
-                <ClickableList
-                    className={classes.clickableList}
-                    options={activitiesRef}
-                    handleChange={setSelectedId}
-                    createActivity={createActivityCallBack}
-                    placeholder="Saisissez une activité"
-                    notFoundLabel="Aucun résultat trouvé"
-                    notFoundComment="Vous pourrez l'ajouter en cliquant sur le bouton ci-dessous, ou le bouton + ci-dessus"
-                    addActivityButtonLabel="Ajouter l'activité"
-                    iconNoResult={clickableListIconNoResult}
-                    iconNoResultAlt="alt pour icon no result"
-                    autoFocus={true}
-                ></ClickableList>
-            ) : null}
+                    {fullScreenComponent === FullScreenComponent.ClickableList ? (
+                        <ClickableList
+                            className={classes.clickableList}
+                            options={activitiesRef}
+                            handleChange={setSelectedId}
+                            createActivity={createActivityCallBack}
+                            placeholder="Saisissez une activité"
+                            notFoundLabel="Aucun résultat trouvé"
+                            notFoundComment="Vous pourrez l'ajouter en cliquant sur le bouton ci-dessous, ou le bouton + ci-dessus"
+                            addActivityButtonLabel="Ajouter l'activité"
+                            iconNoResult={clickableListIconNoResult}
+                            iconNoResultAlt="alt pour icon no result"
+                            autoFocus={true}
+                        ></ClickableList>
+                    ) : null}
 
-            {fullScreenComponent === FullScreenComponent.FreeInput ? (
-                <Box className={classes.root}>
-                    <Typography className={classes.title}>{getTextTitle()}</Typography>
-                    <TextField
-                        value={createActivityValue}
-                        className={classes.freeInputTextField}
-                        onChange={e => setCreateActivityValue(e.target.value)}
-                        placeholder="Saisissez une activité"
-                    ></TextField>
-                </Box>
-            ) : null}
-
-            {fullScreenComponent === FullScreenComponent.Main ? (
-                <Box className={classes.root}>
-                    <Typography className={classes.title}>{getTextTitle()}</Typography>
-
-                    {selectedCategories.length === 0 ? (
-                        <Box
-                            className={classes.activityInput}
-                            onClick={() => setFullScreenComponent(FullScreenComponent.ClickableList)}
-                        >
-                            <Typography className={classes.activityInputLabel}>
-                                Saisissez une activité
-                            </Typography>
-                            <Search className={classes.activityInputIcon} />
+                    {fullScreenComponent === FullScreenComponent.FreeInput ? (
+                        <Box className={classes.root}>
+                            <Typography className={classes.title}>{getTextTitle()}</Typography>
+                            <TextField
+                                value={createActivityValue}
+                                className={classes.freeInputTextField}
+                                onChange={e => setCreateActivityValue(e.target.value)}
+                                placeholder="Saisissez une activité"
+                            ></TextField>
                         </Box>
                     ) : null}
 
-                    {selectedCategories.length === 0 ? (
-                        <Box className={classes.rank1CategoriesBox}>
-                            {categoriesAndActivitesNomenclature.map(d => {
-                                return renderRank1Category(d);
-                            })}
+                    {fullScreenComponent === FullScreenComponent.Main ? (
+                        <Box className={classes.root}>
+                            <Typography className={classes.title}>{getTextTitle()}</Typography>
+
+                            {selectedCategories.length === 0 ? (
+                                <Box
+                                    className={classes.activityInput}
+                                    onClick={() => setFullScreenComponent(FullScreenComponent.ClickableList)}
+                                >
+                                    <Typography className={classes.activityInputLabel}>
+                                        Saisissez une activité
+                                    </Typography>
+                                    <Search className={classes.activityInputIcon} />
+                                </Box>
+                            ) : null}
+
+                            {selectedCategories.length === 0 ? (
+                                <Box className={classes.rank1CategoriesBox}>
+                                    {categoriesAndActivitesNomenclature.map(d => {
+                                        return renderRank1Category(d);
+                                    })}
+                                </Box>
+                            ) : (
+                                <Box className={classes.rank1CategoriesBox}>
+                                    {selectedCategories[selectedCategories.length - 1]?.subs?.map(s => {
+                                        return renderSubRangCategory(s);
+                                    })}
+                                    <Button className={classes.buttonOther} onClick={clickAutreButton}>
+                                        Autre ?
+                                    </Button>
+                                </Box>
+                            )}
                         </Box>
-                    ) : (
-                        <Box className={classes.rank1CategoriesBox}>
-                            {selectedCategories[selectedCategories.length - 1]?.subs?.map(s => {
-                                return renderSubRangCategory(s);
-                            })}
-                            <Button className={classes.buttonOther} onClick={clickAutreButton}>
-                                Autre ?
-                            </Button>
-                        </Box>
-                    )}
-                </Box>
-            ) : null}
+                    ) : null}
+                </>
+            }
         </>
+
     );
 });
 
