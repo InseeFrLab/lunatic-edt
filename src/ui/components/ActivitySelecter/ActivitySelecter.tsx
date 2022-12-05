@@ -37,13 +37,16 @@ const categoriesAndActivitesNomenclature: ActivitySelection[] = activityReferent
 
 const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     let { handleChange, componentSpecificProps } = props;
-    const backClickEvent: React.MouseEvent = componentSpecificProps?.backClickEvent;
-    const nextClickEvent: React.MouseEvent = componentSpecificProps?.nextClickEvent;
-    const backClickCallback = componentSpecificProps?.backClickCallback;
-    const nextClickCallback = componentSpecificProps?.nextClickCallback;
-    const categoriesIcons: string[] = componentSpecificProps?.categoriesIcons;
-    const activitiesRef: RawActiviteOption[] = componentSpecificProps?.activitiesRef;
-    const clickableListIconNoResult: string = componentSpecificProps?.clickableListIconNoResult;
+    let {
+        backClickEvent,
+        nextClickEvent,
+        backClickCallback,
+        nextClickCallback,
+        categoriesIcons,
+        activitiesRef,
+        clickableListIconNoResult,
+        setDisplayStepper,
+    } = { ...props.componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<ActivitySelection[]>([]);
     const [createActivityValue, setCreateActivityValue] = useState<string | undefined>();
@@ -52,6 +55,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         FullScreenComponent.Main,
     );
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
+
+    if (setDisplayStepper) {
+        setDisplayStepper(
+            fullScreenComponent === FullScreenComponent.Main && selectedCategories.length === 0,
+        );
+    }
 
     const { classes, cx } = useStyles();
 
@@ -78,7 +87,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     };
 
     const back = () => {
-        // Go back to previous page
+        // Go back to previous page in application navigation
         if (fullScreenComponent === FullScreenComponent.Main && selectedCategories.length === 0) {
             backClickCallback();
             return;
@@ -147,8 +156,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             if (selectedCategories.length === 0) {
                 return "Que faisiez-vous ?";
             } else {
-                return `Sélectionnez une activité dans la catégorie «${selectedCategories[selectedCategories.length - 1].label
-                    } »`;
+                return `Sélectionnez une activité dans la catégorie «${
+                    selectedCategories[selectedCategories.length - 1].label
+                } »`;
             }
         }
     };
@@ -217,7 +227,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
 
     return (
         <>
-            {componentSpecificProps &&
+            {componentSpecificProps && (
                 <>
                     <Dialog
                         open={displayAlert}
@@ -274,7 +284,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             {selectedCategories.length === 0 ? (
                                 <Box
                                     className={classes.activityInput}
-                                    onClick={() => setFullScreenComponent(FullScreenComponent.ClickableList)}
+                                    onClick={() =>
+                                        setFullScreenComponent(FullScreenComponent.ClickableList)
+                                    }
                                 >
                                     <Typography className={classes.activityInputLabel}>
                                         Saisissez une activité
@@ -302,9 +314,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         </Box>
                     ) : null}
                 </>
-            }
+            )}
         </>
-
     );
 });
 

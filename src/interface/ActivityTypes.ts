@@ -22,4 +22,5 @@ export type ActivitySelecterSpecificProps = {
     nextClickEvent: React.MouseEvent;
     backClickCallback(): void;
     nextClickCallback(): void;
+    setDisplayStepper(value: boolean): void;
 };
