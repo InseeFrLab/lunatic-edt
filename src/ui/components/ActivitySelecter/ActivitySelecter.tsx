@@ -20,7 +20,6 @@ import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../../ui/theme";
 import { Extension, ChevronRight, Search } from "@mui/icons-material";
 import ClickableList from "../ClickableList";
-import { RawActiviteOption } from "interface/RawActiviteOption";
 
 type ActivitySelecterProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
