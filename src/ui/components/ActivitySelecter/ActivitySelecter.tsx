@@ -91,11 +91,11 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             backClickCallback();
             return;
         }
+        const temp = [...selectedCategories];
 
         switch (fullScreenComponent) {
             case FullScreenComponent.Main:
                 setSelectedId(undefined);
-                const temp = [...selectedCategories];
                 temp.pop();
                 setSelectedCategories(temp);
                 break;

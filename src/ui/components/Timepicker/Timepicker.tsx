@@ -13,23 +13,24 @@ export type TimepickerProps = {
     disabled?: boolean;
     readOnly?: boolean;
     value?: string;
-    onChange(value: string | null): void;
+    handleChange(response: { [name: string]: string }, value: string | null): void;
     label?: string;
     id?: string;
+    response: { [name: string]: string };
 };
 
 const Timepicker = memo((props: TimepickerProps) => {
-    const { id, onChange, value, readOnly, disabled, label } = props;
+    const { id, response, handleChange, value, readOnly, disabled, label } = props;
     const { classes } = useStyles();
     const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
 
     useEffect(() => {
-        if (onChange != null) onChange(valueLocal?.format("HH:mmm") || null);
+        handleChange(response, valueLocal?.format("HH:mmm") || null);
     }, []);
 
     function setValueLunatic(newValue: Dayjs | null) {
         setValue(newValue);
-        if (onChange != null) onChange(newValue?.format("HH:mmm") || null);
+        handleChange(response, newValue?.format("HH:mmm") || null);
     }
 
     return (
@@ -68,7 +69,9 @@ const useStyles = makeStylesEdt({ "name": { Timepicker } })(theme => ({
     root: {
         padding: "1rem 2rem 2rem 2rem",
         backgroundColor: theme.variables.white,
-        margin: "0.5rem",
+        border: "1px solid transparent",
+        borderRadius: "10px",
+        margin: "1rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
