@@ -1,6 +1,5 @@
 import { memo, useState, useEffect } from "react";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import activityReferentiel from "../../../activitiesReferentiel.json";
 import {
     ActivitySelecterSpecificProps,
     ActivitySelection,
@@ -24,6 +23,7 @@ import ClickableList from "../ClickableList";
 type ActivitySelecterProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
     componentSpecificProps: ActivitySelecterSpecificProps;
+    response: { [name: string]: string };
 };
 
 enum FullScreenComponent {
@@ -32,19 +32,18 @@ enum FullScreenComponent {
     FreeInput,
 }
 
-const categoriesAndActivitesNomenclature: ActivitySelection[] = activityReferentiel;
-
 const ActivitySelecter = memo((props: ActivitySelecterProps) => {
-    let { handleChange, componentSpecificProps } = props;
+    let { handleChange, componentSpecificProps, response } = props;
     let {
         backClickEvent,
         nextClickEvent,
         backClickCallback,
         nextClickCallback,
         categoriesIcons,
-        activitiesRef,
+        activitesAutoCompleteRef,
         clickableListIconNoResult,
         setDisplayStepper,
+        categoriesAndActivitesNomenclature
     } = { ...props.componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<ActivitySelection[]>([]);
@@ -123,7 +122,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 } else {
                     selection.id = selectedId || selectedCategories[selectedCategories.length - 1]?.id;
                     selection.isFullyCompleted = !continueWithUncompleted;
-                    handleChange({ name: "MAINACTIVITY" }, JSON.stringify(selection));
+                    handleChange(response, JSON.stringify(selection));
                     nextClickCallback();
                 }
                 break;
@@ -140,7 +139,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                     }
                     selection.label = createActivityValue;
                     selection.isFullyCompleted = !continueWithUncompleted;
-                    handleChange({ name: "MAINACTIVITY" }, JSON.stringify(selection));
+                    handleChange(response, JSON.stringify(selection));
                 }
                 break;
             default:
@@ -163,7 +162,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     };
 
     const renderRank1Category = (category: ActivitySelection) => {
-        const id = Number(category.id) || 0;
+        const id = Number(category.id);
         const wholeLabel = category.label;
         let mainLabel;
         let secondLabel;
@@ -251,7 +250,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                     {fullScreenComponent === FullScreenComponent.ClickableList ? (
                         <ClickableList
                             className={classes.clickableList}
-                            options={activitiesRef}
+                            options={activitesAutoCompleteRef}
                             handleChange={setSelectedId}
                             createActivity={createActivityCallBack}
                             placeholder="Saisissez une activité"

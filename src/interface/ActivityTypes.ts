@@ -3,8 +3,8 @@ import { RawActiviteOption } from "./RawActiviteOption";
 
 export type ActivitySelection = {
     label: string;
+    id: string;
     rang: number;
-    id?: string;
     subs?: ActivitySelection[];
 };
 
@@ -17,10 +17,11 @@ export type SelectedActivity = {
 export type ActivitySelecterSpecificProps = {
     categoriesIcons: string[];
     clickableListIconNoResult: string;
-    activitiesRef: RawActiviteOption[];
+    activitesAutoCompleteRef: RawActiviteOption[];
     backClickEvent: React.MouseEvent;
     nextClickEvent: React.MouseEvent;
     backClickCallback(): void;
     nextClickCallback(): void;
     setDisplayStepper(value: boolean): void;
+    categoriesAndActivitesNomenclature: ActivitySelection[];
 };

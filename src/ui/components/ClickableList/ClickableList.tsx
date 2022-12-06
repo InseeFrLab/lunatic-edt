@@ -151,7 +151,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             className={cx(classes.root, className)}
             options={options}
             defaultValue={selectedvalue}
-            onChange={(_event, value) => handleChange(value?.label)}
+            onChange={(_event, value) => handleChange(value?.id)}
             renderInput={params => renderTextField(params)}
             renderOption={(properties, option) => (
                 <li {...properties} className={classes.option}>
