@@ -24,6 +24,7 @@ type ActivitySelecterProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
     componentSpecificProps: ActivitySelecterSpecificProps;
     response: { [name: string]: string };
+    label: string;
 };
 
 enum FullScreenComponent {
@@ -33,7 +34,7 @@ enum FullScreenComponent {
 }
 
 const ActivitySelecter = memo((props: ActivitySelecterProps) => {
-    let { handleChange, componentSpecificProps, response } = props;
+    let { handleChange, componentSpecificProps, response, label } = props;
     let {
         backClickEvent,
         nextClickEvent,
@@ -43,7 +44,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         activitesAutoCompleteRef,
         clickableListIconNoResult,
         setDisplayStepper,
-        categoriesAndActivitesNomenclature
+        categoriesAndActivitesNomenclature,
+        labels
     } = { ...props.componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<ActivitySelection[]>([]);
@@ -149,12 +151,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
 
     const getTextTitle = () => {
         if (fullScreenComponent === FullScreenComponent.FreeInput) {
-            return "Ajoutez une autre activité";
+            return labels.addActivity;
         } else {
             if (selectedCategories.length === 0) {
-                return "Que faisiez-vous ?";
+                return label;
             } else {
-                return `Sélectionnez une activité dans la catégorie «${
+                return `${labels.selectInCategory} «${
                     selectedCategories[selectedCategories.length - 1].label
                 } »`;
             }
@@ -193,7 +195,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         return (
             <Box
                 className={
-                    !category.subs && category.label === selectedId
+                    !category.subs && category.id === selectedId
                         ? cx(classes.subRankCategory, classes.selectedSubRankCategory)
                         : classes.subRankCategory
                 }
@@ -235,14 +237,13 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                     >
                         <DialogContent>
                             <DialogContentText id="alert-dialog-description">
-                                Attention ! Vous n’avez pas été au bout de cette étape. Souhaitez-vous la
-                                compléter ?
+                                {labels.alertMessage}
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => next(true)}>Ignorer</Button>
+                            <Button onClick={() => next(true)}>{labels.alertIgnore}</Button>
                             <Button onClick={handleAlertClose} autoFocus>
-                                Compléter
+                                {labels.alertComplete}
                             </Button>
                         </DialogActions>
                     </Dialog>
@@ -253,10 +254,10 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             options={activitesAutoCompleteRef}
                             handleChange={setSelectedId}
                             createActivity={createActivityCallBack}
-                            placeholder="Saisissez une activité"
-                            notFoundLabel="Aucun résultat trouvé"
-                            notFoundComment="Vous pourrez l'ajouter en cliquant sur le bouton ci-dessous, ou le bouton + ci-dessus"
-                            addActivityButtonLabel="Ajouter l'activité"
+                            placeholder={labels.clickableListPlaceholder}
+                            notFoundLabel={labels.clickableListNotFoundLabel}
+                            notFoundComment={labels.clickableListNotFoundComment}
+                            addActivityButtonLabel={labels.clickableListAddActivityButton}
                             iconNoResult={clickableListIconNoResult}
                             iconNoResultAlt="alt pour icon no result"
                             autoFocus={true}
@@ -270,7 +271,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                 value={createActivityValue}
                                 className={classes.freeInputTextField}
                                 onChange={e => setCreateActivityValue(e.target.value)}
-                                placeholder="Saisissez une activité"
+                                placeholder={labels.clickableListPlaceholder}
                             ></TextField>
                         </Box>
                     ) : null}
@@ -287,7 +288,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                     }
                                 >
                                     <Typography className={classes.activityInputLabel}>
-                                        Saisissez une activité
+                                        {labels.clickableListPlaceholder}
                                     </Typography>
                                     <Search className={classes.activityInputIcon} />
                                 </Box>
@@ -305,7 +306,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                         return renderSubRangCategory(s);
                                     })}
                                     <Button className={classes.buttonOther} onClick={clickAutreButton}>
-                                        Autre ?
+                                        {labels.otherButton}
                                     </Button>
                                 </Box>
                             )}
