@@ -1,4 +1,4 @@
-import { memo, useState, useEffect } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import {
     ActivitySelecterSpecificProps,
@@ -35,6 +35,7 @@ enum FullScreenComponent {
 
 const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     let { handleChange, componentSpecificProps, response, label } = props;
+
     let {
         backClickEvent,
         nextClickEvent,
@@ -51,6 +52,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const [selectedCategories, setSelectedCategories] = useState<ActivitySelection[]>([]);
     const [createActivityValue, setCreateActivityValue] = useState<string | undefined>();
     const [selectedId, setSelectedId] = useState<string | undefined>();
+    const [labelOfSelectedId, setLabelOfSelectedId] = useState<string | undefined>();
     const [fullScreenComponent, setFullScreenComponent] = useState<FullScreenComponent>(
         FullScreenComponent.Main,
     );
@@ -73,17 +75,18 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     useEffect(() => {
         if (nextClickEvent) {
             next(false);
+        } else {
+            onChange(undefined, undefined, false);
         }
     }, [nextClickEvent]);
 
-    const categoriesActivitiesBoxClick = (selection: ActivitySelection) => {
-        if (selection.subs) {
-            const temp = [...selectedCategories];
-            temp.push(selection);
-            setSelectedCategories(temp);
-        } else {
-            setSelectedId(selection.id);
+    const onChange = (id?: string, label?: string, isFullyCompleted?: boolean) => {
+        const selection: SelectedActivity = {
+            id: id,
+            label: label,
+            isFullyCompleted: isFullyCompleted
         }
+        handleChange(response, JSON.stringify(selection));
     };
 
     const back = () => {
@@ -93,20 +96,23 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             return;
         }
         const temp = [...selectedCategories];
+        setSelectedId(undefined);
+        setLabelOfSelectedId(undefined);
 
         switch (fullScreenComponent) {
             case FullScreenComponent.Main:
-                setSelectedId(undefined);
                 temp.pop();
                 setSelectedCategories(temp);
+                onChange(temp[temp.length-1]?.id, undefined, false);
                 break;
             case FullScreenComponent.FreeInput:
                 setCreateActivityValue(undefined);
                 setFullScreenComponent(FullScreenComponent.Main);
+                onChange(selectedCategories[selectedCategories.length-1]?.id, undefined, false);
                 break;
             case FullScreenComponent.ClickableList:
-                setSelectedId(undefined);
                 setFullScreenComponent(FullScreenComponent.Main);
+                onChange(undefined, undefined, false);
                 break;
             default:
                 break;
@@ -114,17 +120,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     };
 
     const next = (continueWithUncompleted: boolean) => {
-        const selection: SelectedActivity = {};
-
         switch (fullScreenComponent) {
             case FullScreenComponent.ClickableList:
             case FullScreenComponent.Main:
                 if (selectedId === undefined && !continueWithUncompleted) {
                     setDisplayAlert(true);
                 } else {
-                    selection.id = selectedId || selectedCategories[selectedCategories.length - 1]?.id;
-                    selection.isFullyCompleted = !continueWithUncompleted;
-                    handleChange(response, JSON.stringify(selection));
                     nextClickCallback();
                 }
                 break;
@@ -135,19 +136,70 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 ) {
                     setDisplayAlert(true);
                 } else {
-                    // If we enter free input value from "Autre" button, then save id of last selected category
-                    if (selectedCategories.length > 0) {
-                        selection.id = selectedCategories[selectedCategories.length - 1].id;
-                    }
-                    selection.label = createActivityValue;
-                    selection.isFullyCompleted = !continueWithUncompleted;
-                    handleChange(response, JSON.stringify(selection));
+                    nextClickCallback();
                 }
                 break;
             default:
                 break;
         }
     };
+
+    const categoriesActivitiesBoxClick = (selection: ActivitySelection) => {
+        if (selection.subs) {
+            const temp = [...selectedCategories];
+            temp.push(selection);
+            setSelectedCategories(temp);
+            onChange(selection.id, undefined, false);
+        } else {
+            onChange(selection.id, undefined, true);
+            setSelectedId(selection.id);
+            setLabelOfSelectedId(selection.label);
+        }
+    };
+
+    const createActivityCallBack = (label: string) => {
+        onChange(undefined, label, true);
+        setFullScreenComponent(FullScreenComponent.FreeInput);
+        setCreateActivityValue(label);
+    };
+
+
+    const clickAutreButton = () => {
+        setFullScreenComponent(FullScreenComponent.FreeInput);
+        // If we enter free input value from "Autre" button, then save id of last selected category
+        let id = undefined;
+        if (selectedCategories.length > 0) {
+            id = selectedCategories[selectedCategories.length - 1].id;
+        }
+        onChange(id, undefined, false);
+    };
+
+    const handleAlertClose = () => {
+        setDisplayAlert(false);
+    };
+
+    const clickableListOnChange = (id: string | undefined) => {
+        setSelectedId(id);
+        if (id) {
+            onChange(id, undefined, true);
+        } else {
+            onChange(id, undefined, false);
+        }
+    };
+
+    const freeInputOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setCreateActivityValue(e.target.value);
+        // If we enter free input value from "Autre" button, then save id of last selected category
+        let id = undefined;
+        if (selectedCategories.length > 0) {
+            id = selectedCategories[selectedCategories.length - 1].id;
+        }
+        if (e.target.value !== "") {
+            onChange(id, e.target.value, true);
+        } else {
+            onChange(id, e.target.value, false);
+        }
+    }
 
     const getTextTitle = () => {
         if (fullScreenComponent === FullScreenComponent.FreeInput) {
@@ -156,11 +208,30 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             if (selectedCategories.length === 0) {
                 return label;
             } else {
-                return `${labels.selectInCategory} «${
-                    selectedCategories[selectedCategories.length - 1].label
-                } »`;
+                return `${labels.selectInCategory} «${selectedCategories[selectedCategories.length - 1].label
+                    } »`;
             }
         }
+    };
+
+    const renderSubRangCategory = (category: ActivitySelection) => {
+        return (
+            <Box
+                className={
+                    !category.subs && category.id === selectedId && category.label === labelOfSelectedId
+                        ? cx(classes.subRankCategory, classes.selectedSubRankCategory)
+                        : classes.subRankCategory
+                }
+                key={uuidv4()}
+                onClick={() => {
+                    categoriesActivitiesBoxClick(category);
+                }}
+            >
+                <Extension className={classes.optionIcon} />
+                <Typography className={classes.subRankLabel}>{category.label}</Typography>
+                {category.subs ? <ChevronRight className={classes.chevronIcon} /> : null}
+            </Box>
+        );
     };
 
     const renderRank1Category = (category: ActivitySelection) => {
@@ -182,47 +253,13 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 key={uuidv4()}
                 onClick={() => categoriesActivitiesBoxClick(category)}
             >
-                <img className={classes.icon} src={categoriesIcons[id - 1]} />
+                <img className={classes.icon} src={categoriesIcons[id]} />
                 <Typography className={classes.rank1MainLabel}>{mainLabel}</Typography>
                 {secondLabel ? (
                     <Typography className={classes.rank1SecondLabel}>{secondLabel}</Typography>
                 ) : null}
             </Box>
         );
-    };
-
-    const renderSubRangCategory = (category: ActivitySelection) => {
-        return (
-            <Box
-                className={
-                    !category.subs && category.id === selectedId
-                        ? cx(classes.subRankCategory, classes.selectedSubRankCategory)
-                        : classes.subRankCategory
-                }
-                key={uuidv4()}
-                onClick={() => {
-                    categoriesActivitiesBoxClick(category);
-                }}
-            >
-                <Extension className={classes.optionIcon} />
-                <Typography className={classes.subRankLabel}>{category.label}</Typography>
-                {category.subs ? <ChevronRight className={classes.chevronIcon} /> : null}
-            </Box>
-        );
-    };
-
-    const createActivityCallBack = (label: string) => {
-        setFullScreenComponent(FullScreenComponent.FreeInput);
-        setCreateActivityValue(label);
-    };
-
-    const clickAutreButton = () => {
-        setSelectedId(undefined);
-        setFullScreenComponent(FullScreenComponent.FreeInput);
-    };
-
-    const handleAlertClose = () => {
-        setDisplayAlert(false);
     };
 
     return (
@@ -252,7 +289,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         <ClickableList
                             className={classes.clickableList}
                             options={activitesAutoCompleteRef}
-                            handleChange={setSelectedId}
+                            handleChange={clickableListOnChange}
                             createActivity={createActivityCallBack}
                             placeholder={labels.clickableListPlaceholder}
                             notFoundLabel={labels.clickableListNotFoundLabel}
@@ -270,7 +307,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             <TextField
                                 value={createActivityValue}
                                 className={classes.freeInputTextField}
-                                onChange={e => setCreateActivityValue(e.target.value)}
+                                onChange={freeInputOnChange}
                                 placeholder={labels.clickableListPlaceholder}
                             ></TextField>
                         </Box>

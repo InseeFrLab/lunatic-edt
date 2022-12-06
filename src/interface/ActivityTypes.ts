@@ -15,7 +15,7 @@ export type SelectedActivity = {
 };
 
 export type ActivitySelecterSpecificProps = {
-    categoriesIcons: string[];
+    categoriesIcons: {[id: string]: string};
     clickableListIconNoResult: string;
     activitesAutoCompleteRef: RawActiviteOption[];
     backClickEvent: React.MouseEvent | undefined;
