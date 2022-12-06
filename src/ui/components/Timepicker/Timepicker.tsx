@@ -14,7 +14,7 @@ export type TimepickerProps = {
     readOnly?: boolean;
     value?: string;
     handleChange(response: { [name: string]: string }, value: string | null): void;
-    label?: string;  
+    label?: string;
     id?: string;
     response: { [name: string]: string };
 };

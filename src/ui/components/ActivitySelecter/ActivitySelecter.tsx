@@ -46,7 +46,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         clickableListIconNoResult,
         setDisplayStepper,
         categoriesAndActivitesNomenclature,
-        labels
+        labels,
     } = { ...props.componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<ActivitySelection[]>([]);
@@ -84,8 +84,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         const selection: SelectedActivity = {
             id: id,
             label: label,
-            isFullyCompleted: isFullyCompleted
-        }
+            isFullyCompleted: isFullyCompleted,
+        };
         handleChange(response, JSON.stringify(selection));
     };
 
@@ -103,12 +103,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             case FullScreenComponent.Main:
                 temp.pop();
                 setSelectedCategories(temp);
-                onChange(temp[temp.length-1]?.id, undefined, false);
+                onChange(temp[temp.length - 1]?.id, undefined, false);
                 break;
             case FullScreenComponent.FreeInput:
                 setCreateActivityValue(undefined);
                 setFullScreenComponent(FullScreenComponent.Main);
-                onChange(selectedCategories[selectedCategories.length-1]?.id, undefined, false);
+                onChange(selectedCategories[selectedCategories.length - 1]?.id, undefined, false);
                 break;
             case FullScreenComponent.ClickableList:
                 setFullScreenComponent(FullScreenComponent.Main);
@@ -163,7 +163,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         setCreateActivityValue(label);
     };
 
-
     const clickAutreButton = () => {
         setFullScreenComponent(FullScreenComponent.FreeInput);
         // If we enter free input value from "Autre" button, then save id of last selected category
@@ -199,7 +198,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         } else {
             onChange(id, e.target.value, false);
         }
-    }
+    };
 
     const getTextTitle = () => {
         if (fullScreenComponent === FullScreenComponent.FreeInput) {
@@ -208,8 +207,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             if (selectedCategories.length === 0) {
                 return label;
             } else {
-                return `${labels.selectInCategory} «${selectedCategories[selectedCategories.length - 1].label
-                    } »`;
+                return `${labels.selectInCategory} «${
+                    selectedCategories[selectedCategories.length - 1].label
+                } »`;
             }
         }
     };

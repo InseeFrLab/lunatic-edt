@@ -15,7 +15,7 @@ export type SelectedActivity = {
 };
 
 export type ActivitySelecterSpecificProps = {
-    categoriesIcons: {[id: string]: string};
+    categoriesIcons: { [id: string]: string };
     clickableListIconNoResult: string;
     activitesAutoCompleteRef: RawActiviteOption[];
     backClickEvent: React.MouseEvent | undefined;
@@ -25,13 +25,13 @@ export type ActivitySelecterSpecificProps = {
     setDisplayStepper(value: boolean): void;
     categoriesAndActivitesNomenclature: ActivitySelection[];
     labels: {
-        selectInCategory: string, 
-        addActivity: string,
-        alertMessage: string,
-        alertIgnore: string,
-        alertComplete: string,
-        clickableListPlaceholder: string,
-        clickableListNotFoundLabel: string,
+        selectInCategory: string;
+        addActivity: string;
+        alertMessage: string;
+        alertIgnore: string;
+        alertComplete: string;
+        clickableListPlaceholder: string;
+        clickableListNotFoundLabel: string;
         clickableListNotFoundComment: string;
         clickableListAddActivityButton: string;
         otherButton: string;
