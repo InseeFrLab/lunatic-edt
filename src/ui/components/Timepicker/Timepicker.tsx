@@ -22,7 +22,7 @@ export type TimepickerProps = {
 const Timepicker = memo((props: TimepickerProps) => {
     const { id, response, handleChange, value, readOnly, disabled, label } = props;
     const { classes } = useStyles();
-    const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
+    const [valueLocal, setValue] = React.useState<Dayjs | null>(value ? dayjs(value, "HH:mm") : dayjs());
 
     useEffect(() => {
         handleChange(response, valueLocal?.format("HH:mm") || null);
