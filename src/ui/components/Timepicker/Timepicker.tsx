@@ -22,15 +22,18 @@ export type TimepickerProps = {
 const Timepicker = memo((props: TimepickerProps) => {
     const { id, response, handleChange, value, readOnly, disabled, label } = props;
     const { classes } = useStyles();
-    const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
+    const [valueLocal, setValue] = React.useState<Dayjs | null>(value ? dayjs(value, "HH:mm") : dayjs());
 
     useEffect(() => {
-        handleChange(response, valueLocal?.format("HH:mmm") || null);
+        if (valueLocal != null && valueLocal?.isValid())
+            handleChange(response, valueLocal?.format("HH:mm") || null);
     }, []);
 
     function setValueLunatic(newValue: Dayjs | null) {
-        setValue(newValue);
-        handleChange(response, newValue?.format("HH:mmm") || null);
+        if (newValue != null && newValue?.isValid()) {
+            setValue(newValue);
+            handleChange(response, newValue?.format("HH:mm") || null);
+        }
     }
 
     return (
