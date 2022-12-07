@@ -25,12 +25,15 @@ const Timepicker = memo((props: TimepickerProps) => {
     const [valueLocal, setValue] = React.useState<Dayjs | null>(value ? dayjs(value, "HH:mm") : dayjs());
 
     useEffect(() => {
-        handleChange(response, valueLocal?.format("HH:mm") || null);
+        if (valueLocal != null && valueLocal?.isValid())
+            handleChange(response, valueLocal?.format("HH:mm") || null);
     }, []);
 
     function setValueLunatic(newValue: Dayjs | null) {
-        setValue(newValue);
-        handleChange(response, newValue?.format("HH:mm") || null);
+        if (newValue != null && newValue?.isValid()) {
+            setValue(newValue);
+            handleChange(response, newValue?.format("HH:mm") || null);
+        }
     }
 
     return (
