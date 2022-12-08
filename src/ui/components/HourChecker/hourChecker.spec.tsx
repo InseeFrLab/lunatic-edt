@@ -1,10 +1,10 @@
-import { render, RenderResult, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { theme } from "../../theme"
-import '@testing-library/jest-dom'
+import { render, RenderResult, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { theme } from "../../theme";
+import "@testing-library/jest-dom";
 
 import { ThemeProvider } from "@mui/material";
-import HourChecker from './HourChecker';
+import HourChecker from "./HourChecker";
 
 describe("hourchecker", () => {
     const responses = [
@@ -38,9 +38,9 @@ describe("hourchecker", () => {
                     responses={responses}
                     value={value}
                 ></HourChecker>
-            </ThemeProvider>
+            </ThemeProvider>,
         );
-    }
+    };
 
     it("displays the four quarters and toogles", async () => {
         const value = {
@@ -61,10 +61,11 @@ describe("hourchecker", () => {
 
         userEvent.click(screen.getByLabelText("hourcheckertoogle"));
 
-        await waitFor(() => expect(screen.queryByLabelText("hourcheckerclosed")).not.toBeInTheDocument())
+        await waitFor(() =>
+            expect(screen.queryByLabelText("hourcheckerclosed")).not.toBeInTheDocument(),
+        );
         expect(await screen.findByLabelText("hourcheckeropen")).toBeInTheDocument();
     });
-
 
     it("updates correctly when selecting one value", async () => {
         const value = {
@@ -87,14 +88,13 @@ describe("hourchecker", () => {
                 [{ name: responses[0].response.name }, false],
                 [{ name: responses[1].response.name }, true],
                 [{ name: responses[2].response.name }, false],
-                [{ name: responses[3].response.name }, false]
-            ])
+                [{ name: responses[3].response.name }, false],
+            ]),
         );
 
         expect(await screen.findAllByLabelText("hournotselected")).toHaveLength(3);
         expect(await screen.findAllByLabelText("hourselected")).toHaveLength(1);
     });
-
 
     it("updates correctly when deselecting one value ", async () => {
         const value = {
@@ -117,14 +117,13 @@ describe("hourchecker", () => {
                 [{ name: responses[0].response.name }, false],
                 [{ name: responses[1].response.name }, false],
                 [{ name: responses[2].response.name }, false],
-                [{ name: responses[3].response.name }, false]
-            ])
+                [{ name: responses[3].response.name }, false],
+            ]),
         );
 
         expect(await screen.findAllByLabelText("hournotselected")).toHaveLength(4);
-        await waitFor(() => expect(screen.queryByLabelText("hourselected")).not.toBeInTheDocument())
+        await waitFor(() => expect(screen.queryByLabelText("hourselected")).not.toBeInTheDocument());
     });
-
 
     it("updates correctly when selecting all values", async () => {
         const value = {
@@ -146,14 +145,13 @@ describe("hourchecker", () => {
                 [{ name: responses[0].response.name }, true],
                 [{ name: responses[1].response.name }, true],
                 [{ name: responses[2].response.name }, true],
-                [{ name: responses[3].response.name }, true]
-            ])
+                [{ name: responses[3].response.name }, true],
+            ]),
         );
 
         await waitFor(() => expect(screen.queryByLabelText("hournotselected")).not.toBeInTheDocument());
         expect(await screen.findAllByLabelText("hourselected")).toHaveLength(4);
     });
-
 
     it("updates correctly when deselecting all values", async () => {
         const value = {
@@ -175,13 +173,11 @@ describe("hourchecker", () => {
                 [{ name: responses[0].response.name }, false],
                 [{ name: responses[1].response.name }, false],
                 [{ name: responses[2].response.name }, false],
-                [{ name: responses[3].response.name }, false]
-            ])
+                [{ name: responses[3].response.name }, false],
+            ]),
         );
 
         expect(await screen.findAllByLabelText("hournotselected")).toHaveLength(4);
         await waitFor(() => expect(screen.queryByLabelText("hourselected")).not.toBeInTheDocument());
     });
 });
-
-
