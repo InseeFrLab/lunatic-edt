@@ -12,3 +12,4 @@ export { default as Info } from "./Info";
 export { default as WeeklyPlanner } from "./Planner/WeeklyPlanner";
 export { default as ActivitySelecter } from "./ActivitySelecter";
 export { default as Timepicker } from "./Timepicker";
+export { default as LocationSelecter } from "./LocationSelecter";

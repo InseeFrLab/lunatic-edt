@@ -1,10 +1,7 @@
 import React, { memo, useState, useEffect } from "react";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import {
-    ActivitySelecterSpecificProps,
-    ActivitySelection,
-    SelectedActivity,
-} from "interface/ActivityTypes";
+import { ActivitySelection, SelectedActivity } from "interface/ActivityTypes";
+import { ActivitySelecterSpecificProps } from "interface/ComponentsSpecificProps";
 import {
     Box,
     Button,
@@ -47,7 +44,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         setDisplayStepper,
         categoriesAndActivitesNomenclature,
         labels,
-    } = { ...props.componentSpecificProps };
+    } = { ...componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<ActivitySelection[]>([]);
     const [createActivityValue, setCreateActivityValue] = useState<string | undefined>();
@@ -209,7 +206,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             } else {
                 return `${labels.selectInCategory} «${
                     selectedCategories[selectedCategories.length - 1].label
-                    } »`;
+                } »`;
             }
         }
     };
@@ -264,7 +261,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
 
     return (
         <>
-            {componentSpecificProps && (
+            {componentSpecificProps && categoriesAndActivitesNomenclature && (
                 <>
                     <Dialog
                         open={displayAlert}
@@ -286,19 +283,19 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                     </Dialog>
 
                     {fullScreenComponent === FullScreenComponent.ClickableList && (
-                            <ClickableList
-                                className={classes.clickableList}
-                                options={activitesAutoCompleteRef}
-                                handleChange={clickableListOnChange}
-                                createActivity={createActivityCallBack}
-                                placeholder={labels.clickableListPlaceholder}
-                                notFoundLabel={labels.clickableListNotFoundLabel}
-                                notFoundComment={labels.clickableListNotFoundComment}
-                                addActivityButtonLabel={labels.clickableListAddActivityButton}
-                                iconNoResult={clickableListIconNoResult}
-                                iconNoResultAlt="alt pour icon no result"
-                                autoFocus={true}
-                            ></ClickableList>
+                        <ClickableList
+                            className={classes.clickableList}
+                            options={activitesAutoCompleteRef}
+                            handleChange={clickableListOnChange}
+                            createActivity={createActivityCallBack}
+                            placeholder={labels.clickableListPlaceholder}
+                            notFoundLabel={labels.clickableListNotFoundLabel}
+                            notFoundComment={labels.clickableListNotFoundComment}
+                            addActivityButtonLabel={labels.clickableListAddActivityButton}
+                            iconNoResult={clickableListIconNoResult}
+                            iconNoResultAlt="alt pour icon no result"
+                            autoFocus={true}
+                        ></ClickableList>
                     )}
 
                     {fullScreenComponent === FullScreenComponent.FreeInput && (
@@ -397,7 +394,7 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         display: "flex",
         flexWrap: "wrap",
         justifyContent: "space-evenly",
-        cursor: "pointer"
+        cursor: "pointer",
     },
     rank1Category: {
         display: "flex",

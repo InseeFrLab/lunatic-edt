@@ -1,1 +1,1 @@
-export { ActivitySelecterSpecificProps } from "./ActivityTypes";
+export * from "./ComponentsSpecificProps";

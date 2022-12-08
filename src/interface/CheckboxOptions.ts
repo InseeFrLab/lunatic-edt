@@ -7,3 +7,8 @@ export type CheckboxOption = {
 export type CheckboxOptionResponse = {
     name: string;
 };
+
+export type CheckboxOneCustomOption = {
+    label: string;
+    value: string;
+};
