@@ -209,7 +209,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             } else {
                 return `${labels.selectInCategory} «${
                     selectedCategories[selectedCategories.length - 1].label
-                } »`;
+                    } »`;
             }
         }
     };
@@ -285,23 +285,23 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         </DialogActions>
                     </Dialog>
 
-                    {fullScreenComponent === FullScreenComponent.ClickableList ? (
-                        <ClickableList
-                            className={classes.clickableList}
-                            options={activitesAutoCompleteRef}
-                            handleChange={clickableListOnChange}
-                            createActivity={createActivityCallBack}
-                            placeholder={labels.clickableListPlaceholder}
-                            notFoundLabel={labels.clickableListNotFoundLabel}
-                            notFoundComment={labels.clickableListNotFoundComment}
-                            addActivityButtonLabel={labels.clickableListAddActivityButton}
-                            iconNoResult={clickableListIconNoResult}
-                            iconNoResultAlt="alt pour icon no result"
-                            autoFocus={true}
-                        ></ClickableList>
-                    ) : null}
+                    {fullScreenComponent === FullScreenComponent.ClickableList && (
+                            <ClickableList
+                                className={classes.clickableList}
+                                options={activitesAutoCompleteRef}
+                                handleChange={clickableListOnChange}
+                                createActivity={createActivityCallBack}
+                                placeholder={labels.clickableListPlaceholder}
+                                notFoundLabel={labels.clickableListNotFoundLabel}
+                                notFoundComment={labels.clickableListNotFoundComment}
+                                addActivityButtonLabel={labels.clickableListAddActivityButton}
+                                iconNoResult={clickableListIconNoResult}
+                                iconNoResultAlt="alt pour icon no result"
+                                autoFocus={true}
+                            ></ClickableList>
+                    )}
 
-                    {fullScreenComponent === FullScreenComponent.FreeInput ? (
+                    {fullScreenComponent === FullScreenComponent.FreeInput && (
                         <Box className={classes.root}>
                             <Typography className={classes.title}>{getTextTitle()}</Typography>
                             <TextField
@@ -311,13 +311,13 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                 placeholder={labels.clickableListPlaceholder}
                             ></TextField>
                         </Box>
-                    ) : null}
+                    )}
 
-                    {fullScreenComponent === FullScreenComponent.Main ? (
+                    {fullScreenComponent === FullScreenComponent.Main && (
                         <Box className={classes.root}>
                             <Typography className={classes.title}>{getTextTitle()}</Typography>
 
-                            {selectedCategories.length === 0 ? (
+                            {selectedCategories.length === 0 && (
                                 <Box
                                     className={classes.activityInput}
                                     onClick={() =>
@@ -329,7 +329,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                     </Typography>
                                     <Search className={classes.activityInputIcon} />
                                 </Box>
-                            ) : null}
+                            )}
 
                             {selectedCategories.length === 0 ? (
                                 <Box className={classes.rank1CategoriesBox}>
@@ -348,7 +348,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                 </Box>
                             )}
                         </Box>
-                    ) : null}
+                    )}
                 </>
             )}
         </>
@@ -385,7 +385,7 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         margin: "1rem",
     },
     clickableList: {
-        width: "100%",
+        width: "300px",
         marginTop: "1rem",
     },
     freeInputTextField: {
@@ -397,6 +397,7 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         display: "flex",
         flexWrap: "wrap",
         justifyContent: "space-evenly",
+        cursor: "pointer"
     },
     rank1Category: {
         display: "flex",
