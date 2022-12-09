@@ -23,7 +23,7 @@ export type TimepickerProps = {
 
 const lastTime = (activities: Activity[], value: string | undefined) => {
     let startTime =
-        activities != null
+        activities != null && activities.length > 0
             ? dayjs(activities[activities.length - 1]?.endTime, "HH:mm")
             : value != null
             ? dayjs(value, "HH:mm")

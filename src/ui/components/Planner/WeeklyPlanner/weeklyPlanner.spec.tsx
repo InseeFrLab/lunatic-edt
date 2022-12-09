@@ -21,7 +21,7 @@ describe("weeklyPlanner", () => {
     const todayStringValue = generateStringInputFromDate(new Date());
     const setIsSubChildDisplayed = jest.fn();
     const hasBeenStarted = "false";
-    const value = `{\"data\":[{\"hasBeenStarted\":${hasBeenStarted},\"date\":\"${todayStringValue}\",\"day\":\"vendredi\",\"detail\":[{\"start\":\"2h15\",\"end\":\"3h0\",\"duration\":60}]}]}`;
+    const value = `{\\"data\\":[{\\"hasBeenStarted\\":${hasBeenStarted},\\"date\\":\\"${todayStringValue}\\",\\"day\\":\\"vendredi\\",\\"detail\\":[{\\"start\\":\\"2h15\\",\\"end\\":\\"3h0\\",\\"duration\\":60}]}]}`;
 
     const renderElement = (value: string, surveyDateString: string): RenderResult => {
         return render(
@@ -80,7 +80,7 @@ describe("weeklyPlanner", () => {
         expect(screen.getByText("0%")).toBeInTheDocument();
 
         const hasBeenStartedUpdated = "true";
-        const valueUpdated = `{\"data\":[{\"hasBeenStarted\":${hasBeenStartedUpdated},\"date\":\"${todayStringValue}\",\"day\":\"vendredi\",\"detail\":[{\"start\":\"2h15\",\"end\":\"3h0\",\"duration\":60}]}]}`;
+        const valueUpdated = `{\\"data\\":[{\\"hasBeenStarted\\":${hasBeenStartedUpdated},\\"date\\":\\"${todayStringValue}\\",\\"day\\":\\"vendredi\\",\\"detail\\":[{\\"start\\":\\"2h15\\",\\"end\\":\\"3h0\\",\\"duration\\":60}]}]}`;
         renderElement(valueUpdated, surveyDateString);
 
         expect(screen.getByText("14%")).toBeInTheDocument();
