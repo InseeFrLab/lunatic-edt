@@ -38,3 +38,7 @@ export type IconGridCheckBoxOneSpecificProps = {
         alertComplete: string;
     };
 };
+
+export type CheckboxGroupSpecificProps = {
+    optionsIcons: { [id: string]: string };
+};
