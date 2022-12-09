@@ -1,20 +1,22 @@
-import { Checkbox, Paper, Typography } from "@mui/material";
+import { Box, Checkbox, Paper, Typography } from "@mui/material";
 import { CheckboxGroupSpecificProps } from "interface";
 import { CheckboxOption } from "interface/CheckboxOptions";
 import { memo } from "react";
 import { makeStylesEdt } from "../../theme";
+import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
-export type CheckboxGroupProps = {
+export type CheckboxGroupEdtProps = {
+    label?: string;
     handleChange(response: { [name: string]: string }, value: boolean): void;
     id?: string;
-    options: CheckboxOption[];
+    responses: CheckboxOption[];
     value: { [key: string]: boolean };
     componentSpecificProps?: CheckboxGroupSpecificProps;
 };
 
-const CheckboxGroup = memo((props: CheckboxGroupProps) => {
-    const { id, value, options, handleChange, componentSpecificProps } = props;
-    console.log(componentSpecificProps);
+const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
+    const { id, value, responses, handleChange, componentSpecificProps, label } = props;
+    console.log(props);
     const { classes } = useStyles();
 
     const handleOptions = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +26,13 @@ const CheckboxGroup = memo((props: CheckboxGroupProps) => {
 
     return (
         <div id={id}>
-            {options.map(option => (
+            {label && (
+                <>
+                    <Box className={classes.labelSpacer}></Box>
+                    <label>{label}</label>
+                </>
+            )}
+            {responses.map(option => (
                 <Paper className={classes.root} elevation={0} key={"paper-" + option.id}>
                     <div style={{ display: "flex" }}>
                         {componentSpecificProps &&
@@ -51,7 +59,7 @@ const CheckboxGroup = memo((props: CheckboxGroupProps) => {
     );
 });
 
-const useStyles = makeStylesEdt({ "name": { CheckboxGroup } })(theme => ({
+const useStyles = makeStylesEdt({ "name": { CheckboxGroupEdt } })(theme => ({
     root: {
         maxWidth: "100%",
         margin: "1rem",
@@ -59,11 +67,18 @@ const useStyles = makeStylesEdt({ "name": { CheckboxGroup } })(theme => ({
         alignItems: "center",
         justifyContent: "space-between",
         paddingLeft: "0.5rem",
+        backgroundColor: theme.variables.white,
     },
     MuiCheckbox: {
         color: theme.variables.neutral,
     },
-    icon: {},
+    labelSpacer: {
+        height: "1rem",
+    },
+    icon: {
+        width: "25px",
+        marginRight: "1rem",
+    },
 }));
 
-export default CheckboxGroup;
+export default createCustomizableLunaticField(CheckboxGroupEdt, "CheckboxGroupEdt");
