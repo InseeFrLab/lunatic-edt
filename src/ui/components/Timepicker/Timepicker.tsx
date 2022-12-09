@@ -1,14 +1,14 @@
-import { Box } from "@mui/system";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { TextField } from "@mui/material";
-import { TimePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { Box } from "@mui/system";
+import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
+import { Activity, TimepickerSpecificProps } from "interface/TimepickerTypes";
 import React, { memo, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import { TimepickerSpecificProps, Activity } from "interface/TimepickerTypes";
 
 export type TimepickerProps = {
     disabled?: boolean;
@@ -18,10 +18,10 @@ export type TimepickerProps = {
     label?: string;
     id?: string;
     response: { [name: string]: string };
-    componentSpecificProps: TimepickerSpecificProps;
+    componentSpecificProps?: TimepickerSpecificProps;
 };
 
-const lastTime = (activities: Activity[], value: string | undefined) => {
+const lastTime = (activities: Activity[] | undefined, value: string | undefined) => {
     let startTime =
         activities != null && activities.length > 0
             ? dayjs(activities[activities.length - 1]?.endTime, "HH:mm")
@@ -36,7 +36,7 @@ const Timepicker = memo((props: TimepickerProps) => {
         props;
     const { classes } = useStyles();
     const [valueLocal, setValue] = React.useState<Dayjs | null>(
-        lastTime(componentSpecificProps.activitiesAct, value),
+        lastTime(componentSpecificProps?.activitiesAct, value),
     );
 
     useEffect(() => {
