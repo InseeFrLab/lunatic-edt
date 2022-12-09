@@ -1,8 +1,8 @@
 import { Box } from "@mui/system";
 import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
 import { memo, useEffect, useState } from "react";
-import { makeStylesEdt } from "../theme";
-import { createCustomizableLunaticField } from "../utils/create-customizable-lunatic-field";
+import { makeStylesEdt } from "../../theme";
+import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import { v4 as uuidv4 } from "uuid";
 import {
     Button,
@@ -12,17 +12,18 @@ import {
     DialogContentText,
     Typography,
 } from "@mui/material";
-import { LocationSelecterSpecificProps } from "interface";
+import { IconGridCheckBoxOneSpecificProps } from "interface";
 
-type LocationSelecterProps = {
+type IconGridCheckBoxOneProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
-    componentSpecificProps: LocationSelecterSpecificProps;
+    componentSpecificProps?: IconGridCheckBoxOneSpecificProps;
     response: { [name: string]: string };
     label: string;
     options: CheckboxOneCustomOption[];
 };
 
-const LocationSelecter = memo((props: LocationSelecterProps) => {
+const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
+
     const { handleChange, componentSpecificProps, response, label, options } = props;
     const {
         optionsIcons,
@@ -39,7 +40,7 @@ const LocationSelecter = memo((props: LocationSelecterProps) => {
     const { classes, cx } = useStyles();
 
     useEffect(() => {
-        if (backClickEvent) {
+        if (backClickEvent && backClickCallback) {
             backClickCallback();
         }
     }, [backClickEvent]);
@@ -54,15 +55,16 @@ const LocationSelecter = memo((props: LocationSelecterProps) => {
     }, [nextClickEvent]);
 
     const next = (continueWithUncompleted: boolean) => {
-        if (selectedValue === "" && !continueWithUncompleted) {
-            setDisplayAlert(true);
-        } else {
-            nextClickCallback();
+        if (nextClickCallback) {
+            if (selectedValue === "" && !continueWithUncompleted) {
+                setDisplayAlert(true);
+            } else {
+                nextClickCallback();
+            }
         }
     };
 
     const optionOnClick = (option: CheckboxOneCustomOption) => {
-        console.log(option.value);
         setSelectedValue(option.value);
         handleChange(response, option.value);
     };
@@ -84,48 +86,52 @@ const LocationSelecter = memo((props: LocationSelecterProps) => {
                     optionOnClick(option);
                 }}
             >
-                <img className={classes.icon} src={optionsIcons[option.value]} />
+                {optionsIcons &&
+                    <img className={classes.icon} src={optionsIcons[option.value]} />
+                }
                 <Typography className={classes.optionLabel}>{option.label}</Typography>
             </Box>
         );
     };
 
     return (
-        componentSpecificProps && (
-            <>
-                <Dialog
-                    open={displayAlert}
-                    onClose={handleAlertClose}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
-                            {labels.alertMessage}
-                        </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => next(true)}>{labels.alertIgnore}</Button>
-                        <Button onClick={handleAlertClose} autoFocus>
-                            {labels.alertComplete}
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-                <Box className={classes.root}>
-                    <Typography className={classes.title}>{label}</Typography>
-                </Box>
+        <>
+            {componentSpecificProps && labels && optionsIcons && (
+                <>
+                    <Dialog
+                        open={displayAlert}
+                        onClose={handleAlertClose}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                                {labels.alertMessage}
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={() => next(true)}>{labels.alertIgnore}</Button>
+                            <Button onClick={handleAlertClose} autoFocus>
+                                {labels.alertComplete}
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Box className={classes.root}>
+                        <Typography className={classes.title}>{label}</Typography>
+                    </Box>
 
-                <Box className={classes.optionsBox}>
-                    {options.map(o => {
-                        return renderOption(o);
-                    })}
-                </Box>
-            </>
-        )
+                    <Box className={classes.optionsBox}>
+                        {options.map(o => {
+                            return renderOption(o);
+                        })}
+                    </Box>
+                </>
+            )}
+        </>
     );
 });
 
-const useStyles = makeStylesEdt({ "name": { LocationSelecter } })(theme => ({
+const useStyles = makeStylesEdt({ "name": { IconGridCheckBoxOne } })(theme => ({
     root: {
         display: "flex",
         alignItems: "center",
@@ -174,4 +180,4 @@ const useStyles = makeStylesEdt({ "name": { LocationSelecter } })(theme => ({
     },
 }));
 
-export default createCustomizableLunaticField(LocationSelecter, "LocationSelecter");
+export default createCustomizableLunaticField(IconGridCheckBoxOne, "IconGridCheckBoxOne");

@@ -119,11 +119,21 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const next = (continueWithUncompleted: boolean) => {
         switch (fullScreenComponent) {
             case FullScreenComponent.ClickableList:
+                if (selectedId === undefined && !continueWithUncompleted) {
+                    setDisplayAlert(true);
+                } else {
+                    nextClickCallback(true);
+                }
+                break;
             case FullScreenComponent.Main:
                 if (selectedId === undefined && !continueWithUncompleted) {
                     setDisplayAlert(true);
                 } else {
-                    nextClickCallback();
+                    if (selectedCategories[selectedCategories.length - 1]) {
+                        nextClickCallback(false);
+                    } else {
+                        nextClickCallback(true);
+                    }
                 }
                 break;
             case FullScreenComponent.FreeInput:
@@ -133,7 +143,11 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 ) {
                     setDisplayAlert(true);
                 } else {
-                    nextClickCallback();
+                    if (selectedCategories[selectedCategories.length - 1]) {
+                        nextClickCallback(false);
+                    } else {
+                        nextClickCallback(true);
+                    }
                 }
                 break;
             default:
@@ -293,7 +307,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             notFoundComment={labels.clickableListNotFoundComment}
                             addActivityButtonLabel={labels.clickableListAddActivityButton}
                             iconNoResult={clickableListIconNoResult}
-                            iconNoResultAlt="alt pour icon no result"
+                            iconNoResultAlt={labels.clickableListIconNoResultAlt}
                             autoFocus={true}
                         ></ClickableList>
                     )}

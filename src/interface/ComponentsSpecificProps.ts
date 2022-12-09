@@ -8,7 +8,7 @@ export type ActivitySelecterSpecificProps = {
     backClickEvent: React.MouseEvent | undefined;
     nextClickEvent: React.MouseEvent | undefined;
     backClickCallback(): void;
-    nextClickCallback(): void;
+    nextClickCallback(routeToGoal: boolean): void;
     setDisplayStepper(value: boolean): void;
     categoriesAndActivitesNomenclature: ActivitySelection[];
     labels: {
@@ -21,11 +21,12 @@ export type ActivitySelecterSpecificProps = {
         clickableListNotFoundLabel: string;
         clickableListNotFoundComment: string;
         clickableListAddActivityButton: string;
+        clickableListIconNoResultAlt: string;
         otherButton: string;
     };
 };
 
-export type LocationSelecterSpecificProps = {
+export type IconGridCheckBoxOneSpecificProps = {
     optionsIcons: { [id: string]: string };
     backClickEvent: React.MouseEvent | undefined;
     nextClickEvent: React.MouseEvent | undefined;
