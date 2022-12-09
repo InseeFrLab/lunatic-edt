@@ -20,11 +20,12 @@ type IconGridCheckBoxOneProps = {
     response: { [name: string]: string };
     label: string;
     options: CheckboxOneCustomOption[];
+    value: string;
 };
 
 const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
 
-    const { handleChange, componentSpecificProps, response, label, options } = props;
+    const { handleChange, componentSpecificProps, response, label, options, value } = props;
     const {
         optionsIcons,
         backClickEvent,
@@ -34,7 +35,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         labels,
     } = { ...componentSpecificProps };
 
-    const [selectedValue, setSelectedValue] = useState<string>("");
+    const [selectedValue, setSelectedValue] = useState<string>(value);
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
 
     const { classes, cx } = useStyles();
@@ -48,9 +49,6 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
     useEffect(() => {
         if (nextClickEvent) {
             next(false);
-        } else {
-            // Initialize handleChange
-            handleChange(response, "");
         }
     }, [nextClickEvent]);
 

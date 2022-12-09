@@ -72,8 +72,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     useEffect(() => {
         if (nextClickEvent) {
             next(false);
-        } else {
-            onChange(undefined, undefined, false);
         }
     }, [nextClickEvent]);
 
