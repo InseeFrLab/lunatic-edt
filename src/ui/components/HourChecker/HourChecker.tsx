@@ -15,6 +15,41 @@ export type HourCheckerProps = {
     label?: string;
 };
 
+const getSelectAllValue = (value: { [key: string]: boolean }, responsesValues: string[]): boolean => {
+    let selectOrUnselectAllValue = true;
+    responsesValues.forEach((key: string) => {
+        selectOrUnselectAllValue = selectOrUnselectAllValue && value[key];
+    });
+    return selectOrUnselectAllValue;
+};
+
+const calculateSelectAllValue = (
+    setSelectAll: any,
+    value: { [key: string]: boolean },
+    responsesValues: string[],
+) => {
+    setSelectAll(getSelectAllValue, value, responsesValues);
+};
+
+const selectOrUnselectAll = (
+    currentlySelected: boolean,
+    selectAll: boolean,
+    value: { [key: string]: boolean },
+    responsesValues: string[],
+    setCurrentOption: any,
+    setSelectAll: any,
+    saveLunaticData: any,
+) => {
+    let selectedOptions: string[] = [];
+    responsesValues.forEach((name: string) => {
+        value[name] = !currentlySelected;
+        selectedOptions.push(name);
+    });
+    setCurrentOption(selectedOptions);
+    setSelectAll(!selectAll);
+    saveLunaticData();
+};
+
 const HourChecker = memo((props: HourCheckerProps) => {
     const { id, value, label, responses, handleChange } = props;
     const [isOpen, setIsOpen] = React.useState(false);
@@ -24,30 +59,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
     const responsesValues = responses.map((option: HourCheckerOption) => option.response.name);
     const [currentOption, setCurrentOption] = React.useState(responsesValues);
 
-    const getSelectAllValue = (): boolean => {
-        let selectOrUnselectAllValue = true;
-        responsesValues.forEach((key: string) => {
-            selectOrUnselectAllValue = selectOrUnselectAllValue && value[key];
-        });
-        return selectOrUnselectAllValue;
-    };
-
-    const [selectAll, setSelectAll] = React.useState(getSelectAllValue);
-
-    const calculateSelectAllValue = () => {
-        setSelectAll(getSelectAllValue);
-    };
-
-    const selectOrUnselectAll = (currentlySelected: boolean) => {
-        let selectedOptions: string[] = [];
-        responsesValues.forEach((name: string) => {
-            value[name] = !currentlySelected;
-            selectedOptions.push(name);
-        });
-        setCurrentOption(selectedOptions);
-        setSelectAll(!selectAll);
-        saveLunaticData();
-    };
+    const [selectAll, setSelectAll] = React.useState(getSelectAllValue(value, responsesValues));
 
     const toggleHourChecker = useCallback((e: any) => {
         e.stopPropagation();
@@ -57,7 +69,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
     const handleOptions = useCallback((event: any, selectedOption: string[]) => {
         setCurrentOption(selectedOption);
         value[event.target.value] = !value[event.target.value];
-        calculateSelectAllValue();
+        calculateSelectAllValue(setSelectAll, value, responsesValues);
         saveLunaticData();
     }, []);
 
@@ -73,12 +85,24 @@ const HourChecker = memo((props: HourCheckerProps) => {
         <Box className={classes.globalBox} component="div" aria-label="hourchecker">
             <Box
                 className={cx(classes.closedBox, !isOpen ? classes.visible : classes.hidden)}
-                onClick={useCallback(() => selectOrUnselectAll(selectAll), [])}
+                onClick={useCallback(
+                    () =>
+                        selectOrUnselectAll(
+                            selectAll,
+                            selectAll,
+                            value,
+                            responsesValues,
+                            setCurrentOption,
+                            setSelectAll,
+                            saveLunaticData,
+                        ),
+                    [],
+                )}
                 aria-label={isOpen ? "hourcheckeropen" : "hourcheckerclosed"}
             >
                 {responses.map((option, index) => (
                     <Box
-                        key={index + "-" + option.id}
+                        key={option.id}
                         className={cx(
                             classes.hourCheckerBox,
                             value[option.response.name] ? classes.hourSelected : classes.hourNotSelected,
