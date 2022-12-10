@@ -32,6 +32,29 @@ const renderDateLabel = (date: Date): string => {
     return formatedDate.charAt(0).toUpperCase() + formatedDate.slice(1);
 };
 
+/**
+ * Returns total sum of work for the day formatted as h:mm
+ * @returns
+ */
+const getFormatedWorkedSum = (workedHoursSum: number): string => {
+    const tempDate = new Date();
+    tempDate.setHours(0);
+    tempDate.setMinutes(workedHoursSum);
+    return (
+        tempDate.getHours() +
+        ":" +
+        (tempDate.getMinutes() === 0 ? "00" : tempDate.getMinutes().toString())
+    );
+};
+
+const setDay = (setDayRelativeTime: any, date: Date, todayDate: Date) => {
+    if (date.getTime() >= todayDate.getTime()) {
+        date.getTime() === todayDate.getTime()
+            ? setDayRelativeTime(DayRelativeTimeEnum.Today)
+            : setDayRelativeTime(DayRelativeTimeEnum.Future);
+    } else setDayRelativeTime(DayRelativeTimeEnum.Past);
+};
+
 const DayPlanner = React.memo((props: DayPlannerProps) => {
     const { classes, cx } = useStyles();
     const {
@@ -53,11 +76,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
 
     // Define DayRelativeTime for each day of the week regarding the current day
     useEffect(() => {
-        date.getTime() >= todayDate.getTime()
-            ? date.getTime() === todayDate.getTime()
-                ? setDayRelativeTime(DayRelativeTimeEnum.Today)
-                : setDayRelativeTime(DayRelativeTimeEnum.Future)
-            : setDayRelativeTime(DayRelativeTimeEnum.Past);
+        setDay(setDayRelativeTime, date, todayDate);
     }, [date]);
 
     useEffect(() => {
@@ -68,21 +87,6 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         setWorkedHoursSum(sum);
         setHasBeenStarted(dayBloc.hasBeenStarted);
     }, [activityData]);
-
-    /**
-     * Returns total sum of work for the day formatted as h:mm
-     * @returns
-     */
-    const getFormatedWorkedSum = (): string => {
-        const tempDate = new Date();
-        tempDate.setHours(0);
-        tempDate.setMinutes(workedHoursSum);
-        return (
-            tempDate.getHours() +
-            ":" +
-            (tempDate.getMinutes() === 0 ? "00" : tempDate.getMinutes().toString())
-        );
-    };
 
     /**
      * Callback for buttons and three dots icon
@@ -104,7 +108,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
             <Box className={classes.textBox}>
                 <Typography className={classes.workTimeText}>
                     {workSumLabel}
-                    <span className={classes.bold}>{getFormatedWorkedSum()}</span>
+                    <span className={classes.bold}>{getFormatedWorkedSum(workedHoursSum)}</span>
                 </Typography>
             </Box>
         ) : dayRelativeTime === 0 || hasBeenStarted ? (
