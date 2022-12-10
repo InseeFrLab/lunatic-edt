@@ -134,7 +134,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                         className={cx(classes.button, classes.buttonFuture)}
                         onClick={buttonsOnClick}
                     >
-                        {pastButtonLabel}
+                        {futureButtonLabel}
                     </Button>
                 </Box>
             );

@@ -6,6 +6,7 @@ import "@testing-library/jest-dom";
 import { ThemeProvider } from "@mui/material";
 import WeeklyPlanner from "./WeeklyPlanner";
 import { generateStringInputFromDate } from "../../../utils";
+import { useCallback } from "react";
 
 describe("weeklyPlanner", () => {
     const workSumLabel = "total travaillé";
@@ -27,9 +28,9 @@ describe("weeklyPlanner", () => {
         return render(
             <ThemeProvider theme={theme}>
                 <WeeklyPlanner
-                    handleChange={() => {
+                    handleChange={useCallback(() => {
                         console.log("changed");
-                    }}
+                    }, [])}
                     value={value}
                     surveyDate={surveyDateString}
                     isSubChildDisplayed={false}

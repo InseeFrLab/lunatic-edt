@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import { v4 as uuidv4 } from "uuid";
@@ -24,7 +24,6 @@ type IconGridCheckBoxOneProps = {
 };
 
 const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
-
     const { handleChange, componentSpecificProps, response, label, options, value } = props;
     const {
         optionsIcons,
@@ -68,9 +67,9 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         handleChange(response, option.value);
     };
 
-    const handleAlertClose = () => {
+    const handleAlertClose = useCallback(() => {
         setDisplayAlert(false);
-    };
+    }, []);
 
     const renderOption = (option: CheckboxOneCustomOption) => {
         return (
@@ -81,13 +80,11 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                         : classes.option
                 }
                 key={uuidv4()}
-                onClick={() => {
+                onClick={useCallback(() => {
                     optionOnClick(option);
-                }}
+                }, [])}
             >
-                {optionsIcons &&
-                    <img className={classes.icon} src={optionsIcons[option.value]} />
-                }
+                {optionsIcons && <img className={classes.icon} src={optionsIcons[option.value]} />}
                 <Typography className={classes.optionLabel}>{option.label}</Typography>
             </Box>
         );
@@ -109,7 +106,9 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => next(true)}>{labels.alertIgnore}</Button>
+                            <Button onClick={useCallback(() => next(true), [])}>
+                                {labels.alertIgnore}
+                            </Button>
                             <Button onClick={handleAlertClose} autoFocus>
                                 {labels.alertComplete}
                             </Button>

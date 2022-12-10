@@ -1,7 +1,7 @@
 import { Box, Checkbox, Paper, Typography } from "@mui/material";
 import { CheckboxGroupSpecificProps } from "interface";
 import { CheckboxOption } from "interface/CheckboxOptions";
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -19,10 +19,10 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
     console.log(props);
     const { classes } = useStyles();
 
-    const handleOptions = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleOptions = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         value[event.target.value] = !value[event.target.value];
         handleChange({ name: event.target.value }, value[event.target.value]);
-    };
+    }, []);
 
     return (
         <div id={id}>

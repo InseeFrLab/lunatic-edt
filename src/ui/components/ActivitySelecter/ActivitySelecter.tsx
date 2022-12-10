@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState, useEffect, useCallback } from "react";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import { ActivitySelection, SelectedActivity } from "interface/ActivityTypes";
 import { ActivitySelecterSpecificProps } from "interface/ComponentsSpecificProps";
@@ -166,13 +166,13 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         }
     };
 
-    const createActivityCallBack = (label: string) => {
+    const createActivityCallBack = useCallback((label: string) => {
         onChange(undefined, label, true);
         setFullScreenComponent(FullScreenComponent.FreeInput);
         setCreateActivityValue(label);
-    };
+    }, []);
 
-    const clickAutreButton = () => {
+    const clickAutreButton = useCallback(() => {
         setFullScreenComponent(FullScreenComponent.FreeInput);
         // If we enter free input value from "Autre" button, then save id of last selected category
         let id = undefined;
@@ -180,34 +180,37 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             id = selectedCategories[selectedCategories.length - 1].id;
         }
         onChange(id, undefined, false);
-    };
+    }, []);
 
-    const handleAlertClose = () => {
+    const handleAlertClose = useCallback(() => {
         setDisplayAlert(false);
-    };
+    }, []);
 
-    const clickableListOnChange = (id: string | undefined) => {
+    const clickableListOnChange = useCallback((id: string | undefined) => {
         setSelectedId(id);
         if (id) {
             onChange(id, undefined, true);
         } else {
             onChange(id, undefined, false);
         }
-    };
+    }, []);
 
-    const freeInputOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setCreateActivityValue(e.target.value);
-        // If we enter free input value from "Autre" button, then save id of last selected category
-        let id = undefined;
-        if (selectedCategories.length > 0) {
-            id = selectedCategories[selectedCategories.length - 1].id;
-        }
-        if (e.target.value !== "") {
-            onChange(id, e.target.value, true);
-        } else {
-            onChange(id, e.target.value, false);
-        }
-    };
+    const freeInputOnChange = useCallback(
+        (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            setCreateActivityValue(e.target.value);
+            // If we enter free input value from "Autre" button, then save id of last selected category
+            let id = undefined;
+            if (selectedCategories.length > 0) {
+                id = selectedCategories[selectedCategories.length - 1].id;
+            }
+            if (e.target.value !== "") {
+                onChange(id, e.target.value, true);
+            } else {
+                onChange(id, e.target.value, false);
+            }
+        },
+        [],
+    );
 
     const getTextTitle = () => {
         if (fullScreenComponent === FullScreenComponent.FreeInput) {
@@ -232,9 +235,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         : classes.subRankCategory
                 }
                 key={uuidv4()}
-                onClick={() => {
+                onClick={useCallback(() => {
                     categoriesActivitiesBoxClick(category);
-                }}
+                }, [])}
             >
                 <Extension className={classes.optionIcon} />
                 <Typography className={classes.subRankLabel}>{category.label}</Typography>
@@ -260,7 +263,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             <Box
                 className={classes.rank1Category}
                 key={uuidv4()}
-                onClick={() => categoriesActivitiesBoxClick(category)}
+                onClick={useCallback(() => categoriesActivitiesBoxClick(category), [])}
             >
                 <img className={classes.icon} src={categoriesIcons[id]} />
                 <Typography className={classes.rank1MainLabel}>{mainLabel}</Typography>
@@ -287,7 +290,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={() => next(true)}>{labels.alertIgnore}</Button>
+                            <Button onClick={useCallback(() => next(true), [])}>
+                                {labels.alertIgnore}
+                            </Button>
                             <Button onClick={handleAlertClose} autoFocus>
                                 {labels.alertComplete}
                             </Button>
@@ -329,9 +334,10 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             {selectedCategories.length === 0 && (
                                 <Box
                                     className={classes.activityInput}
-                                    onClick={() =>
-                                        setFullScreenComponent(FullScreenComponent.ClickableList)
-                                    }
+                                    onClick={useCallback(
+                                        () => setFullScreenComponent(FullScreenComponent.ClickableList),
+                                        [],
+                                    )}
                                 >
                                     <Typography className={classes.activityInputLabel}>
                                         {labels.clickableListPlaceholder}

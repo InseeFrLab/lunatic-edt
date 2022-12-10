@@ -6,7 +6,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
 import { Activity, TimepickerSpecificProps } from "interface/TimepickerTypes";
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -64,14 +64,17 @@ const Timepicker = memo((props: TimepickerProps) => {
                     openTo="hours"
                     views={["hours", "minutes"]}
                     value={valueLocal}
-                    onChange={newValue => {
+                    onChange={useCallback(newValue => {
                         setValueLunatic(newValue);
-                    }}
+                    }, [])}
                     components={{
                         OpenPickerIcon: KeyboardArrowDownIcon,
                     }}
-                    renderInput={params => (
-                        <TextField size="small" {...params} sx={{ svg: { color: "#1F4076" } }} />
+                    renderInput={useCallback(
+                        params => (
+                            <TextField size="small" {...params} sx={{ svg: { color: "#1F4076" } }} />
+                        ),
+                        [],
                     )}
                     className={classes.input}
                 />

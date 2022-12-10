@@ -1,6 +1,6 @@
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
@@ -23,10 +23,13 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(value ?? undefined);
 
-    const handleOptions = (_event: React.MouseEvent<HTMLElement>, selectedOption: string) => {
-        setCurrentOption(selectedOption);
-        handleChange(response, selectedOption);
-    };
+    const handleOptions = useCallback(
+        (_event: React.MouseEvent<HTMLElement>, selectedOption: string) => {
+            setCurrentOption(selectedOption);
+            handleChange(response, selectedOption);
+        },
+        [],
+    );
 
     return (
         <>
