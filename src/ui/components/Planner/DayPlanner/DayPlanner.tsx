@@ -1,6 +1,6 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import ProgressBar from "../../ProgressBar";
 import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
@@ -91,7 +91,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     /**
      * Callback for buttons and three dots icon
      */
-    const buttonsOnClick = (): void => {
+    const buttonsOnClick = useCallback((): void => {
         const temp = [...activityData];
         const dayBloc: WeeklyPlannerDataType = temp.filter(
             d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
@@ -101,7 +101,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
 
         setDisplayDayOverview(true);
         setDayOverviewSelectedDate(date);
-    };
+    }, []);
 
     const renderBottomPart = () => {
         return dayRelativeTime === -1 ? (

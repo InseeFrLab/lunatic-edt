@@ -1,7 +1,7 @@
 import { Checkbox, Paper, Typography } from "@mui/material";
 import { CheckboxGroupSpecificProps } from "interface";
 import { CheckboxOption } from "interface/CheckboxOptions";
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 
 export type CheckboxGroupProps = {
@@ -17,10 +17,10 @@ const CheckboxGroup = memo((props: CheckboxGroupProps) => {
     console.log(componentSpecificProps);
     const { classes } = useStyles();
 
-    const handleOptions = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleOptions = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         value[event.target.value] = !value[event.target.value];
         handleChange({ name: event.target.value }, value[event.target.value]);
-    };
+    }, []);
 
     return (
         <div id={id}>
