@@ -3,7 +3,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import WorkIcon from "@mui/icons-material/Work";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { HourCheckerOption } from "interface/HourCheckerOptions";
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -49,17 +49,17 @@ const HourChecker = memo((props: HourCheckerProps) => {
         saveLunaticData();
     };
 
-    const toggleHourChecker = (e: any) => {
+    const toggleHourChecker = useCallback((e: any) => {
         e.stopPropagation();
         setIsOpen(!isOpen);
-    };
+    }, []);
 
-    const handleOptions = (event: any, selectedOption: string[]) => {
+    const handleOptions = useCallback((event: any, selectedOption: string[]) => {
         setCurrentOption(selectedOption);
         value[event.target.value] = !value[event.target.value];
         calculateSelectAllValue();
         saveLunaticData();
-    };
+    }, []);
 
     const saveLunaticData = () => {
         if (handleChange) {
@@ -73,7 +73,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
         <Box className={classes.globalBox} component="div">
             <Box
                 className={cx(classes.closedBox, !isOpen ? classes.visible : classes.hidden)}
-                onClick={() => selectOrUnselectAll(selectAll)}
+                onClick={useCallback(() => selectOrUnselectAll(selectAll), [])}
             >
                 {responses.map((option, index) => (
                     <Box

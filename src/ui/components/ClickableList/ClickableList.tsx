@@ -9,7 +9,7 @@ import {
     TextField,
 } from "@mui/material";
 import { RawActiviteOption } from "interface/RawActiviteOption";
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -125,7 +125,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                     className={classes.addActivityButton}
                     variant="contained"
                     startIcon={<Add />}
-                    onClick={createActivity.bind(this, currentInputValue)}
+                    onClick={useCallback(() => createActivity(currentInputValue), [])}
                 >
                     {addActivityButtonLabel}
                 </Button>
@@ -146,21 +146,34 @@ const ClickableList = memo((props: ClickableListProps) => {
             className={classes.root}
             options={options}
             defaultValue={selectedvalue}
-            onChange={(_event, value) => console.log(value)}
-            renderInput={params => renderTextField(params)}
-            renderOption={(properties, option) => (
-                <li {...properties} className={classes.option}>
-                    <Extension className={classes.optionIcon} />
-                    {option.label}
-                </li>
+            onChange={useCallback(
+                (_event: React.SyntheticEvent<Element, Event>, value: RawActiviteOption | null) =>
+                    console.log(value),
+                [],
             )}
-            getOptionLabel={option => option.label}
-            filterOptions={filterOptions}
+            renderInput={useCallback(
+                (params: AutocompleteRenderInputParams) => renderTextField(params),
+                [],
+            )}
+            renderOption={useCallback(
+                (properties: React.HTMLAttributes<HTMLLIElement>, option: RawActiviteOption) => (
+                    <li {...properties} className={classes.option}>
+                        <Extension className={classes.optionIcon} />
+                        {option.label}
+                    </li>
+                ),
+                [],
+            )}
+            getOptionLabel={useCallback((option: RawActiviteOption) => option.label, [])}
+            filterOptions={useCallback(filterOptions, [])}
             noOptionsText={renderNoOption()}
-            onClose={() => setDisplayAddIcon(false)}
+            onClose={useCallback(() => setDisplayAddIcon(false), [])}
             fullWidth={true}
             popupIcon={
-                <Icon children={renderIcon()} onClick={createActivity.bind(this, currentInputValue)} />
+                <Icon
+                    children={renderIcon()}
+                    onClick={useCallback(() => createActivity(currentInputValue), [])}
+                />
             }
             classes={{ popupIndicator: classes.popupIndicator }}
         />

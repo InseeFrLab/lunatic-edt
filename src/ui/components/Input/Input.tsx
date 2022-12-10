@@ -1,6 +1,7 @@
 import { TextField } from "@mui/material";
 import { memo } from "react";
 import { makeStylesEdt } from "../../theme";
+import { useCallback } from "react";
 
 export type InputProps = {
     id?: string;
@@ -31,7 +32,11 @@ export const Input = memo((props: InputProps) => {
             error={errors ? true : false}
             helperText={errors?.errorMessage}
             inputProps={{ maxLength: maxLength ?? 100 }}
-            onChange={event => onChange(event.target.value)}
+            onChange={useCallback(
+                (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+                    onChange(event.target.value),
+                [],
+            )}
             size="small"
             variant="outlined"
             className={classes.input}

@@ -1,5 +1,5 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
 
@@ -18,11 +18,12 @@ const CheckboxBoolean = memo((props: CheckboxBooleanProps) => {
     const valAsString = checked === null ? "" : checked + "";
     const [localValue, setLocalValue] = React.useState(valAsString);
 
-    const handleOptions = (_event: React.MouseEvent<HTMLElement>, value: string) => {
+    const handleOptions = useCallback((_event: React.MouseEvent<HTMLElement>, value: string) => {
         setLocalValue(value);
         const valAsBool = value === "true" ? true : false;
         onClick(valAsBool);
-    };
+    }, []);
+
     return (
         <ToggleButtonGroup
             orientation="horizontal"
