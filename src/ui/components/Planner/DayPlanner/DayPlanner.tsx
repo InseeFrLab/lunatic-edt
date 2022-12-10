@@ -104,32 +104,41 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     }, []);
 
     const renderBottomPart = () => {
-        return dayRelativeTime === -1 ? (
-            <Box className={classes.textBox}>
-                <Typography className={classes.workTimeText}>
-                    {workSumLabel}
-                    <span className={classes.bold}>{getFormatedWorkedSum(workedHoursSum)}</span>
-                </Typography>
-            </Box>
-        ) : dayRelativeTime === 0 || hasBeenStarted ? (
-            <Box className={classes.buttonBox}>
-                {dayRelativeTime === 0 && (
-                    <ProgressBar
-                        className={classes.progressBar}
-                        value={Math.round((new Date().getHours() / 24) * 100)}
-                    />
-                )}
-                <Button className={classes.button} onClick={buttonsOnClick}>
-                    {presentButtonLabel}
-                </Button>
-            </Box>
-        ) : (
-            <Box className={classes.buttonBox}>
-                <Button className={cx(classes.button, classes.buttonFuture)} onClick={buttonsOnClick}>
-                    {pastButtonLabel}
-                </Button>
-            </Box>
-        );
+        if (dayRelativeTime === -1) {
+            return (
+                <Box className={classes.textBox}>
+                    <Typography className={classes.workTimeText}>
+                        {workSumLabel}
+                        <span className={classes.bold}>{getFormatedWorkedSum(workedHoursSum)}</span>
+                    </Typography>
+                </Box>
+            );
+        } else if (dayRelativeTime === 0 || hasBeenStarted) {
+            return (
+                <Box className={classes.buttonBox}>
+                    {dayRelativeTime === 0 && (
+                        <ProgressBar
+                            className={classes.progressBar}
+                            value={Math.round((new Date().getHours() / 24) * 100)}
+                        />
+                    )}
+                    <Button className={classes.button} onClick={buttonsOnClick}>
+                        {presentButtonLabel}
+                    </Button>
+                </Box>
+            );
+        } else {
+            return (
+                <Box className={classes.buttonBox}>
+                    <Button
+                        className={cx(classes.button, classes.buttonFuture)}
+                        onClick={buttonsOnClick}
+                    >
+                        {pastButtonLabel}
+                    </Button>
+                </Box>
+            );
+        }
     };
 
     return (
