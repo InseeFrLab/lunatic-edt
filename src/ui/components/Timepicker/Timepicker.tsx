@@ -22,13 +22,13 @@ export type TimepickerProps = {
 };
 
 const lastTime = (activities: Activity[] | undefined, value: string | undefined) => {
-    let startTime =
-        value != null
-            ? dayjs(value, "HH:mm")
-            : activities != null && activities.length > 0
-            ? dayjs(activities[activities.length - 1]?.endTime, "HH:mm")
-            : dayjs();
-    return startTime;
+    if (value != null) {
+        return dayjs(value, "HH:mm");
+    } else if (activities != null && activities.length > 0) {
+        return dayjs(activities[activities.length - 1]?.endTime, "HH:mm");
+    } else {
+        return dayjs();
+    }
 };
 
 const Timepicker = memo((props: TimepickerProps) => {

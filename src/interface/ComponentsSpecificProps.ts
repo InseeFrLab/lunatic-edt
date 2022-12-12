@@ -1,6 +1,20 @@
 import { ActivitySelection } from "./ActivityTypes";
 import { RawActiviteOption } from "./RawActiviteOption";
 
+export type ActivityLabelProps = {
+    selectInCategory: string;
+    addActivity: string;
+    alertMessage: string;
+    alertIgnore: string;
+    alertComplete: string;
+    clickableListPlaceholder: string;
+    clickableListNotFoundLabel: string;
+    clickableListNotFoundComment: string;
+    clickableListAddActivityButton: string;
+    clickableListIconNoResultAlt: string;
+    otherButton: string;
+};
+
 export type ActivitySelecterSpecificProps = {
     categoriesIcons: { [id: string]: string };
     clickableListIconNoResult: string;
@@ -11,19 +25,7 @@ export type ActivitySelecterSpecificProps = {
     nextClickCallback(routeToGoal: boolean): void;
     setDisplayStepper(value: boolean): void;
     categoriesAndActivitesNomenclature: ActivitySelection[];
-    labels: {
-        selectInCategory: string;
-        addActivity: string;
-        alertMessage: string;
-        alertIgnore: string;
-        alertComplete: string;
-        clickableListPlaceholder: string;
-        clickableListNotFoundLabel: string;
-        clickableListNotFoundComment: string;
-        clickableListAddActivityButton: string;
-        clickableListIconNoResultAlt: string;
-        otherButton: string;
-    };
+    labels: ActivityLabelProps;
 };
 
 export type IconGridCheckBoxOneSpecificProps = {

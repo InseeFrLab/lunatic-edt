@@ -24,13 +24,15 @@ describe("weeklyPlanner", () => {
     const hasBeenStarted = "false";
     const value = `{\\"data\\":[{\\"hasBeenStarted\\":${hasBeenStarted},\\"date\\":\\"${todayStringValue}\\",\\"day\\":\\"vendredi\\",\\"detail\\":[{\\"start\\":\\"2h15\\",\\"end\\":\\"3h0\\",\\"duration\\":60}]}]}`;
 
+    const handleChangeCallback = useCallback(() => {
+        console.log("changed");
+    }, []);
+
     const renderElement = (value: string, surveyDateString: string): RenderResult => {
         return render(
             <ThemeProvider theme={theme}>
                 <WeeklyPlanner
-                    handleChange={useCallback(() => {
-                        console.log("changed");
-                    }, [])}
+                    handleChange={handleChangeCallback}
                     value={value}
                     surveyDate={surveyDateString}
                     isSubChildDisplayed={false}

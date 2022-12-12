@@ -67,6 +67,8 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         handleChange(response, option.value);
     };
 
+    const handleAlert = useCallback(() => next(true), []);
+
     const handleAlertClose = useCallback(() => {
         setDisplayAlert(false);
     }, []);
@@ -80,9 +82,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                         : classes.option
                 }
                 key={uuidv4()}
-                onClick={useCallback(() => {
-                    optionOnClick(option);
-                }, [])}
+                onClick={useCallback(() => optionOnClick(option), [])}
             >
                 {optionsIcons && <img className={classes.icon} src={optionsIcons[option.value]} />}
                 <Typography className={classes.optionLabel}>{option.label}</Typography>
@@ -106,9 +106,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={useCallback(() => next(true), [])}>
-                                {labels.alertIgnore}
-                            </Button>
+                            <Button onClick={handleAlert}>{labels.alertIgnore}</Button>
                             <Button onClick={handleAlertClose} autoFocus>
                                 {labels.alertComplete}
                             </Button>

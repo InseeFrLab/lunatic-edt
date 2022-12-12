@@ -50,6 +50,10 @@ const selectOrUnselectAll = (
     saveLunaticData();
 };
 
+const getClassName = (cx: any, className: any, classVisible: any, classHidden: any, isOpen: boolean) => {
+    return cx(className, isOpen ? classVisible : classHidden);
+};
+
 const HourChecker = memo((props: HourCheckerProps) => {
     const { id, value, label, responses, handleChange } = props;
     const [isOpen, setIsOpen] = React.useState(false);
@@ -84,7 +88,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
     return (
         <Box className={classes.globalBox} component="div" aria-label="hourchecker">
             <Box
-                className={cx(classes.closedBox, !isOpen ? classes.visible : classes.hidden)}
+                className={getClassName(cx, classes.closedBox, classes.visible, classes.hidden, !isOpen)}
                 onClick={useCallback(
                     () =>
                         selectOrUnselectAll(
@@ -132,7 +136,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
                 onChange={handleOptions}
                 id={id}
                 aria-label={label}
-                className={cx(classes.openedBox, isOpen ? classes.visible : classes.hidden)}
+                className={getClassName(cx, classes.openedBox, classes.visible, classes.hidden, isOpen)}
             >
                 {responses.map((option, index) => (
                     <ToggleButton
