@@ -15,6 +15,18 @@ export type ActivityLabelProps = {
     otherButton: string;
 };
 
+export type WeeklyPlannerSpecificProps = {
+    surveyDate?: string;
+    isSubChildDisplayed: boolean;
+    setIsSubChildDisplayed(value: boolean): void;
+    labels: {
+        title: string,
+        workSumLabel: string,
+        presentButtonLabel: string,
+        futureButtonLabel: string
+    };
+};
+
 export type ActivitySelecterSpecificProps = {
     categoriesIcons: { [id: string]: string };
     clickableListIconNoResult: string;
