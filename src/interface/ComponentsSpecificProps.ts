@@ -7,6 +7,7 @@ export type ActivityLabelProps = {
     alertMessage: string;
     alertIgnore: string;
     alertComplete: string;
+    alertAlticon: string;
     clickableListPlaceholder: string;
     clickableListNotFoundLabel: string;
     clickableListNotFoundComment: string;
@@ -26,6 +27,7 @@ export type ActivitySelecterSpecificProps = {
     setDisplayStepper(value: boolean): void;
     categoriesAndActivitesNomenclature: ActivitySelection[];
     labels: ActivityLabelProps;
+    errorIcon: string;
 };
 
 export type IconGridCheckBoxOneSpecificProps = {
@@ -38,7 +40,9 @@ export type IconGridCheckBoxOneSpecificProps = {
         alertMessage: string;
         alertIgnore: string;
         alertComplete: string;
+        alertAlticon: string;
     };
+    errorIcon: string;
 };
 
 export type CheckboxGroupSpecificProps = {

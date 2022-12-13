@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../../ui/theme";
 import { Extension, ChevronRight, Search } from "@mui/icons-material";
 import ClickableList from "../ClickableList";
+import Alert from "../Alert";
 
 type ActivitySelecterProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
@@ -44,6 +45,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         setDisplayStepper,
         categoriesAndActivitesNomenclature,
         labels,
+        errorIcon,
     } = { ...componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<ActivitySelection[]>([]);
@@ -182,10 +184,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         onChange(id, undefined, false);
     };
 
-    const handleAlertClose = () => {
-        setDisplayAlert(false);
-    };
-
     const clickableListOnChange = (id: string | undefined) => {
         setSelectedId(id);
         if (id) {
@@ -275,24 +273,18 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         <>
             {componentSpecificProps && categoriesAndActivitesNomenclature && (
                 <>
-                    <Dialog
-                        open={displayAlert}
-                        onClose={handleAlertClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                {labels.alertMessage}
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={() => next(true)}>{labels.alertIgnore}</Button>
-                            <Button onClick={handleAlertClose} autoFocus>
-                                {labels.alertComplete}
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
+                    <Alert
+                        isAlertDisplayed={displayAlert}
+                        onCompleteCallBack={() => setDisplayAlert(false)}
+                        onCancelCallBack={() => next(true)}
+                        labels={{
+                            content: labels.alertMessage,
+                            cancel: labels.alertIgnore,
+                            complete: labels.alertComplete,
+                        }}
+                        icon={errorIcon}
+                        errorIconAlt={labels.alertAlticon}
+                    ></Alert>
 
                     {fullScreenComponent === FullScreenComponent.ClickableList && (
                         <ClickableList

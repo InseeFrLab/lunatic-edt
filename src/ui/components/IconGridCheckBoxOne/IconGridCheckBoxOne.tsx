@@ -4,15 +4,9 @@ import { memo, useEffect, useState, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import { v4 as uuidv4 } from "uuid";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    Typography,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 import { IconGridCheckBoxOneSpecificProps } from "interface";
+import Alert from "../Alert";
 
 type IconGridCheckBoxOneProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
@@ -32,6 +26,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         backClickCallback,
         nextClickCallback,
         labels,
+        errorIcon,
     } = { ...componentSpecificProps };
 
     const [selectedValue, setSelectedValue] = useState<string>(value);
@@ -69,10 +64,6 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
 
     const handleAlert = useCallback(() => next(true), []);
 
-    const handleAlertClose = useCallback(() => {
-        setDisplayAlert(false);
-    }, []);
-
     const renderOption = (option: CheckboxOneCustomOption) => {
         return (
             <Box
@@ -94,24 +85,18 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         <>
             {componentSpecificProps && labels && optionsIcons && (
                 <>
-                    <Dialog
-                        open={displayAlert}
-                        onClose={handleAlertClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                {labels.alertMessage}
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleAlert}>{labels.alertIgnore}</Button>
-                            <Button onClick={handleAlertClose} autoFocus>
-                                {labels.alertComplete}
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
+                    <Alert
+                        isAlertDisplayed={displayAlert}
+                        onCompleteCallBack={() => setDisplayAlert(false)}
+                        onCancelCallBack={handleAlert}
+                        labels={{
+                            content: labels.alertMessage,
+                            cancel: labels.alertIgnore,
+                            complete: labels.alertComplete,
+                        }}
+                        icon={errorIcon}
+                        errorIconAlt={labels.alertAlticon}
+                    ></Alert>
                     <Box className={classes.root}>
                         <Typography className={classes.title}>{label}</Typography>
                     </Box>
