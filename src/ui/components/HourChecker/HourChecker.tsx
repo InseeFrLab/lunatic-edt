@@ -3,16 +3,51 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import WorkIcon from "@mui/icons-material/Work";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { HourCheckerOption } from "interface/HourCheckerOptions";
-import React, { memo } from "react";
-import { makeStyles } from "tss-react/mui";
+import React, { memo, useCallback } from "react";
+import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type HourCheckerProps = {
-    handleChange(response: { [name: string]: string }, value: boolean): void;
+    handleChange?(response: { [name: string]: string }, value: boolean): void;
     id?: string;
     responses: HourCheckerOption[];
     value: { [key: string]: boolean };
     label?: string;
+};
+
+const getSelectAllValue = (value: { [key: string]: boolean }, responsesValues: string[]): boolean => {
+    let selectOrUnselectAllValue = true;
+    responsesValues.forEach((key: string) => {
+        selectOrUnselectAllValue = selectOrUnselectAllValue && value[key];
+    });
+    return selectOrUnselectAllValue;
+};
+
+const calculateSelectAllValue = (
+    setSelectAll: any,
+    value: { [key: string]: boolean },
+    responsesValues: string[],
+) => {
+    setSelectAll(getSelectAllValue, value, responsesValues);
+};
+
+const selectOrUnselectAll = (
+    currentlySelected: boolean,
+    selectAll: boolean,
+    value: { [key: string]: boolean },
+    responsesValues: string[],
+    setCurrentOption: any,
+    setSelectAll: any,
+    saveLunaticData: any,
+) => {
+    let selectedOptions: string[] = [];
+    responsesValues.forEach((name: string) => {
+        value[name] = !currentlySelected;
+        selectedOptions.push(name);
+    });
+    setCurrentOption(selectedOptions);
+    setSelectAll(!selectAll);
+    saveLunaticData();
 };
 
 const HourChecker = memo((props: HourCheckerProps) => {
@@ -24,59 +59,49 @@ const HourChecker = memo((props: HourCheckerProps) => {
     const responsesValues = responses.map((option: HourCheckerOption) => option.response.name);
     const [currentOption, setCurrentOption] = React.useState(responsesValues);
 
-    const getSelectAllValue = (): boolean => {
-        let selectOrUnselectAllValue = true;
-        responsesValues.forEach((key: string) => {
-            selectOrUnselectAllValue = selectOrUnselectAllValue && value[key];
-        });
-        return selectOrUnselectAllValue;
-    };
+    const [selectAll, setSelectAll] = React.useState(getSelectAllValue(value, responsesValues));
 
-    const [selectAll, setSelectAll] = React.useState(getSelectAllValue);
-
-    const calculateSelectAllValue = () => {
-        setSelectAll(getSelectAllValue);
-    };
-
-    const selectOrUnselectAll = (currentlySelected: boolean) => {
-        let selectedOptions: string[] = [];
-        responsesValues.forEach((name: string) => {
-            value[name] = !currentlySelected;
-            selectedOptions.push(name);
-        });
-        setCurrentOption(selectedOptions);
-        setSelectAll(!selectAll);
-        saveLunaticData();
-    };
-
-    const toggleHourChecker = (e: any) => {
+    const toggleHourChecker = useCallback((e: any) => {
         e.stopPropagation();
         setIsOpen(!isOpen);
-    };
+    }, []);
 
-    const handleOptions = (event: any, selectedOption: string[]) => {
+    const handleOptions = useCallback((event: any, selectedOption: string[]) => {
         setCurrentOption(selectedOption);
         value[event.target.value] = !value[event.target.value];
-        calculateSelectAllValue();
+        calculateSelectAllValue(setSelectAll, value, responsesValues);
         saveLunaticData();
-    };
+    }, []);
 
     const saveLunaticData = () => {
-        responsesValues.forEach((name: string) => {
-            handleChange({ name: name }, value[name]);
-        });
+        if (handleChange) {
+            responsesValues.forEach((name: string) => {
+                handleChange({ name: name }, value[name]);
+            });
+        }
     };
 
     return (
-        <Box sx={{ maxWidth: "1024px" }} component="div">
+        <Box className={classes.globalBox} component="div">
             <Box
-                sx={{ display: "flex", cursor: "pointer" }}
-                className={!isOpen ? classes.visible : classes.hidden}
-                onClick={() => selectOrUnselectAll(selectAll)}
+                className={cx(classes.closedBox, !isOpen ? classes.visible : classes.hidden)}
+                onClick={useCallback(
+                    () =>
+                        selectOrUnselectAll(
+                            selectAll,
+                            selectAll,
+                            value,
+                            responsesValues,
+                            setCurrentOption,
+                            setSelectAll,
+                            saveLunaticData,
+                        ),
+                    [],
+                )}
             >
                 {responses.map((option, index) => (
                     <Box
-                        key={index + "-" + option.id}
+                        key={option.id}
                         className={cx(
                             classes.hourCheckerBox,
                             value[option.response.name] ? classes.hourSelected : classes.hourNotSelected,
@@ -104,8 +129,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
                 onChange={handleOptions}
                 id={id}
                 aria-label={label}
-                sx={{ width: "100%" }}
-                className={isOpen ? classes.visible : classes.hidden}
+                className={cx(classes.openedBox, isOpen ? classes.visible : classes.hidden)}
             >
                 {responses.map((option, index) => (
                     <ToggleButton
@@ -136,7 +160,18 @@ const HourChecker = memo((props: HourCheckerProps) => {
     );
 });
 
-const useStyles = makeStyles<{ width: string }>({ "name": { HourChecker } })((theme, { width }) => ({
+const useStyles = makeStylesEdt<{ width: string }>({ "name": { HourChecker } })((theme, { width }) => ({
+    globalBox: {
+        maxWidth: "1024px",
+        width: "100%",
+    },
+    closedBox: {
+        display: "flex",
+        cursor: "pointer",
+    },
+    openedBox: {
+        width: "100%",
+    },
     visible: {},
     hidden: {
         visibility: "hidden",

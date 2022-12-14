@@ -2,8 +2,9 @@ import { TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
-import React from "react";
-import { memo } from "react";
+import "dayjs/locale/fr";
+import React, { memo, useEffect, useCallback } from "react";
+import { makeStylesEdt } from "../../theme";
 
 export type DatepickerProps = {
     disabled?: boolean;
@@ -18,8 +19,12 @@ export type DatepickerProps = {
 
 const Datepicker = memo((props: DatepickerProps) => {
     const { id, onChange, value, readOnly, disabled } = props;
-
+    const { classes } = useStyles();
     const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
+
+    useEffect(() => {
+        onChange(valueLocal?.format("YYYY-MM-DD") || null);
+    }, []);
 
     function setValueLunatic(newValue: Dayjs | null) {
         setValue(newValue);
@@ -27,21 +32,33 @@ const Datepicker = memo((props: DatepickerProps) => {
     }
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <LocalizationProvider adapterLocale={"fr"} dateAdapter={AdapterDayjs}>
             <DatePicker
                 key={id}
                 disabled={disabled}
                 readOnly={readOnly}
                 openTo="day"
-                views={["day", "month", "year"]}
+                views={["day"]}
                 value={valueLocal}
-                onChange={newValue => {
+                onChange={useCallback(newValue => {
                     setValueLunatic(newValue);
-                }}
-                renderInput={params => <TextField {...params} />}
+                }, [])}
+                renderInput={useCallback(
+                    params => (
+                        <TextField {...params} />
+                    ),
+                    [],
+                )}
+                className={classes.input}
             />
         </LocalizationProvider>
     );
 });
+
+const useStyles = makeStylesEdt({ "name": { Datepicker } })(() => ({
+    input: {
+        width: "100%",
+    },
+}));
 
 export default Datepicker;

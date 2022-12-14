@@ -1,8 +1,8 @@
 // Lunatic default Input: https://github.com/InseeFr/Lunatic/blob/v2-master/src/components/button/lunatic-button.js
 
-import { memo } from "react";
 import { Button as ButtonMaterial } from "@mui/material";
-import { makeStyles } from "tss-react/mui";
+import { memo } from "react";
+import { makeStylesEdt } from "../../theme";
 
 export type ButtonProps = {
     id?: string;
@@ -31,7 +31,7 @@ const Button = memo((props: ButtonProps) => {
     );
 });
 
-const useStyles = makeStyles({ "name": { Button } })(() => ({
+const useStyles = makeStylesEdt({ "name": { Button } })(() => ({
     "MuiButton": {
         textTransform: "none",
     },

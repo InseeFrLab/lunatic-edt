@@ -2,3 +2,4 @@
 /dist/
 /.eslintrc.js
 /CHANGELOG.md
+/src/ui/theme/make-style-edt.ts

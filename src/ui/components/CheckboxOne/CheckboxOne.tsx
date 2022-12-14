@@ -1,8 +1,7 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { CheckboxOption } from "interface/CheckboxOptions";
-import React from "react";
-import { memo } from "react";
-import { makeStyles } from "tss-react/mui";
+import React, { memo, useCallback } from "react";
+import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
 
 export type CheckboxOneProps = {
@@ -22,11 +21,14 @@ const CheckboxOne = memo((props: CheckboxOneProps) => {
     const preSelectedValue: string | undefined = Object.keys(value).find(i => value[i] === true);
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(preSelectedValue);
 
-    const handleOptions = (_event: React.MouseEvent<HTMLElement>, selectedOption: string) => {
-        setCurrentOption(selectedOption);
-        value[selectedOption] = !value[selectedOption];
-        handleChange({ name: selectedOption }, value[selectedOption]);
-    };
+    const handleOptions = useCallback(
+        (_event: React.MouseEvent<HTMLElement>, selectedOption: string) => {
+            setCurrentOption(selectedOption);
+            value[selectedOption] = !value[selectedOption];
+            handleChange({ name: selectedOption }, value[selectedOption]);
+        },
+        [],
+    );
 
     return (
         <ToggleButtonGroup
@@ -51,7 +53,7 @@ const CheckboxOne = memo((props: CheckboxOneProps) => {
     );
 });
 
-const useStyles = makeStyles({ "name": { CheckboxOne } })(theme => ({
+const useStyles = makeStylesEdt({ "name": { CheckboxOne } })(theme => ({
     "MuiToggleButton": {
         marginBottom: "0.5rem",
         border: important("2px solid #FFFFFF"),

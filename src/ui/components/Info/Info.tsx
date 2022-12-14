@@ -1,6 +1,6 @@
 import { Box } from "@mui/system";
 import { memo } from "react";
-import { makeStyles } from "tss-react/mui";
+import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type InfoProps = {
@@ -33,7 +33,7 @@ const Info = memo((props: InfoProps) => {
     );
 });
 
-const useStyles = makeStyles({ "name": { Info } })(theme => ({
+const useStyles = makeStylesEdt({ "name": { Info } })(theme => ({
     root: {
         backgroundColor: theme.variables.white,
         border: "1px dashed " + theme.variables.neutral,
