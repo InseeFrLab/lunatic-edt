@@ -38,10 +38,12 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                         {componentSpecificProps &&
                             componentSpecificProps.optionsIcons &&
                             componentSpecificProps.optionsIcons[option.id] && (
-                                <img
-                                    className={classes.icon}
-                                    src={componentSpecificProps.optionsIcons[option.id]}
-                                />
+                                <Box className={classes.iconBox}>
+                                    <img
+                                        className={classes.icon}
+                                        src={componentSpecificProps.optionsIcons[option.id]}
+                                    />
+                                </Box>
                             )}
                         <Typography color="textSecondary">{option.label}</Typography>
                     </div>
@@ -62,7 +64,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
 const useStyles = makeStylesEdt({ "name": { CheckboxGroupEdt } })(theme => ({
     root: {
         maxWidth: "100%",
-        margin: "1rem",
+        margin: "1rem 0",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
@@ -75,9 +77,14 @@ const useStyles = makeStylesEdt({ "name": { CheckboxGroupEdt } })(theme => ({
     labelSpacer: {
         height: "1rem",
     },
+    iconBox: {
+        display: "flex",
+        alignItems: "center",
+        marginRight: "1rem",
+    },
     icon: {
         width: "25px",
-        marginRight: "1rem",
+        height: "25px",
     },
 }));
 

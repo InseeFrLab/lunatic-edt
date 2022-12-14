@@ -212,8 +212,7 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
         marginBottom: "0.5rem",
     },
     rowLabel: {
-        width: "40px",
-        marginRight: "1rem",
+        width: "50px",
     },
     hourLabel: {
         color: theme.palette.info.main,
