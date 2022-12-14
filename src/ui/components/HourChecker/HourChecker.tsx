@@ -28,12 +28,11 @@ const calculateSelectAllValue = (
     value: { [key: string]: boolean },
     responsesValues: string[],
 ) => {
-    setSelectAll(getSelectAllValue, value, responsesValues);
+    setSelectAll(getSelectAllValue(value, responsesValues));
 };
 
 const selectOrUnselectAll = (
     currentlySelected: boolean,
-    selectAll: boolean,
     value: { [key: string]: boolean },
     responsesValues: string[],
     setCurrentOption: any,
@@ -46,7 +45,7 @@ const selectOrUnselectAll = (
         selectedOptions.push(name);
     });
     setCurrentOption(selectedOptions);
-    setSelectAll(!selectAll);
+    setSelectAll(!currentlySelected);
     saveLunaticData();
 };
 
@@ -92,7 +91,6 @@ const HourChecker = memo((props: HourCheckerProps) => {
                 onClick={useCallback(
                     () =>
                         selectOrUnselectAll(
-                            selectAll,
                             selectAll,
                             value,
                             responsesValues,
