@@ -116,7 +116,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         );
     };
 
-    const createActivityCallback = useCallback(() => createActivity(currentInputValue), []);
+    const createActivityCallback = useCallback(() => createActivity(currentInputValue), [currentInputValue]);
 
     /**
      * Render no result component
