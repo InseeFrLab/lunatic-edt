@@ -1,7 +1,6 @@
 import { Box, Button, Modal } from "@mui/material";
 import { Fragment, memo } from "react";
 import { makeStylesEdt } from "../../theme";
-import { createCustomizableLunaticField } from "../../utils";
 
 type AlertProps = {
     isAlertDisplayed: boolean;
@@ -91,4 +90,4 @@ const useStyles = makeStylesEdt({ "name": { Alert } })(theme => ({
     },
 }));
 
-export default createCustomizableLunaticField(Alert, "Alert");
+export default Alert;
