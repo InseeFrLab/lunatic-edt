@@ -31,13 +31,13 @@ const ModalEdt = memo((props: ModalProps) => {
                             <img src={icon} alt={iconAlt} />
                         </Box>
                         <Box className={cx(classes.boxCenter)}>
-                            <h2>{labels.title}</h2>
+                            <h2>{labels?.title}</h2>
                         </Box>
                         <Box className={cx(classes.boxCenter)}>
-                            <p className={classes.contentBox}>{labels.content}</p>
+                            <p className={classes.contentBox}>{labels?.content}</p>
                         </Box>
                         <Box className={cx(classes.boxCenter)}>
-                            <p className={classes.endContentBox}>{labels.endContent}</p>
+                            <p className={classes.endContentBox}>{labels?.endContent}</p>
                         </Box>
                         <Box className={classes.boxEvenly}>
                             <Button
@@ -46,7 +46,7 @@ const ModalEdt = memo((props: ModalProps) => {
                                 className={classes.buttonNext}
                                 endIcon={<ArrowForwardIosIcon className={classes.arrowIcon} />}
                             >
-                                {labels.buttonLabel}
+                                {labels?.buttonLabel}
                             </Button>
                         </Box>
                     </Box>

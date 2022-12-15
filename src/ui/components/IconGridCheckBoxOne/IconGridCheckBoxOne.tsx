@@ -94,7 +94,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                             cancel: labels.alertIgnore,
                             complete: labels.alertComplete,
                         }}
-                        icon={errorIcon}
+                        icon={errorIcon || ""}
                         errorIconAlt={labels.alertAlticon}
                     ></Alert>
                     <Box className={classes.root}>
