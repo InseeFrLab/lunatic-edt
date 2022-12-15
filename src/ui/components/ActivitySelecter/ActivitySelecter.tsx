@@ -1,25 +1,22 @@
 import React, { memo, useState, useEffect } from "react";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import { ActivitySelection, SelectedActivity } from "interface/ActivityTypes";
-import { ActivitySelecterSpecificProps } from "interface/ComponentsSpecificProps";
-import {
-    Box,
-    Button,
-    TextField,
-    Typography,
-} from "@mui/material";
+import { ActivitySelecterSpecificProps, ActivityLabelProps } from "interface/ComponentsSpecificProps";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../../ui/theme";
 import { Extension, ChevronRight, Search } from "@mui/icons-material";
 import ClickableList from "../ClickableList";
 import Alert from "../Alert";
 import { splitLabelWithParenthesis } from "../../../ui/utils";
+import { findItemInNomenclature } from "./utils";
 
 type ActivitySelecterProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
     componentSpecificProps: ActivitySelecterSpecificProps;
     response: { [name: string]: string };
     label: string;
+    value: string;
 };
 
 enum FullScreenComponent {
@@ -29,7 +26,7 @@ enum FullScreenComponent {
 }
 
 const ActivitySelecter = memo((props: ActivitySelecterProps) => {
-    let { handleChange, componentSpecificProps, response, label } = props;
+    let { handleChange, componentSpecificProps, response, label, value } = props;
 
     let {
         backClickEvent,
@@ -48,6 +45,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const [selectedCategories, setSelectedCategories] = useState<ActivitySelection[]>([]);
     const [createActivityValue, setCreateActivityValue] = useState<string | undefined>();
     const [selectedId, setSelectedId] = useState<string | undefined>();
+    const [selectedSuggesterId, setSelectedSuggesterId] = useState<string | undefined>();
     const [labelOfSelectedId, setLabelOfSelectedId] = useState<string | undefined>();
     const [fullScreenComponent, setFullScreenComponent] = useState<FullScreenComponent>(
         FullScreenComponent.Main,
@@ -63,6 +61,18 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const { classes, cx } = useStyles();
 
     useEffect(() => {
+        processSelectedValue(
+            value,
+            categoriesAndActivitesNomenclature,
+            setFullScreenComponent,
+            setSelectedId,
+            setSelectedSuggesterId,
+            setCreateActivityValue,
+            setSelectedCategories,
+        );
+    }, []);
+
+    useEffect(() => {
         if (backClickEvent) {
             back(
                 fullScreenComponent,
@@ -70,6 +80,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 selectedCategories,
                 setSelectedId,
                 setLabelOfSelectedId,
+                setSelectedSuggesterId,
                 setSelectedCategories,
                 onChange,
                 setCreateActivityValue,
@@ -83,6 +94,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             next(
                 false,
                 selectedId,
+                selectedSuggesterId,
                 fullScreenComponent,
                 setDisplayAlert,
                 selectedCategories,
@@ -92,9 +104,10 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         }
     }, [nextClickEvent]);
 
-    const onChange = (id?: string, label?: string, isFullyCompleted?: boolean) => {
+    const onChange = (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => {
         const selection: SelectedActivity = {
             id: id,
+            suggesterId: suggesterId,
             label: label,
             isFullyCompleted: isFullyCompleted,
         };
@@ -102,18 +115,18 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     };
 
     const createActivityCallBack = (label: string) => {
-        onChange(undefined, label, true);
+        onChange(true, undefined, undefined, label);
         setFullScreenComponent(FullScreenComponent.FreeInput);
         setCreateActivityValue(label);
     };
 
     const clickableListOnChange = (id: string | undefined) => {
-        setSelectedId(id);
+        setSelectedSuggesterId(id);
         let isFully = false;
         if (id) {
             isFully = true;
         }
-        onChange(id, undefined, isFully);
+        onChange(isFully, undefined, id, undefined);
     };
 
     const freeInputOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -127,7 +140,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         if (e.target.value !== "") {
             isFully = true;
         }
-        onChange(id, e.target.value, isFully);
+        onChange(isFully, id, undefined, e.target.value);
     };
 
     const renderSubRangCategory = (category: ActivitySelection) => {
@@ -194,15 +207,18 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                     <Alert
                         isAlertDisplayed={displayAlert}
                         onCompleteCallBack={() => setDisplayAlert(false)}
-                        onCancelCallBack={() => next(
-                            true,
-                            selectedId,
-                            fullScreenComponent,
-                            setDisplayAlert,
-                            selectedCategories,
-                            nextClickCallback,
-                            createActivityValue,
-                        )}
+                        onCancelCallBack={() =>
+                            next(
+                                true,
+                                selectedId,
+                                selectedSuggesterId,
+                                fullScreenComponent,
+                                setDisplayAlert,
+                                selectedCategories,
+                                nextClickCallback,
+                                createActivityValue,
+                            )
+                        }
                         labels={{
                             content: labels.alertMessage,
                             cancel: labels.alertIgnore,
@@ -216,6 +232,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         <ClickableList
                             className={classes.clickableList}
                             options={activitesAutoCompleteRef}
+                            selectedId={selectedSuggesterId}
                             handleChange={clickableListOnChange}
                             createActivity={createActivityCallBack}
                             placeholder={labels.clickableListPlaceholder}
@@ -295,14 +312,63 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     );
 });
 
+const processSelectedValue = (
+    value: string,
+    categoriesAndActivitesNomenclature: ActivitySelection[],
+    setFullScreenComponent: (screen: FullScreenComponent) => void,
+    setSelectedId: (id: string | undefined) => void,
+    setSelectedSuggesterId: (id: string | undefined) => void,
+    setCreateActivityValue: (val: string | undefined) => void,
+    setSelectedCategories: (cats: ActivitySelection[]) => void,
+) => {
+    const parsedValue: SelectedActivity = JSON.parse(value);
+    const hasId: boolean = parsedValue?.id !== undefined;
+    const hasSuggesterId: boolean = parsedValue?.suggesterId !== undefined;
+    const hasLabel: boolean = parsedValue?.label !== undefined;
+    const isFullyCompleted: boolean = parsedValue?.isFullyCompleted;
+
+    if (hasId && !hasLabel) {
+        setSelectedId(parsedValue.id);
+        if (categoriesAndActivitesNomenclature) {
+            const res = findItemInNomenclature(
+                parsedValue.id,
+                categoriesAndActivitesNomenclature,
+                undefined,
+            );
+            if (isFullyCompleted) {
+                setSelectedCategories([res.parent]);
+            } else {
+                setSelectedCategories([res.item]);
+            }
+        }
+    }
+    if (hasSuggesterId) {
+        setFullScreenComponent(FullScreenComponent.ClickableList);
+        setSelectedSuggesterId(parsedValue.suggesterId);
+    }
+    if (hasLabel) {
+        setFullScreenComponent(FullScreenComponent.FreeInput);
+        setCreateActivityValue(parsedValue.label);
+        if (categoriesAndActivitesNomenclature && hasId) {
+            const res = findItemInNomenclature(
+                parsedValue.id,
+                categoriesAndActivitesNomenclature,
+                undefined,
+            );
+            setSelectedCategories([res.item]);
+        }
+    }
+};
+
 const back = (
     fullScreenComponent: FullScreenComponent,
     backClickCallback: () => void,
     selectedCategories: ActivitySelection[],
     setSelectedId: (id?: string) => void,
     setLabelOfSelectedId: (label?: string) => void,
+    setSelectedSuggesterId: (id?: string) => void,
     setSelectedCategories: (activities: ActivitySelection[]) => void,
-    onChange: (id?: string, label?: string, isFullyCompleted?: boolean) => void,
+    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     setCreateActivityValue: (value?: string) => void,
     setFullScreenComponent: (comp: FullScreenComponent) => void,
 ) => {
@@ -312,23 +378,26 @@ const back = (
         return;
     }
     const temp = [...selectedCategories];
-    setSelectedId(undefined);
-    setLabelOfSelectedId(undefined);
 
     switch (fullScreenComponent) {
         case FullScreenComponent.Main:
+            setSelectedId(undefined);
+            setLabelOfSelectedId(undefined);
             temp.pop();
             setSelectedCategories(temp);
-            onChange(temp[temp.length - 1]?.id, undefined, false);
+            onChange(false, temp[temp.length - 1]?.id, undefined);
             break;
         case FullScreenComponent.FreeInput:
+            setSelectedId(undefined);
+            setLabelOfSelectedId(undefined);
             setCreateActivityValue(undefined);
             setFullScreenComponent(FullScreenComponent.Main);
-            onChange(selectedCategories[selectedCategories.length - 1]?.id, undefined, false);
+            onChange(false, selectedCategories[selectedCategories.length - 1]?.id, undefined, undefined);
             break;
         case FullScreenComponent.ClickableList:
+            setSelectedSuggesterId(undefined);
             setFullScreenComponent(FullScreenComponent.Main);
-            onChange(undefined, undefined, false);
+            onChange(false, undefined, undefined, undefined);
             break;
         default:
             break;
@@ -338,6 +407,7 @@ const back = (
 const next = (
     continueWithUncompleted: boolean,
     selectedId: string | undefined,
+    suggesterId: string | undefined,
     fullScreenComponent: FullScreenComponent,
     setDisplayAlert: (display: boolean) => void,
     selectedCategories: ActivitySelection[],
@@ -345,7 +415,8 @@ const next = (
     createActivityValue: string | undefined,
 ) => {
     let routeToGoal = true;
-    let displayAlert1 = selectedId === undefined && !continueWithUncompleted;
+    let displayAlert1 =
+        selectedId === undefined && suggesterId === undefined && !continueWithUncompleted;
     let displayAlert2 =
         (createActivityValue === undefined || createActivityValue === "") && !continueWithUncompleted;
 
@@ -379,7 +450,7 @@ const next = (
 const clickAutreButton = (
     setFullScreenComponent: (comp: FullScreenComponent) => void,
     selectedCategories: ActivitySelection[],
-    onChange: (id?: string, label?: string, isFullyCompleted?: boolean) => void,
+    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
 ) => {
     setFullScreenComponent(FullScreenComponent.FreeInput);
     // If we enter free input value from "Autre" button, then save id of last selected category
@@ -387,27 +458,32 @@ const clickAutreButton = (
     if (selectedCategories.length > 0) {
         id = selectedCategories[selectedCategories.length - 1].id;
     }
-    onChange(id, undefined, false);
+    onChange(false, id, undefined);
 };
 
-const getTextTitle = (fullScreenComponent: any, selectedCategories: any, labels: any, label: any) => {
+const getTextTitle = (
+    fullScreenComponent: FullScreenComponent,
+    selectedCategories: ActivitySelection[],
+    labels: ActivityLabelProps,
+    label: string,
+) => {
     if (fullScreenComponent === FullScreenComponent.FreeInput) {
         return labels.addActivity;
     }
     if (selectedCategories.length === 0) {
         return label;
     }
-    return `${labels.selectInCategory} «${selectedCategories[selectedCategories.length - 1].label} »`;
+    return `${labels.selectInCategory} «${selectedCategories[selectedCategories.length - 1]?.label} »`;
 };
 
 const getSubRankCategoryClassName = (
     category: ActivitySelection,
     selectedId: string | undefined,
-    labelOfSelectedId: string | undefined,
+    _labelOfSelectedId: string | undefined,
     classes: any,
     cx: any,
 ) => {
-    if (category.id === selectedId && category.label === labelOfSelectedId) {
+    if (category.id === selectedId) {
         return cx(classes.subRankCategory, classes.selectedSubRankCategory);
     }
     return classes.subRankCategory;
@@ -417,7 +493,7 @@ const categoriesActivitiesBoxClick = (
     selection: ActivitySelection,
     selectedCategories: ActivitySelection[],
     setSelectedCategories: (activities: ActivitySelection[]) => void,
-    onChange: (id?: string, label?: string, isFullyCompleted?: boolean) => void,
+    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     setSelectedId: (id: string) => void,
     setLabelOfSelectedId: (label: string) => void,
 ) => {
@@ -425,9 +501,9 @@ const categoriesActivitiesBoxClick = (
         const temp = [...selectedCategories];
         temp.push(selection);
         setSelectedCategories(temp);
-        onChange(selection.id, undefined, false);
+        onChange(false, selection.id, undefined, undefined);
     } else {
-        onChange(selection.id, undefined, true);
+        onChange(true, selection.id, undefined, undefined);
         setSelectedId(selection.id);
         setLabelOfSelectedId(selection.label);
     }

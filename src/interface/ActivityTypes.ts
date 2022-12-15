@@ -7,6 +7,7 @@ export type ActivitySelection = {
 
 export type SelectedActivity = {
     id?: string;
+    suggesterId?: string;
     label?: string;
-    isFullyCompleted?: boolean;
+    isFullyCompleted: boolean;
 };

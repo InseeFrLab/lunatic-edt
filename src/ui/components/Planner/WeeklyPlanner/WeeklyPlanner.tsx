@@ -40,18 +40,11 @@ const generateDayList = (startDate: Date): Date[] => {
 
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const { classes } = useStyles();
-    let {
-        value,
-        handleChange,
-        componentSpecificProps
-    } = props;
+    let { value, handleChange, componentSpecificProps } = props;
 
-    const {
-        surveyDate,
-        isSubChildDisplayed,
-        setIsSubChildDisplayed,
-        labels,
-    } = { ...componentSpecificProps };
+    const { surveyDate, isSubChildDisplayed, setIsSubChildDisplayed, labels } = {
+        ...componentSpecificProps,
+    };
 
     const values: WeeklyPlannerValue = JSON.parse(value);
     const startDate: string = surveyDate || "";

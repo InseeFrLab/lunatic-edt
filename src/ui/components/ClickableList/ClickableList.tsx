@@ -116,7 +116,10 @@ const ClickableList = memo((props: ClickableListProps) => {
         );
     };
 
-    const createActivityCallback = useCallback(() => createActivity(currentInputValue), [currentInputValue]);
+    const createActivityCallback = useCallback(
+        () => createActivity(currentInputValue),
+        [currentInputValue],
+    );
 
     /**
      * Render no result component
@@ -166,9 +169,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             noOptionsText={renderNoOption()}
             onClose={() => setDisplayAddIcon(false)}
             fullWidth={true}
-            popupIcon={
-                <Icon children={renderIcon()} onClick={createActivityCallback} />
-            }
+            popupIcon={<Icon children={renderIcon()} onClick={createActivityCallback} />}
             classes={{ popupIndicator: classes.popupIndicator }}
         />
     );
