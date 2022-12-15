@@ -5,6 +5,7 @@ export interface EdtTheme extends Theme {
         neutral: string;
         iconRounding: string;
         white: string;
+        modal: string;
     };
 }
 
@@ -13,5 +14,6 @@ export interface EdtThemeOptions extends ThemeOptions {
         neutral: string;
         iconRounding: string;
         white: string;
+        modal: string;
     };
 }

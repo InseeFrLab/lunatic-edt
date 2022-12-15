@@ -9,6 +9,7 @@ const theme = createTheme({
         neutral: "#DCE7F9",
         iconRounding: "#DEE2EB",
         white: "#FFFFFF",
+        modal: "#F3F2F8",
     },
     palette: {
         primary: {
@@ -21,7 +22,6 @@ const theme = createTheme({
         background: {
             default: "#F2F1F7",
             paper: "#E4E5EF",
-            modal: "#F3F2F8",
         },
         error: {
             main: "#D8765F",
