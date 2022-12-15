@@ -153,31 +153,22 @@ const ClickableList = memo((props: ClickableListProps) => {
             className={cx(classes.root, className)}
             options={options}
             defaultValue={selectedvalue}
-            onChange={useCallback(
-                (_event: React.SyntheticEvent<Element, Event>, value: RawActiviteOption | null) => {
-                    handleChange(value?.id);
-                },
-                [],
+            onChange={(_event, value) => handleChange(value?.id)}
+            renderInput={params => renderTextField(params)}
+            renderOption={(properties, option) => (
+                <li {...properties} className={classes.option}>
+                    <Extension className={classes.optionIcon} />
+                    {option.label}
+                </li>
             )}
-            renderInput={useCallback(
-                (params: AutocompleteRenderInputParams) => renderTextField(params),
-                [],
-            )}
-            renderOption={useCallback(
-                (properties: React.HTMLAttributes<HTMLLIElement>, option: RawActiviteOption) => (
-                    <li {...properties} className={classes.option}>
-                        <Extension className={classes.optionIcon} />
-                        {option.label}
-                    </li>
-                ),
-                [],
-            )}
-            getOptionLabel={useCallback((option: RawActiviteOption) => option.label, [])}
-            filterOptions={useCallback(filterOptions, [])}
+            getOptionLabel={option => option.label}
+            filterOptions={filterOptions}
             noOptionsText={renderNoOption()}
-            onClose={useCallback(() => setDisplayAddIcon(false), [])}
+            onClose={() => setDisplayAddIcon(false)}
             fullWidth={true}
-            popupIcon={<Icon children={renderIcon()} onClick={createActivityCallback} />}
+            popupIcon={
+                <Icon children={renderIcon()} onClick={createActivityCallback} />
+            }
             classes={{ popupIndicator: classes.popupIndicator }}
         />
     );

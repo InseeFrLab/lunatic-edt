@@ -10,7 +10,7 @@ import Alert from "../Alert";
 
 type IconGridCheckBoxOneProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
-    componentSpecificProps?: IconGridCheckBoxOneSpecificProps;
+    componentSpecificProps: IconGridCheckBoxOneSpecificProps;
     response: { [name: string]: string };
     label: string;
     options: CheckboxOneCustomOption[];
