@@ -4,7 +4,7 @@ export const findItemInNomenclature = (
     id: string | undefined,
     subs: ActivitySelection[],
     parent: ActivitySelection | undefined,
-): any => {
+): { item: ActivitySelection; parent: ActivitySelection | undefined } | undefined => {
     let res = subs.find(a => a.id === id);
     if (res) {
         return {

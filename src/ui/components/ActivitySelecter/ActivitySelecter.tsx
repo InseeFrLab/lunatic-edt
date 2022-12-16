@@ -335,10 +335,12 @@ const processSelectedValue = (
                 categoriesAndActivitesNomenclature,
                 undefined,
             );
+            const resParent = res?.parent ? [res?.parent] : [];
+            const resItem = res?.item ? [res?.item] : [];
             if (isFullyCompleted) {
-                setSelectedCategories([res.parent]);
+                setSelectedCategories(resParent);
             } else {
-                setSelectedCategories([res.item]);
+                setSelectedCategories(resItem);
             }
         }
     }
@@ -355,7 +357,8 @@ const processSelectedValue = (
                 categoriesAndActivitesNomenclature,
                 undefined,
             );
-            setSelectedCategories([res.item]);
+            const resItem = res?.item ? [res?.item] : [];
+            setSelectedCategories(resItem);
         }
     }
 };
