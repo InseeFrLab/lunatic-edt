@@ -20,10 +20,10 @@ export type WeeklyPlannerSpecificProps = {
     isSubChildDisplayed: boolean;
     setIsSubChildDisplayed(value: boolean): void;
     labels: {
-        title: string,
-        workSumLabel: string,
-        presentButtonLabel: string,
-        futureButtonLabel: string
+        title: string;
+        workSumLabel: string;
+        presentButtonLabel: string;
+        futureButtonLabel: string;
     };
 };
 
