@@ -1,7 +1,6 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
-import ProgressBar from "../../ProgressBar";
 import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
 import {
@@ -9,6 +8,7 @@ import {
     generateDateFromStringInput,
     setDateTimeToZero,
 } from "../../../utils";
+import ProgressBar from "../../ProgressBar";
 
 export type DayPlannerProps = {
     date: Date;
