@@ -1,11 +1,11 @@
+import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { IconGridCheckBoxOneSpecificProps } from "interface";
 import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
-import { memo, useEffect, useState, useCallback } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import { v4 as uuidv4 } from "uuid";
-import { Typography } from "@mui/material";
-import { IconGridCheckBoxOneSpecificProps } from "interface";
 import Alert from "../Alert";
 
 type IconGridCheckBoxOneProps = {

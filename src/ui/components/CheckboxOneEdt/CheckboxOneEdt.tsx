@@ -16,7 +16,6 @@ export type CheckboxOneProps = {
 };
 
 const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
-    console.log(props);
     const { id, value, label, options, className, handleChange, response } = props;
 
     const { classes, cx } = useStyles();

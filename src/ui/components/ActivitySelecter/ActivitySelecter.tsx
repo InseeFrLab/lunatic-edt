@@ -1,14 +1,14 @@
-import React, { memo, useState, useEffect } from "react";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import { NomenclatureActivityOption, SelectedActivity } from "interface/ActivityTypes";
-import { ActivitySelecterSpecificProps, ActivityLabelProps } from "interface/ComponentsSpecificProps";
+import { ChevronRight, Extension, Search } from "@mui/icons-material";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { NomenclatureActivityOption, SelectedActivity } from "interface/ActivityTypes";
+import { ActivityLabelProps, ActivitySelecterSpecificProps } from "interface/ComponentsSpecificProps";
+import React, { memo, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../../ui/theme";
-import { Extension, ChevronRight, Search } from "@mui/icons-material";
-import ClickableList from "../ClickableList";
-import Alert from "../Alert";
 import { splitLabelWithParenthesis } from "../../../ui/utils";
+import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
+import Alert from "../Alert";
+import ClickableList from "../ClickableList";
 import { findItemInCategoriesNomenclature } from "./activityUtils";
 
 type ActivitySelecterProps = {
@@ -63,15 +63,17 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const { classes, cx } = useStyles();
 
     useEffect(() => {
-        processSelectedValue(
-            value,
-            categoriesAndActivitesNomenclature,
-            setFullScreenComponent,
-            setSelectedId,
-            setSelectedSuggesterId,
-            setCreateActivityValue,
-            setSelectedCategories,
-        );
+        if (value) {
+            processSelectedValue(
+                value,
+                categoriesAndActivitesNomenclature,
+                setFullScreenComponent,
+                setSelectedId,
+                setSelectedSuggesterId,
+                setCreateActivityValue,
+                setSelectedCategories,
+            );
+        }
     }, []);
 
     useEffect(() => {

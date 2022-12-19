@@ -7,6 +7,7 @@ import { createCustomizableLunaticField } from "../../utils/create-customizable-
 
 export type CheckboxGroupEdtProps = {
     label?: string;
+    tipsLabel: string;
     handleChange(response: { [name: string]: string }, value: boolean): void;
     id?: string;
     responses: CheckboxOption[];
@@ -15,7 +16,7 @@ export type CheckboxGroupEdtProps = {
 };
 
 const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
-    const { id, value, responses, handleChange, componentSpecificProps, label } = props;
+    const { id, value, responses, handleChange, componentSpecificProps, label, tipsLabel } = props;
     const { classes } = useStyles();
 
     const handleOptions = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,6 +30,12 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                 <>
                     <Box className={classes.labelSpacer}></Box>
                     <label>{label}</label>
+                </>
+            )}
+            {tipsLabel && (
+                <>
+                    <Box className={classes.labelSpacer}></Box>
+                    <Typography className={classes.tipsLabel}>{tipsLabel}</Typography>
                 </>
             )}
             {responses.map(option => (
@@ -75,6 +82,9 @@ const useStyles = makeStylesEdt({ "name": { CheckboxGroupEdt } })(theme => ({
     },
     labelSpacer: {
         height: "1rem",
+    },
+    tipsLabel: {
+        color: theme.palette.text.secondary,
     },
     iconBox: {
         display: "flex",
