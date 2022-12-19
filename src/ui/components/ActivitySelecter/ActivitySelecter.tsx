@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect } from "react";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import { ActivitySelection, SelectedActivity } from "interface/ActivityTypes";
+import { NomenclatureActivityOption, SelectedActivity } from "interface/ActivityTypes";
 import { ActivitySelecterSpecificProps, ActivityLabelProps } from "interface/ComponentsSpecificProps";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
@@ -9,7 +9,7 @@ import { Extension, ChevronRight, Search } from "@mui/icons-material";
 import ClickableList from "../ClickableList";
 import Alert from "../Alert";
 import { splitLabelWithParenthesis } from "../../../ui/utils";
-import { findItemInNomenclature } from "./utils";
+import { findItemInCategoriesNomenclature } from "./activityUtils";
 
 type ActivitySelecterProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
@@ -42,7 +42,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         errorIcon,
     } = { ...componentSpecificProps };
 
-    const [selectedCategories, setSelectedCategories] = useState<ActivitySelection[]>([]);
+    const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
     const [createActivityValue, setCreateActivityValue] = useState<string | undefined>();
     const [selectedId, setSelectedId] = useState<string | undefined>();
     const [selectedSuggesterId, setSelectedSuggesterId] = useState<string | undefined>();
@@ -145,7 +145,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         onChange(isFully, id, undefined, e.target.value);
     };
 
-    const renderSubRangCategory = (category: ActivitySelection) => {
+    const renderSubRangCategory = (category: NomenclatureActivityOption) => {
         return (
             <Box
                 className={getSubRankCategoryClassName(
@@ -174,7 +174,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         );
     };
 
-    const renderRank1Category = (category: ActivitySelection) => {
+    const renderRank1Category = (category: NomenclatureActivityOption) => {
         const id = Number(category.id);
         const { mainLabel, secondLabel } = splitLabelWithParenthesis(category.label);
 
@@ -316,12 +316,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
 
 const processSelectedValue = (
     value: string,
-    categoriesAndActivitesNomenclature: ActivitySelection[],
+    categoriesAndActivitesNomenclature: NomenclatureActivityOption[],
     setFullScreenComponent: (screen: FullScreenComponent) => void,
     setSelectedId: (id: string | undefined) => void,
     setSelectedSuggesterId: (id: string | undefined) => void,
     setCreateActivityValue: (val: string | undefined) => void,
-    setSelectedCategories: (cats: ActivitySelection[]) => void,
+    setSelectedCategories: (cats: NomenclatureActivityOption[]) => void,
 ) => {
     const parsedValue: SelectedActivity = JSON.parse(value);
     const hasId: boolean = parsedValue?.id !== undefined;
@@ -332,7 +332,7 @@ const processSelectedValue = (
     if (hasId && !hasLabel) {
         setSelectedId(parsedValue.id);
         if (categoriesAndActivitesNomenclature) {
-            const res = findItemInNomenclature(
+            const res = findItemInCategoriesNomenclature(
                 parsedValue.id,
                 categoriesAndActivitesNomenclature,
                 undefined,
@@ -354,7 +354,7 @@ const processSelectedValue = (
         setFullScreenComponent(FullScreenComponent.FreeInput);
         setCreateActivityValue(parsedValue.label);
         if (categoriesAndActivitesNomenclature && hasId) {
-            const res = findItemInNomenclature(
+            const res = findItemInCategoriesNomenclature(
                 parsedValue.id,
                 categoriesAndActivitesNomenclature,
                 undefined,
@@ -368,11 +368,11 @@ const processSelectedValue = (
 const back = (
     fullScreenComponent: FullScreenComponent,
     backClickCallback: () => void,
-    selectedCategories: ActivitySelection[],
+    selectedCategories: NomenclatureActivityOption[],
     setSelectedId: (id?: string) => void,
     setLabelOfSelectedId: (label?: string) => void,
     setSelectedSuggesterId: (id?: string) => void,
-    setSelectedCategories: (activities: ActivitySelection[]) => void,
+    setSelectedCategories: (activities: NomenclatureActivityOption[]) => void,
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     setCreateActivityValue: (value?: string) => void,
     setFullScreenComponent: (comp: FullScreenComponent) => void,
@@ -415,7 +415,7 @@ const next = (
     suggesterId: string | undefined,
     fullScreenComponent: FullScreenComponent,
     setDisplayAlert: (display: boolean) => void,
-    selectedCategories: ActivitySelection[],
+    selectedCategories: NomenclatureActivityOption[],
     nextClickCallback: (routeToGoal: boolean) => void,
     createActivityValue: string | undefined,
 ) => {
@@ -454,7 +454,7 @@ const next = (
 
 const clickAutreButton = (
     setFullScreenComponent: (comp: FullScreenComponent) => void,
-    selectedCategories: ActivitySelection[],
+    selectedCategories: NomenclatureActivityOption[],
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
 ) => {
     setFullScreenComponent(FullScreenComponent.FreeInput);
@@ -468,7 +468,7 @@ const clickAutreButton = (
 
 const getTextTitle = (
     fullScreenComponent: FullScreenComponent,
-    selectedCategories: ActivitySelection[],
+    selectedCategories: NomenclatureActivityOption[],
     labels: ActivityLabelProps,
     label: string,
 ) => {
@@ -482,7 +482,7 @@ const getTextTitle = (
 };
 
 const getSubRankCategoryClassName = (
-    category: ActivitySelection,
+    category: NomenclatureActivityOption,
     selectedId: string | undefined,
     _labelOfSelectedId: string | undefined,
     classes: any,
@@ -495,9 +495,9 @@ const getSubRankCategoryClassName = (
 };
 
 const categoriesActivitiesBoxClick = (
-    selection: ActivitySelection,
-    selectedCategories: ActivitySelection[],
-    setSelectedCategories: (activities: ActivitySelection[]) => void,
+    selection: NomenclatureActivityOption,
+    selectedCategories: NomenclatureActivityOption[],
+    setSelectedCategories: (activities: NomenclatureActivityOption[]) => void,
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     setSelectedId: (id: string) => void,
     setLabelOfSelectedId: (label: string) => void,

@@ -1,1 +1,2 @@
-export { default } from "./ActivitySelecter";
+export { default as ActivitySelecter } from "./ActivitySelecter";
+export { findItemInCategoriesNomenclature, findItemInAutoCompleteRef } from "./activityUtils";

@@ -1,5 +1,5 @@
-import { ActivitySelection } from "./ActivityTypes";
-import { RawActiviteOption } from "./RawActiviteOption";
+import { NomenclatureActivityOption } from "./ActivityTypes";
+import { AutoCompleteActiviteOption } from "./ActivityTypes";
 
 export type ActivityLabelProps = {
     selectInCategory: string;
@@ -31,13 +31,13 @@ export type WeeklyPlannerSpecificProps = {
 export type ActivitySelecterSpecificProps = {
     categoriesIcons: { [id: string]: string };
     clickableListIconNoResult: string;
-    activitesAutoCompleteRef: RawActiviteOption[];
+    activitesAutoCompleteRef: AutoCompleteActiviteOption[];
     backClickEvent: React.MouseEvent | undefined;
     nextClickEvent: React.MouseEvent | undefined;
     backClickCallback(): void;
     nextClickCallback(routeToGoal: boolean): void;
     setDisplayStepper(value: boolean): void;
-    categoriesAndActivitesNomenclature: ActivitySelection[];
+    categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
     labels: ActivityLabelProps;
     errorIcon: string;
 };

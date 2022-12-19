@@ -1,10 +1,10 @@
-import { RawActiviteOption } from "interface/RawActiviteOption";
+import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
 import { getStoryFactory } from "stories/getStory";
 import { ClickableList } from "ui";
 import activites from "./activites.json";
 import iconNoResult from "./puzzle.svg";
 
-const options: RawActiviteOption[] = activites;
+const options: AutoCompleteActiviteOption[] = activites;
 
 const { meta, getStory } = getStoryFactory({
     sectionName: "Composants",
