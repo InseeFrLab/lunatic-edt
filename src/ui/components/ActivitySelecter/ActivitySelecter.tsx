@@ -52,11 +52,13 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     );
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
 
-    if (setDisplayStepper) {
-        setDisplayStepper(
-            fullScreenComponent === FullScreenComponent.Main && selectedCategories.length === 0,
-        );
-    }
+    useEffect(() => {
+        if (setDisplayStepper) {
+            setDisplayStepper(
+                fullScreenComponent === FullScreenComponent.Main && selectedCategories.length === 0,
+            );
+        }
+    }, [fullScreenComponent, selectedCategories]);
 
     const { classes, cx } = useStyles();
 
