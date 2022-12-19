@@ -323,44 +323,46 @@ const processSelectedValue = (
     setCreateActivityValue: (val: string | undefined) => void,
     setSelectedCategories: (cats: NomenclatureActivityOption[]) => void,
 ) => {
-    const parsedValue: SelectedActivity = JSON.parse(value);
-    const hasId: boolean = parsedValue?.id !== undefined;
-    const hasSuggesterId: boolean = parsedValue?.suggesterId !== undefined;
-    const hasLabel: boolean = parsedValue?.label !== undefined;
-    const isFullyCompleted: boolean = parsedValue?.isFullyCompleted;
+    if (value) {
+        const parsedValue: SelectedActivity = JSON.parse(value);
+        const hasId: boolean = parsedValue?.id !== undefined;
+        const hasSuggesterId: boolean = parsedValue?.suggesterId !== undefined;
+        const hasLabel: boolean = parsedValue?.label !== undefined;
+        const isFullyCompleted: boolean = parsedValue?.isFullyCompleted;
 
-    if (hasId && !hasLabel) {
-        setSelectedId(parsedValue.id);
-        if (categoriesAndActivitesNomenclature) {
-            const res = findItemInCategoriesNomenclature(
-                parsedValue.id,
-                categoriesAndActivitesNomenclature,
-                undefined,
-            );
-            const resParent = res?.parent ? [res?.parent] : [];
-            const resItem = res?.item ? [res?.item] : [];
-            if (isFullyCompleted) {
-                setSelectedCategories(resParent);
-            } else {
-                setSelectedCategories(resItem);
+        if (hasId && !hasLabel) {
+            setSelectedId(parsedValue.id);
+            if (categoriesAndActivitesNomenclature) {
+                const res = findItemInCategoriesNomenclature(
+                    parsedValue.id,
+                    categoriesAndActivitesNomenclature,
+                    undefined,
+                );
+                const resParent = res?.parent ? [res?.parent] : [];
+                const resItem = res?.item ? [res?.item] : [];
+                if (isFullyCompleted) {
+                    setSelectedCategories(resParent);
+                } else {
+                    setSelectedCategories(resItem);
+                }
             }
         }
-    }
-    if (hasSuggesterId) {
-        setFullScreenComponent(FullScreenComponent.ClickableList);
-        setSelectedSuggesterId(parsedValue.suggesterId);
-    }
-    if (hasLabel) {
-        setFullScreenComponent(FullScreenComponent.FreeInput);
-        setCreateActivityValue(parsedValue.label);
-        if (categoriesAndActivitesNomenclature && hasId) {
-            const res = findItemInCategoriesNomenclature(
-                parsedValue.id,
-                categoriesAndActivitesNomenclature,
-                undefined,
-            );
-            const resItem = res?.item ? [res?.item] : [];
-            setSelectedCategories(resItem);
+        if (hasSuggesterId) {
+            setFullScreenComponent(FullScreenComponent.ClickableList);
+            setSelectedSuggesterId(parsedValue.suggesterId);
+        }
+        if (hasLabel) {
+            setFullScreenComponent(FullScreenComponent.FreeInput);
+            setCreateActivityValue(parsedValue.label);
+            if (categoriesAndActivitesNomenclature && hasId) {
+                const res = findItemInCategoriesNomenclature(
+                    parsedValue.id,
+                    categoriesAndActivitesNomenclature,
+                    undefined,
+                );
+                const resItem = res?.item ? [res?.item] : [];
+                setSelectedCategories(resItem);
+            }
         }
     }
 };
