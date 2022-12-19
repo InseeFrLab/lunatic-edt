@@ -39,25 +39,27 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                     <label>{label}</label>
                 </>
             )}
-            <ToggleButtonGroup
-                orientation="vertical"
-                value={currentOption}
-                exclusive
-                onChange={handleOptions}
-                id={id}
-                aria-label={label}
-                className={cx(className, classes.toggleButtonGroup)}
-            >
-                {options.map(option => (
-                    <ToggleButton
-                        className={classes.MuiToggleButton}
-                        key={option.value}
-                        value={option.value}
-                    >
-                        {option.label}
-                    </ToggleButton>
-                ))}
-            </ToggleButtonGroup>
+            {options &&
+                <ToggleButtonGroup
+                    orientation="vertical"
+                    value={currentOption}
+                    exclusive
+                    onChange={handleOptions}
+                    id={id}
+                    aria-label={label}
+                    className={cx(className, classes.toggleButtonGroup)}
+                >
+                    {options.map(option => (
+                        <ToggleButton
+                            className={classes.MuiToggleButton}
+                            key={option.value}
+                            value={option.value}
+                        >
+                            {option.label}
+                        </ToggleButton>
+                    ))}
+                </ToggleButtonGroup>
+            }
         </>
     );
 });
