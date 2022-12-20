@@ -102,7 +102,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                     </Box>
 
                     <Box className={classes.optionsBox}>
-                        {options.map(o => {
+                        {options?.map(o => {
                             return renderOption(o);
                         })}
                     </Box>
