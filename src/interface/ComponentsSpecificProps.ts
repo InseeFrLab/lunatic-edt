@@ -1,4 +1,5 @@
 import { ActivitySelection } from "./ActivityTypes";
+import { CheckboxOneCustomOption, CheckboxOption } from "./CheckboxOptions";
 import { RawActiviteOption } from "./RawActiviteOption";
 
 export type ActivityLabelProps = {
@@ -21,10 +22,10 @@ export type WeeklyPlannerSpecificProps = {
     isSubChildDisplayed: boolean;
     setIsSubChildDisplayed(value: boolean): void;
     labels: {
-        title: string,
-        workSumLabel: string,
-        presentButtonLabel: string,
-        futureButtonLabel: string
+        title: string;
+        workSumLabel: string;
+        presentButtonLabel: string;
+        futureButtonLabel: string;
     };
 };
 
@@ -59,4 +60,10 @@ export type IconGridCheckBoxOneSpecificProps = {
 
 export type CheckboxGroupSpecificProps = {
     optionsIcons: { [id: string]: string };
+    options: CheckboxOption[];
+};
+
+export type CheckboxOneSpecificProps = {
+    options: CheckboxOneCustomOption[];
+    icon?: string;
 };
