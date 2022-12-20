@@ -139,9 +139,9 @@ const useStyles = makeStylesEdt({ "name": { IconGridCheckBoxOne } })(theme => ({
         width: "45.5%",
         marginTop: "4%",
         borderRadius: "15px",
+        border: "2px solid transparent",
     },
     selectedOption: {
-        border: "2px solid",
         borderColor: theme.palette.primary.main,
     },
     optionLabel: {
