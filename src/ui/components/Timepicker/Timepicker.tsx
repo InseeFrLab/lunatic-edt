@@ -21,12 +21,19 @@ export type TimepickerProps = {
     componentSpecificProps?: TimepickerSpecificProps;
 };
 
-const lastTime = (activities: Activity[] | undefined, value: string | undefined) => {
+const lastTime = (
+    activities: Activity[] | undefined,
+    value: string | undefined,
+    defaultValue: boolean | undefined,
+) => {
     if (value != null) {
+        console.log(value);
         return dayjs(value, "HH:mm");
-    } else if (activities != null && activities.length > 0) {
+    } else if (defaultValue && activities != null && activities.length > 0) {
+        console.log("activity");
         return dayjs(activities[activities.length - 1]?.endTime, "HH:mm");
     } else {
+        console.log("null");
         return dayjs();
     }
 };
@@ -35,9 +42,16 @@ const Timepicker = memo((props: TimepickerProps) => {
     const { id, response, handleChange, value, readOnly, disabled, label, componentSpecificProps } =
         props;
     const { classes } = useStyles();
-    const [valueLocal, setValue] = React.useState<Dayjs | null>(
-        lastTime(componentSpecificProps?.activitiesAct, value),
+
+    console.log(value);
+
+    const lastTimeValue = lastTime(
+        componentSpecificProps?.activitiesAct,
+        value,
+        componentSpecificProps?.defaultValue,
     );
+
+    const [valueLocal, setValue] = React.useState<Dayjs | null>(lastTimeValue);
 
     useEffect(() => {
         if (valueLocal != null && valueLocal?.isValid())
