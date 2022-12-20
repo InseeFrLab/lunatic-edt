@@ -31,7 +31,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                     <label>{label}</label>
                 </>
             )}
-            {responses.map(option => (
+            {responses?.map(option => (
                 <Paper className={classes.root} elevation={0} key={"paper-" + option.id}>
                     <div style={{ display: "flex" }}>
                         {componentSpecificProps &&

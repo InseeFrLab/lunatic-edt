@@ -27,13 +27,10 @@ const lastTime = (
     defaultValue: boolean | undefined,
 ) => {
     if (value != null) {
-        console.log(value);
         return dayjs(value, "HH:mm");
     } else if (defaultValue && activities != null && activities.length > 0) {
-        console.log("activity");
         return dayjs(activities[activities.length - 1]?.endTime, "HH:mm");
     } else {
-        console.log("null");
         return dayjs();
     }
 };

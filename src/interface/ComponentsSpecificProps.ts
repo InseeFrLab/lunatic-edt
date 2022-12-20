@@ -60,7 +60,6 @@ export type IconGridCheckBoxOneSpecificProps = {
 
 export type CheckboxGroupSpecificProps = {
     optionsIcons: { [id: string]: string };
-    options: CheckboxOption[];
 };
 
 export type CheckboxOneSpecificProps = {
