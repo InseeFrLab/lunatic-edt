@@ -21,7 +21,6 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     const { id, value, label, options, className, handleChange, response, componentSpecificProps } =
         props;
     const { classes, cx } = useStyles();
-    console.log(value);
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(value ?? undefined);
 
     const handleOptions = useCallback(

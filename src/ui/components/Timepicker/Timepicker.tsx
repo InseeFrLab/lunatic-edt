@@ -16,6 +16,7 @@ export type TimepickerProps = {
     value?: string;
     handleChange(response: { [name: string]: string }, value: string | null): void;
     label?: string;
+    tipsLabel?: string;
     id?: string;
     response: { [name: string]: string };
     componentSpecificProps?: TimepickerSpecificProps;
@@ -36,11 +37,18 @@ const lastTime = (
 };
 
 const Timepicker = memo((props: TimepickerProps) => {
-    const { id, response, handleChange, value, readOnly, disabled, label, componentSpecificProps } =
-        props;
+    const {
+        id,
+        response,
+        handleChange,
+        value,
+        readOnly,
+        disabled,
+        label,
+        tipsLabel,
+        componentSpecificProps,
+    } = props;
     const { classes } = useStyles();
-
-    console.log(value);
 
     const lastTimeValue = lastTime(
         componentSpecificProps?.activitiesAct,
@@ -63,34 +71,39 @@ const Timepicker = memo((props: TimepickerProps) => {
     }
 
     return (
-        <Box className={classes.root}>
-            <Box className={classes.label}>
-                <p>{label}</p>
+        <>
+            <Box>
+                <label>{label}</label>
             </Box>
-            <LocalizationProvider adapterLocale={"fr"} dateAdapter={AdapterDayjs}>
-                <TimePicker
-                    key={id}
-                    disabled={disabled}
-                    readOnly={readOnly}
-                    openTo="hours"
-                    views={["hours", "minutes"]}
-                    value={valueLocal}
-                    onChange={useCallback(newValue => {
-                        setValueLunatic(newValue);
-                    }, [])}
-                    components={{
-                        OpenPickerIcon: KeyboardArrowDownIcon,
-                    }}
-                    renderInput={useCallback(
-                        params => (
-                            <TextField size="small" {...params} sx={{ svg: { color: "#1F4076" } }} />
-                        ),
-                        [],
-                    )}
-                    className={classes.input}
-                />
-            </LocalizationProvider>
-        </Box>
+            <Box className={classes.root}>
+                <Box className={classes.tipsLabel}>
+                    <p>{tipsLabel}</p>
+                </Box>
+                <LocalizationProvider adapterLocale={"fr"} dateAdapter={AdapterDayjs}>
+                    <TimePicker
+                        key={id}
+                        disabled={disabled}
+                        readOnly={readOnly}
+                        openTo="hours"
+                        views={["hours", "minutes"]}
+                        value={valueLocal}
+                        onChange={useCallback(newValue => {
+                            setValueLunatic(newValue);
+                        }, [])}
+                        components={{
+                            OpenPickerIcon: KeyboardArrowDownIcon,
+                        }}
+                        renderInput={useCallback(
+                            params => (
+                                <TextField size="small" {...params} sx={{ svg: { color: "#1F4076" } }} />
+                            ),
+                            [],
+                        )}
+                        className={classes.input}
+                    />
+                </LocalizationProvider>
+            </Box>
+        </>
     );
 });
 
@@ -108,7 +121,7 @@ const useStyles = makeStylesEdt({ "name": { Timepicker } })(theme => ({
         flexDirection: "column",
         alignItems: "center",
     },
-    label: {
+    tipsLabel: {
         fontSize: "14px",
         color: theme.palette.info.main,
         fontWeight: "bold",
