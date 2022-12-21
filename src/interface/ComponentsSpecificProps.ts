@@ -1,5 +1,5 @@
-import { NomenclatureActivityOption } from "./ActivityTypes";
-import { AutoCompleteActiviteOption } from "./ActivityTypes";
+import { AutoCompleteActiviteOption, NomenclatureActivityOption } from "./ActivityTypes";
+import { CheckboxOneCustomOption } from "./CheckboxOptions";
 
 export type ActivityLabelProps = {
     selectInCategory: string;
@@ -59,4 +59,10 @@ export type IconGridCheckBoxOneSpecificProps = {
 
 export type CheckboxGroupSpecificProps = {
     optionsIcons: { [id: string]: string };
+};
+
+export type CheckboxOneSpecificProps = {
+    options: CheckboxOneCustomOption[];
+    icon?: string;
+    defaultIcon?: string;
 };

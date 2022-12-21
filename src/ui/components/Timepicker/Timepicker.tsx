@@ -16,15 +16,20 @@ export type TimepickerProps = {
     value?: string;
     handleChange(response: { [name: string]: string }, value: string | null): void;
     label?: string;
+    tipsLabel?: string;
     id?: string;
     response: { [name: string]: string };
     componentSpecificProps?: TimepickerSpecificProps;
 };
 
-const lastTime = (activities: Activity[] | undefined, value: string | undefined) => {
+const lastTime = (
+    activities: Activity[] | undefined,
+    value: string | undefined,
+    defaultValue: boolean | undefined,
+) => {
     if (value != null) {
         return dayjs(value, "HH:mm");
-    } else if (activities != null && activities.length > 0) {
+    } else if (defaultValue && activities != null && activities.length > 0) {
         return dayjs(activities[activities.length - 1]?.endTime, "HH:mm");
     } else {
         return dayjs();
@@ -32,12 +37,26 @@ const lastTime = (activities: Activity[] | undefined, value: string | undefined)
 };
 
 const Timepicker = memo((props: TimepickerProps) => {
-    const { id, response, handleChange, value, readOnly, disabled, label, componentSpecificProps } =
-        props;
+    const {
+        id,
+        response,
+        handleChange,
+        value,
+        readOnly,
+        disabled,
+        label,
+        tipsLabel,
+        componentSpecificProps,
+    } = props;
     const { classes } = useStyles();
-    const [valueLocal, setValue] = React.useState<Dayjs | null>(
-        lastTime(componentSpecificProps?.activitiesAct, value),
+
+    const lastTimeValue = lastTime(
+        componentSpecificProps?.activitiesAct,
+        value,
+        componentSpecificProps?.defaultValue,
     );
+
+    const [valueLocal, setValue] = React.useState<Dayjs | null>(lastTimeValue);
 
     useEffect(() => {
         if (valueLocal != null && valueLocal?.isValid())
@@ -52,34 +71,39 @@ const Timepicker = memo((props: TimepickerProps) => {
     }
 
     return (
-        <Box className={classes.root}>
-            <Box className={classes.label}>
-                <p>{label}</p>
+        <>
+            <Box className={classes.labelSpacer}>
+                <label>{label}</label>
             </Box>
-            <LocalizationProvider adapterLocale={"fr"} dateAdapter={AdapterDayjs}>
-                <TimePicker
-                    key={id}
-                    disabled={disabled}
-                    readOnly={readOnly}
-                    openTo="hours"
-                    views={["hours", "minutes"]}
-                    value={valueLocal}
-                    onChange={useCallback(newValue => {
-                        setValueLunatic(newValue);
-                    }, [])}
-                    components={{
-                        OpenPickerIcon: KeyboardArrowDownIcon,
-                    }}
-                    renderInput={useCallback(
-                        params => (
-                            <TextField size="small" {...params} sx={{ svg: { color: "#1F4076" } }} />
-                        ),
-                        [],
-                    )}
-                    className={classes.input}
-                />
-            </LocalizationProvider>
-        </Box>
+            <Box className={classes.root}>
+                <Box className={classes.tipsLabel}>
+                    <p>{tipsLabel}</p>
+                </Box>
+                <LocalizationProvider adapterLocale={"fr"} dateAdapter={AdapterDayjs}>
+                    <TimePicker
+                        key={id}
+                        disabled={disabled}
+                        readOnly={readOnly}
+                        openTo="hours"
+                        views={["hours", "minutes"]}
+                        value={valueLocal}
+                        onChange={useCallback(newValue => {
+                            setValueLunatic(newValue);
+                        }, [])}
+                        components={{
+                            OpenPickerIcon: KeyboardArrowDownIcon,
+                        }}
+                        renderInput={useCallback(
+                            params => (
+                                <TextField size="small" {...params} sx={{ svg: { color: "#1F4076" } }} />
+                            ),
+                            [],
+                        )}
+                        className={classes.input}
+                    />
+                </LocalizationProvider>
+            </Box>
+        </>
     );
 });
 
@@ -97,7 +121,10 @@ const useStyles = makeStylesEdt({ "name": { Timepicker } })(theme => ({
         flexDirection: "column",
         alignItems: "center",
     },
-    label: {
+    labelSpacer: {
+        marginBottom: "1rem",
+    },
+    tipsLabel: {
         fontSize: "14px",
         color: theme.palette.info.main,
         fontWeight: "bold",

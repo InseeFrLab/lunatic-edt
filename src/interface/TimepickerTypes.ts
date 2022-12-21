@@ -6,4 +6,5 @@ export interface Activity {
 
 export type TimepickerSpecificProps = {
     activitiesAct: Activity[];
+    defaultValue?: boolean;
 };

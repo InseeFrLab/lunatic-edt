@@ -1,4 +1,6 @@
+import { Extension } from "@mui/icons-material";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { CheckboxOneSpecificProps } from "interface";
 import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
 import React, { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
@@ -13,13 +15,13 @@ export type CheckboxOneProps = {
     value: string | null;
     response: { [name: string]: string };
     className?: string;
+    componentSpecificProps: CheckboxOneSpecificProps;
 };
 
 const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
-    const { id, value, label, options, className, handleChange, response } = props;
-
+    const { id, value, label, options, className, handleChange, response, componentSpecificProps } =
+        props;
     const { classes, cx } = useStyles();
-
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(value ?? undefined);
 
     const handleOptions = useCallback(
@@ -34,11 +36,12 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         <>
             {label && (
                 <>
-                    <Box className={classes.labelSpacer}></Box>
-                    <label>{label}</label>
+                    <Box className={classes.labelSpacer}>
+                        <label>{label}</label>
+                    </Box>
                 </>
             )}
-            {options &&
+            {(options || componentSpecificProps?.options) && (
                 <ToggleButtonGroup
                     orientation="vertical"
                     value={currentOption}
@@ -48,23 +51,40 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                     aria-label={label}
                     className={cx(className, classes.toggleButtonGroup)}
                 >
-                    {options.map(option => (
-                        <ToggleButton
-                            className={classes.MuiToggleButton}
-                            key={option.value}
-                            value={option.value}
-                        >
-                            {option.label}
-                        </ToggleButton>
-                    ))}
+                    {(componentSpecificProps?.options ?? options)?.map(
+                        (option: CheckboxOneCustomOption, index) => (
+                            <ToggleButton
+                                className={
+                                    componentSpecificProps?.icon || componentSpecificProps?.defaultIcon
+                                        ? classes.MuiToggleButtonIcon
+                                        : classes.MuiToggleButton
+                                }
+                                key={option.value + "-" + index}
+                                value={option.value}
+                            >
+                                {componentSpecificProps?.icon && (
+                                    <Box className={classes.iconBox}>
+                                        <img
+                                            className={classes.icon}
+                                            src={componentSpecificProps?.icon}
+                                        />
+                                    </Box>
+                                )}
+                                {componentSpecificProps?.defaultIcon && (
+                                    <Extension className={classes.iconBox} />
+                                )}
+                                <Box>{option.label}</Box>
+                            </ToggleButton>
+                        ),
+                    )}
                 </ToggleButtonGroup>
-            }
+            )}
         </>
     );
 });
 
 const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
-    "MuiToggleButton": {
+    MuiToggleButton: {
         marginBottom: "0.5rem",
         border: important("2px solid #FFFFFF"),
         borderRadius: important("6px"),
@@ -77,8 +97,32 @@ const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
             color: theme.palette.primary.main,
         },
     },
+    MuiToggleButtonIcon: {
+        marginBottom: "0.5rem",
+        border: important("2px solid #FFFFFF"),
+        borderRadius: important("6px"),
+        backgroundColor: "#FFFFFF",
+        color: theme.palette.primary.main,
+        justifyContent: "flex-start",
+        textAlign: "left",
+        "&.Mui-selected": {
+            borderColor: important(theme.palette.primary.main),
+            fontWeight: "bold",
+            backgroundColor: "#FFFFFF",
+            color: theme.palette.primary.main,
+        },
+    },
     labelSpacer: {
-        height: "1rem",
+        marginBottom: "0.5rem",
+    },
+    iconBox: {
+        marginRight: "0.5rem",
+        color: theme.palette.primary.main,
+        width: "10%",
+    },
+    icon: {
+        width: "25px",
+        height: "25px",
     },
     toggleButtonGroup: {
         marginTop: "1rem",
