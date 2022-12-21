@@ -64,5 +64,5 @@ export type CheckboxGroupSpecificProps = {
 export type CheckboxOneSpecificProps = {
     options: CheckboxOneCustomOption[];
     icon?: string;
-    defaultIcon?: string;
+    defaultIcon?: boolean;
 };
