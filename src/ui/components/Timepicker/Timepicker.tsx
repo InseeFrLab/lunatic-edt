@@ -72,7 +72,7 @@ const Timepicker = memo((props: TimepickerProps) => {
 
     return (
         <>
-            <Box>
+            <Box className={classes.labelSpacer}>
                 <label>{label}</label>
             </Box>
             <Box className={classes.root}>
@@ -120,6 +120,9 @@ const useStyles = makeStylesEdt({ "name": { Timepicker } })(theme => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+    },
+    labelSpacer: {
+        marginBottom: "1rem",
     },
     tipsLabel: {
         fontSize: "14px",

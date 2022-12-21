@@ -1,3 +1,4 @@
+import { Extension } from "@mui/icons-material";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { CheckboxOneSpecificProps } from "interface";
 import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
@@ -35,8 +36,9 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         <>
             {label && (
                 <>
-                    <Box className={classes.labelSpacer}></Box>
-                    <label>{label}</label>
+                    <Box className={classes.labelSpacer}>
+                        <label>{label}</label>
+                    </Box>
                 </>
             )}
             {(options || componentSpecificProps?.options) && (
@@ -53,7 +55,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                         (option: CheckboxOneCustomOption, index) => (
                             <ToggleButton
                                 className={
-                                    componentSpecificProps?.icon
+                                    componentSpecificProps?.icon || componentSpecificProps?.defaultIcon
                                         ? classes.MuiToggleButtonIcon
                                         : classes.MuiToggleButton
                                 }
@@ -67,6 +69,9 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                             src={componentSpecificProps?.icon}
                                         />
                                     </Box>
+                                )}
+                                {componentSpecificProps?.defaultIcon && (
+                                    <Extension className={classes.iconBox} />
                                 )}
                                 <Box>{option.label}</Box>
                             </ToggleButton>
@@ -108,12 +113,12 @@ const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
         },
     },
     labelSpacer: {
-        height: "1rem",
+        marginBottom: "0.5rem",
     },
     iconBox: {
-        display: "flex",
-        alignItems: "center",
-        marginRight: "1rem",
+        marginRight: "0.5rem",
+        color: theme.palette.primary.main,
+        width: "10%",
     },
     icon: {
         width: "25px",
