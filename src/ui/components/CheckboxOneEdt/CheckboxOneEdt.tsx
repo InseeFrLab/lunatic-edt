@@ -40,36 +40,41 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                     <label>{label}</label>
                 </>
             )}
-            <ToggleButtonGroup
-                orientation="vertical"
-                value={currentOption}
-                exclusive
-                onChange={handleOptions}
-                id={id}
-                aria-label={label}
-                className={cx(className, classes.toggleButtonGroup)}
-            >
-                {(componentSpecificProps?.options ?? options)?.map(
-                    (option: CheckboxOneCustomOption, index) => (
-                        <ToggleButton
-                            className={
-                                componentSpecificProps?.icon
-                                    ? classes.MuiToggleButtonIcon
-                                    : classes.MuiToggleButton
-                            }
-                            key={option.value + "-" + index}
-                            value={option.value}
-                        >
-                            {componentSpecificProps?.icon && (
-                                <Box className={classes.iconBox}>
-                                    <img className={classes.icon} src={componentSpecificProps?.icon} />
-                                </Box>
-                            )}
-                            <Box>{option.label}</Box>
-                        </ToggleButton>
-                    ),
-                )}
-            </ToggleButtonGroup>
+            {(options || componentSpecificProps?.options) && (
+                <ToggleButtonGroup
+                    orientation="vertical"
+                    value={currentOption}
+                    exclusive
+                    onChange={handleOptions}
+                    id={id}
+                    aria-label={label}
+                    className={cx(className, classes.toggleButtonGroup)}
+                >
+                    {(componentSpecificProps?.options ?? options)?.map(
+                        (option: CheckboxOneCustomOption, index) => (
+                            <ToggleButton
+                                className={
+                                    componentSpecificProps?.icon
+                                        ? classes.MuiToggleButtonIcon
+                                        : classes.MuiToggleButton
+                                }
+                                key={option.value + "-" + index}
+                                value={option.value}
+                            >
+                                {componentSpecificProps?.icon && (
+                                    <Box className={classes.iconBox}>
+                                        <img
+                                            className={classes.icon}
+                                            src={componentSpecificProps?.icon}
+                                        />
+                                    </Box>
+                                )}
+                                <Box>{option.label}</Box>
+                            </ToggleButton>
+                        ),
+                    )}
+                </ToggleButtonGroup>
+            )}
         </>
     );
 });

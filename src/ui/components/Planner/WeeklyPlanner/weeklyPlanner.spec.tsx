@@ -6,7 +6,7 @@ import "@testing-library/jest-dom";
 import { ThemeProvider } from "@mui/material";
 import WeeklyPlanner from "./WeeklyPlanner";
 import { generateStringInputFromDate } from "../../../utils";
-import { useCallback } from "react";
+import { WeeklyPlannerSpecificProps } from "interface";
 
 describe("weeklyPlanner", () => {
     const workSumLabel = "total travaillé";
@@ -21,33 +21,51 @@ describe("weeklyPlanner", () => {
 
     const todayStringValue = generateStringInputFromDate(new Date());
     const setIsSubChildDisplayed = jest.fn();
-    const hasBeenStarted = "false";
-    const value = `{\\"data\\":[{\\"hasBeenStarted\\":${hasBeenStarted},\\"date\\":\\"${todayStringValue}\\",\\"day\\":\\"vendredi\\",\\"detail\\":[{\\"start\\":\\"2h15\\",\\"end\\":\\"3h0\\",\\"duration\\":60}]}]}`;
+    const data = {
+        data: [
+            {
+                hasBeenStarted: false,
+                date: todayStringValue,
+                day: "vendredi",
+                detail: [
+                    {
+                        start: "2h15",
+                        end: "3h0",
+                        duration: 60,
+                    },
+                ],
+            },
+        ],
+    };
 
-    const handleChangeCallback = useCallback(() => {
-        console.log("changed");
-    }, []);
+    const value = JSON.stringify(data);
 
-    const renderElement = (value: string, surveyDateString: string): RenderResult => {
+    const componentProps: WeeklyPlannerSpecificProps = {
+        surveyDate: surveyDateString,
+        isSubChildDisplayed: false,
+        setIsSubChildDisplayed: setIsSubChildDisplayed,
+        labels: {
+            title: title,
+            workSumLabel: workSumLabel,
+            presentButtonLabel: presentButtonLabel,
+            futureButtonLabel: futureButtonLable,
+        },
+    };
+
+    const renderElement = (value: string): RenderResult => {
         return render(
             <ThemeProvider theme={theme}>
                 <WeeklyPlanner
-                    handleChange={handleChangeCallback}
+                    handleChange={() => console.log("changed")}
                     value={value}
-                    surveyDate={surveyDateString}
-                    isSubChildDisplayed={false}
-                    setIsSubChildDisplayed={setIsSubChildDisplayed}
-                    title={title}
-                    workSumLabel={workSumLabel}
-                    presentButtonLabel={presentButtonLabel}
-                    futureButtonLabel={futureButtonLable}
+                    componentSpecificProps={componentProps}
                 ></WeeklyPlanner>
             </ThemeProvider>,
         );
     };
 
     beforeEach(() => {
-        renderElement(value, surveyDateString);
+        renderElement(value);
     });
 
     it("renders 7 DayPlanner and 1 DayOverview with 24 Hourchecker", () => {
@@ -82,10 +100,25 @@ describe("weeklyPlanner", () => {
     it("updates ProgressBar label", () => {
         expect(screen.getByText("0%")).toBeInTheDocument();
 
-        const hasBeenStartedUpdated = "true";
-        const valueUpdated = `{\\"data\\":[{\\"hasBeenStarted\\":${hasBeenStartedUpdated},\\"date\\":\\"${todayStringValue}\\",\\"day\\":\\"vendredi\\",\\"detail\\":[{\\"start\\":\\"2h15\\",\\"end\\":\\"3h0\\",\\"duration\\":60}]}]}`;
-        renderElement(valueUpdated, surveyDateString);
+        const dataUpdated = {
+            data: [
+                {
+                    hasBeenStarted: true,
+                    date: todayStringValue,
+                    day: "vendredi",
+                    detail: [
+                        {
+                            start: "2h15",
+                            end: "3h0",
+                            duration: 60,
+                        },
+                    ],
+                },
+            ],
+        };
 
+        const value2 = JSON.stringify(dataUpdated);
+        renderElement(value2);
         expect(screen.getByText("14%")).toBeInTheDocument();
     });
 });

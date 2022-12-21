@@ -1,4 +1,8 @@
-export { default as ActivitySelecter } from "./ActivitySelecter";
+export {
+    ActivitySelecter,
+    findItemInAutoCompleteRef,
+    findItemInCategoriesNomenclature,
+} from "./ActivitySelecter";
 export { default as Button } from "./Button";
 export { default as CheckboxBoolean } from "./CheckboxBoolean";
 export { default as CheckboxGroup } from "./CheckboxGroup";

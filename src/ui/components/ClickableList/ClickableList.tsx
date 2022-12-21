@@ -8,14 +8,14 @@ import {
     Icon,
     TextField,
 } from "@mui/material";
-import { RawActiviteOption } from "interface/RawActiviteOption";
+import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
 import React, { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type ClickableListProps = {
     placeholder: string;
-    options: RawActiviteOption[];
+    options: AutoCompleteActiviteOption[];
     selectedId?: string;
     handleChange(id: string | undefined): void;
     createActivity(value: string | undefined): void;
@@ -47,7 +47,7 @@ const ClickableList = memo((props: ClickableListProps) => {
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
     const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
 
-    const selectedvalue: RawActiviteOption = options.filter(e => e.id === selectedId)[0];
+    const selectedvalue: AutoCompleteActiviteOption = options.filter(e => e.id === selectedId)[0];
 
     const { classes, cx } = useStyles();
 
@@ -67,10 +67,10 @@ const ClickableList = memo((props: ClickableListProps) => {
      * @returns
      */
     const filterOptions = (
-        options: RawActiviteOption[],
-        state: FilterOptionsState<RawActiviteOption>,
+        options: AutoCompleteActiviteOption[],
+        state: FilterOptionsState<AutoCompleteActiviteOption>,
     ) => {
-        let newOptions: RawActiviteOption[] = [];
+        let newOptions: AutoCompleteActiviteOption[] = [];
 
         if (state.inputValue.length > 1) {
             setDisplayAddIcon(true);
@@ -79,7 +79,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             setDisplayAddIcon(false);
         }
 
-        options.forEach((element: RawActiviteOption) => {
+        options.forEach((element: AutoCompleteActiviteOption) => {
             const stateInputValue = state.inputValue;
             const label = removeAccents(element.label.toLowerCase());
             const synonymes = removeAccents(element.synonymes.toLowerCase()).replace(",", "");
@@ -116,7 +116,10 @@ const ClickableList = memo((props: ClickableListProps) => {
         );
     };
 
-    const createActivityCallback = useCallback(() => createActivity(currentInputValue), [currentInputValue]);
+    const createActivityCallback = useCallback(
+        () => createActivity(currentInputValue),
+        [currentInputValue],
+    );
 
     /**
      * Render no result component
@@ -166,9 +169,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             noOptionsText={renderNoOption()}
             onClose={() => setDisplayAddIcon(false)}
             fullWidth={true}
-            popupIcon={
-                <Icon children={renderIcon()} onClick={createActivityCallback} />
-            }
+            popupIcon={<Icon children={renderIcon()} onClick={createActivityCallback} />}
             classes={{ popupIndicator: classes.popupIndicator }}
         />
     );
