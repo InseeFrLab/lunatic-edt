@@ -9,7 +9,11 @@ import {
     TextField,
 } from "@mui/material";
 import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
-import React, { memo, useCallback } from "react";
+import elasticlunr, { Index } from "elasticlunrjs";
+import stopWords from "./stop_words_french.json";
+import { stemmer } from "./stemmer";
+
+import React, { memo, useCallback, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -46,19 +50,29 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
     const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
+    const [index, _setIndex] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
+        elasticlunr.clearStopWords();
+        elasticlunr.addStopWords(stopWords);
+        const temp: Index<AutoCompleteActiviteOption> = elasticlunr();
+        temp.addField("label");
+        temp.addField("synonymes");
+        temp.setRef("id");
+        temp.pipeline.add(
+            elasticlunr.trimmer,
+            elasticlunr.stopWordFilter,
+            str => str.normalize("NFD").replace(/\p{Diacritic}/gu, ""), // remove accents
+            str => stemmer(str),
+        );
+
+        for (const doc of options) {
+            temp.addDoc(doc);
+        }
+        return temp;
+    });
 
     const selectedvalue: AutoCompleteActiviteOption = options.filter(e => e.id === selectedId)[0];
 
     const { classes, cx } = useStyles();
-
-    /**
-     * Remove accents from string
-     * @param value
-     * @returns
-     */
-    const removeAccents = (value: string): string => {
-        return value.normalize("NFD").replace(/\p{Diacritic}/gu, "");
-    };
 
     /**
      * Filter options to be returned according to user search input
@@ -69,30 +83,27 @@ const ClickableList = memo((props: ClickableListProps) => {
     const filterOptions = (
         options: AutoCompleteActiviteOption[],
         state: FilterOptionsState<AutoCompleteActiviteOption>,
-    ) => {
-        let newOptions: AutoCompleteActiviteOption[] = [];
-
+    ): AutoCompleteActiviteOption[] => {
         if (state.inputValue.length > 1) {
             setDisplayAddIcon(true);
-            setCurrentInputValue(state.inputValue);
         } else {
             setDisplayAddIcon(false);
         }
+        setCurrentInputValue(state.inputValue);
+        const value = state.inputValue;
+        const res =
+            index.search(value, {
+                fields: {
+                    label: { boost: 2 },
+                    synonymes: { boost: 1 },
+                },
+            }) || [];
 
-        options.forEach((element: AutoCompleteActiviteOption) => {
-            const stateInputValue = state.inputValue;
-            const label = removeAccents(element.label.toLowerCase());
-            const synonymes = removeAccents(element.synonymes.toLowerCase()).replace(",", "");
-            const stateInput = removeAccents(stateInputValue.toLowerCase());
+        const results: AutoCompleteActiviteOption[] = res.map(
+            r => options.filter(o => o.id === r.ref)[0],
+        );
 
-            if (
-                stateInputValue.length > 1 &&
-                (label.includes(stateInput) || synonymes.includes(stateInput))
-            ) {
-                newOptions.push(element);
-            }
-        });
-        return newOptions;
+        return results;
     };
 
     /**

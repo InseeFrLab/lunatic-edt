@@ -3229,6 +3229,11 @@
   dependencies:
     "@types/ms" "*"
 
+"@types/elasticlunrjs@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/elasticlunrjs/-/elasticlunrjs-1.0.0.tgz#50e7a68f10710c28152c8576e8ea71c9a9257f35"
+  integrity sha512-DpO3XXuhDB7+a/T0I6ndC1bU16cKIMZl7JQfPgG5ZZnMCk9xQuG+i2M1KMlv5J3FwkTaKViVkXgGP95buLTPsw==
+
 "@types/eslint-scope@^3.7.3":
   version "3.7.4"
   resolved "https://registry.yarnpkg.com/@types/eslint-scope/-/eslint-scope-3.7.4.tgz#37fc1223f0786c39627068a12e94d6e6fc61de16"
@@ -6180,6 +6185,11 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
+
+elasticlunrjs@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/elasticlunrjs/-/elasticlunrjs-1.0.1.tgz#a1479765e79fb11188c2af358789be5747ddca25"
+  integrity sha512-Si+Y2Kef7AC6UVA0bgSOG20xtszLeUFmk4Yj2C73tP7OuIciwErU4ReQ8nZnT4NoB2JtcI7ia0Dr+HgoxcVFyw==
 
 electron-to-chromium@^1.4.251:
   version "1.4.284"

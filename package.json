@@ -107,7 +107,9 @@
         "@mui/icons-material": "^5.10.9",
         "@mui/material": "^5.10.9",
         "@mui/x-date-pickers": "^5.0.8",
+        "@types/elasticlunrjs": "^1.0.0",
         "dayjs": "^1.11.5",
+        "elasticlunrjs": "^1.0.1",
         "tss-react": "^4.0.0",
         "uuid": "^9.0.0"
     }
