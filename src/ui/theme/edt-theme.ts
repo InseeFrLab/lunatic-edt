@@ -6,6 +6,7 @@ export interface EdtTheme extends Theme {
         iconRounding: string;
         white: string;
         modal: string;
+        alertActivity: string;
     };
 }
 
@@ -15,5 +16,6 @@ export interface EdtThemeOptions extends ThemeOptions {
         iconRounding: string;
         white: string;
         modal: string;
+        alertActivity: string;
     };
 }

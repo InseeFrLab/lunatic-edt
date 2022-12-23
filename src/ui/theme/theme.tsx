@@ -10,6 +10,7 @@ const theme = createTheme({
         iconRounding: "#DEE2EB",
         white: "#FFFFFF",
         modal: "#F3F2F8",
+        alertActivity: "#B6462C",
     },
     palette: {
         primary: {
