@@ -47,16 +47,13 @@ export const stemmer = (word: string) => {
     word = word.replace(/([aeiouyÃ¢Ã Ã«Ã©ÃªÃ¨Ã¯Ã®Ã´Ã»Ã¹])y/g, "$1Y");
     word = word.replace(/y([aeiouyÃ¢Ã Ã«Ã©ÃªÃ¨Ã¯Ã®Ã´Ã»Ã¹])/g, "Y$1");
 
-    let rv = "";
     let rvIndex = -1;
     if (word.search(/^(par|col|tap)/) != -1 || word.search(/^[aeiouyÃ¢Ã Ã«Ã©ÃªÃ¨Ã¯Ã®Ã´Ã»Ã¹]{2}/) != -1) {
-        rv = word.substring(3);
         rvIndex = 3;
     } else {
         rvIndex = word.substring(1).search(/[aeiouyÃ¢Ã Ã«Ã©ÃªÃ¨Ã¯Ã®Ã´Ã»Ã¹]/);
         if (rvIndex != -1) {
             rvIndex += 2; //+2 is to supplement the substring(1) used to find rvIndex
-            rv = word.substring(rvIndex);
         } else {
             rvIndex = word.length;
         }
@@ -74,15 +71,12 @@ export const stemmer = (word: string) => {
     }
 
     let r2Index = -1;
-    let r2 = "";
     if (r1Index != -1) {
         r2Index = r1.search(/[aeiouyÃ¢Ã Ã«Ã©ÃªÃ¨Ã¯Ã®Ã´Ã»Ã¹][^aeiouyÃ¢Ã Ã«Ã©ÃªÃ¨Ã¯Ã®Ã´Ã»Ã¹]/);
         if (r2Index != -1) {
             r2Index += 2;
-            r2 = r1.substring(r2Index);
             r2Index += r1Index;
         } else {
-            r2 = "";
             r2Index = word.length;
         }
     }
@@ -237,7 +231,6 @@ export const stemmer = (word: string) => {
 
     if (oriWord != word.toLowerCase()) {
         /* Step 3 */
-        let rep = "";
         if (word.search(/Y$/) != -1) {
             word = word.replace(/Y$/, "i");
         } else if (word.search(/Ã§$/) != -1) {

@@ -13,7 +13,7 @@ import elasticlunr, { Index } from "elasticlunrjs";
 import stopWords from "./stop_words_french.json";
 import { stemmer } from "./stemmer";
 
-import React, { memo, useCallback, useEffect } from "react";
+import React, { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
