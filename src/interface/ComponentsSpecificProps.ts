@@ -65,4 +65,15 @@ export type CheckboxOneSpecificProps = {
     options: CheckboxOneCustomOption[];
     icon?: string;
     defaultIcon?: boolean;
+    labels?: CheckBoxOneSpecificPropsLabels;
+    backClickEvent?: React.MouseEvent | undefined;
+    nextClickEvent?: React.MouseEvent | undefined;
+    backClickCallback?(): void;
+    nextClickCallback?(): void;
+};
+
+export type CheckBoxOneSpecificPropsLabels = {
+    otherButtonLabel?: string;
+    subchildLabel?: string;
+    inputPlaceholder?: string;
 };
