@@ -118,7 +118,7 @@ const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
     iconBox: {
         marginRight: "0.5rem",
         color: theme.palette.primary.main,
-        width: "10%",
+        width: "25px",
     },
     icon: {
         width: "25px",
