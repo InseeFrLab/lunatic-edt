@@ -89,12 +89,12 @@ const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
         border: important("2px solid #FFFFFF"),
         borderRadius: important("6px"),
         backgroundColor: "#FFFFFF",
-        color: theme.palette.primary.main,
+        color: theme.palette.secondary.main,
         "&.Mui-selected": {
             borderColor: important(theme.palette.primary.main),
             fontWeight: "bold",
             backgroundColor: "#FFFFFF",
-            color: theme.palette.primary.main,
+            color: theme.palette.secondary.main,
         },
     },
     MuiToggleButtonIcon: {
@@ -102,14 +102,12 @@ const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
         border: important("2px solid #FFFFFF"),
         borderRadius: important("6px"),
         backgroundColor: "#FFFFFF",
-        color: theme.palette.primary.main,
+        color: theme.palette.secondary.main,
         justifyContent: "flex-start",
         textAlign: "left",
+        fontWeight: "bold",
         "&.Mui-selected": {
             borderColor: important(theme.palette.primary.main),
-            fontWeight: "bold",
-            backgroundColor: "#FFFFFF",
-            color: theme.palette.primary.main,
         },
     },
     labelSpacer: {
