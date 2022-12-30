@@ -26,12 +26,16 @@ const lastTime = (
     activities: Activity[] | undefined,
     value: string | undefined,
     defaultValue: boolean | undefined,
+    nameObject: string,
 ) => {
     if (value != null) {
         return dayjs(value, "HH:mm");
     } else if (defaultValue && activities != null && activities.length > 0) {
         return dayjs(activities[activities.length - 1]?.endTime, "HH:mm");
     } else {
+        if (nameObject == "ENDTIME") {
+            return dayjs().add(5, "minutes");
+        }
         return dayjs();
     }
 };
@@ -54,6 +58,7 @@ const Timepicker = memo((props: TimepickerProps) => {
         componentSpecificProps?.activitiesAct,
         value,
         componentSpecificProps?.defaultValue,
+        response["name"],
     );
 
     const [valueLocal, setValue] = React.useState<Dayjs | null>(lastTimeValue);
