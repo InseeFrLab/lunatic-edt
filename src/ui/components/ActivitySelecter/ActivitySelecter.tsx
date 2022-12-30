@@ -595,6 +595,7 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         marginLeft: "0.5rem",
     },
     subRankCategory: {
+        border: "2px solid transparent",
         display: "flex",
         backgroundColor: theme.variables.white,
         marginTop: "4%",
@@ -605,7 +606,6 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         justifyContent: "space-between",
     },
     selectedSubRankCategory: {
-        border: "2px solid",
         borderColor: theme.palette.primary.main,
     },
     subRankLabel: {
