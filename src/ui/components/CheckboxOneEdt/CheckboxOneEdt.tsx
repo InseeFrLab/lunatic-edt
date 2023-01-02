@@ -70,7 +70,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                             </Box>
                         </>
                     )}
-                    {options && (
+                    {(componentSpecificProps?.options ?? options) && (
                         <ToggleButtonGroup
                             orientation="vertical"
                             value={currentOption}
@@ -80,31 +80,33 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                             aria-label={label}
                             className={cx(className, classes.toggleButtonGroup)}
                         >
-                            {options?.map((option: CheckboxOneCustomOption, index) => (
-                                <ToggleButton
-                                    className={
-                                        componentSpecificProps?.icon ||
-                                        componentSpecificProps?.defaultIcon
-                                            ? classes.MuiToggleButtonIcon
-                                            : classes.MuiToggleButton
-                                    }
-                                    key={option.value + "-" + index}
-                                    value={option.value}
-                                >
-                                    {componentSpecificProps?.icon && (
-                                        <Box className={classes.iconBox}>
-                                            <img
-                                                className={classes.icon}
-                                                src={componentSpecificProps?.icon}
-                                            />
-                                        </Box>
-                                    )}
-                                    {componentSpecificProps?.defaultIcon && (
-                                        <Extension className={classes.iconBox} />
-                                    )}
-                                    <Box>{option.label}</Box>
-                                </ToggleButton>
-                            ))}
+                            {(componentSpecificProps?.options ?? options)?.map(
+                                (option: CheckboxOneCustomOption, index) => (
+                                    <ToggleButton
+                                        className={
+                                            componentSpecificProps?.icon ||
+                                            componentSpecificProps?.defaultIcon
+                                                ? classes.MuiToggleButtonIcon
+                                                : classes.MuiToggleButton
+                                        }
+                                        key={option.value + "-" + index}
+                                        value={option.value}
+                                    >
+                                        {componentSpecificProps?.icon && (
+                                            <Box className={classes.iconBox}>
+                                                <img
+                                                    className={classes.icon}
+                                                    src={componentSpecificProps?.icon}
+                                                />
+                                            </Box>
+                                        )}
+                                        {componentSpecificProps?.defaultIcon && (
+                                            <Extension className={classes.iconBox} />
+                                        )}
+                                        <Box>{option.label}</Box>
+                                    </ToggleButton>
+                                ),
+                            )}
                         </ToggleButtonGroup>
                     )}
                     {options && componentSpecificProps?.labels?.otherButtonLabel && (
