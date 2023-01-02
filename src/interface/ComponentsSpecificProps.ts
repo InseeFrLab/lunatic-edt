@@ -1,5 +1,6 @@
 import { AutoCompleteActiviteOption, NomenclatureActivityOption } from "./ActivityTypes";
 import { CheckboxOneCustomOption } from "./CheckboxOptions";
+import { Activity } from "./TimepickerTypes";
 
 export type ActivityLabelProps = {
     selectInCategory: string;
@@ -76,4 +77,11 @@ export type CheckBoxOneSpecificPropsLabels = {
     otherButtonLabel?: string;
     subchildLabel?: string;
     inputPlaceholder?: string;
+};
+
+
+export type TimepickerSpecificProps = {
+    activitiesAct: Activity[];
+    defaultValue?: boolean;
+    gapToFillIndex?: number;
 };

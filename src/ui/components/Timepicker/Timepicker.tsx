@@ -5,7 +5,9 @@ import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
-import { Activity, TimepickerSpecificProps } from "interface/TimepickerTypes";
+import { TimepickerSpecificProps } from "interface";
+import { Activity } from "interface/TimepickerTypes";
+
 import React, { memo, useEffect, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
@@ -22,23 +24,7 @@ export type TimepickerProps = {
     componentSpecificProps?: TimepickerSpecificProps;
 };
 
-const lastTime = (
-    activities: Activity[] | undefined,
-    value: string | undefined,
-    defaultValue: boolean | undefined,
-    nameObject: string,
-) => {
-    if (value != null) {
-        return dayjs(value, "HH:mm");
-    } else if (defaultValue && activities != null && activities.length > 0) {
-        return dayjs(activities[activities.length - 1]?.endTime, "HH:mm");
-    } else {
-        if (nameObject == "ENDTIME") {
-            return dayjs().add(5, "minutes");
-        }
-        return dayjs();
-    }
-};
+
 
 const Timepicker = memo((props: TimepickerProps) => {
     const {
@@ -54,22 +40,46 @@ const Timepicker = memo((props: TimepickerProps) => {
     } = props;
     const { classes } = useStyles();
 
-    const lastTimeValue = lastTime(
-        componentSpecificProps?.activitiesAct,
-        value,
-        componentSpecificProps?.defaultValue,
-        response["name"],
-    );
+    const [valueLocal, setValue] = React.useState<Dayjs | undefined>();
 
-    const [valueLocal, setValue] = React.useState<Dayjs | null>(lastTimeValue);
+    const computeLastTime = (
+        activities: Activity[] | undefined,
+        value: string | undefined,
+        defaultValue: boolean | undefined,
+        nameObject: string,
+    ) => {
+        let lastTime;
+        if (value) {
+            lastTime = dayjs(value, "HH:mm");
+        } else {
+            if (defaultValue && activities && activities.length > 0) {
+                lastTime = dayjs(activities[activities.length - 1]?.endTime, "HH:mm");
+            } else {
+                lastTime = dayjs();
+            }
+            if (nameObject == "ENDTIME") {
+                lastTime = lastTime.add(5, "minutes");
+            }
+        }
+        setValue(lastTime);
+    };
 
     useEffect(() => {
-        if (valueLocal != null && valueLocal?.isValid())
-            handleChange(response, valueLocal?.format("HH:mm") || null);
+        computeLastTime(
+            componentSpecificProps?.activitiesAct,
+            value,
+            componentSpecificProps?.defaultValue,
+            response["name"],
+        );
     }, []);
 
+    useEffect(() => {
+        if (valueLocal != undefined && valueLocal?.isValid())
+            handleChange(response, valueLocal?.format("HH:mm") || null);
+    }, [valueLocal]);
+
     function setValueLunatic(newValue: Dayjs | null) {
-        if (newValue != null && newValue?.isValid()) {
+        if (newValue != undefined && newValue?.isValid()) {
             setValue(newValue);
             handleChange(response, newValue?.format("HH:mm") || null);
         }
