@@ -79,7 +79,6 @@ export type CheckBoxOneSpecificPropsLabels = {
     inputPlaceholder?: string;
 };
 
-
 export type TimepickerSpecificProps = {
     activitiesAct: Activity[];
     defaultValue?: boolean;

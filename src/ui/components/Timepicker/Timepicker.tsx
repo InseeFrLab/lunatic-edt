@@ -24,8 +24,6 @@ export type TimepickerProps = {
     componentSpecificProps?: TimepickerSpecificProps;
 };
 
-
-
 const Timepicker = memo((props: TimepickerProps) => {
     const {
         id,
