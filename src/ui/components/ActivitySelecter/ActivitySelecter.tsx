@@ -431,15 +431,21 @@ const next = (
 
     switch (fullScreenComponent) {
         case FullScreenComponent.ClickableList:
+            if (displayAlert1) {
+                setDisplayAlert(true);
+                break;
+            }
+            if (!suggesterId) {
+                routeToGoal = false;
+            }
+            nextClickCallback(routeToGoal);
+            break;
         case FullScreenComponent.Main:
             if (displayAlert1) {
                 setDisplayAlert(true);
                 break;
             }
-            if (selectedCategories[selectedCategories.length - 1]) {
-                routeToGoal = false;
-            }
-            nextClickCallback(routeToGoal);
+            nextClickCallback(false);
             break;
         case FullScreenComponent.FreeInput:
             if (displayAlert2) {
