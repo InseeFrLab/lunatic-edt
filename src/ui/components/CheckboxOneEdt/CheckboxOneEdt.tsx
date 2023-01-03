@@ -198,6 +198,7 @@ const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
         justifyContent: "flex-start",
         textAlign: "left",
         fontWeight: "bold",
+        minWidth: "350px",
         "&.Mui-selected": {
             borderColor: important(theme.palette.primary.main),
         },
