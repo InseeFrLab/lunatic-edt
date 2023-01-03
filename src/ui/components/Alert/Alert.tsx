@@ -27,7 +27,7 @@ const Alert = memo((props: AlertProps) => {
                 sx={{ display: isAlertDisplayed ? "visible" : "none" }}
             ></Box>
             <Fragment>
-                <Modal hideBackdrop open={isAlertDisplayed} aria-labelledby={""} aria-describedby={""}>
+                <Modal open={isAlertDisplayed} aria-labelledby={""} aria-describedby={""}>
                     <Box className={classes.errorBox}>
                         <Box className={classes.boxCenter}>
                             <img src={icon} alt={errorIconAlt} />

@@ -67,10 +67,17 @@ export type CheckboxOneSpecificProps = {
     icon?: string;
     defaultIcon?: boolean;
     labels?: CheckBoxOneSpecificPropsLabels;
+    labelsAlert?: {
+        alertMessage: string;
+        alertIgnore: string;
+        alertComplete: string;
+        alertAlticon: string;
+    };
     backClickEvent?: React.MouseEvent | undefined;
     nextClickEvent?: React.MouseEvent | undefined;
     backClickCallback?(): void;
     nextClickCallback?(): void;
+    errorIcon?: string;
 };
 
 export type CheckBoxOneSpecificPropsLabels = {
