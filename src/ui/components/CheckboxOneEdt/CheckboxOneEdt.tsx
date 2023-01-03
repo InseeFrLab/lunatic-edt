@@ -139,7 +139,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                         {componentSpecificProps?.defaultIcon && (
                                             <Extension className={classes.iconBox} />
                                         )}
-                                        <Box>{option.label}</Box>
+                                        <Box className={classes.labelBox}>{option.label}</Box>
                                     </ToggleButton>
                                 ),
                             )}
@@ -209,6 +209,9 @@ const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
         marginRight: "0.5rem",
         color: theme.palette.primary.main,
         width: "25px",
+    },
+    labelBox: {
+        marginLeft: "0.25rem",
     },
     icon: {
         width: "25px",
