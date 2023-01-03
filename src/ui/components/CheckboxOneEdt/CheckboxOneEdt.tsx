@@ -70,10 +70,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     const next = (continueWithUncompleted: boolean) => {
         if (nextClickCallback) {
-            console.log(currentOption);
-            console.log(continueWithUncompleted);
             if ((currentOption == null || currentOption == "") && !continueWithUncompleted) {
-                console.log("display");
                 handleChange(response, "");
                 setDisplayAlert(true);
             } else {
