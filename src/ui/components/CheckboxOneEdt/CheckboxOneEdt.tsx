@@ -2,10 +2,11 @@ import { Extension } from "@mui/icons-material";
 import { Box, Button, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { CheckboxOneSpecificProps } from "interface";
 import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
-import React, { memo, useCallback, useEffect } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
+import Alert from "../Alert";
 
 export type CheckboxOneProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
@@ -21,13 +22,21 @@ export type CheckboxOneProps = {
 const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     const { id, value, label, options, className, handleChange, response, componentSpecificProps } =
         props;
-    const { backClickEvent, nextClickEvent, backClickCallback, nextClickCallback } = {
+    const {
+        backClickEvent,
+        nextClickEvent,
+        backClickCallback,
+        nextClickCallback,
+        labelsAlert,
+        errorIcon,
+    } = {
         ...componentSpecificProps,
     };
     const { classes, cx } = useStyles();
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(value ?? undefined);
     const [isSubchildDisplayed, setIsSubchildDisplayed] = React.useState<boolean>(false);
     const [newOptionValue, setNewOptionValue] = React.useState<string | undefined>(undefined);
+    const [displayAlert, setDisplayAlert] = useState<boolean>(false);
 
     useEffect(() => {
         if (isSubchildDisplayed) {
@@ -39,7 +48,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     useEffect(() => {
         if (nextClickEvent && nextClickCallback) {
-            nextClickCallback();
+            next(false);
         }
     }, [nextClickEvent]);
 
@@ -59,8 +68,38 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         setNewOptionValue(e.target.value);
     };
 
+    const next = (continueWithUncompleted: boolean) => {
+        if (nextClickCallback) {
+            console.log(currentOption);
+            console.log(continueWithUncompleted);
+            if ((currentOption == null || currentOption == "") && !continueWithUncompleted) {
+                console.log("display");
+                handleChange(response, "");
+                setDisplayAlert(true);
+            } else {
+                nextClickCallback();
+            }
+        }
+    };
+
+    const handleAlert = useCallback(() => next(true), []);
+
     return (
         <>
+            {labelsAlert && (
+                <Alert
+                    isAlertDisplayed={displayAlert}
+                    onCompleteCallBack={() => setDisplayAlert(false)}
+                    onCancelCallBack={handleAlert}
+                    labels={{
+                        content: labelsAlert.alertMessage,
+                        cancel: labelsAlert.alertIgnore,
+                        complete: labelsAlert.alertComplete,
+                    }}
+                    icon={errorIcon || ""}
+                    errorIconAlt={labelsAlert.alertAlticon}
+                ></Alert>
+            )}
             {!isSubchildDisplayed && (
                 <>
                     {label && (
