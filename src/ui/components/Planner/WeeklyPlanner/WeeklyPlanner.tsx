@@ -39,12 +39,16 @@ const generateDayList = (startDate: Date): Date[] => {
 };
 
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
-    const { classes } = useStyles();
     let { value, handleChange, componentSpecificProps } = props;
 
     const { surveyDate, isSubChildDisplayed, setIsSubChildDisplayed, labels } = {
         ...componentSpecificProps,
     };
+    const rootBoxWidth = document.getElementById("root-box")?.parentElement?.clientWidth;
+    const halfRootBoxWidthPx = (rootBoxWidth ? (rootBoxWidth / 2).toString() : "0") + "px";
+    const { classes } = useStyles({
+        "transform": `translateX(calc(${halfRootBoxWidthPx} - 50vw))`,
+    });
 
     const values: WeeklyPlannerValue = JSON.parse(value);
     const startDate: string = surveyDate || "";
@@ -97,7 +101,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     };
 
     return (
-        <Box>
+        <Box id="root-box">
             <DayOverview
                 isDisplayed={isSubChildDisplayed}
                 date={dayOverviewSelectedDate}
@@ -136,23 +140,25 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     );
 });
 
-const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
-    listContainer: {
-        display: "flex",
-        flexDirection: "column",
-    },
-    title: {
-        marginTop: "5rem",
-        fontSize: "14px",
-    },
-    progressBar: {
-        padding: "1rem",
-        backgroundColor: theme.variables.white,
-        position: "absolute",
-        left: "0",
-        top: "4.1rem",
-        overflowX: "hidden",
-    },
-}));
+const useStyles = makeStylesEdt<{ transform: string }>({ "name": { WeeklyPlanner } })(
+    (theme, { transform }) => ({
+        listContainer: {
+            display: "flex",
+            flexDirection: "column",
+        },
+        title: {
+            marginTop: "5rem",
+            fontSize: "14px",
+        },
+        progressBar: {
+            padding: "1rem",
+            backgroundColor: theme.variables.white,
+            position: "relative",
+            width: "100vw !important",
+            overflowX: "hidden",
+            transform,
+        },
+    }),
+);
 
 export default createCustomizableLunaticField(WeeklyPlanner, "WeeklyPlanner");
