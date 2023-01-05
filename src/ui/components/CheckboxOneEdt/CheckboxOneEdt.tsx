@@ -204,7 +204,7 @@ const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
         },
     },
     labelSpacer: {
-        marginBottom: "0.5rem",
+        margin: "1.5rem 0rem 0.5rem 0rem",
     },
     iconBox: {
         marginRight: "0.5rem",
