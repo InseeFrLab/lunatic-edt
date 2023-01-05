@@ -1,8 +1,12 @@
 import { ChevronRight, Extension, Search } from "@mui/icons-material";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { NomenclatureActivityOption, SelectedActivity } from "interface/ActivityTypes";
+import {
+    AutoCompleteActiviteOption,
+    NomenclatureActivityOption,
+    SelectedActivity,
+} from "interface/ActivityTypes";
 import { ActivityLabelProps, ActivitySelecterSpecificProps } from "interface/ComponentsSpecificProps";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../../ui/theme";
 import { splitLabelWithParenthesis } from "../../../ui/utils";
@@ -40,6 +44,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         categoriesAndActivitesNomenclature,
         labels,
         errorIcon,
+        addToReferentielCallBack,
     } = { ...componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
@@ -51,6 +56,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         FullScreenComponent.Main,
     );
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
+    const newItemId = useRef(uuidv4());
 
     useEffect(() => {
         if (setDisplayStepper) {
@@ -104,6 +110,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 selectedCategories,
                 nextClickCallback,
                 createActivityValue,
+                addToReferentielCallBack,
+                newItemId.current,
             );
         }
     }, [nextClickEvent]);
@@ -221,6 +229,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                 selectedCategories,
                                 nextClickCallback,
                                 createActivityValue,
+                                addToReferentielCallBack,
+                                newItemId.current,
                             )
                         }
                         labels={{
@@ -422,6 +432,8 @@ const next = (
     selectedCategories: NomenclatureActivityOption[],
     nextClickCallback: (routeToGoal: boolean) => void,
     createActivityValue: string | undefined,
+    addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void,
+    newItemId: string,
 ) => {
     let routeToGoal = true;
     let displayAlert1 =
@@ -455,6 +467,11 @@ const next = (
             if (selectedCategories[selectedCategories.length - 1]) {
                 routeToGoal = false;
             }
+            addToReferentielCallBack({
+                id: newItemId,
+                label: createActivityValue || "",
+                synonymes: "",
+            });
             nextClickCallback(routeToGoal);
             break;
         default:

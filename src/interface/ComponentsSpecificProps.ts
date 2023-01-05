@@ -41,6 +41,7 @@ export type ActivitySelecterSpecificProps = {
     categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
     labels: ActivityLabelProps;
     errorIcon: string;
+    addToReferentielCallBack(newItem: AutoCompleteActiviteOption): void;
 };
 
 export type IconGridCheckBoxOneSpecificProps = {
@@ -78,6 +79,7 @@ export type CheckboxOneSpecificProps = {
     backClickCallback?(): void;
     nextClickCallback?(): void;
     errorIcon?: string;
+    addToReferentielCallBack?(newItem: CheckboxOneCustomOption): void;
 };
 
 export type CheckBoxOneSpecificPropsLabels = {

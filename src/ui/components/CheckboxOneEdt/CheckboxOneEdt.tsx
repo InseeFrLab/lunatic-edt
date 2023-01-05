@@ -2,7 +2,8 @@ import { Extension } from "@mui/icons-material";
 import { Box, Button, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { CheckboxOneSpecificProps } from "interface";
 import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
@@ -29,6 +30,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         nextClickCallback,
         labelsAlert,
         errorIcon,
+        addToReferentielCallBack,
     } = {
         ...componentSpecificProps,
     };
@@ -37,6 +39,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     const [isSubchildDisplayed, setIsSubchildDisplayed] = React.useState<boolean>(false);
     const [newOptionValue, setNewOptionValue] = React.useState<string | undefined>(undefined);
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
+    const newItemId = useRef(uuidv4());
 
     useEffect(() => {
         if (isSubchildDisplayed) {
@@ -66,14 +69,25 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     const newOptionOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setNewOptionValue(e.target.value);
+        handleChange(response, newItemId.current);
     };
 
     const next = (continueWithUncompleted: boolean) => {
         if (nextClickCallback) {
-            if ((currentOption == null || currentOption == "") && !continueWithUncompleted) {
+            if (
+                (currentOption == null || currentOption == "") &&
+                (newOptionValue == null || newOptionValue == "") &&
+                !continueWithUncompleted
+            ) {
                 handleChange(response, "");
                 setDisplayAlert(true);
             } else {
+                if (addToReferentielCallBack && newOptionValue) {
+                    addToReferentielCallBack({
+                        label: newOptionValue || "",
+                        value: newItemId.current,
+                    });
+                }
                 nextClickCallback();
             }
         }
