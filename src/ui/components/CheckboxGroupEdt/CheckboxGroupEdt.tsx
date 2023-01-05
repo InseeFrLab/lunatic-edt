@@ -76,6 +76,7 @@ const useStyles = makeStylesEdt({ "name": { CheckboxGroupEdt } })(theme => ({
         justifyContent: "space-between",
         paddingLeft: "0.5rem",
         backgroundColor: theme.variables.white,
+        padding: "0.5rem 0rem 0.25rem 1rem",
     },
     MuiCheckbox: {
         color: theme.variables.neutral,
