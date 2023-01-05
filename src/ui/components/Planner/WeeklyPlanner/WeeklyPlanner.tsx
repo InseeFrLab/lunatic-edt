@@ -147,7 +147,7 @@ const useStyles = makeStylesEdt<{ transform: string }>({ "name": { WeeklyPlanner
             flexDirection: "column",
         },
         title: {
-            marginTop: "5rem",
+            marginTop: "2rem",
             fontSize: "14px",
         },
         progressBar: {
