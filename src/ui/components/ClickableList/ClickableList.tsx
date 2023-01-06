@@ -76,12 +76,12 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     /**
      * Filter options to be returned according to user search input
-     * @param options
+     * @param ref
      * @param state
      * @returns
      */
     const filterOptions = (
-        options: AutoCompleteActiviteOption[],
+        ref: AutoCompleteActiviteOption[],
         state: FilterOptionsState<AutoCompleteActiviteOption>,
     ): AutoCompleteActiviteOption[] => {
         if (state.inputValue.length > 1) {
@@ -99,9 +99,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                 },
             }) || [];
 
-        const results: AutoCompleteActiviteOption[] = res.map(
-            r => options.filter(o => o.id === r.ref)[0],
-        );
+        const results: AutoCompleteActiviteOption[] = res.map(r => ref.filter(o => o.id === r.ref)[0]);
 
         return results;
     };

@@ -52,12 +52,12 @@ describe("weeklyPlanner", () => {
         },
     };
 
-    const renderElement = (value: string): RenderResult => {
+    const renderElement = (valueData: string): RenderResult => {
         return render(
             <ThemeProvider theme={theme}>
                 <WeeklyPlanner
                     handleChange={() => console.log("changed")}
-                    value={value}
+                    value={valueData}
                     componentSpecificProps={componentProps}
                 ></WeeklyPlanner>
             </ThemeProvider>,

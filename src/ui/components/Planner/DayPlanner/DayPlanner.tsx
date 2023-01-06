@@ -83,7 +83,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         const dayBloc: WeeklyPlannerDataType = activityData.filter(
             d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
         )[0];
-        const sum: number = dayBloc?.detail.reduce((sum, val) => sum + val.duration, 0);
+        const sum: number = dayBloc?.detail.reduce((acc, val) => acc + val.duration, 0);
         setWorkedHoursSum(sum);
         setHasBeenStarted(dayBloc?.hasBeenStarted);
     }, [activityData]);
@@ -141,28 +141,32 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         }
     };
 
+    const getMainContainerComplementaryClass = () => {
+        return dayRelativeTime === 0 ? classes.mainContainerPresent : "";
+    };
+    const getDayAndDotsClass = () => {
+        return dayRelativeTime === -1 ? classes.dayAndDotsContainer : "";
+    };
+    const renderMoreIcon = () => {
+        return dayRelativeTime === -1 ? (
+            <MoreHorizIcon className={classes.clickable} onClick={buttonsOnClick}></MoreHorizIcon>
+        ) : (
+            <></>
+        );
+    };
+
     return (
         <>
             {dayRelativeTime !== undefined ? (
                 <Box
-                    className={cx(
-                        classes.mainContainer,
-                        dayRelativeTime === 0 ? classes.mainContainerPresent : "",
-                    )}
+                    className={cx(classes.mainContainer, getMainContainerComplementaryClass())}
                     aria-label="dayplanner"
                 >
-                    <Box className={dayRelativeTime === -1 ? classes.dayAndDotsContainer : ""}>
+                    <Box className={getDayAndDotsClass()}>
                         <Typography className={cx(classes.dayLabel, classes.bold)}>
                             {renderDateLabel(date)}
                         </Typography>
-                        {dayRelativeTime === -1 ? (
-                            <MoreHorizIcon
-                                className={classes.clickable}
-                                onClick={buttonsOnClick}
-                            ></MoreHorizIcon>
-                        ) : (
-                            <></>
-                        )}
+                        {renderMoreIcon()}
                     </Box>
                     {renderBottomPart()}
                 </Box>

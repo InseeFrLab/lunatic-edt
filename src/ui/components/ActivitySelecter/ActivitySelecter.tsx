@@ -13,7 +13,7 @@ import { splitLabelWithParenthesis } from "../../../ui/utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Alert from "../Alert";
 import ClickableList from "../ClickableList";
-import { findItemInCategoriesNomenclature } from "./activityUtils";
+import { processSelectedValue } from "./activityUtils";
 
 type ActivitySelecterProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
@@ -23,9 +23,9 @@ type ActivitySelecterProps = {
     value: string;
 };
 
-enum FullScreenComponent {
+export enum FullScreenComponent {
     Main,
-    ClickableList,
+    ClickableListComp,
     FreeInput,
 }
 
@@ -59,17 +59,17 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const newItemId = useRef(uuidv4());
 
     useEffect(() => {
-        if (setDisplayStepper) {
+        setDisplayStepper &&
             setDisplayStepper(
                 fullScreenComponent === FullScreenComponent.Main && selectedCategories.length === 0,
             );
-        }
     }, [fullScreenComponent, selectedCategories]);
 
     const { classes, cx } = useStyles();
 
     useEffect(() => {
-        if (value) {
+        value &&
+            categoriesAndActivitesNomenclature &&
             processSelectedValue(
                 value,
                 categoriesAndActivitesNomenclature,
@@ -79,57 +79,63 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 setCreateActivityValue,
                 setSelectedCategories,
             );
-        }
     }, []);
 
     useEffect(() => {
-        if (backClickEvent) {
+        backClickEvent &&
             back(
                 fullScreenComponent,
                 backClickCallback,
                 selectedCategories,
-                setSelectedId,
-                setLabelOfSelectedId,
-                setSelectedSuggesterId,
-                setSelectedCategories,
+                {
+                    setSelectedId: setSelectedId,
+                    setLabelOfSelectedId: setLabelOfSelectedId,
+                    setSelectedSuggesterId: setSelectedSuggesterId,
+                    setSelectedCategories: setSelectedCategories,
+                    setCreateActivityValue: setCreateActivityValue,
+                    setFullScreenComponent: setFullScreenComponent,
+                },
                 onChange,
-                setCreateActivityValue,
-                setFullScreenComponent,
             );
-        }
     }, [backClickEvent]);
 
     useEffect(() => {
-        if (nextClickEvent) {
+        nextClickEvent &&
             next(
                 false,
-                selectedId,
-                selectedSuggesterId,
-                fullScreenComponent,
+                {
+                    selectedId: selectedId,
+                    suggesterId: selectedSuggesterId,
+                    fullScreenComponent: fullScreenComponent,
+                    selectedCategories: selectedCategories,
+                    createActivityValue: createActivityValue,
+                },
                 setDisplayAlert,
-                selectedCategories,
                 nextClickCallback,
-                createActivityValue,
                 addToReferentielCallBack,
                 newItemId.current,
             );
-        }
     }, [nextClickEvent]);
 
-    const onChange = (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => {
+    const onChange = (
+        isFullyCompleted: boolean,
+        id?: string,
+        suggesterId?: string,
+        activityLabel?: string,
+    ) => {
         const selection: SelectedActivity = {
             id: id,
             suggesterId: suggesterId,
-            label: label,
+            label: activityLabel,
             isFullyCompleted: isFullyCompleted,
         };
         handleChange(response, JSON.stringify(selection));
     };
 
-    const createActivityCallBack = (label: string) => {
-        onChange(true, undefined, undefined, label);
+    const createActivityCallBack = (activityLabel: string) => {
+        onChange(true, undefined, undefined, activityLabel);
         setFullScreenComponent(FullScreenComponent.FreeInput);
-        setCreateActivityValue(label);
+        setCreateActivityValue(activityLabel);
     };
 
     const clickableListOnChange = (id: string | undefined) => {
@@ -138,7 +144,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         if (id) {
             isFully = true;
         }
-        onChange(isFully, undefined, id, undefined);
+        onChange(isFully, undefined, id);
     };
 
     const freeInputOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -222,13 +228,15 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         onCancelCallBack={() =>
                             next(
                                 true,
-                                selectedId,
-                                selectedSuggesterId,
-                                fullScreenComponent,
+                                {
+                                    selectedId: selectedId,
+                                    suggesterId: selectedSuggesterId,
+                                    fullScreenComponent: fullScreenComponent,
+                                    selectedCategories: selectedCategories,
+                                    createActivityValue: createActivityValue,
+                                },
                                 setDisplayAlert,
-                                selectedCategories,
                                 nextClickCallback,
-                                createActivityValue,
                                 addToReferentielCallBack,
                                 newItemId.current,
                             )
@@ -242,7 +250,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         errorIconAlt={labels.alertAlticon}
                     ></Alert>
 
-                    {fullScreenComponent === FullScreenComponent.ClickableList && (
+                    {fullScreenComponent === FullScreenComponent.ClickableListComp && (
                         <ClickableList
                             className={classes.clickableList}
                             options={activitesAutoCompleteRef}
@@ -283,7 +291,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                 <Box
                                     className={classes.activityInput}
                                     onClick={() =>
-                                        setFullScreenComponent(FullScreenComponent.ClickableList)
+                                        setFullScreenComponent(FullScreenComponent.ClickableListComp)
                                     }
                                 >
                                     <Typography className={classes.activityInputLabel}>
@@ -326,70 +334,19 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     );
 });
 
-const processSelectedValue = (
-    value: string,
-    categoriesAndActivitesNomenclature: NomenclatureActivityOption[],
-    setFullScreenComponent: (screen: FullScreenComponent) => void,
-    setSelectedId: (id: string | undefined) => void,
-    setSelectedSuggesterId: (id: string | undefined) => void,
-    setCreateActivityValue: (val: string | undefined) => void,
-    setSelectedCategories: (cats: NomenclatureActivityOption[]) => void,
-) => {
-    if (value) {
-        const parsedValue: SelectedActivity = JSON.parse(value);
-        const hasId: boolean = parsedValue?.id !== undefined;
-        const hasSuggesterId: boolean = parsedValue?.suggesterId !== undefined;
-        const hasLabel: boolean = parsedValue?.label !== undefined;
-        const isFullyCompleted: boolean = parsedValue?.isFullyCompleted;
-
-        if (hasId && !hasLabel) {
-            setSelectedId(parsedValue.id);
-            if (categoriesAndActivitesNomenclature) {
-                const res = findItemInCategoriesNomenclature(
-                    parsedValue.id,
-                    categoriesAndActivitesNomenclature,
-                    undefined,
-                );
-                const resParent = res?.parent ? [res?.parent] : [];
-                const resItem = res?.item ? [res?.item] : [];
-                if (isFullyCompleted) {
-                    setSelectedCategories(resParent);
-                } else {
-                    setSelectedCategories(resItem);
-                }
-            }
-        }
-        if (hasSuggesterId) {
-            setFullScreenComponent(FullScreenComponent.ClickableList);
-            setSelectedSuggesterId(parsedValue.suggesterId);
-        }
-        if (hasLabel) {
-            setFullScreenComponent(FullScreenComponent.FreeInput);
-            setCreateActivityValue(parsedValue.label);
-            if (categoriesAndActivitesNomenclature && hasId) {
-                const res = findItemInCategoriesNomenclature(
-                    parsedValue.id,
-                    categoriesAndActivitesNomenclature,
-                    undefined,
-                );
-                const resItem = res?.item ? [res?.item] : [];
-                setSelectedCategories(resItem);
-            }
-        }
-    }
-};
-
 const back = (
     fullScreenComponent: FullScreenComponent,
     backClickCallback: () => void,
     selectedCategories: NomenclatureActivityOption[],
-    setSelectedId: (id?: string) => void,
-    setLabelOfSelectedId: (label?: string) => void,
-    setSelectedSuggesterId: (id?: string) => void,
-    setSelectedCategories: (activities: NomenclatureActivityOption[]) => void,
+    setters: {
+        setSelectedId: (id?: string) => void;
+        setLabelOfSelectedId: (label?: string) => void;
+        setSelectedSuggesterId: (id?: string) => void;
+        setSelectedCategories: (activities: NomenclatureActivityOption[]) => void;
+        setCreateActivityValue: (value?: string) => void;
+        setFullScreenComponent: (comp: FullScreenComponent) => void;
+    },
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
-    setCreateActivityValue: (value?: string) => void,
-    setFullScreenComponent: (comp: FullScreenComponent) => void,
 ) => {
     // Go back to previous page in application navigation
     if (fullScreenComponent === FullScreenComponent.Main && selectedCategories.length === 0) {
@@ -400,22 +357,22 @@ const back = (
 
     switch (fullScreenComponent) {
         case FullScreenComponent.Main:
-            setSelectedId(undefined);
-            setLabelOfSelectedId(undefined);
+            setters.setSelectedId(undefined);
+            setters.setLabelOfSelectedId(undefined);
             temp.pop();
-            setSelectedCategories(temp);
+            setters.setSelectedCategories(temp);
             onChange(false, temp[temp.length - 1]?.id, undefined);
             break;
         case FullScreenComponent.FreeInput:
-            setSelectedId(undefined);
-            setLabelOfSelectedId(undefined);
-            setCreateActivityValue(undefined);
-            setFullScreenComponent(FullScreenComponent.Main);
+            setters.setSelectedId(undefined);
+            setters.setLabelOfSelectedId(undefined);
+            setters.setCreateActivityValue(undefined);
+            setters.setFullScreenComponent(FullScreenComponent.Main);
             onChange(false, selectedCategories[selectedCategories.length - 1]?.id, undefined, undefined);
             break;
-        case FullScreenComponent.ClickableList:
-            setSelectedSuggesterId(undefined);
-            setFullScreenComponent(FullScreenComponent.Main);
+        case FullScreenComponent.ClickableListComp:
+            setters.setSelectedSuggesterId(undefined);
+            setters.setFullScreenComponent(FullScreenComponent.Main);
             onChange(false, undefined, undefined, undefined);
             break;
         default:
@@ -425,29 +382,32 @@ const back = (
 
 const next = (
     continueWithUncompleted: boolean,
-    selectedId: string | undefined,
-    suggesterId: string | undefined,
-    fullScreenComponent: FullScreenComponent,
+    states: {
+        selectedId: string | undefined;
+        suggesterId: string | undefined;
+        fullScreenComponent: FullScreenComponent;
+        selectedCategories: NomenclatureActivityOption[];
+        createActivityValue: string | undefined;
+    },
     setDisplayAlert: (display: boolean) => void,
-    selectedCategories: NomenclatureActivityOption[],
     nextClickCallback: (routeToGoal: boolean) => void,
-    createActivityValue: string | undefined,
     addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void,
     newItemId: string,
 ) => {
     let routeToGoal = true;
     let displayAlert1 =
-        selectedId === undefined && suggesterId === undefined && !continueWithUncompleted;
+        states.selectedId === undefined && states.suggesterId === undefined && !continueWithUncompleted;
     let displayAlert2 =
-        (createActivityValue === undefined || createActivityValue === "") && !continueWithUncompleted;
+        (states.createActivityValue === undefined || states.createActivityValue === "") &&
+        !continueWithUncompleted;
 
-    switch (fullScreenComponent) {
-        case FullScreenComponent.ClickableList:
+    switch (states.fullScreenComponent) {
+        case FullScreenComponent.ClickableListComp:
             if (displayAlert1) {
                 setDisplayAlert(true);
                 break;
             }
-            if (!suggesterId) {
+            if (!states.suggesterId) {
                 routeToGoal = false;
             }
             nextClickCallback(routeToGoal);
@@ -464,12 +424,12 @@ const next = (
                 setDisplayAlert(true);
                 break;
             }
-            if (selectedCategories[selectedCategories.length - 1]) {
+            if (states.selectedCategories[states.selectedCategories.length - 1]) {
                 routeToGoal = false;
             }
             addToReferentielCallBack({
                 id: newItemId,
-                label: createActivityValue || "",
+                label: states.createActivityValue || "",
                 synonymes: "",
             });
             nextClickCallback(routeToGoal);

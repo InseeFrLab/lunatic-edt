@@ -39,7 +39,7 @@ const value = {
 export default meta;
 
 export const Default = getStory({
-    handleChange: (value: string) => console.log(value),
+    handleChange: (newValue: string) => console.log(newValue),
     responses: responses,
     value: value,
 });

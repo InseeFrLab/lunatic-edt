@@ -100,6 +100,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         return Math.round((activityData.filter(a => a.hasBeenStarted === true).length / 7) * 100);
     };
 
+    const getMainDisplay = () => {
+        return isSubChildDisplayed ? "none" : "inline";
+    };
+
     return (
         <Box id="root-box">
             <DayOverview
@@ -110,7 +114,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 setActivityData={setActivityData}
             ></DayOverview>
             {activityData.length !== 0 && needSpinner ? (
-                <Box display={isSubChildDisplayed ? "none" : "inline"}>
+                <Box display={getMainDisplay()}>
                     <ProgressBar
                         className={classes.progressBar}
                         value={getProgressBarValue()}

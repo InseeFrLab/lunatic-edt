@@ -42,13 +42,13 @@ const Timepicker = memo((props: TimepickerProps) => {
 
     const computeLastTime = (
         activities: Activity[] | undefined,
-        value: string | undefined,
+        valueData: string | undefined,
         defaultValue: boolean | undefined,
         nameObject: string,
     ) => {
         let lastTime;
-        if (value) {
-            lastTime = dayjs(value, "HH:mm");
+        if (valueData) {
+            lastTime = dayjs(valueData, "HH:mm");
         } else {
             if (defaultValue && activities && activities.length > 0) {
                 lastTime = dayjs(activities[activities.length - 1]?.endTime, "HH:mm");

@@ -74,8 +74,8 @@ export type CheckboxOneSpecificProps = {
         alertComplete: string;
         alertAlticon: string;
     };
-    backClickEvent?: React.MouseEvent | undefined;
-    nextClickEvent?: React.MouseEvent | undefined;
+    backClickEvent?: React.MouseEvent;
+    nextClickEvent?: React.MouseEvent;
     backClickCallback?(): void;
     nextClickCallback?(): void;
     errorIcon?: string;
