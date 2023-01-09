@@ -88,16 +88,15 @@ const HourChecker = memo((props: HourCheckerProps) => {
         <Box className={classes.globalBox} component="div" aria-label="hourchecker">
             <Box
                 className={getClassName(cx, classes.closedBox, classes.visible, classes.hidden, !isOpen)}
-                onClick={
-                    () =>
-                        selectOrUnselectAll(
-                            selectAll,
-                            value,
-                            responsesValues,
-                            setCurrentOption,
-                            setSelectAll,
-                            saveLunaticData,
-                        )
+                onClick={() =>
+                    selectOrUnselectAll(
+                        selectAll,
+                        value,
+                        responsesValues,
+                        setCurrentOption,
+                        setSelectAll,
+                        saveLunaticData,
+                    )
                 }
                 aria-label={isOpen ? "hourcheckeropen" : "hourcheckerclosed"}
             >

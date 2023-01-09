@@ -1,4 +1,4 @@
-import { Box, Button, Modal } from "@mui/material";
+import { Box, Button, Modal, Typography } from "@mui/material";
 import { Fragment, memo } from "react";
 import { makeStylesEdt } from "../../theme";
 
@@ -7,6 +7,7 @@ type AlertProps = {
     onCompleteCallBack(): void;
     onCancelCallBack(forceQuite: boolean): void;
     labels: {
+        boldContent?: string;
         content: string;
         cancel: string;
         complete: string;
@@ -33,7 +34,12 @@ const Alert = memo((props: AlertProps) => {
                             <img src={icon} alt={errorIconAlt} />
                         </Box>
                         <Box className={cx(classes.boxCenter, classes.errorMessageBox)}>
-                            <p>{labels.content}</p>
+                            {labels.boldContent && (
+                                <Typography className={classes.boldText}>
+                                    {labels.boldContent}
+                                </Typography>
+                            )}
+                            <Typography>{labels.content}</Typography>
                         </Box>
                         <Box className={classes.boxEvenly}>
                             <Button variant="outlined" onClick={() => onCancelCallBack(true)}>
@@ -78,7 +84,15 @@ const useStyles = makeStylesEdt({ "name": { Alert } })(theme => ({
         index: "1",
     },
     errorMessageBox: {
+        display: "flex",
+        flexDirection: "column",
         color: theme.palette.error.main,
+        textAlign: "center",
+        marginTop: "1.5rem",
+        marginBottom: "1.5rem",
+    },
+    boldText: {
+        fontWeight: "bold",
     },
     boxCenter: {
         display: "flex",
