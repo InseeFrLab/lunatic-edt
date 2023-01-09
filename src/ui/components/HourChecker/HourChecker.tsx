@@ -64,10 +64,10 @@ const HourChecker = memo((props: HourCheckerProps) => {
 
     const [selectAll, setSelectAll] = React.useState(getSelectAllValue(value, responsesValues));
 
-    const toggleHourChecker = useCallback((e: any) => {
+    const toggleHourChecker = (e: any) => {
         e.stopPropagation();
         setIsOpen(!isOpen);
-    }, []);
+    };
 
     const handleOptions = useCallback((event: any, selectedOption: string[]) => {
         setCurrentOption(selectedOption);
@@ -88,7 +88,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
         <Box className={classes.globalBox} component="div" aria-label="hourchecker">
             <Box
                 className={getClassName(cx, classes.closedBox, classes.visible, classes.hidden, !isOpen)}
-                onClick={useCallback(
+                onClick={
                     () =>
                         selectOrUnselectAll(
                             selectAll,
@@ -97,9 +97,8 @@ const HourChecker = memo((props: HourCheckerProps) => {
                             setCurrentOption,
                             setSelectAll,
                             saveLunaticData,
-                        ),
-                    [],
-                )}
+                        )
+                }
                 aria-label={isOpen ? "hourcheckeropen" : "hourcheckerclosed"}
             >
                 {responses.map((option, index) => (
