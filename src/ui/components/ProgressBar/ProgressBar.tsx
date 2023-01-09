@@ -19,7 +19,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number; s
                         sx={{ transform: "translateX(" + labelTranslateX + "%)" }}
                         color="primary"
                     >
-                        {props.value}%
+                        {props.value + "%"}
                     </Typography>
                 )}
             </Box>
@@ -50,6 +50,7 @@ const ProgressBar = memo((props: ProgressBarProps) => {
                 classes.root,
                 isPrimaryMainColor ? classes.primaryMainColor : classes.primaryWarningColor,
             )}
+            aria-label="progressbar"
         >
             <LinearProgressWithLabel id={id} value={progress} showlabel={showlabel} />
         </Box>

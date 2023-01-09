@@ -1,5 +1,6 @@
 import { CircularProgress, List, Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { WeeklyPlannerSpecificProps } from "interface";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { WeeklyPlannerDataType, WeeklyPlannerValue } from "../../../../interface/WeeklyPlannerTypes";
@@ -19,13 +20,7 @@ import DayPlanner from "../DayPlanner/DayPlanner";
 export type WeeklyPlannerProps = {
     handleChange(response: { [name: string]: string }, value: string): void;
     value: string;
-    surveyDate: string;
-    isSubChildDisplayed: boolean;
-    setIsSubChildDisplayed(value: boolean): void;
-    title: string;
-    workSumLabel?: string;
-    presentButtonLabel?: string;
-    pastButtonLabel?: string;
+    componentSpecificProps: WeeklyPlannerSpecificProps;
 };
 
 /**
@@ -45,20 +40,14 @@ const generateDayList = (startDate: Date): Date[] => {
 
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const { classes } = useStyles();
-    let {
-        value,
-        handleChange,
-        surveyDate,
-        isSubChildDisplayed,
-        setIsSubChildDisplayed,
-        title,
-        workSumLabel,
-        presentButtonLabel,
-        pastButtonLabel,
-    } = props;
+    let { value, handleChange, componentSpecificProps } = props;
+
+    const { surveyDate, isSubChildDisplayed, setIsSubChildDisplayed, labels } = {
+        ...componentSpecificProps,
+    };
 
     const values: WeeklyPlannerValue = JSON.parse(value);
-    const startDate: string = surveyDate;
+    const startDate: string = surveyDate || "";
     const data: WeeklyPlannerDataType[] | undefined = values?.data;
 
     const startDateFormated: Date = setDateTimeToZero(generateDateFromStringInput(startDate));
@@ -94,10 +83,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     }, []);
 
     useEffect(() => {
-        handleChange(
-            { name: "WEEKLYPLANNER" },
-            JSON.stringify({ "startDate": startDate, "data": activityData }),
-        );
+        handleChange({ name: "WEEKLYPLANNER" }, JSON.stringify({ "data": activityData }));
         setNeedSpinner(true);
     }, [activityData]);
 
@@ -126,7 +112,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                         value={getProgressBarValue()}
                         showlabel={true}
                     />
-                    <Typography className={classes.title}>{title}</Typography>
+                    <Typography className={classes.title}>{labels.title}</Typography>
                     <List className={classes.listContainer}>
                         {dayList.map(d => (
                             <DayPlanner
@@ -136,9 +122,9 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                                 setDayOverviewSelectedDate={setDayOverviewSelectedDate}
                                 activityData={activityData}
                                 setActivityData={setActivityData}
-                                workSumLabel={workSumLabel}
-                                presentButtonLabel={presentButtonLabel}
-                                pastButtonLabel={pastButtonLabel}
+                                workSumLabel={labels.workSumLabel}
+                                presentButtonLabel={labels.presentButtonLabel}
+                                futureButtonLabel={labels.futureButtonLabel}
                             ></DayPlanner>
                         ))}
                     </List>

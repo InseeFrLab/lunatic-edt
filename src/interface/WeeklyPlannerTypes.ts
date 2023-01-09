@@ -12,6 +12,5 @@ export type DayDetailType = {
 };
 
 export type WeeklyPlannerValue = {
-    startDate: string;
     data: WeeklyPlannerDataType[] | undefined;
 };

@@ -106,3 +106,26 @@ export const generateDayOverviewTimelineRawData = (): TimeLineRowType[] => {
     }
     return rowData;
 };
+
+/**
+ * Splits a label (e.g. of categories) in two if it has some parenthesis
+ * @param fullLabel
+ * @returns
+ */
+export const splitLabelWithParenthesis = (
+    fullLabel: string,
+): { mainLabel: string; secondLabel: string | undefined } => {
+    let mainLabel;
+    let secondLabel;
+    const indexOfParenthesis = fullLabel.indexOf("(");
+    if (indexOfParenthesis !== -1) {
+        mainLabel = fullLabel.substring(0, indexOfParenthesis);
+        secondLabel = fullLabel.substring(indexOfParenthesis + 1, fullLabel.length - 1);
+    } else {
+        mainLabel = fullLabel;
+    }
+    return {
+        mainLabel: mainLabel,
+        secondLabel: secondLabel,
+    };
+};

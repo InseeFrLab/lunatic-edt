@@ -1,4 +1,4 @@
-describe("hourChecker", () => {
+describe("checkboxGroupEdt", () => {
     it("fake", () => {
         expect(null).toBeNull();
     });

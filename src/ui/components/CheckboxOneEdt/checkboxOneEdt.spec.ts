@@ -1,4 +1,4 @@
-describe("dayPlanner", () => {
+describe("checkboxOneEdt", () => {
     it("fake", () => {
         expect(null).toBeNull();
     });

@@ -158,7 +158,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
     };
 
     return (
-        <Box className={classes.mainContainer} display={componentDisplay}>
+        <Box className={classes.mainContainer} display={componentDisplay} aria-label="dayoverview">
             <Box className={classes.absoluteBox}>
                 <Box className={classes.headerContainer}>
                     <Typography className={classes.dayLabel}>{formateDateLabel(date)}</Typography>

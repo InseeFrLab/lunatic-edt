@@ -39,6 +39,7 @@ export const OrchestratorForStories = (props: OrchestratorProps) => {
     const { getComponents, goPreviousPage, goNextPage, isFirstPage, isLastPage, getCurrentErrors } =
         lunatic.useLunatic(source, data, {
             onChange: onLogChange,
+            activeControls: true,
         });
 
     const components = getComponents();

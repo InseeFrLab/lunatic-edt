@@ -1,7 +1,6 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
-import ProgressBar from "../../ProgressBar";
 import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
 import {
@@ -9,6 +8,7 @@ import {
     generateDateFromStringInput,
     setDateTimeToZero,
 } from "../../../utils";
+import ProgressBar from "../../ProgressBar";
 
 export type DayPlannerProps = {
     date: Date;
@@ -18,7 +18,7 @@ export type DayPlannerProps = {
     setActivityData(data: WeeklyPlannerDataType[]): void;
     workSumLabel?: string;
     presentButtonLabel?: string;
-    pastButtonLabel?: string;
+    futureButtonLabel?: string;
 };
 
 enum DayRelativeTimeEnum {
@@ -65,7 +65,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         setActivityData,
         workSumLabel,
         presentButtonLabel,
-        pastButtonLabel,
+        futureButtonLabel,
     } = props;
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
@@ -134,7 +134,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                         className={cx(classes.button, classes.buttonFuture)}
                         onClick={buttonsOnClick}
                     >
-                        {pastButtonLabel}
+                        {futureButtonLabel}
                     </Button>
                 </Box>
             );
@@ -149,6 +149,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                         classes.mainContainer,
                         dayRelativeTime === 0 ? classes.mainContainerPresent : "",
                     )}
+                    aria-label="dayplanner"
                 >
                     <Box className={dayRelativeTime === -1 ? classes.dayAndDotsContainer : ""}>
                         <Typography className={cx(classes.dayLabel, classes.bold)}>

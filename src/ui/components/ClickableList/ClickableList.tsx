@@ -9,7 +9,7 @@ import {
     TextField,
 } from "@mui/material";
 import { RawActiviteOption } from "interface/RawActiviteOption";
-import React, { memo, useCallback } from "react";
+import React, { memo } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -17,13 +17,15 @@ export type ClickableListProps = {
     placeholder: string;
     options: RawActiviteOption[];
     selectedId?: string;
-    handleChange(value: RawActiviteOption | null): void;
+    handleChange(id: string | undefined): void;
     createActivity(value: string | undefined): void;
     notFoundLabel: string;
     notFoundComment: string;
     addActivityButtonLabel: string;
     iconNoResult: string;
     iconNoResultAlt: string;
+    className?: string;
+    autoFocus?: boolean;
 };
 
 const ClickableList = memo((props: ClickableListProps) => {
@@ -31,12 +33,15 @@ const ClickableList = memo((props: ClickableListProps) => {
         placeholder,
         options,
         selectedId,
+        handleChange,
         createActivity,
         notFoundLabel,
         notFoundComment,
         addActivityButtonLabel,
         iconNoResult,
         iconNoResultAlt,
+        className,
+        autoFocus = false,
     } = props;
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
@@ -44,7 +49,7 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     const selectedvalue: RawActiviteOption = options.filter(e => e.id === selectedId)[0];
 
-    const { classes } = useStyles();
+    const { classes, cx } = useStyles();
 
     /**
      * Remove accents from string
@@ -106,12 +111,10 @@ const ClickableList = memo((props: ClickableListProps) => {
     const renderTextField = (params: AutocompleteRenderInputParams) => {
         return (
             <>
-                <TextField {...params} placeholder={placeholder} />
+                <TextField {...params} autoFocus={autoFocus} placeholder={placeholder} />
             </>
         );
     };
-
-    const createActivityCallback = useCallback(() => createActivity(currentInputValue), []);
 
     /**
      * Render no result component
@@ -127,7 +130,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                     className={classes.addActivityButton}
                     variant="contained"
                     startIcon={<Add />}
-                    onClick={createActivityCallback}
+                    onClick={() => createActivity(currentInputValue)}
                 >
                     {addActivityButtonLabel}
                 </Button>
@@ -145,33 +148,25 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     return (
         <Autocomplete
-            className={classes.root}
+            className={cx(classes.root, className)}
             options={options}
             defaultValue={selectedvalue}
-            onChange={useCallback(
-                (_event: React.SyntheticEvent<Element, Event>, value: RawActiviteOption | null) =>
-                    console.log(value),
-                [],
+            onChange={(_event, value) => handleChange(value?.id)}
+            renderInput={params => renderTextField(params)}
+            renderOption={(properties, option) => (
+                <li {...properties} className={classes.option}>
+                    <Extension className={classes.optionIcon} />
+                    {option.label}
+                </li>
             )}
-            renderInput={useCallback(
-                (params: AutocompleteRenderInputParams) => renderTextField(params),
-                [],
-            )}
-            renderOption={useCallback(
-                (properties: React.HTMLAttributes<HTMLLIElement>, option: RawActiviteOption) => (
-                    <li {...properties} className={classes.option}>
-                        <Extension className={classes.optionIcon} />
-                        {option.label}
-                    </li>
-                ),
-                [],
-            )}
-            getOptionLabel={useCallback((option: RawActiviteOption) => option.label, [])}
-            filterOptions={useCallback(filterOptions, [])}
+            getOptionLabel={option => option.label}
+            filterOptions={filterOptions}
             noOptionsText={renderNoOption()}
-            onClose={useCallback(() => setDisplayAddIcon(false), [])}
+            onClose={() => setDisplayAddIcon(false)}
             fullWidth={true}
-            popupIcon={<Icon children={renderIcon()} onClick={createActivityCallback} />}
+            popupIcon={
+                <Icon children={renderIcon()} onClick={createActivity.bind(this, currentInputValue)} />
+            }
             classes={{ popupIndicator: classes.popupIndicator }}
         />
     );
@@ -182,8 +177,6 @@ const useStyles = makeStylesEdt({ "name": { ClickableList } })(theme => ({
         backgroundColor: theme.variables.white,
         borderColor: theme.variables.neutral,
         borderWidth: "3",
-        width: 300,
-        margin: "1rem",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
