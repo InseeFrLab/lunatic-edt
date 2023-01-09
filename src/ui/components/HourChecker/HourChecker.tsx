@@ -221,8 +221,13 @@ const useStyles = makeStylesEdt<{ width: string }>({ "name": { HourChecker } })(
         "&.Mui-selected": {
             backgroundColor: theme.palette.action.hover,
             color: theme.variables.white,
+            "&:hover": {
+                backgroundColor: theme.palette.action.hover,
+                color: theme.variables.white,
+            },
         },
         "&:hover": {
+            backgroundColor: theme.variables.white,
             color: theme.palette.action.hover,
         },
     },
