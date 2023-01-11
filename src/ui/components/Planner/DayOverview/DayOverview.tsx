@@ -205,6 +205,7 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
         display: "flex",
         flexDirection: "column",
         paddingTop: "2rem",
+        paddingBottom: "6rem",
     },
     rowContainer: {
         display: "flex",
