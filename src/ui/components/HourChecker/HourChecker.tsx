@@ -150,7 +150,11 @@ const HourChecker = memo((props: HourCheckerProps) => {
                             <div className={classes.noIconSpacer}></div>
                         )}
                         {index === 0 && <ExpandMoreIcon onClick={toggleHourChecker} />}
-                        {index !== responses.length - 1 ? option.label : <span>&nbsp;</span>}
+                        {index !== responses.length - 1 ? (
+                            <span className={classes.label}>{option.label}</span>
+                        ) : (
+                            <span>&nbsp;</span>
+                        )}
                         {index === responses.length - 1 && (
                             <div className={classes.iconRounder}>
                                 <WorkIcon fontSize="small" />
@@ -228,6 +232,10 @@ const useStyles = makeStylesEdt<{ width: string }>({ "name": { HourChecker } })(
             backgroundColor: theme.variables.white,
             color: theme.palette.action.hover,
         },
+    },
+    label: {
+        fontSize: "11px",
+        fontWeight: "bold",
     },
     toggleWithIcon: {
         justifyContent: "space-between",
