@@ -19,5 +19,6 @@ export { default as WeeklyPlanner } from "./Planner/WeeklyPlanner";
 export { default as ProgressBar } from "./ProgressBar";
 export { default as Radio } from "./Radio";
 export { default as Timepicker } from "./Timepicker";
+export { default as Duration } from "./Duration";
 export { default as Alert } from "./Alert";
 export { default as ModalEdt } from "./ModalEdt";
