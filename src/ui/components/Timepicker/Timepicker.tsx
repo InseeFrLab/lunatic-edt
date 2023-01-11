@@ -113,6 +113,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                             [],
                         )}
                         className={classes.input}
+                        minutesStep={5}
                     />
                 </LocalizationProvider>
             </Box>
