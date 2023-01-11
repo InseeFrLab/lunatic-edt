@@ -149,6 +149,7 @@ const useStyles = makeStylesEdt<{ transform: string }>({ "name": { WeeklyPlanner
         listContainer: {
             display: "flex",
             flexDirection: "column",
+            paddingBottom: "5rem",
         },
         title: {
             marginTop: "2rem",
