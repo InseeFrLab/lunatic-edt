@@ -5,10 +5,7 @@ import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
-import { TimepickerSpecificProps } from "interface";
-import { Activity } from "interface/TimepickerTypes";
-
-import React, { memo, useEffect, useCallback } from "react";
+import React, { memo, useCallback, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -21,55 +18,17 @@ export type TimepickerProps = {
     tipsLabel?: string;
     id?: string;
     response: { [name: string]: string };
-    componentSpecificProps?: TimepickerSpecificProps;
 };
 
 const Timepicker = memo((props: TimepickerProps) => {
-    const {
-        id,
-        response,
-        handleChange,
-        value,
-        readOnly,
-        disabled,
-        label,
-        tipsLabel,
-        componentSpecificProps,
-    } = props;
+    const { id, response, handleChange, value, readOnly, disabled, label, tipsLabel } = props;
     const { classes } = useStyles();
 
     const [valueLocal, setValue] = React.useState<Dayjs | undefined>();
 
-    const computeLastTime = (
-        activities: Activity[] | undefined,
-        valueData: string | undefined,
-        defaultValue: boolean | undefined,
-        nameObject: string,
-    ) => {
-        let lastTime;
-        if (valueData) {
-            lastTime = dayjs(valueData, "HH:mm");
-        } else {
-            if (defaultValue && activities && activities.length > 0) {
-                lastTime = dayjs(activities[activities.length - 1]?.endTime, "HH:mm");
-            } else {
-                lastTime = dayjs();
-            }
-            if (nameObject == "ENDTIME") {
-                lastTime = lastTime.add(5, "minutes");
-            }
-        }
-        setValue(lastTime);
-    };
-
     useEffect(() => {
-        computeLastTime(
-            componentSpecificProps?.activitiesAct,
-            value,
-            componentSpecificProps?.defaultValue,
-            response["name"],
-        );
-    }, []);
+        setValue(dayjs(value, "HH:mm"));
+    }, [value]);
 
     useEffect(() => {
         if (valueLocal != undefined && valueLocal?.isValid())
@@ -113,6 +72,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                             [],
                         )}
                         className={classes.input}
+                        minutesStep={5}
                     />
                 </LocalizationProvider>
             </Box>
