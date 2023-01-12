@@ -5,6 +5,7 @@ export {
 } from "./ActivitySelecter";
 export { default as Button } from "./Button";
 export { default as CheckboxBoolean } from "./CheckboxBoolean";
+export { default as CheckboxBooleanEdt } from "./CheckboxBooleanEdt";
 export { default as CheckboxGroup } from "./CheckboxGroup";
 export { default as CheckboxGroupEdt } from "./CheckboxGroupEdt";
 export { default as CheckboxOne } from "./CheckboxOne";
