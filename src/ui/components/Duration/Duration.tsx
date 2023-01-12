@@ -116,7 +116,7 @@ const Duration = memo((props: DurationProps) => {
                             labelId={minLabel ? "durationMin-label" : undefined}
                             id={"durationMin-select"}
                             value={minutes}
-                            onChange={newValue => setValueLunatic(minutes, newValue.target.value)}
+                            onChange={newValue => setValueLunatic(hour, newValue.target.value)}
                             MenuProps={{
                                 PopoverClasses: {
                                     root: classes.menuSelectBox,
