@@ -14,3 +14,7 @@ export type DayDetailType = {
 export type WeeklyPlannerValue = {
     data: WeeklyPlannerDataType[] | undefined;
 };
+
+export type IODataStructure = {
+    [key: string]: string;
+};

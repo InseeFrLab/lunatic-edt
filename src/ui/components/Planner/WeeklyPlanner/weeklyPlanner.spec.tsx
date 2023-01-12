@@ -7,8 +7,10 @@ import { ThemeProvider } from "@mui/material";
 import WeeklyPlanner from "./WeeklyPlanner";
 import { generateStringInputFromDate } from "../../../utils";
 import { WeeklyPlannerSpecificProps } from "interface";
+import { IODataStructure, WeeklyPlannerDataType } from "interface/WeeklyPlannerTypes";
+import { transformToIODataStructure, transformToWeeklyPlannerDataType } from "./utils";
 
-describe("weeklyPlanner", () => {
+describe("weeklyPlannerComponent", () => {
     const workSumLabel = "total travaillé";
     const presentButtonLabel = "continuer";
     const futureButtonLable = "commencer";
@@ -21,24 +23,14 @@ describe("weeklyPlanner", () => {
 
     const todayStringValue = generateStringInputFromDate(new Date());
     const setIsSubChildDisplayed = jest.fn();
-    const data = {
-        data: [
-            {
-                hasBeenStarted: false,
-                date: todayStringValue,
-                day: "vendredi",
-                detail: [
-                    {
-                        start: "2h15",
-                        end: "3h0",
-                        duration: 60,
-                    },
-                ],
-            },
-        ],
-    };
 
-    const value = JSON.stringify(data);
+    const value: IODataStructure[] = [
+        { "day1": todayStringValue },
+        { "day1_2h15": "true" },
+        { "day1_2h30": "true" },
+        { "day1_2h45": "true" },
+        { "day1_3h0": "true" },
+    ];
 
     const componentProps: WeeklyPlannerSpecificProps = {
         surveyDate: surveyDateString,
@@ -52,7 +44,7 @@ describe("weeklyPlanner", () => {
         },
     };
 
-    const renderElement = (valueData: string): RenderResult => {
+    const renderElement = (valueData: IODataStructure[]): RenderResult => {
         return render(
             <ThemeProvider theme={theme}>
                 <WeeklyPlanner
@@ -98,27 +90,81 @@ describe("weeklyPlanner", () => {
     });
 
     it("updates ProgressBar label", () => {
-        expect(screen.getByText("0%")).toBeInTheDocument();
+        expect(screen.getByText("14%")).toBeInTheDocument();
+    });
+});
 
-        const dataUpdated = {
-            data: [
+describe("weeklyPlannerFunctions", () => {
+    const IOData: IODataStructure[] = [
+        { "day1": "2023-1-10" },
+        { "day1_0h0": "true" },
+        { "day1_2h15": "true" },
+        { "day1_2h30": "true" },
+        { "day2": "2023-1-11" },
+        { "day2_14h0": "true" },
+        { "day2_14h15": "true" },
+        { "day2_14h30": "true" },
+        { "day2_14h45": "true" },
+        { "day3": "2023-1-12" },
+        { "day4": "2023-1-13" },
+        { "day5": "2023-1-14" },
+    ];
+
+    const WeeklyPlannerData: WeeklyPlannerDataType[] = [
+        {
+            hasBeenStarted: true,
+            date: "2023-1-10",
+            day: "mardi",
+            detail: [
                 {
-                    hasBeenStarted: true,
-                    date: todayStringValue,
-                    day: "vendredi",
-                    detail: [
-                        {
-                            start: "2h15",
-                            end: "3h0",
-                            duration: 60,
-                        },
-                    ],
+                    start: "0h0",
+                    end: "0h0",
+                    duration: 15,
+                },
+                {
+                    start: "2h15",
+                    end: "2h30",
+                    duration: 30,
                 },
             ],
-        };
+        },
+        {
+            hasBeenStarted: true,
+            date: "2023-1-11",
+            day: "mercredi",
+            detail: [
+                {
+                    start: "14h0",
+                    end: "14h45",
+                    duration: 60,
+                },
+            ],
+        },
+        {
+            hasBeenStarted: false,
+            date: "2023-1-12",
+            day: "jeudi",
+            detail: [],
+        },
+        {
+            hasBeenStarted: false,
+            date: "2023-1-13",
+            day: "vendredi",
+            detail: [],
+        },
+        {
+            hasBeenStarted: false,
+            date: "2023-1-14",
+            day: "samedi",
+            detail: [],
+        },
+    ];
 
-        const value2 = JSON.stringify(dataUpdated);
-        renderElement(value2);
-        expect(screen.getByText("14%")).toBeInTheDocument();
+    it("transform to weekly planner type", () => {
+        expect(transformToWeeklyPlannerDataType(IOData)).toEqual(WeeklyPlannerData);
+    });
+
+    it("transform to IO data structure", () => {
+        expect(transformToIODataStructure(WeeklyPlannerData)).toEqual(IOData);
     });
 });

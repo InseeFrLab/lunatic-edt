@@ -13,6 +13,7 @@ import {
 } from "../../../utils";
 import HourChecker from "../../HourChecker";
 import ProgressBar from "../../ProgressBar";
+import { INTERVAL } from "../WeeklyPlanner/utils";
 
 export type DayOverviewProps = {
     date: Date;
@@ -46,12 +47,10 @@ const fromDayDetailsToValues = (details: DayDetailType[]): LunaticMultiSelection
         time.setHours(Number(splittedTime[0]));
         time.setMinutes(Number(splittedTime[1]));
 
-        const intervalInMinutes = 15;
-
-        for (let i = 0; i < b.duration / intervalInMinutes; i++) {
+        for (let i = 0; i < b.duration / INTERVAL; i++) {
             const key = convertTime(time);
             values[key] = true;
-            time.setMinutes(time.getMinutes() + intervalInMinutes);
+            time.setMinutes(time.getMinutes() + INTERVAL);
         }
     });
     return values;
@@ -124,9 +123,9 @@ const DayOverview = memo((props: DayOverviewProps) => {
             if (value && startHour === "start") {
                 startHour = key;
                 endHour = key;
-                durationTime = durationTime + 15;
+                durationTime = durationTime + INTERVAL;
             } else if (value) {
-                durationTime = durationTime + 15;
+                durationTime = durationTime + INTERVAL;
                 endHour = key;
             }
             if (!value && endHour !== "end") {
@@ -141,7 +140,16 @@ const DayOverview = memo((props: DayOverviewProps) => {
             }
         });
 
+        if (endHour !== "end") {
+            details.push({
+                start: startHour,
+                end: endHour,
+                duration: durationTime,
+            });
+        }
+
         dayBloc.detail = details;
+
         setActivityData(temp);
     };
 

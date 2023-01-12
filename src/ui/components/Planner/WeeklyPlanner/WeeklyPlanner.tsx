@@ -3,7 +3,7 @@ import { Box } from "@mui/system";
 import { WeeklyPlannerSpecificProps } from "interface";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { WeeklyPlannerDataType, WeeklyPlannerValue } from "../../../../interface/WeeklyPlannerTypes";
+import { WeeklyPlannerDataType, IODataStructure } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
 import {
     generateDateFromStringInput,
@@ -16,10 +16,11 @@ import { createCustomizableLunaticField } from "../../../utils/create-customizab
 import ProgressBar from "../../ProgressBar";
 import DayOverview from "../DayOverview/DayOverview";
 import DayPlanner from "../DayPlanner/DayPlanner";
+import { transformToIODataStructure, transformToWeeklyPlannerDataType } from "./utils";
 
 export type WeeklyPlannerProps = {
-    handleChange(response: { [name: string]: string }, value: string): void;
-    value: string;
+    handleChange(response: { [name: string]: string }, value: IODataStructure[]): void;
+    value: IODataStructure[];
     componentSpecificProps: WeeklyPlannerSpecificProps;
 };
 
@@ -50,9 +51,9 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         "transform": `translateX(calc(${halfRootBoxWidthPx} - 50vw))`,
     });
 
-    const values: WeeklyPlannerValue = JSON.parse(value);
+    const data: WeeklyPlannerDataType[] | undefined =
+        value.length > 1 ? transformToWeeklyPlannerDataType(value) : undefined;
     const startDate: string = surveyDate || "";
-    const data: WeeklyPlannerDataType[] | undefined = values?.data;
 
     const startDateFormated: Date = setDateTimeToZero(generateDateFromStringInput(startDate));
     const dayList = generateDayList(startDateFormated);
@@ -87,7 +88,8 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     }, []);
 
     useEffect(() => {
-        handleChange({ name: "WEEKLYPLANNER" }, JSON.stringify({ "data": activityData }));
+        const toStore = transformToIODataStructure(activityData);
+        handleChange({ name: "WEEKLYPLANNER" }, toStore);
         setNeedSpinner(true);
     }, [activityData]);
 
