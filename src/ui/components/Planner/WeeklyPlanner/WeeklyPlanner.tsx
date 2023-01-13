@@ -16,7 +16,11 @@ import { createCustomizableLunaticField } from "../../../utils/create-customizab
 import ProgressBar from "../../ProgressBar";
 import DayOverview from "../DayOverview/DayOverview";
 import DayPlanner from "../DayPlanner/DayPlanner";
-import { transformToIODataStructure, transformToWeeklyPlannerDataType } from "./utils";
+import {
+    getProgressBarValue,
+    transformToIODataStructure,
+    transformToWeeklyPlannerDataType,
+} from "./utils";
 
 export type WeeklyPlannerProps = {
     handleChange(response: { [name: string]: string }, value: IODataStructure[]): void;
@@ -93,15 +97,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         setNeedSpinner(true);
     }, [activityData]);
 
-    /**
-     * Returns number between 0 and 100 depending on how many days of the week for which editing has been started
-     * at the end discrete values between 1/7 and 7/7 rounded as %
-     * @returns
-     */
-    const getProgressBarValue = (): number => {
-        return Math.round((activityData.filter(a => a.hasBeenStarted === true).length / 7) * 100);
-    };
-
     const getMainDisplay = () => {
         return isSubChildDisplayed ? "none" : "inline";
     };
@@ -119,7 +114,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 <Box display={getMainDisplay()}>
                     <ProgressBar
                         className={classes.progressBar}
-                        value={getProgressBarValue()}
+                        value={getProgressBarValue(activityData)}
                         showlabel={true}
                     />
                     <Typography className={classes.title}>{labels.title}</Typography>

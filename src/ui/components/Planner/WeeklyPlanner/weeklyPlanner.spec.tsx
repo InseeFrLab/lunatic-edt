@@ -25,11 +25,12 @@ describe("weeklyPlannerComponent", () => {
     const setIsSubChildDisplayed = jest.fn();
 
     const value: IODataStructure[] = [
-        { "day1": todayStringValue },
-        { "day1_2h15": "true" },
-        { "day1_2h30": "true" },
-        { "day1_2h45": "true" },
-        { "day1_3h0": "true" },
+        { "dateJ1": todayStringValue },
+        { "dateJ1_started": "true" },
+        { "dateJ1_2h15": "true" },
+        { "dateJ1_2h30": "true" },
+        { "dateJ1_2h45": "true" },
+        { "dateJ1_3h0": "true" },
     ];
 
     const componentProps: WeeklyPlannerSpecificProps = {
@@ -96,18 +97,23 @@ describe("weeklyPlannerComponent", () => {
 
 describe("weeklyPlannerFunctions", () => {
     const IOData: IODataStructure[] = [
-        { "day1": "2023-1-10" },
-        { "day1_0h0": "true" },
-        { "day1_2h15": "true" },
-        { "day1_2h30": "true" },
-        { "day2": "2023-1-11" },
-        { "day2_14h0": "true" },
-        { "day2_14h15": "true" },
-        { "day2_14h30": "true" },
-        { "day2_14h45": "true" },
-        { "day3": "2023-1-12" },
-        { "day4": "2023-1-13" },
-        { "day5": "2023-1-14" },
+        { "dateJ1": "2023-1-10" },
+        { "dateJ1_started": "true" },
+        { "dateJ1_0h0": "true" },
+        { "dateJ1_2h15": "true" },
+        { "dateJ1_2h30": "true" },
+        { "dateJ2": "2023-1-11" },
+        { "dateJ2_started": "true" },
+        { "dateJ2_14h0": "true" },
+        { "dateJ2_14h15": "true" },
+        { "dateJ2_14h30": "true" },
+        { "dateJ2_14h45": "true" },
+        { "dateJ3": "2023-1-12" },
+        { "dateJ3_started": "false" },
+        { "dateJ4": "2023-1-13" },
+        { "dateJ4_started": "true" },
+        { "dateJ5": "2023-1-14" },
+        { "dateJ5_started": "true" },
     ];
 
     const WeeklyPlannerData: WeeklyPlannerDataType[] = [
@@ -147,13 +153,13 @@ describe("weeklyPlannerFunctions", () => {
             detail: [],
         },
         {
-            hasBeenStarted: false,
+            hasBeenStarted: true,
             date: "2023-1-13",
             day: "vendredi",
             detail: [],
         },
         {
-            hasBeenStarted: false,
+            hasBeenStarted: true,
             date: "2023-1-14",
             day: "samedi",
             detail: [],
