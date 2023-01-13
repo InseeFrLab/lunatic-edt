@@ -52,7 +52,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         nextClickCallback: () => void,
     ) => {
         if (nextClickCallback) {
-            if ((selectedValue === null || selectedValue === "") && !continueWithUncompleted) {
+            if ((selectedValue == null || selectedValue == "") && !continueWithUncompleted) {
                 handleChange(response, "");
                 setDisplayAlert(true);
             } else {
@@ -86,10 +86,6 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
             </Box>
         );
     };
-    console.log(componentSpecificProps);
-    console.log(labels);
-    console.log(optionsIcons);
-    console.log(displayAlert);
 
     return (
         <>
