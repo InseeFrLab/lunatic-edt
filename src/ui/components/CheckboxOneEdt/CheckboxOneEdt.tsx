@@ -51,7 +51,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     useEffect(() => {
         if (nextClickEvent && nextClickCallback) {
-            next(false);
+            next(false, setDisplayAlert, nextClickCallback);
         }
     }, [nextClickEvent]);
 
@@ -72,28 +72,32 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         handleChange(response, newItemId.current);
     };
 
-    const next = (continueWithUncompleted: boolean) => {
-        if (nextClickCallback) {
-            if (
-                (currentOption == null || currentOption == "") &&
-                (newOptionValue == null || newOptionValue == "") &&
-                !continueWithUncompleted
-            ) {
-                handleChange(response, "");
-                setDisplayAlert(true);
-            } else {
-                if (addToReferentielCallBack && newOptionValue) {
-                    addToReferentielCallBack({
-                        label: newOptionValue || "",
-                        value: newItemId.current,
-                    });
-                }
-                nextClickCallback();
+    const next = (
+        continueWithUncompleted: boolean,
+        setDisplayAlert: (display: boolean) => void,
+        nextClickCallback: () => void,
+    ) => {
+        if (
+            (currentOption == null || currentOption == "") &&
+            (newOptionValue == null || newOptionValue == "") &&
+            !continueWithUncompleted
+        ) {
+            handleChange(response, "");
+            setDisplayAlert(true);
+        } else {
+            if (addToReferentielCallBack && newOptionValue) {
+                addToReferentielCallBack({
+                    label: newOptionValue || "",
+                    value: newItemId.current,
+                });
             }
+            nextClickCallback();
         }
     };
 
-    const handleAlert = useCallback(() => next(true), []);
+    const handleAlert = useCallback(() => {
+        if (nextClickCallback) next(true, setDisplayAlert, nextClickCallback);
+    }, [displayAlert]);
 
     return (
         <>

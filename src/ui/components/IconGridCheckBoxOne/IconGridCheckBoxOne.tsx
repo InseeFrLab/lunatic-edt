@@ -42,13 +42,17 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
 
     useEffect(() => {
         if (nextClickEvent) {
-            next(false);
+            next(false, setDisplayAlert, nextClickCallback);
         }
     }, [nextClickEvent]);
 
-    const next = (continueWithUncompleted: boolean) => {
+    const next = (
+        continueWithUncompleted: boolean,
+        setDisplayAlert: (display: boolean) => void,
+        nextClickCallback: () => void,
+    ) => {
         if (nextClickCallback) {
-            if ((selectedValue === null || selectedValue === "") && !continueWithUncompleted) {
+            if ((selectedValue == null || selectedValue == "") && !continueWithUncompleted) {
                 handleChange(response, "");
                 setDisplayAlert(true);
             } else {
@@ -62,7 +66,9 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         handleChange(response, option.value);
     };
 
-    const handleAlert = useCallback(() => next(true), []);
+    const handleAlert = useCallback(() => {
+        next(true, setDisplayAlert, nextClickCallback);
+    }, [displayAlert]);
 
     const renderOption = (option: CheckboxOneCustomOption) => {
         return (

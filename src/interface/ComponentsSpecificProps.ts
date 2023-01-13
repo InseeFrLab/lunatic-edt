@@ -61,6 +61,17 @@ export type IconGridCheckBoxOneSpecificProps = {
 
 export type CheckboxGroupSpecificProps = {
     optionsIcons: { [id: string]: string };
+    backClickEvent?: React.MouseEvent;
+    nextClickEvent?: React.MouseEvent;
+    backClickCallback?(): void;
+    nextClickCallback?(): void;
+    labels?: {
+        alertMessage?: string;
+        alertIgnore?: string;
+        alertComplete?: string;
+        alertAlticon?: string;
+    };
+    errorIcon?: string;
 };
 
 export type CheckboxOneSpecificProps = {
@@ -92,4 +103,18 @@ export type TimepickerSpecificProps = {
     activitiesAct: Activity[];
     defaultValue?: boolean;
     gapToFillIndex?: number;
+};
+
+export type CheckboxBooleanEdtSpecificProps = {
+    backClickEvent?: React.MouseEvent;
+    nextClickEvent?: React.MouseEvent;
+    backClickCallback?(): void;
+    nextClickCallback?(): void;
+    labels?: {
+        alertMessage?: string;
+        alertIgnore?: string;
+        alertComplete?: string;
+        alertAlticon?: string;
+    };
+    errorIcon?: string;
 };
