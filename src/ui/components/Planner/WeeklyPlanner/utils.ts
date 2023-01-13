@@ -27,6 +27,7 @@ export const transformToWeeklyPlannerDataType = (input: IODataStructure[]): Week
     let previousTime: Date;
 
     input &&
+        input.length > 1 &&
         input.forEach(i => {
             const key = Object.keys(i)[0];
             const value = Object.values(i)[0];

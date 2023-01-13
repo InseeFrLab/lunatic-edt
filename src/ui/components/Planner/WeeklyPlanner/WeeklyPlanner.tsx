@@ -88,7 +88,11 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 temp.push(dayBloc);
             }
         });
-        setActivityData(temp);
+        // loop through saved data to check if some are out of the week range after survey date update
+        const dayListAsString: string[] = dayList.map(d => generateStringInputFromDate(d));
+        const clearedTemp = temp.filter(dayBloc => dayListAsString.includes(dayBloc.date));
+
+        setActivityData(clearedTemp);
     }, []);
 
     useEffect(() => {
