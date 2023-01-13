@@ -97,6 +97,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                     label: { boost: 2 },
                     synonymes: { boost: 1 },
                 },
+                expand: true,
             }) || [];
 
         const results: AutoCompleteActiviteOption[] = res.map(r => ref.filter(o => o.id === r.ref)[0]);
@@ -157,7 +158,11 @@ const ClickableList = memo((props: ClickableListProps) => {
      * @returns
      */
     const renderNoOption = () => {
-        return displayAddIcon ? renderNoResults() : <></>;
+        return displayAddIcon && currentInputValue && currentInputValue?.length > 2 ? (
+            renderNoResults()
+        ) : (
+            <></>
+        );
     };
 
     return (
