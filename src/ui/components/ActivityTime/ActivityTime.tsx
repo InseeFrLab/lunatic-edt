@@ -70,17 +70,7 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
     const [startTime, setStartTime] = React.useState<string | undefined>(
         startTimeComputed.format("HH:mm"),
     );
-    const [endTime, setEndTime] = React.useState<string | undefined>();
-
-    const changeValueEndTime = () => {
-        const startTimeComputed = computeStartTime(
-            componentSpecificProps?.activitiesAct,
-            value?.STARTTIME,
-            componentSpecificProps?.defaultValue,
-        );
-        let endTimeDay = startTimeComputed.add(5, "minute");
-        setEndTime(endTimeDay.format("HH:mm"));
-    };
+    const [endTime, setEndTime] = React.useState<string | undefined>(value?.ENDTIME);
 
     useEffect(() => {
         dayjs.extend(customParseFormat);
@@ -89,16 +79,10 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
             value?.STARTTIME,
             componentSpecificProps?.defaultValue,
         );
-
-        if (value?.ENDTIME == null) {
+        if (endTime == null || startTime != value?.STARTTIME) {
             let endTimeDay = startTimeComputed.add(5, "minute");
             setEndTime(endTimeDay.format("HH:mm"));
         }
-    }, [value?.STARTTIME]);
-
-    React.useEffect(() => {
-        document.addEventListener("click", changeValueEndTime, true);
-        return () => document.removeEventListener("click", changeValueEndTime, true);
     }, [value?.STARTTIME]);
 
     return (
@@ -113,7 +97,7 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
                 readOnly={readOnly}
                 tipsLabel={startTimeLabel}
                 id={id}
-                value={startTime ?? value?.STARTTIME}
+                value={startTime}
             />
             <Timepicker
                 response={responses[1].response}
@@ -122,7 +106,7 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
                 readOnly={readOnly}
                 tipsLabel={endTimeLabel}
                 id={id}
-                value={endTime ?? value?.ENDTIME}
+                value={endTime}
             />
         </>
     );
