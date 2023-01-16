@@ -7,6 +7,7 @@ import React, { memo, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Timepicker from "../Timepicker/Timepicker";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 
 export type ActivityTimeProps = {
     disabled?: boolean;
@@ -36,20 +37,6 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
     } = props;
     const { classes } = useStyles();
 
-    const [startTime, setStartTime] = React.useState<string | undefined>();
-    const [endTime, setEndTime] = React.useState<string | undefined>();
-
-    useEffect(() => {
-        const startTimeComputed = computeStartTime(
-            componentSpecificProps?.activitiesAct,
-            value?.STARTTIME,
-            componentSpecificProps?.defaultValue,
-        );
-        setStartTime(startTimeComputed?.format("HH:mm"));
-
-        const endTimeDay = startTimeComputed.add(5, "minute");
-        setEndTime(endTimeDay.format("HH:mm"));
-    }, [value?.STARTTIME, startTime]);
     const computeStartTime = (
         activities: Activity[] | undefined,
         valueData: string | undefined,
@@ -73,6 +60,46 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
         }
         return time;
     };
+
+    const startTimeComputed = computeStartTime(
+        componentSpecificProps?.activitiesAct,
+        value?.STARTTIME,
+        componentSpecificProps?.defaultValue,
+    );
+
+    const [startTime, setStartTime] = React.useState<string | undefined>(
+        startTimeComputed.format("HH:mm"),
+    );
+    const [endTime, setEndTime] = React.useState<string | undefined>();
+
+    const changeValueEndTime = () => {
+        const startTimeComputed = computeStartTime(
+            componentSpecificProps?.activitiesAct,
+            value?.STARTTIME,
+            componentSpecificProps?.defaultValue,
+        );
+        let endTimeDay = startTimeComputed.add(5, "minute");
+        setEndTime(endTimeDay.format("HH:mm"));
+    };
+
+    useEffect(() => {
+        dayjs.extend(customParseFormat);
+        const startTimeComputed = computeStartTime(
+            componentSpecificProps?.activitiesAct,
+            value?.STARTTIME,
+            componentSpecificProps?.defaultValue,
+        );
+
+        if (value?.ENDTIME == null) {
+            let endTimeDay = startTimeComputed.add(5, "minute");
+            setEndTime(endTimeDay.format("HH:mm"));
+        }
+    }, [value?.STARTTIME]);
+
+    React.useEffect(() => {
+        document.addEventListener("click", changeValueEndTime, true);
+        return () => document.removeEventListener("click", changeValueEndTime, true);
+    }, [value?.STARTTIME]);
 
     return (
         <>
