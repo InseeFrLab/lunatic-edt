@@ -67,9 +67,6 @@ export const processSelectedValue = (
     setCreateActivityValue: (val: string | undefined) => void,
     setSelectedCategories: (cats: NomenclatureActivityOption[]) => void,
 ) => {
-    console.log("value", value);
-    console.log("ref", categoriesAndActivitesNomenclature);
-
     if (value) {
         const parsedValue: SelectedActivity = JSON.parse(value);
         const hasId: boolean = parsedValue?.id !== undefined;
