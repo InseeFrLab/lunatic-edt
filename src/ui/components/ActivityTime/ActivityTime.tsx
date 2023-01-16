@@ -67,9 +67,7 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
         componentSpecificProps?.defaultValue,
     );
 
-    const [startTime, setStartTime] = React.useState<string | undefined>(
-        startTimeComputed.format("HH:mm"),
-    );
+    const [startTime] = React.useState<string | undefined>(startTimeComputed.format("HH:mm"));
     const [endTime, setEndTime] = React.useState<string | undefined>(value?.ENDTIME);
 
     useEffect(() => {
