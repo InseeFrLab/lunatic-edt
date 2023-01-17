@@ -27,6 +27,7 @@ export type WeeklyPlannerSpecificProps = {
         presentButtonLabel: string;
         futureButtonLabel: string;
     };
+    saveAll(): void;
 };
 
 export type ActivitySelecterSpecificProps = {

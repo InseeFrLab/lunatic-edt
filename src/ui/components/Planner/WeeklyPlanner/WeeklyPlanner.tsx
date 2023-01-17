@@ -46,7 +46,7 @@ const generateDayList = (startDate: Date): Date[] => {
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     let { value, handleChange, componentSpecificProps } = props;
 
-    const { surveyDate, isSubChildDisplayed, setIsSubChildDisplayed, labels } = {
+    const { surveyDate, isSubChildDisplayed, setIsSubChildDisplayed, labels, saveAll } = {
         ...componentSpecificProps,
     };
     const rootBoxWidth = document.getElementById("root-box")?.parentElement?.clientWidth;
@@ -90,15 +90,18 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         });
         // loop through saved data to check if some are out of the week range after survey date update
         const dayListAsString: string[] = dayList.map(d => generateStringInputFromDate(d));
-        const clearedTemp = temp.filter(dayBloc => dayListAsString.includes(dayBloc.date));
+        const clearedTemp = temp
+            .filter(dayBloc => dayListAsString.includes(dayBloc.date))
+            .sort((a, b) => a.date.localeCompare(b.date));
 
         setActivityData(clearedTemp);
+        const toStore = transformToIODataStructure(clearedTemp);
+        handleChange({ name: "WEEKLYPLANNER" }, toStore);
     }, []);
 
     useEffect(() => {
-        const toStore = transformToIODataStructure(activityData);
-        handleChange({ name: "WEEKLYPLANNER" }, toStore);
         setNeedSpinner(true);
+        saveAll();
     }, [activityData]);
 
     const getMainDisplay = () => {
@@ -113,6 +116,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 rawTimeLineData={generateDayOverviewTimelineRawData()}
                 activityData={activityData}
                 setActivityData={setActivityData}
+                handleChangeData={handleChange}
             ></DayOverview>
             {activityData.length !== 0 && needSpinner ? (
                 <Box display={getMainDisplay()}>

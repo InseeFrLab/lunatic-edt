@@ -23,6 +23,7 @@ describe("weeklyPlannerComponent", () => {
 
     const todayStringValue = generateStringInputFromDate(new Date());
     const setIsSubChildDisplayed = jest.fn();
+    const saveAll = jest.fn();
 
     const value: IODataStructure[] = [
         { "dateJ1": todayStringValue },
@@ -43,6 +44,7 @@ describe("weeklyPlannerComponent", () => {
             presentButtonLabel: presentButtonLabel,
             futureButtonLabel: futureButtonLable,
         },
+        saveAll: saveAll,
     };
 
     const renderElement = (valueData: IODataStructure[]): RenderResult => {

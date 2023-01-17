@@ -3,7 +3,11 @@ import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
 import { LunaticMultiSelectionValues } from "../../../../interface/LunaticMultiSelectionValues";
-import { DayDetailType, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
+import {
+    DayDetailType,
+    IODataStructure,
+    WeeklyPlannerDataType,
+} from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
 import {
     convertTime,
@@ -13,7 +17,7 @@ import {
 } from "../../../utils";
 import HourChecker from "../../HourChecker";
 import ProgressBar from "../../ProgressBar";
-import { INTERVAL } from "../WeeklyPlanner/utils";
+import { INTERVAL, transformToIODataStructure } from "../WeeklyPlanner/utils";
 
 export type DayOverviewProps = {
     date: Date;
@@ -21,6 +25,7 @@ export type DayOverviewProps = {
     rawTimeLineData: TimeLineRowType[];
     activityData: WeeklyPlannerDataType[];
     setActivityData(data: WeeklyPlannerDataType[]): void;
+    handleChangeData(response: { [name: string]: string }, value: IODataStructure[]): void;
 };
 
 /**
@@ -58,7 +63,8 @@ const fromDayDetailsToValues = (details: DayDetailType[]): LunaticMultiSelection
 
 const DayOverview = memo((props: DayOverviewProps) => {
     const { classes } = useStyles();
-    const { date, isDisplayed, rawTimeLineData, activityData, setActivityData } = props;
+    const { date, isDisplayed, rawTimeLineData, activityData, setActivityData, handleChangeData } =
+        props;
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
     const [timeLineData, setTimeLineData] = React.useState<TimeLineRowType[]>(rawTimeLineData);
@@ -149,6 +155,9 @@ const DayOverview = memo((props: DayOverviewProps) => {
         }
 
         dayBloc.detail = details;
+
+        const toStore = transformToIODataStructure(temp);
+        handleChangeData({ name: "WEEKLYPLANNER" }, toStore);
 
         setActivityData(temp);
     };
