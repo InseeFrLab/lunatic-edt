@@ -155,6 +155,7 @@ const useStyles = makeStylesEdt({ "name": { Duration } })(theme => ({
         padding: "2rem 3rem",
         display: "flex",
         justifyContent: "center",
+        borderRadius: "10px",
     },
     durationBox: {
         display: "flex",
