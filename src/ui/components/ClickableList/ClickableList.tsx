@@ -8,10 +8,10 @@ import {
     Icon,
     TextField,
 } from "@mui/material";
-import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
 import elasticlunr, { Index } from "elasticlunrjs";
-import stopWords from "./stop_words_french.json";
+import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
 import { stemmer } from "./stemmer";
+import stopWords from "./stop_words_french.json";
 
 import React, { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
@@ -50,7 +50,7 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
     const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
-    const [index, _setIndex] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
+    const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
         elasticlunr.clearStopWords();
         elasticlunr.addStopWords(stopWords);
         const temp: Index<AutoCompleteActiviteOption> = elasticlunr();
