@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import React, { memo } from "react";
 import { makeStylesEdt } from "../../theme";
 
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number; showlabel: boolean }) {
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number; showlabel: string }) {
     let labelTranslateX = props.value === 0 ? props.value : props.value - 2;
     const { classes } = useStyles();
     return (
@@ -52,7 +52,7 @@ const ProgressBar = memo((props: ProgressBarProps) => {
             )}
             aria-label="progressbar"
         >
-            <LinearProgressWithLabel id={id} value={progress} showlabel={showlabel} />
+            <LinearProgressWithLabel id={id} value={progress} showlabel={showlabel ? "true" : "false"} />
         </Box>
     );
 });
