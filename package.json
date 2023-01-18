@@ -61,7 +61,7 @@
         "@babel/core": "^7.18.13",
         "@commitlint/cli": "^17.0.3",
         "@commitlint/config-conventional": "^17.0.3",
-        "@inseefr/lunatic": "2.0.2-v2",
+        "@inseefr/lunatic": "2.0.6-v2",
         "@storybook/addon-a11y": "^6.5.12",
         "@storybook/addon-actions": "^6.5.12",
         "@storybook/addon-essentials": "^6.5.12",
