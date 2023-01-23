@@ -92,6 +92,7 @@ export type CheckboxOneSpecificProps = {
     nextClickCallback?(): void;
     errorIcon?: string;
     addToReferentielCallBack?(newItem: CheckboxOneCustomOption): void;
+    onClick?(): void;
 };
 
 export type CheckBoxOneSpecificPropsLabels = {
@@ -117,5 +118,6 @@ export type CheckboxBooleanEdtSpecificProps = {
         alertComplete?: string;
         alertAlticon?: string;
     };
+    onClick?(): void;
     errorIcon?: string;
 };
