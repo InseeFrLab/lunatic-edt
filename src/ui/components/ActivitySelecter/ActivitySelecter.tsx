@@ -45,6 +45,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         labels,
         errorIcon,
         addToReferentielCallBack,
+        onClick,
     } = { ...componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
@@ -180,6 +181,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         onChange,
                         setSelectedId,
                         setLabelOfSelectedId,
+                        onClick,
                     );
                 }}
             >
@@ -206,6 +208,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         onChange,
                         setSelectedId,
                         setLabelOfSelectedId,
+                        onClick,
                     )
                 }
             >
@@ -476,7 +479,7 @@ const getSubRankCategoryClassName = (
     cx: any,
 ) => {
     if (category.id === selectedId) {
-        return cx(classes.subRankCategory, classes.selectedSubRankCategory);
+        return cx(classes.subRankCsategory, classes.selectedSubRankCategory);
     }
     return classes.subRankCategory;
 };
@@ -488,6 +491,7 @@ const categoriesActivitiesBoxClick = (
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     setSelectedId: (id: string) => void,
     setLabelOfSelectedId: (label: string) => void,
+    onClick: () => void,
 ) => {
     if (selection.subs) {
         const temp = [...selectedCategories];
@@ -498,6 +502,7 @@ const categoriesActivitiesBoxClick = (
         onChange(true, selection.id, undefined, undefined);
         setSelectedId(selection.id);
         setLabelOfSelectedId(selection.label);
+        onClick();
     }
 };
 

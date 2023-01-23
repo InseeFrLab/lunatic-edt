@@ -43,6 +43,7 @@ export type ActivitySelecterSpecificProps = {
     labels: ActivityLabelProps;
     errorIcon: string;
     addToReferentielCallBack(newItem: AutoCompleteActiviteOption): void;
+    onClick(): void;
 };
 
 export type IconGridCheckBoxOneSpecificProps = {
