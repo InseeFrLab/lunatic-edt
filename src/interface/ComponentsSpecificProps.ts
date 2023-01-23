@@ -58,6 +58,7 @@ export type IconGridCheckBoxOneSpecificProps = {
         alertAlticon: string;
     };
     errorIcon: string;
+    onClick?(): void;
 };
 
 export type CheckboxGroupSpecificProps = {
