@@ -29,7 +29,7 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
         nextClickCallback,
         labels,
         errorIcon,
-        onClick,
+        onSelectValue,
     } = {
         ...componentSpecificProps,
     };
@@ -52,8 +52,8 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
     const handleOptions = useCallback((_event: React.MouseEvent<HTMLElement>, value: any) => {
         setLocalValue(value);
         handleChange(response, value);
-        if (onClick && value != null) {
-            onClick();
+        if (onSelectValue && value != null) {
+            onSelectValue();
         }
     }, []);
 

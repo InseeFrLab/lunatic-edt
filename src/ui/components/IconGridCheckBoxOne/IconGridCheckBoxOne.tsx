@@ -27,7 +27,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         nextClickCallback,
         labels,
         errorIcon,
-        onClick,
+        onSelectValue,
     } = { ...componentSpecificProps };
 
     const [selectedValue, setSelectedValue] = useState<string | undefined>(value);
@@ -66,8 +66,8 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         const value = option.value == selectedValue ? undefined : option.value;
         setSelectedValue(value);
         handleChange(response, value);
-        if (onClick && value != null) {
-            onClick();
+        if (onSelectValue && value != null) {
+            onSelectValue();
         }
     };
 
