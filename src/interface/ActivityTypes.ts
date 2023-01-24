@@ -17,3 +17,11 @@ export type AutoCompleteActiviteOption = {
     label: string;
     synonymes: string;
 };
+
+export type responseType = {
+    [name: string]: string;
+};
+
+export type responsesType = {
+    response: responseType;
+};

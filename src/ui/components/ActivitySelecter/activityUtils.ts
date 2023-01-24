@@ -2,6 +2,7 @@ import {
     NomenclatureActivityOption,
     AutoCompleteActiviteOption,
     SelectedActivity,
+    responseType,
 } from "interface/ActivityTypes";
 import { FullScreenComponent } from "./ActivitySelecter";
 
@@ -59,7 +60,11 @@ const getItemFromSearchResult = (
 };
 
 export const processSelectedValue = (
-    value: string,
+    value: { [key: string]: string | boolean },
+    idBindingDep: responseType,
+    suggesterIdBindingDep: responseType,
+    labelBindingDep: responseType,
+    isFullyCompletedBindingDep: responseType,
     categoriesAndActivitesNomenclature: NomenclatureActivityOption[],
     setFullScreenComponent: (screen: FullScreenComponent) => void,
     setSelectedId: (id: string | undefined) => void,
@@ -67,43 +72,43 @@ export const processSelectedValue = (
     setCreateActivityValue: (val: string | undefined) => void,
     setSelectedCategories: (cats: NomenclatureActivityOption[]) => void,
 ) => {
-    if (value) {
-        const parsedValue: SelectedActivity = JSON.parse(value);
-        const hasId: boolean = parsedValue?.id !== undefined;
-        const hasSuggesterId: boolean = parsedValue?.suggesterId !== undefined;
-        const hasLabel: boolean = parsedValue?.label !== undefined;
-        const isFullyCompleted: boolean = parsedValue?.isFullyCompleted;
+    const parsedValue: SelectedActivity = {
+        id: value[idBindingDep.name] as string,
+        suggesterId: value[suggesterIdBindingDep.name] as string,
+        label: value[labelBindingDep.name] as string,
+        isFullyCompleted: value[isFullyCompletedBindingDep.name] as boolean,
+    };
+    const hasId: boolean = parsedValue.id != null;
+    const hasSuggesterId: boolean = parsedValue.suggesterId != null;
+    const hasLabel: boolean = parsedValue.label != null;
+    const isFullyCompleted: boolean = parsedValue.isFullyCompleted;
 
-        if (hasId && !hasLabel) {
-            setSelectedId(parsedValue.id);
+    if (hasId && !hasLabel) {
+        setSelectedId(parsedValue.id);
 
+        const res = findItemInCategoriesNomenclature(parsedValue.id, categoriesAndActivitesNomenclature);
+        const resParent = getParentFromSearchResult(res);
+        const resItem = getItemFromSearchResult(res);
+        if (isFullyCompleted) {
+            setSelectedCategories(resParent);
+        } else {
+            setSelectedCategories(resItem);
+        }
+    }
+    if (hasSuggesterId) {
+        setFullScreenComponent(FullScreenComponent.ClickableListComp);
+        setSelectedSuggesterId(parsedValue.suggesterId);
+    }
+    if (hasLabel) {
+        setFullScreenComponent(FullScreenComponent.FreeInput);
+        setCreateActivityValue(parsedValue.label);
+        if (categoriesAndActivitesNomenclature && hasId) {
             const res = findItemInCategoriesNomenclature(
                 parsedValue.id,
                 categoriesAndActivitesNomenclature,
             );
-            const resParent = getParentFromSearchResult(res);
-            const resItem = getItemFromSearchResult(res);
-            if (isFullyCompleted) {
-                setSelectedCategories(resParent);
-            } else {
-                setSelectedCategories(resItem);
-            }
-        }
-        if (hasSuggesterId) {
-            setFullScreenComponent(FullScreenComponent.ClickableListComp);
-            setSelectedSuggesterId(parsedValue.suggesterId);
-        }
-        if (hasLabel) {
-            setFullScreenComponent(FullScreenComponent.FreeInput);
-            setCreateActivityValue(parsedValue.label);
-            if (categoriesAndActivitesNomenclature && hasId) {
-                const res = findItemInCategoriesNomenclature(
-                    parsedValue.id,
-                    categoriesAndActivitesNomenclature,
-                );
-                const resItem = res?.item ? [res?.item] : [];
-                setSelectedCategories(resItem);
-            }
+            const resItem = res?.item ? [res?.item] : [];
+            setSelectedCategories(resItem);
         }
     }
 };

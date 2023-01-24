@@ -3,6 +3,8 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import {
     AutoCompleteActiviteOption,
     NomenclatureActivityOption,
+    responsesType,
+    responseType,
     SelectedActivity,
 } from "interface/ActivityTypes";
 import { ActivityLabelProps, ActivitySelecterSpecificProps } from "interface/ComponentsSpecificProps";
@@ -16,11 +18,11 @@ import ClickableList from "../ClickableList";
 import { processSelectedValue } from "./activityUtils";
 
 type ActivitySelecterProps = {
-    handleChange(response: { [name: string]: string }, value: string): void;
+    handleChange(response: responseType, value: string | boolean | undefined): void;
     componentSpecificProps: ActivitySelecterSpecificProps;
-    response: { [name: string]: string };
+    responses: [responsesType, responsesType, responsesType, responsesType];
     label: string;
-    value: string;
+    value: { [key: string]: string | boolean };
 };
 
 export enum FullScreenComponent {
@@ -30,7 +32,12 @@ export enum FullScreenComponent {
 }
 
 const ActivitySelecter = memo((props: ActivitySelecterProps) => {
-    let { handleChange, componentSpecificProps, response, label, value } = props;
+    let { handleChange, componentSpecificProps, responses, label, value } = props;
+
+    const idBindingDep = responses[0].response;
+    const suggesterIdBindingDep = responses[1].response;
+    const labelBindingDep = responses[2].response;
+    const isFullyCompletedBindingDep = responses[3].response;
 
     let {
         backClickEvent,
@@ -72,6 +79,10 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             categoriesAndActivitesNomenclature &&
             processSelectedValue(
                 value,
+                idBindingDep,
+                suggesterIdBindingDep,
+                labelBindingDep,
+                isFullyCompletedBindingDep,
                 categoriesAndActivitesNomenclature,
                 setFullScreenComponent,
                 setSelectedId,
@@ -129,7 +140,10 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             label: activityLabel,
             isFullyCompleted: isFullyCompleted,
         };
-        handleChange(response, JSON.stringify(selection));
+        handleChange(idBindingDep, selection.id);
+        handleChange(suggesterIdBindingDep, selection.suggesterId);
+        handleChange(labelBindingDep, selection.label);
+        handleChange(isFullyCompletedBindingDep, selection.isFullyCompleted);
     };
 
     const createActivityCallBack = (activityLabel: string) => {
