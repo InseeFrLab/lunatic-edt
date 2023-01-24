@@ -60,7 +60,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         (_event: React.MouseEvent<HTMLElement>, selectedOption: string) => {
             setCurrentOption(selectedOption);
             handleChange(response, selectedOption);
-            if (onClick) {
+            if (onClick && selectedOption != null) {
                 onClick();
             }
         },
