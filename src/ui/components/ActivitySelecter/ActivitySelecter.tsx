@@ -479,7 +479,7 @@ const getSubRankCategoryClassName = (
     cx: any,
 ) => {
     if (category.id === selectedId) {
-        return cx(classes.subRankCsategory, classes.selectedSubRankCategory);
+        return cx(classes.subRankCategory, classes.selectedSubRankCategory);
     }
     return classes.subRankCategory;
 };
