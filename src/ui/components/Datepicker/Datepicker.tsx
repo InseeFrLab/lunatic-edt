@@ -3,7 +3,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
-import React, { memo, useEffect, useCallback } from "react";
+import React, { memo, useCallback, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 
 export type DatepickerProps = {
@@ -40,6 +40,7 @@ const Datepicker = memo((props: DatepickerProps) => {
                 openTo="day"
                 views={["day"]}
                 value={valueLocal}
+                label=" "
                 onChange={useCallback(newValue => {
                     setValueLunatic(newValue);
                 }, [])}
@@ -49,6 +50,11 @@ const Datepicker = memo((props: DatepickerProps) => {
                     ),
                     [],
                 )}
+                componentsProps={{
+                    actionBar: {
+                        actions: ["accept"],
+                    },
+                }}
                 className={classes.input}
             />
         </LocalizationProvider>
@@ -58,6 +64,9 @@ const Datepicker = memo((props: DatepickerProps) => {
 const useStyles = makeStylesEdt({ "name": { Datepicker } })(() => ({
     input: {
         width: "100%",
+        legend: {
+            display: "none",
+        },
     },
 }));
 
