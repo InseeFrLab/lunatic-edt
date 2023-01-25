@@ -52,6 +52,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         labels,
         errorIcon,
         addToReferentielCallBack,
+        onSelectValue,
     } = { ...componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
@@ -193,7 +194,10 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         setSelectedCategories,
                         onChange,
                         setSelectedId,
+                        selectedId,
                         setLabelOfSelectedId,
+                        labelOfSelectedId,
+                        onSelectValue,
                     );
                 }}
             >
@@ -219,7 +223,10 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         setSelectedCategories,
                         onChange,
                         setSelectedId,
+                        selectedId,
                         setLabelOfSelectedId,
+                        labelOfSelectedId,
+                        onSelectValue,
                     )
                 }
             >
@@ -500,18 +507,24 @@ const categoriesActivitiesBoxClick = (
     selectedCategories: NomenclatureActivityOption[],
     setSelectedCategories: (activities: NomenclatureActivityOption[]) => void,
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
-    setSelectedId: (id: string) => void,
-    setLabelOfSelectedId: (label: string) => void,
+    setSelectedId: (id: string | undefined) => void,
+    selectedId: string | undefined,
+    setLabelOfSelectedId: (label: string | undefined) => void,
+    labelOfSelectedId: string | undefined,
+    onSelectValue: () => void,
 ) => {
+    const id = selectedId == selection.id ? undefined : selection.id;
+    const label = labelOfSelectedId == selection.label ? undefined : selection.label;
     if (selection.subs) {
         const temp = [...selectedCategories];
         temp.push(selection);
         setSelectedCategories(temp);
-        onChange(false, selection.id, undefined, undefined);
+        onChange(false, id, undefined, undefined);
     } else {
-        onChange(true, selection.id, undefined, undefined);
-        setSelectedId(selection.id);
-        setLabelOfSelectedId(selection.label);
+        onChange(true, id, undefined, undefined);
+        setSelectedId(id);
+        setLabelOfSelectedId(label);
+        if (id != null) onSelectValue();
     }
 };
 

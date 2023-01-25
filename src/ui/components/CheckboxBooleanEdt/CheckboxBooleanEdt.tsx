@@ -6,7 +6,6 @@ import { createCustomizableLunaticField, important } from "../../utils";
 import Alert from "../Alert";
 
 export type CheckboxBooleanEdtProps = {
-    onClick(value: boolean): void;
     id?: string;
     label?: string;
     checked?: boolean;
@@ -23,7 +22,15 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
         props;
     const { classes, cx } = useStyles();
 
-    const { backClickEvent, nextClickEvent, backClickCallback, nextClickCallback, labels, errorIcon } = {
+    const {
+        backClickEvent,
+        nextClickEvent,
+        backClickCallback,
+        nextClickCallback,
+        labels,
+        errorIcon,
+        onSelectValue,
+    } = {
         ...componentSpecificProps,
     };
 
@@ -45,6 +52,9 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
     const handleOptions = useCallback((_event: React.MouseEvent<HTMLElement>, value: any) => {
         setLocalValue(value);
         handleChange(response, value);
+        if (onSelectValue && value != null) {
+            onSelectValue();
+        }
     }, []);
 
     const next = (

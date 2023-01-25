@@ -9,7 +9,7 @@ import { createCustomizableLunaticField } from "../../utils/create-customizable-
 import Alert from "../Alert";
 
 type IconGridCheckBoxOneProps = {
-    handleChange(response: { [name: string]: string }, value: string): void;
+    handleChange(response: { [name: string]: string }, value: string | undefined): void;
     componentSpecificProps: IconGridCheckBoxOneSpecificProps;
     response: { [name: string]: string };
     label: string;
@@ -27,9 +27,10 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         nextClickCallback,
         labels,
         errorIcon,
+        onSelectValue,
     } = { ...componentSpecificProps };
 
-    const [selectedValue, setSelectedValue] = useState<string>(value);
+    const [selectedValue, setSelectedValue] = useState<string | undefined>(value);
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
 
     const { classes, cx } = useStyles();
@@ -62,8 +63,12 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
     };
 
     const optionOnClick = (option: CheckboxOneCustomOption) => {
-        setSelectedValue(option.value);
-        handleChange(response, option.value);
+        const value = option.value == selectedValue ? undefined : option.value;
+        setSelectedValue(value);
+        handleChange(response, value);
+        if (onSelectValue && value != null) {
+            onSelectValue();
+        }
     };
 
     const handleAlert = useCallback(() => {

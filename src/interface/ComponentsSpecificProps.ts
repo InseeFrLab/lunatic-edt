@@ -43,6 +43,7 @@ export type ActivitySelecterSpecificProps = {
     labels: ActivityLabelProps;
     errorIcon: string;
     addToReferentielCallBack(newItem: AutoCompleteActiviteOption): void;
+    onSelectValue(): void;
 };
 
 export type IconGridCheckBoxOneSpecificProps = {
@@ -58,6 +59,7 @@ export type IconGridCheckBoxOneSpecificProps = {
         alertAlticon: string;
     };
     errorIcon: string;
+    onSelectValue?(): void;
 };
 
 export type CheckboxGroupSpecificProps = {
@@ -92,6 +94,7 @@ export type CheckboxOneSpecificProps = {
     nextClickCallback?(): void;
     errorIcon?: string;
     addToReferentielCallBack?(newItem: CheckboxOneCustomOption): void;
+    onSelectValue?(): void;
 };
 
 export type CheckBoxOneSpecificPropsLabels = {
@@ -117,5 +120,6 @@ export type CheckboxBooleanEdtSpecificProps = {
         alertComplete?: string;
         alertAlticon?: string;
     };
+    onSelectValue?(): void;
     errorIcon?: string;
 };

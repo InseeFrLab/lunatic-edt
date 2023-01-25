@@ -31,6 +31,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         labelsAlert,
         errorIcon,
         addToReferentielCallBack,
+        onSelectValue,
     } = {
         ...componentSpecificProps,
     };
@@ -59,6 +60,9 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         (_event: React.MouseEvent<HTMLElement>, selectedOption: string) => {
             setCurrentOption(selectedOption);
             handleChange(response, selectedOption);
+            if (onSelectValue && selectedOption != null) {
+                onSelectValue();
+            }
         },
         [],
     );
