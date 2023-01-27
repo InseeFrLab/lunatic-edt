@@ -183,7 +183,7 @@ const useStyles = makeStylesEdt({ "name": { DayPlanner } })(theme => ({
     mainContainer: {
         marginTop: "1.25rem",
         padding: "1rem",
-        width: "100%",
+        width: "350px",
         borderRadius: "5px",
         backgroundColor: theme.palette.background.paper,
     },
