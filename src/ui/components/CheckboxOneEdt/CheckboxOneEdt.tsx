@@ -28,7 +28,8 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         nextClickEvent,
         backClickCallback,
         nextClickCallback,
-        labelsAlert,
+        labels,
+        labelsSpecifiques,
         errorIcon,
         addToReferentielCallBack,
         onSelectValue,
@@ -105,18 +106,18 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     return (
         <>
-            {labelsAlert && (
+            {labels && (
                 <Alert
                     isAlertDisplayed={displayAlert}
                     onCompleteCallBack={() => setDisplayAlert(false)}
                     onCancelCallBack={handleAlert}
                     labels={{
-                        content: labelsAlert.alertMessage,
-                        cancel: labelsAlert.alertIgnore,
-                        complete: labelsAlert.alertComplete,
+                        content: labels.alertMessage,
+                        cancel: labels.alertIgnore,
+                        complete: labels.alertComplete,
                     }}
                     icon={errorIcon || ""}
-                    errorIconAlt={labelsAlert.alertAlticon}
+                    errorIconAlt={labels.alertAlticon}
                 ></Alert>
             )}
             {!isSubchildDisplayed && (
@@ -167,11 +168,11 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                             )}
                         </ToggleButtonGroup>
                     )}
-                    {options && componentSpecificProps?.labels?.otherButtonLabel && (
+                    {options && componentSpecificProps?.labelsSpecifiques?.otherButtonLabel && (
                         <>
                             <Box className={classes.centerBox}>
                                 <Button variant="contained" onClick={onAddNewOption}>
-                                    {componentSpecificProps.labels?.otherButtonLabel}
+                                    {componentSpecificProps.labelsSpecifiques?.otherButtonLabel}
                                 </Button>
                             </Box>
                         </>
@@ -181,14 +182,14 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
             {isSubchildDisplayed && (
                 <>
                     <Box className={classes.labelSpacer}>
-                        <label>{componentSpecificProps.labels?.subchildLabel}</label>
+                        <label>{componentSpecificProps.labelsSpecifiques?.subchildLabel}</label>
                     </Box>
                     <Box className={classes.centerBox}>
                         <TextField
                             value={newOptionValue}
                             className={classes.newOptionTextField}
                             onChange={newOptionOnChange}
-                            placeholder={componentSpecificProps.labels?.inputPlaceholder}
+                            placeholder={componentSpecificProps.labelsSpecifiques?.inputPlaceholder}
                         ></TextField>
                     </Box>
                 </>
