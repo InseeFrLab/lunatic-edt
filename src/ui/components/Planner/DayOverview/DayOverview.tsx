@@ -9,12 +9,7 @@ import {
     WeeklyPlannerDataType,
 } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
-import {
-    convertTime,
-    formateDateToFrenchFormat,
-    generateDateFromStringInput,
-    setDateTimeToZero,
-} from "../../../utils";
+import { convertTime, generateDateFromStringInput, setDateTimeToZero } from "../../../utils";
 import HourChecker from "../../HourChecker";
 import ProgressBar from "../../ProgressBar";
 import { INTERVAL, transformToIODataStructure } from "../WeeklyPlanner/utils";
@@ -26,16 +21,6 @@ export type DayOverviewProps = {
     activityData: WeeklyPlannerDataType[];
     setActivityData(data: WeeklyPlannerDataType[]): void;
     handleChangeData(response: { [name: string]: string }, value: IODataStructure[]): void;
-};
-
-/**
- * Returns a formated string from Date
- * @param date
- * @returns
- */
-const formateDateLabel = (date: Date): string => {
-    const formatedDate = formateDateToFrenchFormat(date);
-    return formatedDate.toUpperCase();
 };
 
 /**
