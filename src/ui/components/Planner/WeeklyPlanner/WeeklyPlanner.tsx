@@ -3,9 +3,10 @@ import { Box } from "@mui/system";
 import { WeeklyPlannerSpecificProps } from "interface";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { WeeklyPlannerDataType, IODataStructure } from "../../../../interface/WeeklyPlannerTypes";
+import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
 import {
+    formateDateToFrenchFormat,
     generateDateFromStringInput,
     generateDayOverviewTimelineRawData,
     generateStringInputFromDate,
@@ -46,14 +47,17 @@ const generateDayList = (startDate: Date): Date[] => {
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     let { value, handleChange, componentSpecificProps } = props;
 
-    const { surveyDate, isSubChildDisplayed, setIsSubChildDisplayed, labels, saveAll } = {
+    const {
+        surveyDate,
+        isSubChildDisplayed,
+        setIsSubChildDisplayed,
+        labels,
+        saveAll,
+        setDisplayedDayHeader,
+    } = {
         ...componentSpecificProps,
     };
-    const rootBoxWidth = document.getElementById("root-box")?.parentElement?.clientWidth;
-    const halfRootBoxWidthPx = (rootBoxWidth ? (rootBoxWidth / 2).toString() : "0") + "px";
-    const { classes } = useStyles({
-        "transform": `translateX(calc(${halfRootBoxWidthPx} - 50vw))`,
-    });
+    const { classes } = useStyles();
 
     const data: WeeklyPlannerDataType[] | undefined =
         value.length > 1 ? transformToWeeklyPlannerDataType(value) : undefined;
@@ -67,9 +71,18 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const [activityData, setActivityData] = React.useState<WeeklyPlannerDataType[]>([]);
     const [needSpinner, setNeedSpinner] = React.useState<boolean>(true);
 
+    const formateDateLabel = (date: Date): string => {
+        const formatedDate = formateDateToFrenchFormat(date);
+        return formatedDate.toUpperCase();
+    };
+
     useEffect(() => {
         setNeedSpinner(false);
     }, [isSubChildDisplayed]);
+
+    useEffect(() => {
+        setDisplayedDayHeader(formateDateLabel(dayOverviewSelectedDate));
+    }, [dayOverviewSelectedDate]);
 
     // Complete activity data with default values for all days of the week if it was not the case in data input
     useEffect(() => {
@@ -149,26 +162,25 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     );
 });
 
-const useStyles = makeStylesEdt<{ transform: string }>({ "name": { WeeklyPlanner } })(
-    (theme, { transform }) => ({
-        listContainer: {
-            display: "flex",
-            flexDirection: "column",
-            paddingBottom: "6rem",
-        },
-        title: {
-            marginTop: "2rem",
-            fontSize: "14px",
-        },
-        progressBar: {
-            padding: "1rem",
-            backgroundColor: theme.variables.white,
-            position: "relative",
-            width: "100vw !important",
-            overflowX: "hidden",
-            transform,
-        },
-    }),
-);
+const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
+    listContainer: {
+        display: "flex",
+        flexDirection: "column",
+        paddingBottom: "6rem",
+    },
+    title: {
+        marginTop: "2rem",
+        fontSize: "14px",
+    },
+    progressBar: {
+        padding: "1rem",
+        backgroundColor: theme.variables.white,
+        position: "relative",
+        width: "100vw !important",
+        overflowX: "hidden",
+        //Orchestrator content width is limited to 350px, 175px correspond to half if it
+        transform: "translateX(calc(175px - 50vw))",
+    },
+}));
 
 export default createCustomizableLunaticField(WeeklyPlanner, "WeeklyPlanner");

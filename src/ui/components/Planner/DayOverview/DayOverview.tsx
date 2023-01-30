@@ -9,12 +9,7 @@ import {
     WeeklyPlannerDataType,
 } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
-import {
-    convertTime,
-    formateDateToFrenchFormat,
-    generateDateFromStringInput,
-    setDateTimeToZero,
-} from "../../../utils";
+import { convertTime, generateDateFromStringInput, setDateTimeToZero } from "../../../utils";
 import HourChecker from "../../HourChecker";
 import ProgressBar from "../../ProgressBar";
 import { INTERVAL, transformToIODataStructure } from "../WeeklyPlanner/utils";
@@ -26,16 +21,6 @@ export type DayOverviewProps = {
     activityData: WeeklyPlannerDataType[];
     setActivityData(data: WeeklyPlannerDataType[]): void;
     handleChangeData(response: { [name: string]: string }, value: IODataStructure[]): void;
-};
-
-/**
- * Returns a formated string from Date
- * @param date
- * @returns
- */
-const formateDateLabel = (date: Date): string => {
-    const formatedDate = formateDateToFrenchFormat(date);
-    return formatedDate.toUpperCase();
 };
 
 /**
@@ -176,9 +161,8 @@ const DayOverview = memo((props: DayOverviewProps) => {
 
     return (
         <Box className={classes.mainContainer} display={componentDisplay} aria-label="dayoverview">
-            <Box className={classes.absoluteBox}>
+            <Box className={classes.headerContainerBox}>
                 <Box className={classes.headerContainer}>
-                    <Typography className={classes.dayLabel}>{formateDateLabel(date)}</Typography>
                     <ProgressBar
                         className={classes.progressBar}
                         value={Math.round((new Date().getHours() / 24) * 100)}
@@ -196,13 +180,13 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     mainContainer: {
         flexDirection: "column",
     },
-    absoluteBox: {
-        position: "absolute",
-        left: "0",
-        top: "0",
-        overflowX: "hidden",
-        width: "100%",
+    headerContainerBox: {
         zIndex: "1",
+        position: "relative",
+        width: "100vw !important",
+        overflowX: "hidden",
+        //Orchestrator content width is limited to 350px, 175px correspond to half of it
+        transform: "translateX(calc(175px - 50vw))",
     },
     headerContainer: {
         backgroundColor: theme.variables.white,

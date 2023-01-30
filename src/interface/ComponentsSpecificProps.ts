@@ -21,6 +21,8 @@ export type WeeklyPlannerSpecificProps = {
     surveyDate?: string;
     isSubChildDisplayed: boolean;
     setIsSubChildDisplayed(value: boolean): void;
+    setDisplayedDayHeader(value: string): void;
+    displayedDayHeader: string;
     labels: {
         title: string;
         workSumLabel: string;
