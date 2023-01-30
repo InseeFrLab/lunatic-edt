@@ -25,7 +25,7 @@ const theme = createTheme({
             paper: "#E4E5EF",
         },
         error: {
-            main: "#D8765F",
+            main: "#B6462C",
             light: "#FCE7D8",
         },
         success: {
