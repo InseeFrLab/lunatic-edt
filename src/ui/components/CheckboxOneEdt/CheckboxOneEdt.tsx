@@ -29,7 +29,6 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         backClickCallback,
         nextClickCallback,
         labels,
-        labelsSpecifiques,
         errorIcon,
         addToReferentielCallBack,
         onSelectValue,
@@ -168,11 +167,11 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                             )}
                         </ToggleButtonGroup>
                     )}
-                    {options && componentSpecificProps?.labelsSpecifiques?.otherButtonLabel && (
+                    {options && componentSpecificProps?.labelsSpecifics?.otherButtonLabel && (
                         <>
                             <Box className={classes.centerBox}>
                                 <Button variant="contained" onClick={onAddNewOption}>
-                                    {componentSpecificProps.labelsSpecifiques?.otherButtonLabel}
+                                    {componentSpecificProps.labelsSpecifics?.otherButtonLabel}
                                 </Button>
                             </Box>
                         </>
@@ -182,14 +181,14 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
             {isSubchildDisplayed && (
                 <>
                     <Box className={classes.labelSpacer}>
-                        <label>{componentSpecificProps.labelsSpecifiques?.subchildLabel}</label>
+                        <label>{componentSpecificProps.labelsSpecifics?.subchildLabel}</label>
                     </Box>
                     <Box className={classes.centerBox}>
                         <TextField
                             value={newOptionValue}
                             className={classes.newOptionTextField}
                             onChange={newOptionOnChange}
-                            placeholder={componentSpecificProps.labelsSpecifiques?.inputPlaceholder}
+                            placeholder={componentSpecificProps.labelsSpecifics?.inputPlaceholder}
                         ></TextField>
                     </Box>
                 </>
