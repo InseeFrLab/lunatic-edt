@@ -83,8 +83,8 @@ export type CheckboxOneSpecificProps = {
     options?: CheckboxOneCustomOption[];
     icon?: string;
     defaultIcon?: boolean;
-    labels?: CheckBoxOneSpecificPropsLabels;
-    labelsAlert?: {
+    labelsSpecifics?: CheckBoxOneSpecificPropsLabels;
+    labels?: {
         alertMessage: string;
         alertIgnore: string;
         alertComplete: string;
