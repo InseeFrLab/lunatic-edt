@@ -42,7 +42,11 @@ const Alert = memo((props: AlertProps) => {
                             <Typography>{labels.content}</Typography>
                         </Box>
                         <Box className={classes.boxEvenly}>
-                            <Button variant="outlined" onClick={() => onCancelCallBack(true)}>
+                            <Button
+                                className={classes.cancelButton}
+                                variant="outlined"
+                                onClick={() => onCancelCallBack(true)}
+                            >
                                 {labels.cancel}
                             </Button>
                             <Button variant="contained" onClick={onCompleteCallBack}>
@@ -101,6 +105,9 @@ const useStyles = makeStylesEdt({ "name": { Alert } })(theme => ({
     boxEvenly: {
         display: "flex",
         justifyContent: "space-evenly",
+    },
+    cancelButton: {
+        backgroundColor: theme.variables.white,
     },
 }));
 
