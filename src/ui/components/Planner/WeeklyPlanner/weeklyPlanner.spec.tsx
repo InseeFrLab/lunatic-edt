@@ -1,14 +1,14 @@
+import "@testing-library/jest-dom";
 import { render, RenderResult, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { theme } from "./../../../theme";
-import "@testing-library/jest-dom";
 
 import { ThemeProvider } from "@mui/material";
-import WeeklyPlanner from "./WeeklyPlanner";
-import { generateStringInputFromDate } from "../../../utils";
 import { WeeklyPlannerSpecificProps } from "interface";
 import { IODataStructure, WeeklyPlannerDataType } from "interface/WeeklyPlannerTypes";
+import { generateStringInputFromDate } from "../../../utils";
 import { transformToIODataStructure, transformToWeeklyPlannerDataType } from "./utils";
+import WeeklyPlanner from "./WeeklyPlanner";
 
 describe("weeklyPlannerComponent", () => {
     const workSumLabel = "total travaillé";
@@ -23,6 +23,7 @@ describe("weeklyPlannerComponent", () => {
 
     const todayStringValue = generateStringInputFromDate(new Date());
     const setIsSubChildDisplayed = jest.fn();
+    const setDisplayedDayHeader = jest.fn();
     const saveAll = jest.fn();
 
     const value: IODataStructure[] = [
@@ -38,6 +39,8 @@ describe("weeklyPlannerComponent", () => {
         surveyDate: surveyDateString,
         isSubChildDisplayed: false,
         setIsSubChildDisplayed: setIsSubChildDisplayed,
+        setDisplayedDayHeader: setDisplayedDayHeader,
+        displayedDayHeader: "",
         labels: {
             title: title,
             workSumLabel: workSumLabel,
