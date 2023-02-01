@@ -10,7 +10,7 @@ import { createCustomizableLunaticField } from "../../utils/create-customizable-
 import Alert from "../Alert";
 
 export type CheckboxOneProps = {
-    handleChange(response: { [name: string]: string }, value: string): void;
+    handleChange(response: { [name: string]: string }, value: string | undefined): void;
     id?: string;
     label?: string;
     options: CheckboxOneCustomOption[];
@@ -58,9 +58,11 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     const handleOptions = useCallback(
         (_event: React.MouseEvent<HTMLElement>, selectedOption: string) => {
-            setCurrentOption(selectedOption);
-            handleChange(response, selectedOption);
-            if (onSelectValue && selectedOption != null) {
+            let option =
+                selectedOption != null && selectedOption.length > 0 ? selectedOption : undefined;
+            setCurrentOption(option);
+            handleChange(response, option);
+            if (onSelectValue && option != null) {
                 onSelectValue();
             }
         },
@@ -86,7 +88,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
             (newOptionValue == null || newOptionValue == "") &&
             !continueWithUncompleted
         ) {
-            handleChange(response, "");
+            handleChange(response, undefined);
             setDisplayAlert(true);
         } else {
             if (addToReferentielCallBack && newOptionValue) {
