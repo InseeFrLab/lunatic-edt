@@ -57,6 +57,10 @@
         },
         "testResultsProcessor": "jest-sonar-reporter"
     },
+    "testPathIgnorePatterns": [
+        "/src/*/dist",
+        "/dist"
+    ],
     "devDependencies": {
         "@babel/core": "^7.18.13",
         "@commitlint/cli": "^17.0.3",
