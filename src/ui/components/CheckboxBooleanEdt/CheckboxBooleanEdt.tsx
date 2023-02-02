@@ -101,7 +101,7 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
                     onChange={handleOptions}
                     id={id}
                     aria-label={label}
-                    className={className}
+                    className={classes.buttonGroupBox}
                     disabled={disabled}
                 >
                     <ToggleButton className={classes.MuiToggleButton} value={false} aria-label="no">
@@ -139,6 +139,10 @@ const useStyles = makeStylesEdt({ "name": { CheckboxBooleanEdt } })(theme => ({
     },
     labelSpacer: {
         margin: "1rem 0rem",
+    },
+    buttonGroupBox: {
+        "width": "100% !important",
+        "justifyContent": "center",
     },
 }));
 
