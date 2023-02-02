@@ -22,6 +22,9 @@ export type ActivityTimeProps = {
     componentSpecificProps?: TimepickerSpecificProps;
 };
 
+const START_TIME_DAY = "04:00";
+const FORMAT_TIME = "HH:mm";
+
 const ActivityTime = memo((props: ActivityTimeProps) => {
     const {
         id,
@@ -44,12 +47,12 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
     ) => {
         let time;
         if (valueData) {
-            time = dayjs(valueData, "HH:mm");
+            time = dayjs(valueData, FORMAT_TIME);
         } else {
             if (defaultValue && activities && activities.length > 0) {
-                time = dayjs(activities[activities.length - 1]?.endTime, "HH:mm");
+                time = dayjs(activities[activities.length - 1]?.endTime, FORMAT_TIME);
             } else {
-                time = dayjs();
+                time = dayjs(START_TIME_DAY, FORMAT_TIME);
             }
         }
 
@@ -67,7 +70,7 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
         componentSpecificProps?.defaultValue,
     );
 
-    const [startTime] = React.useState<string | undefined>(startTimeComputed.format("HH:mm"));
+    const [startTime] = React.useState<string | undefined>(startTimeComputed.format(FORMAT_TIME));
     const [endTime, setEndTime] = React.useState<string | undefined>(value?.ENDTIME);
 
     useEffect(() => {
@@ -79,7 +82,7 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
         );
         if (endTime == null || startTime != value?.STARTTIME) {
             let endTimeDay = startTimeComputed.add(5, "minute");
-            setEndTime(endTimeDay.format("HH:mm"));
+            setEndTime(endTimeDay.format(FORMAT_TIME));
         }
     }, [value?.STARTTIME]);
 

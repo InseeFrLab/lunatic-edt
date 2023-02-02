@@ -17,16 +17,22 @@ const Info = memo((props: InfoProps) => {
     return (
         <Box className={classes.root}>
             <Box className={classes.titleWithIcon}>
-                <Box className={classes.iconContainer}>
-                    <img src={infoIcon} alt={infoIconAlt} />
-                </Box>
-                <Box className={classes.title}>
-                    <p className={classes.text}>{normalText}</p>
-                </Box>
-            </Box>
-            <Box className={classes.tipsContainer}>
-                <Box className={classes.tips}>
-                    <p className={classes.textBold}>{boldText}</p>
+                {infoIcon && (
+                    <Box className={classes.iconContainer}>
+                        <img src={infoIcon} alt={infoIconAlt} />
+                    </Box>
+                )}
+                <Box>
+                    {normalText && (
+                        <Box className={classes.title}>
+                            <p className={classes.text}>{normalText}</p>
+                        </Box>
+                    )}
+                    {boldText && (
+                        <Box className={classes.tips}>
+                            <p className={classes.textBold}>{boldText}</p>
+                        </Box>
+                    )}
                 </Box>
             </Box>
         </Box>
@@ -44,6 +50,7 @@ const useStyles = makeStylesEdt({ "name": { Info } })(theme => ({
         alignItems: "center",
         justifyContent: "space-between",
         padding: "1rem 1rem 1rem 0",
+        maxWidth: "520px",
     },
     titleWithIcon: {
         width: "100%",
@@ -58,11 +65,6 @@ const useStyles = makeStylesEdt({ "name": { Info } })(theme => ({
     },
     title: {
         width: "85%",
-    },
-    tipsContainer: {
-        width: "100%",
-        display: "flex",
-        justifyContent: "flex-end",
     },
     tips: {
         width: "85%",
