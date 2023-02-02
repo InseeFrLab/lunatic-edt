@@ -18,7 +18,7 @@ export type CheckboxBooleanEdtProps = {
 };
 
 const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
-    const { id, label, disabled, className, value, handleChange, response, componentSpecificProps } =
+    const { id, label, disabled, value, className, handleChange, response, componentSpecificProps } =
         props;
     const { classes, cx } = useStyles();
 
@@ -101,7 +101,7 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
                     onChange={handleOptions}
                     id={id}
                     aria-label={label}
-                    className={classes.buttonGroupBox}
+                    className={cx(classes.buttonGroupBox, className)}
                     disabled={disabled}
                 >
                     <ToggleButton className={classes.MuiToggleButton} value={false} aria-label="no">
