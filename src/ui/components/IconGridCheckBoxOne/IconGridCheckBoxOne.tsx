@@ -54,7 +54,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
     ) => {
         if (nextClickCallback) {
             if ((selectedValue == null || selectedValue == "") && !continueWithUncompleted) {
-                handleChange(response, "");
+                handleChange(response, undefined);
                 setDisplayAlert(true);
             } else {
                 nextClickCallback();
