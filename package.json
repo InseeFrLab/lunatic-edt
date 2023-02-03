@@ -55,7 +55,11 @@
         "transform": {
             "^.+\\.(ts|tsx|js|jsx)$": "ts-jest"
         },
-        "testResultsProcessor": "jest-sonar-reporter"
+        "testResultsProcessor": "jest-sonar-reporter",
+        "testPathIgnorePatterns": [
+            "/src/*/dist",
+            "dist"
+        ]
     },
     "devDependencies": {
         "@babel/core": "^7.18.13",
