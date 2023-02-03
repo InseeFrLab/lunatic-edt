@@ -11,19 +11,20 @@ export const findItemInCategoriesNomenclature = (
     ref: NomenclatureActivityOption[],
     parent?: NomenclatureActivityOption,
 ): { item: NomenclatureActivityOption; parent: NomenclatureActivityOption | undefined } | undefined => {
-    let res = ref.find(a => a.id === id);
-    if (res) {
+    let categoriesFirstRang = ref.find(a => a.id === id);
+    if (categoriesFirstRang) {
         return {
-            item: res,
+            item: categoriesFirstRang,
             parent: parent,
         };
     } else {
         for (let i = 0; i < ref.length; i++) {
             let subsubs = ref[i].subs;
             if (subsubs) {
-                let res2 = findItemInCategoriesNomenclature(id, subsubs, ref[i]);
-                if (res2) {
-                    return res2;
+                //if category of activity have sub categories that match the selected item
+                let categoriesSecondRang = findItemInCategoriesNomenclature(id, subsubs, ref[i]);
+                if (categoriesSecondRang) {
+                    return categoriesSecondRang;
                 }
             }
         }
