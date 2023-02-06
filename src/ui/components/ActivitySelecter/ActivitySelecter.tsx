@@ -15,7 +15,11 @@ import { splitLabelWithParenthesis } from "../../../ui/utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Alert from "../Alert";
 import ClickableList from "../ClickableList";
-import { processSelectedValue } from "./activityUtils";
+import {
+    processActivityCategory,
+    processActivityAutocomplete,
+    processNewActivity,
+} from "./activityUtils";
 
 type ActivitySelecterProps = {
     handleChange(response: responseType, value: string | boolean | undefined): void;
@@ -58,6 +62,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
     const [createActivityValue, setCreateActivityValue] = useState<string | undefined>();
     const [selectedId, setSelectedId] = useState<string | undefined>();
+
     const [selectedSuggesterId, setSelectedSuggesterId] = useState<string | undefined>();
     const [labelOfSelectedId, setLabelOfSelectedId] = useState<string | undefined>();
     const [fullScreenComponent, setFullScreenComponent] = useState<FullScreenComponent>(
@@ -76,21 +81,44 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const { classes, cx } = useStyles();
 
     useEffect(() => {
-        value &&
-            categoriesAndActivitesNomenclature &&
-            processSelectedValue(
-                value,
-                idBindingDep,
-                suggesterIdBindingDep,
-                labelBindingDep,
-                isFullyCompletedBindingDep,
-                categoriesAndActivitesNomenclature,
-                setFullScreenComponent,
-                setSelectedId,
-                setSelectedSuggesterId,
-                setCreateActivityValue,
-                setSelectedCategories,
-            );
+        const parsedValue: SelectedActivity = {
+            id: value[idBindingDep.name] as string,
+            suggesterId: value[suggesterIdBindingDep.name] as string,
+            label: value[labelBindingDep.name] as string,
+            isFullyCompleted: value[isFullyCompletedBindingDep.name] as boolean,
+        };
+
+        const hasId: boolean = parsedValue.id != null;
+        const hasSuggesterId: boolean = parsedValue.suggesterId != null;
+        const hasLabel: boolean = parsedValue.label != null;
+
+        if (hasId && !hasLabel) {
+            value &&
+                categoriesAndActivitesNomenclature &&
+                processActivityCategory(
+                    parsedValue,
+                    categoriesAndActivitesNomenclature,
+                    setSelectedId,
+                    setSelectedCategories,
+                );
+        }
+
+        if (hasSuggesterId) {
+            value &&
+                processActivityAutocomplete(parsedValue, setFullScreenComponent, setSelectedSuggesterId);
+        }
+
+        if (hasLabel) {
+            value &&
+                categoriesAndActivitesNomenclature &&
+                processNewActivity(
+                    parsedValue,
+                    categoriesAndActivitesNomenclature,
+                    setFullScreenComponent,
+                    setCreateActivityValue,
+                    setSelectedCategories,
+                );
+        }
     }, []);
 
     useEffect(() => {
@@ -141,6 +169,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             label: activityLabel,
             isFullyCompleted: isFullyCompleted,
         };
+        console.log(selection);
+
         handleChange(idBindingDep, selection.id);
         handleChange(suggesterIdBindingDep, selection.suggesterId);
         handleChange(labelBindingDep, selection.label);
@@ -190,13 +220,13 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 onClick={() => {
                     categoriesActivitiesBoxClick(
                         category,
-                        selectedCategories,
-                        setSelectedCategories,
+                        //selectedCategories,
+                        //setSelectedCategories,
                         onChange,
-                        setSelectedId,
-                        selectedId,
-                        setLabelOfSelectedId,
-                        labelOfSelectedId,
+                        //setSelectedId,
+                        //selectedId,
+                        //setLabelOfSelectedId,
+                        //labelOfSelectedId,
                         onSelectValue,
                     );
                 }}
@@ -219,13 +249,13 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 onClick={() =>
                     categoriesActivitiesBoxClick(
                         category,
-                        selectedCategories,
-                        setSelectedCategories,
+                        //selectedCategories,
+                        //setSelectedCategories,
                         onChange,
-                        setSelectedId,
-                        selectedId,
-                        setLabelOfSelectedId,
-                        labelOfSelectedId,
+                        //setSelectedId,
+                        //selectedId,
+                        //setLabelOfSelectedId,
+                        //labelOfSelectedId,
                         onSelectValue,
                     )
                 }
@@ -237,6 +267,32 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 )}
             </Box>
         );
+    };
+
+    const categoriesActivitiesBoxClick = (
+        selection: NomenclatureActivityOption,
+        //selectedCategories: NomenclatureActivityOption[],
+        //setSelectedCategories: (activities: NomenclatureActivityOption[]) => void,
+        onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+        //setSelectedId: (id: string | undefined) => void,
+        //selectedId: string | undefined,
+        //setLabelOfSelectedId: (label: string | undefined) => void,
+        //labelOfSelectedId: string | undefined,
+        onSelectValue: () => void,
+    ) => {
+        const id = selectedId == selection.id ? undefined : selection.id;
+        const label = labelOfSelectedId == selection.label ? undefined : selection.label;
+        if (selection.subs) {
+            const temp = [...selectedCategories];
+            temp.push(selection);
+            setSelectedCategories(temp);
+            onChange(false, id, undefined, undefined);
+        } else {
+            onChange(true, id, undefined, undefined);
+            setSelectedId(id);
+            setLabelOfSelectedId(label);
+            if (id != null) onSelectValue();
+        }
     };
 
     return (
@@ -500,32 +556,6 @@ const getSubRankCategoryClassName = (
         return cx(classes.subRankCategory, classes.selectedSubRankCategory);
     }
     return classes.subRankCategory;
-};
-
-const categoriesActivitiesBoxClick = (
-    selection: NomenclatureActivityOption,
-    selectedCategories: NomenclatureActivityOption[],
-    setSelectedCategories: (activities: NomenclatureActivityOption[]) => void,
-    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
-    setSelectedId: (id: string | undefined) => void,
-    selectedId: string | undefined,
-    setLabelOfSelectedId: (label: string | undefined) => void,
-    labelOfSelectedId: string | undefined,
-    onSelectValue: () => void,
-) => {
-    const id = selectedId == selection.id ? undefined : selection.id;
-    const label = labelOfSelectedId == selection.label ? undefined : selection.label;
-    if (selection.subs) {
-        const temp = [...selectedCategories];
-        temp.push(selection);
-        setSelectedCategories(temp);
-        onChange(false, id, undefined, undefined);
-    } else {
-        onChange(true, id, undefined, undefined);
-        setSelectedId(id);
-        setLabelOfSelectedId(label);
-        if (id != null) onSelectValue();
-    }
 };
 
 const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
