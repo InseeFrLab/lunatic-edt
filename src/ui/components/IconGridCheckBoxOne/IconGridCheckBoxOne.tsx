@@ -75,6 +75,8 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         next(true, setDisplayAlert, nextClickCallback);
     }, [displayAlert]);
 
+    const onClick = useCallback((option: CheckboxOneCustomOption) => () => optionOnClick(option), []);
+
     const renderOption = (option: CheckboxOneCustomOption) => {
         return (
             <Box
@@ -84,7 +86,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                         : classes.option
                 }
                 key={uuidv4()}
-                onClick={useCallback(() => optionOnClick(option), [])}
+                onClick={onClick(option)}
             >
                 {optionsIcons && <img className={classes.icon} src={optionsIcons[option.value]} />}
                 <Typography className={classes.optionLabel}>{option.label}</Typography>
