@@ -15,7 +15,12 @@ import { splitLabelWithParenthesis } from "../../../ui/utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Alert from "../Alert";
 import ClickableList from "../ClickableList";
-import { processSelectedValue } from "./activityUtils";
+import {
+    processActivityCategory,
+    processActivityAutocomplete,
+    processNewActivity,
+    findItemInCategoriesNomenclature,
+} from "./activityUtils";
 
 type ActivitySelecterProps = {
     handleChange(response: responseType, value: string | boolean | undefined): void;
@@ -56,8 +61,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     } = { ...componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
+    const [selectRank1Category, setSelectRank1Category] = useState<
+        NomenclatureActivityOption | undefined
+    >(undefined);
     const [createActivityValue, setCreateActivityValue] = useState<string | undefined>();
     const [selectedId, setSelectedId] = useState<string | undefined>();
+
     const [selectedSuggesterId, setSelectedSuggesterId] = useState<string | undefined>();
     const [labelOfSelectedId, setLabelOfSelectedId] = useState<string | undefined>();
     const [fullScreenComponent, setFullScreenComponent] = useState<FullScreenComponent>(
@@ -76,21 +85,45 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const { classes, cx } = useStyles();
 
     useEffect(() => {
-        value &&
-            categoriesAndActivitesNomenclature &&
-            processSelectedValue(
-                value,
-                idBindingDep,
-                suggesterIdBindingDep,
-                labelBindingDep,
-                isFullyCompletedBindingDep,
-                categoriesAndActivitesNomenclature,
-                setFullScreenComponent,
-                setSelectedId,
-                setSelectedSuggesterId,
-                setCreateActivityValue,
-                setSelectedCategories,
-            );
+        const parsedValue: SelectedActivity = {
+            id: value[idBindingDep.name] as string,
+            suggesterId: value[suggesterIdBindingDep.name] as string,
+            label: value[labelBindingDep.name] as string,
+            isFullyCompleted: value[isFullyCompletedBindingDep.name] as boolean,
+        };
+        setSelectRank1Category(findRank1Category());
+
+        const hasId: boolean = parsedValue.id != null;
+        const hasSuggesterId: boolean = parsedValue.suggesterId != null;
+        const hasLabel: boolean = parsedValue.label != null;
+
+        if (hasId && !hasLabel) {
+            value &&
+                categoriesAndActivitesNomenclature &&
+                processActivityCategory(
+                    parsedValue,
+                    categoriesAndActivitesNomenclature,
+                    setSelectedId,
+                    setSelectedCategories,
+                );
+        }
+
+        if (hasSuggesterId) {
+            value &&
+                processActivityAutocomplete(parsedValue, setFullScreenComponent, setSelectedSuggesterId);
+        }
+
+        if (hasLabel) {
+            value &&
+                categoriesAndActivitesNomenclature &&
+                processNewActivity(
+                    parsedValue,
+                    categoriesAndActivitesNomenclature,
+                    setFullScreenComponent,
+                    setCreateActivityValue,
+                    setSelectedCategories,
+                );
+        }
     }, []);
 
     useEffect(() => {
@@ -116,6 +149,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             next(
                 false,
                 {
+                    selectedCategory: selectRank1Category?.id,
                     selectedId: selectedId,
                     suggesterId: selectedSuggesterId,
                     fullScreenComponent: fullScreenComponent,
@@ -141,6 +175,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             label: activityLabel,
             isFullyCompleted: isFullyCompleted,
         };
+
         handleChange(idBindingDep, selection.id);
         handleChange(suggesterIdBindingDep, selection.suggesterId);
         handleChange(labelBindingDep, selection.label);
@@ -176,6 +211,11 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         onChange(isFully, id, undefined, e.target.value);
     };
 
+    /**
+     * Show categories of rang 2 or 3
+     * @param category category du first rang
+     * @returns
+     */
     const renderSubRangCategory = (category: NomenclatureActivityOption) => {
         return (
             <Box
@@ -188,17 +228,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 )}
                 key={uuidv4()}
                 onClick={() => {
-                    categoriesActivitiesBoxClick(
-                        category,
-                        selectedCategories,
-                        setSelectedCategories,
-                        onChange,
-                        setSelectedId,
-                        selectedId,
-                        setLabelOfSelectedId,
-                        labelOfSelectedId,
-                        onSelectValue,
-                    );
+                    categoriesActivitiesBoxClick(category, onChange, onSelectValue);
                 }}
             >
                 <Extension className={classes.optionIcon} />
@@ -208,27 +238,45 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         );
     };
 
+    /**
+     * Find category of rang 1 when selectionne categories of rang 2 or 3
+     */
+    const findRank1Category = () => {
+        const idSelected = value[idBindingDep.name] as string;
+        const isFullyCompleted = value[isFullyCompletedBindingDep.name] as boolean;
+        let category = undefined;
+        //if category of 3nd rang, get category 2n rang, other get category 1r rang
+        const categorySecondRang = findItemInCategoriesNomenclature(
+            idSelected,
+            categoriesAndActivitesNomenclature,
+        );
+        //if category of 2nd rang, get category 1r rang, other undefined
+        const categoryFirstRang = findItemInCategoriesNomenclature(
+            categorySecondRang?.parent?.id,
+            categoriesAndActivitesNomenclature,
+        );
+
+        category = categoryFirstRang?.parent == null ? categorySecondRang : categoryFirstRang;
+
+        return isFullyCompleted ? category?.parent : category?.item;
+    };
+
+    /**
+     * Show categories of rang 1
+     * @param category
+     * @returns
+     */
     const renderRank1Category = (category: NomenclatureActivityOption) => {
         const id = Number(category.id);
         const { mainLabel, secondLabel } = splitLabelWithParenthesis(category.label);
-
         return (
             <Box
-                className={classes.rank1Category}
+                className={cx(
+                    classes.rank1Category,
+                    selectRank1Category?.id == category.id ? classes.rank1CategorySelected : undefined,
+                )}
                 key={uuidv4()}
-                onClick={() =>
-                    categoriesActivitiesBoxClick(
-                        category,
-                        selectedCategories,
-                        setSelectedCategories,
-                        onChange,
-                        setSelectedId,
-                        selectedId,
-                        setLabelOfSelectedId,
-                        labelOfSelectedId,
-                        onSelectValue,
-                    )
-                }
+                onClick={() => categoriesActivitiesBoxClick(category, onChange, onSelectValue)}
             >
                 <img className={classes.icon} src={categoriesIcons[id]} />
                 <Typography className={classes.rank1MainLabel}>{mainLabel}</Typography>
@@ -237,6 +285,34 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 )}
             </Box>
         );
+    };
+
+    /**
+     * When category selected,
+     * if exist subcategories, save category selectionned uncompleted
+     * other save category completed
+     * @param selection
+     * @param onChange
+     * @param onSelectValue
+     */
+    const categoriesActivitiesBoxClick = (
+        selection: NomenclatureActivityOption,
+        onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+        onSelectValue: () => void,
+    ) => {
+        const id = selectedId == selection.id ? undefined : selection.id;
+        const label = labelOfSelectedId == selection.label ? undefined : selection.label;
+        if (selection.subs) {
+            const temp = [...selectedCategories];
+            temp.push(selection);
+            setSelectedCategories(temp);
+            onChange(false, id, undefined, undefined);
+        } else {
+            onChange(true, id, undefined, undefined);
+            setSelectedId(id);
+            setLabelOfSelectedId(label);
+            if (id != null) onSelectValue();
+        }
     };
 
     return (
@@ -250,6 +326,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             next(
                                 true,
                                 {
+                                    selectedCategory: selectRank1Category?.id,
                                     selectedId: selectedId,
                                     suggesterId: selectedSuggesterId,
                                     fullScreenComponent: fullScreenComponent,
@@ -401,9 +478,19 @@ const back = (
     }
 };
 
+/**
+ * Next step if doesn't need display alert
+ * @param continueWithUncompleted
+ * @param states
+ * @param setDisplayAlert
+ * @param nextClickCallback
+ * @param addToReferentielCallBack
+ * @param newItemId
+ */
 const next = (
     continueWithUncompleted: boolean,
     states: {
+        selectedCategory: string | undefined;
         selectedId: string | undefined;
         suggesterId: string | undefined;
         fullScreenComponent: FullScreenComponent;
@@ -417,12 +504,16 @@ const next = (
 ) => {
     let routeToGoal = true;
     let displayAlert1 =
-        states.selectedId === undefined && states.suggesterId === undefined && !continueWithUncompleted;
+        states.selectedCategory === undefined &&
+        states.selectedId === undefined &&
+        states.suggesterId === undefined &&
+        !continueWithUncompleted;
     let displayAlert2 =
         (states.createActivityValue === undefined || states.createActivityValue === "") &&
         !continueWithUncompleted;
 
     switch (states.fullScreenComponent) {
+        //option clickable list - when activity selected is one of sub category
         case FullScreenComponent.ClickableListComp:
             if (displayAlert1) {
                 setDisplayAlert(true);
@@ -433,6 +524,7 @@ const next = (
             }
             nextClickCallback(routeToGoal);
             break;
+        //option page principal - when activity selected is one category of first rang
         case FullScreenComponent.Main:
             if (displayAlert1) {
                 setDisplayAlert(true);
@@ -440,6 +532,7 @@ const next = (
             }
             nextClickCallback(false);
             break;
+        //option free input - when new activity or activity searched
         case FullScreenComponent.FreeInput:
             if (displayAlert2) {
                 setDisplayAlert(true);
@@ -502,32 +595,6 @@ const getSubRankCategoryClassName = (
     return classes.subRankCategory;
 };
 
-const categoriesActivitiesBoxClick = (
-    selection: NomenclatureActivityOption,
-    selectedCategories: NomenclatureActivityOption[],
-    setSelectedCategories: (activities: NomenclatureActivityOption[]) => void,
-    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
-    setSelectedId: (id: string | undefined) => void,
-    selectedId: string | undefined,
-    setLabelOfSelectedId: (label: string | undefined) => void,
-    labelOfSelectedId: string | undefined,
-    onSelectValue: () => void,
-) => {
-    const id = selectedId == selection.id ? undefined : selection.id;
-    const label = labelOfSelectedId == selection.label ? undefined : selection.label;
-    if (selection.subs) {
-        const temp = [...selectedCategories];
-        temp.push(selection);
-        setSelectedCategories(temp);
-        onChange(false, id, undefined, undefined);
-    } else {
-        onChange(true, id, undefined, undefined);
-        setSelectedId(id);
-        setLabelOfSelectedId(label);
-        if (id != null) onSelectValue();
-    }
-};
-
 const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
     root: {
         display: "flex",
@@ -580,6 +647,10 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         width: "45.5%",
         marginTop: "4%",
         borderRadius: "15px",
+    },
+    rank1CategorySelected: {
+        border: "2px solid #4973D2 !important",
+        fontWeight: "bold",
     },
     icon: {
         width: "80px",
