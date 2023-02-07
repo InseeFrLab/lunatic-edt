@@ -5,7 +5,6 @@ import React, { memo, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number; showlabel: string }) {
-    let labelTranslateX = props.value === 0 ? props.value : props.value - 2;
     const { classes } = useStyles();
     return (
         <Box className={classes.linearProgressBox}>
@@ -14,11 +13,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number; s
             </Box>
             <Box className={classes.labelBox}>
                 {props.showlabel && (
-                    <Typography
-                        className={classes.label}
-                        sx={{ transform: "translateX(" + labelTranslateX + "%)" }}
-                        color="primary"
-                    >
+                    <Typography className={classes.label} color="primary">
                         {props.value + "%"}
                     </Typography>
                 )}
