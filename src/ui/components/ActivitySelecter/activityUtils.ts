@@ -5,15 +5,22 @@ import {
 } from "interface/ActivityTypes";
 import { FullScreenComponent } from "./ActivitySelecter";
 
+/**
+ * Find category of activity
+ * @param id id of activity
+ * @param referentiel list of categories
+ * @param parent if category's activty is subcategory, list of subcategories
+ * @returns category's activity and upper category's
+ */
 export const findItemInCategoriesNomenclature = (
     id: string | undefined,
     referentiel: NomenclatureActivityOption[],
     parent?: NomenclatureActivityOption,
 ): { item: NomenclatureActivityOption; parent: NomenclatureActivityOption | undefined } | undefined => {
-    let categoriesFirstRang = referentiel.find(a => a.id === id);
-    if (categoriesFirstRang) {
+    let categoriesFirstRank = referentiel.find(a => a.id === id);
+    if (categoriesFirstRank) {
         return {
-            item: categoriesFirstRang,
+            item: categoriesFirstRank,
             parent: parent,
         };
     } else {
@@ -21,9 +28,9 @@ export const findItemInCategoriesNomenclature = (
             let subsubs = ref.subs;
             if (subsubs) {
                 //if category of activity have sub categories that match the selected item
-                let categoriesSecondRang = findItemInCategoriesNomenclature(id, subsubs, ref);
-                if (categoriesSecondRang) {
-                    return categoriesSecondRang;
+                let categoriesSecondRank = findItemInCategoriesNomenclature(id, subsubs, ref);
+                if (categoriesSecondRank) {
+                    return categoriesSecondRank;
                 }
             }
         }
@@ -37,6 +44,11 @@ export const findItemInAutoCompleteRef = (
     return ref.find(a => a.id === id);
 };
 
+/**
+ * Get category of upper rang of activity searched
+ * @param res
+ * @returns
+ */
 const getParentFromSearchResult = (
     res:
         | {
@@ -48,6 +60,11 @@ const getParentFromSearchResult = (
     return res?.parent ? [res?.parent] : [];
 };
 
+/**
+ * Get category of activity searched
+ * @param res
+ * @returns
+ */
 const getItemFromSearchResult = (
     res:
         | {
@@ -59,6 +76,9 @@ const getItemFromSearchResult = (
     return res?.item ? [res?.item] : [];
 };
 
+/**
+ * When selectionne activity with categories
+ */
 export const processActivityCategory = (
     parsedValue: SelectedActivity,
     categoriesAndActivitesNomenclature: NomenclatureActivityOption[],
@@ -78,6 +98,9 @@ export const processActivityCategory = (
     }
 };
 
+/**
+ * When search activity
+ */
 export const processActivityAutocomplete = (
     parsedValue: SelectedActivity,
     setFullScreenComponent: (screen: FullScreenComponent) => void,
@@ -87,6 +110,9 @@ export const processActivityAutocomplete = (
     setSelectedSuggesterId(parsedValue.suggesterId);
 };
 
+/**
+ * When selectionne option new activity
+ */
 export const processNewActivity = (
     parsedValue: SelectedActivity,
     categoriesAndActivitesNomenclature: NomenclatureActivityOption[],

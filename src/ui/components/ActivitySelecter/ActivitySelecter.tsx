@@ -212,11 +212,11 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     };
 
     /**
-     * Show categories of rang 2 or 3
-     * @param category category du first rang
+     * Show categories of rank 2 or 3
+     * @param category category du first rank
      * @returns
      */
-    const renderSubRangCategory = (category: NomenclatureActivityOption) => {
+    const renderSubRankCategory = (category: NomenclatureActivityOption) => {
         return (
             <Box
                 className={getSubRankCategoryClassName(
@@ -239,30 +239,30 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     };
 
     /**
-     * Find category of rang 1 when selectionne categories of rang 2 or 3
+     * Find category of rank 1 when selectionne categories of rank 2 or 3
      */
     const findRank1Category = () => {
         const idSelected = value[idBindingDep.name] as string;
         const isFullyCompleted = value[isFullyCompletedBindingDep.name] as boolean;
         let category = undefined;
-        //if category of 3nd rang, get category 2n rang, other get category 1r rang
-        const categorySecondRang = findItemInCategoriesNomenclature(
+        //if category of 3nd rank, get category 2n rank, other get category 1r rank
+        const categorySecondRank = findItemInCategoriesNomenclature(
             idSelected,
             categoriesAndActivitesNomenclature,
         );
-        //if category of 2nd rang, get category 1r rang, other undefined
-        const categoryFirstRang = findItemInCategoriesNomenclature(
-            categorySecondRang?.parent?.id,
+        //if category of 2nd rank, get category 1r rank, other undefined
+        const categoryFirstRank = findItemInCategoriesNomenclature(
+            categorySecondRank?.parent?.id,
             categoriesAndActivitesNomenclature,
         );
 
-        category = categoryFirstRang?.parent == null ? categorySecondRang : categoryFirstRang;
+        category = categoryFirstRank?.parent == null ? categorySecondRank : categoryFirstRank;
 
         return isFullyCompleted ? category?.parent : category?.item;
     };
 
     /**
-     * Show categories of rang 1
+     * Show categories of rank 1
      * @param category
      * @returns
      */
@@ -408,7 +408,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             ) : (
                                 <Box className={classes.rank1CategoriesBox}>
                                     {selectedCategories[selectedCategories.length - 1]?.subs?.map(s => {
-                                        return renderSubRangCategory(s);
+                                        return renderSubRankCategory(s);
                                     })}
                                     <Button
                                         className={classes.buttonOther}
@@ -524,7 +524,7 @@ const next = (
             }
             nextClickCallback(routeToGoal);
             break;
-        //option page principal - when activity selected is one category of first rang
+        //option page principal - when activity selected is one category of first rank
         case FullScreenComponent.Main:
             if (displayAlert1) {
                 setDisplayAlert(true);
