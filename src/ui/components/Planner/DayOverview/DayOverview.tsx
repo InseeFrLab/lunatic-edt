@@ -46,6 +46,10 @@ const fromDayDetailsToValues = (details: DayDetailType[]): LunaticMultiSelection
     return values;
 };
 
+/**
+ * This component is the one shown inside WeeklyPlanner component when the user choose a day to fullfil.
+ * It shows to the user a list of 24 Hourchecker components corresponding to an entire day.
+ */
 const DayOverview = memo((props: DayOverviewProps) => {
     const { classes } = useStyles();
     const { date, isDisplayed, rawTimeLineData, activityData, setActivityData, handleChangeData } =

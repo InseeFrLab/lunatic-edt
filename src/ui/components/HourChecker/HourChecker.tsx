@@ -53,6 +53,12 @@ const getClassName = (cx: any, className: any, classVisible: any, classHidden: a
     return cx(className, isOpen ? classVisible : classHidden);
 };
 
+/**
+ * This component is used to select fraction of hours.
+ * The entire hour is selectable at once clicking on the entire component
+ * After toggle the arrow button, the hour is divided per the size of reponses props,
+ * each fraction is individualy selectable.
+ */
 const HourChecker = memo((props: HourCheckerProps) => {
     const { id, value, label, responses, handleChange } = props;
     const [isOpen, setIsOpen] = React.useState(false);

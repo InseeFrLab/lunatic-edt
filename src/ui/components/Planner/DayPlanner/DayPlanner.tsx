@@ -55,6 +55,12 @@ const setDay = (setDayRelativeTime: any, date: Date, todayDate: Date) => {
     } else setDayRelativeTime(DayRelativeTimeEnum.Past);
 };
 
+/**
+ * This component is the one shown inside WeeklyPlanner component when the user still have to
+ * choose a day to fullfil.
+ * It allows the user to select the day he wants to fullfil and also give information about the status
+ * of the completion of this day.
+ */
 const DayPlanner = React.memo((props: DayPlannerProps) => {
     const { classes, cx } = useStyles();
     const {
