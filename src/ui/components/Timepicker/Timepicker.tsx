@@ -6,7 +6,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
 import React, { memo, useCallback, useEffect } from "react";
-import { FORMAT_TIME } from "ui/utils/constants/constants";
+import { FORMAT_TIME } from "../../utils/constants/constants";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 

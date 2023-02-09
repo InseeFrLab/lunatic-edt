@@ -2,7 +2,7 @@ import { Box, InputLabel, MenuItem, Select } from "@mui/material";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import React, { memo, useEffect } from "react";
-import { FORMAT_TIME } from "ui/utils/constants/constants";
+import { FORMAT_TIME } from "../../utils/constants/constants";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 

@@ -30,6 +30,7 @@ export type WeeklyPlannerSpecificProps = {
         futureButtonLabel: string;
     };
     saveAll(): void;
+    language: string;
 };
 
 export type ActivitySelecterSpecificProps = {

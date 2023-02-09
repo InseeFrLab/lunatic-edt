@@ -8,7 +8,7 @@ import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Timepicker from "../Timepicker/Timepicker";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { FORMAT_TIME, MINUTE_LABEL, START_TIME_DAY } from "ui/utils/constants/constants";
+import { FORMAT_TIME, MINUTE_LABEL, START_TIME_DAY } from "../../utils/constants/constants";
 
 export type ActivityTimeProps = {
     disabled?: boolean;

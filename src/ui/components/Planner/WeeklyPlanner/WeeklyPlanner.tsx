@@ -54,13 +54,14 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         labels,
         saveAll,
         setDisplayedDayHeader,
+        language,
     } = {
         ...componentSpecificProps,
     };
     const { classes } = useStyles();
 
     const data: WeeklyPlannerDataType[] | undefined =
-        value.length > 1 ? transformToWeeklyPlannerDataType(value) : undefined;
+        value.length > 1 ? transformToWeeklyPlannerDataType(value, language) : undefined;
     const startDate: string = surveyDate || "";
 
     const startDateFormated: Date = setDateTimeToZero(generateDateFromStringInput(startDate));
