@@ -30,6 +30,7 @@ export type WeeklyPlannerSpecificProps = {
         futureButtonLabel: string;
     };
     saveAll(): void;
+    language: string;
 };
 
 export type ActivitySelecterSpecificProps = {
@@ -109,6 +110,7 @@ export type TimepickerSpecificProps = {
     activitiesAct: Activity[];
     defaultValue?: boolean;
     gapToFillIndex?: number;
+    constants: any;
 };
 
 export type CheckboxBooleanEdtSpecificProps = {

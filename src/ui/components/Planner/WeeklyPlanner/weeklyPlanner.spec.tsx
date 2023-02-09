@@ -48,6 +48,7 @@ describe("weeklyPlannerComponent", () => {
             futureButtonLabel: futureButtonLable,
         },
         saveAll: saveAll,
+        language: "fr",
     };
 
     const renderElement = (valueData: IODataStructure[]): RenderResult => {
@@ -172,7 +173,7 @@ describe("weeklyPlannerFunctions", () => {
     ];
 
     it("transform to weekly planner type", () => {
-        expect(transformToWeeklyPlannerDataType(IOData)).toEqual(WeeklyPlannerData);
+        expect(transformToWeeklyPlannerDataType(IOData, "fr")).toEqual(WeeklyPlannerData);
     });
 
     it("transform to IO data structure", () => {

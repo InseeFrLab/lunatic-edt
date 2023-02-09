@@ -12,7 +12,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 export type ActivityTimeProps = {
     disabled?: boolean;
     readOnly?: boolean;
-    value?: { STARTTIME: any; ENDTIME: any };
+    value?: { START_TIME: any; END_TIME: any };
     handleChange(response: { [name: string]: string }, value: string | null): void;
     label?: string;
     startTimeLabel?: string;
@@ -21,9 +21,6 @@ export type ActivityTimeProps = {
     responses: { response: { [name: string]: string } }[];
     componentSpecificProps?: TimepickerSpecificProps;
 };
-
-const START_TIME_DAY = "04:00";
-const FORMAT_TIME = "HH:mm";
 
 const ActivityTime = memo((props: ActivityTimeProps) => {
     const {
@@ -47,44 +44,51 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
     ) => {
         let time;
         if (valueData) {
-            time = dayjs(valueData, FORMAT_TIME);
+            time = dayjs(valueData, componentSpecificProps?.constants.FORMAT_TIME);
         } else {
             if (defaultValue && activities && activities.length > 0) {
-                time = dayjs(activities[activities.length - 1]?.endTime, FORMAT_TIME);
+                time = dayjs(
+                    activities[activities.length - 1]?.endTime,
+                    componentSpecificProps?.constants.FORMAT_TIME,
+                );
             } else {
-                time = dayjs(START_TIME_DAY, FORMAT_TIME);
+                time = dayjs(
+                    componentSpecificProps?.constants.START_TIME_DAY,
+                    componentSpecificProps?.constants.FORMAT_TIME,
+                );
             }
         }
 
         if (time.isValid() && time.minute() % 5 != 0) {
             const iterations = Math.trunc(time.minute() / 5) + 1;
-            time = time.set("minute", 0);
-            time = time.add(iterations * 5, "minute");
+            time = time.set(componentSpecificProps?.constants.MINUTE_LABEL, 0);
+            time = time.add(iterations * 5, componentSpecificProps?.constants.MINUTE_LABEL);
         }
         return time;
     };
-
     const startTimeComputed = computeStartTime(
         componentSpecificProps?.activitiesAct,
-        value?.STARTTIME,
+        value?.START_TIME,
         componentSpecificProps?.defaultValue,
     );
 
-    const [startTime] = React.useState<string | undefined>(startTimeComputed.format(FORMAT_TIME));
-    const [endTime, setEndTime] = React.useState<string | undefined>(value?.ENDTIME);
+    const [startTime] = React.useState<string | undefined>(
+        startTimeComputed.format(componentSpecificProps?.constants.FORMAT_TIME),
+    );
+    const [endTime, setEndTime] = React.useState<string | undefined>(value?.END_TIME);
 
     useEffect(() => {
         dayjs.extend(customParseFormat);
         const startTimeComputed = computeStartTime(
             componentSpecificProps?.activitiesAct,
-            value?.STARTTIME,
+            value?.START_TIME,
             componentSpecificProps?.defaultValue,
         );
-        if (endTime == null || startTime != value?.STARTTIME) {
-            let endTimeDay = startTimeComputed.add(5, "minute");
-            setEndTime(endTimeDay.format(FORMAT_TIME));
+        if (endTime == null || startTime != value?.START_TIME) {
+            let endTimeDay = startTimeComputed.add(5, componentSpecificProps?.constants.MINUTE_LABEL);
+            setEndTime(endTimeDay.format(componentSpecificProps?.constants.FORMAT_TIME));
         }
-    }, [value?.STARTTIME]);
+    }, [value?.START_TIME]);
 
     return (
         <>
@@ -99,6 +103,7 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
                 tipsLabel={startTimeLabel}
                 id={id}
                 value={startTime}
+                componentSpecificProps={componentSpecificProps}
             />
             <Timepicker
                 response={responses[1].response}
@@ -108,6 +113,7 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
                 tipsLabel={endTimeLabel}
                 id={id}
                 value={endTime}
+                componentSpecificProps={componentSpecificProps}
             />
         </>
     );

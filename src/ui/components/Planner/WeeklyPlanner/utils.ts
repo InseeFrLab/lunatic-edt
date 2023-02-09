@@ -1,5 +1,8 @@
+import dayjs from "dayjs";
+import "dayjs/locale/fr";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { DayDetailType, IODataStructure, WeeklyPlannerDataType } from "interface/WeeklyPlannerTypes";
-import { convertTime, generateDateFromStringInput, getFrenchDayFromDate } from "../../../utils";
+import { convertTime } from "../../../utils";
 
 export const INTERVAL = 15;
 const DAY_TIME_SEPARATOR = "_";
@@ -15,7 +18,30 @@ const convertTimeAsDate = (time: string): Date => {
     return result;
 };
 
-export const transformToWeeklyPlannerDataType = (input: IODataStructure[]): WeeklyPlannerDataType[] => {
+const keyWithoutSeparator = (
+    currentDetail: DayDetailType | undefined,
+    currentDay: WeeklyPlannerDataType,
+    value: string,
+    language: string,
+) => {
+    if (currentDetail) {
+        currentDay.detail.push(currentDetail);
+    }
+    dayjs.extend(relativeTime);
+    const dayFormatted = dayjs(value).locale(language).format("dddd");
+    currentDay = {
+        hasBeenStarted: false,
+        date: value,
+        day: dayFormatted,
+        detail: [],
+    };
+    return currentDay;
+};
+
+export const transformToWeeklyPlannerDataType = (
+    input: IODataStructure[],
+    language: string,
+): WeeklyPlannerDataType[] => {
     const result: WeeklyPlannerDataType[] = [];
     let currentDay: WeeklyPlannerDataType = {
         hasBeenStarted: false,
@@ -32,16 +58,8 @@ export const transformToWeeklyPlannerDataType = (input: IODataStructure[]): Week
             const key = Object.keys(i)[0];
             const value = Object.values(i)[0];
             if (!key.includes(DAY_TIME_SEPARATOR)) {
-                if (currentDetail) {
-                    currentDay.detail.push(currentDetail);
-                }
+                currentDay = keyWithoutSeparator(currentDetail, currentDay, value, language);
                 currentDetail = undefined;
-                currentDay = {
-                    hasBeenStarted: false,
-                    date: value,
-                    day: getFrenchDayFromDate(generateDateFromStringInput(value)),
-                    detail: [],
-                };
                 result.push(currentDay);
             } else if (key.includes(STARTED_LABEL)) {
                 currentDay.hasBeenStarted = value === "true";
