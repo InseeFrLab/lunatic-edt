@@ -6,6 +6,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
 import React, { memo, useCallback, useEffect } from "react";
+import { FORMAT_TIME } from "ui/utils/constants/constants";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -27,18 +28,18 @@ const Timepicker = memo((props: TimepickerProps) => {
     const [valueLocal, setValue] = React.useState<Dayjs | undefined>();
 
     useEffect(() => {
-        setValue(dayjs(value, "HH:mm"));
+        setValue(dayjs(value, FORMAT_TIME));
     }, [value]);
 
     useEffect(() => {
         if (valueLocal != undefined && valueLocal?.isValid())
-            handleChange(response, valueLocal?.format("HH:mm") || null);
+            handleChange(response, valueLocal?.format(FORMAT_TIME) || null);
     }, [valueLocal]);
 
     function setValueLunatic(newValue: Dayjs | null) {
         if (newValue != undefined && newValue?.isValid()) {
             setValue(newValue);
-            handleChange(response, newValue?.format("HH:mm") || null);
+            handleChange(response, newValue?.format(FORMAT_TIME) || null);
         }
     }
 

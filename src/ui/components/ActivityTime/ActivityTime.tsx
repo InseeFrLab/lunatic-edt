@@ -8,11 +8,12 @@ import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Timepicker from "../Timepicker/Timepicker";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { FORMAT_TIME, MINUTE_LABEL, START_TIME_DAY } from "ui/utils/constants/constants";
 
 export type ActivityTimeProps = {
     disabled?: boolean;
     readOnly?: boolean;
-    value?: { STARTTIME: any; ENDTIME: any };
+    value?: { START_TIME: any; END_TIME: any };
     handleChange(response: { [name: string]: string }, value: string | null): void;
     label?: string;
     startTimeLabel?: string;
@@ -21,9 +22,6 @@ export type ActivityTimeProps = {
     responses: { response: { [name: string]: string } }[];
     componentSpecificProps?: TimepickerSpecificProps;
 };
-
-const START_TIME_DAY = "04:00";
-const FORMAT_TIME = "HH:mm";
 
 const ActivityTime = memo((props: ActivityTimeProps) => {
     const {
@@ -63,28 +61,28 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
         }
         return time;
     };
-
+    console.log(value);
     const startTimeComputed = computeStartTime(
         componentSpecificProps?.activitiesAct,
-        value?.STARTTIME,
+        value?.START_TIME,
         componentSpecificProps?.defaultValue,
     );
 
     const [startTime] = React.useState<string | undefined>(startTimeComputed.format(FORMAT_TIME));
-    const [endTime, setEndTime] = React.useState<string | undefined>(value?.ENDTIME);
+    const [endTime, setEndTime] = React.useState<string | undefined>(value?.END_TIME);
 
     useEffect(() => {
         dayjs.extend(customParseFormat);
         const startTimeComputed = computeStartTime(
             componentSpecificProps?.activitiesAct,
-            value?.STARTTIME,
+            value?.START_TIME,
             componentSpecificProps?.defaultValue,
         );
-        if (endTime == null || startTime != value?.STARTTIME) {
-            let endTimeDay = startTimeComputed.add(5, "minute");
+        if (endTime == null || startTime != value?.START_TIME) {
+            let endTimeDay = startTimeComputed.add(5, MINUTE_LABEL);
             setEndTime(endTimeDay.format(FORMAT_TIME));
         }
-    }, [value?.STARTTIME]);
+    }, [value?.START_TIME]);
 
     return (
         <>
