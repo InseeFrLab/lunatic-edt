@@ -8,7 +8,6 @@ import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Timepicker from "../Timepicker/Timepicker";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { FORMAT_TIME, MINUTE_LABEL, START_TIME_DAY } from "../../utils/constants/constants";
 
 export type ActivityTimeProps = {
     disabled?: boolean;
@@ -45,30 +44,37 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
     ) => {
         let time;
         if (valueData) {
-            time = dayjs(valueData, FORMAT_TIME);
+            time = dayjs(valueData, componentSpecificProps?.constants.FORMAT_TIME);
         } else {
             if (defaultValue && activities && activities.length > 0) {
-                time = dayjs(activities[activities.length - 1]?.endTime, FORMAT_TIME);
+                time = dayjs(
+                    activities[activities.length - 1]?.endTime,
+                    componentSpecificProps?.constants.FORMAT_TIME,
+                );
             } else {
-                time = dayjs(START_TIME_DAY, FORMAT_TIME);
+                time = dayjs(
+                    componentSpecificProps?.constants.START_TIME_DAY,
+                    componentSpecificProps?.constants.FORMAT_TIME,
+                );
             }
         }
 
         if (time.isValid() && time.minute() % 5 != 0) {
             const iterations = Math.trunc(time.minute() / 5) + 1;
-            time = time.set("minute", 0);
-            time = time.add(iterations * 5, "minute");
+            time = time.set(componentSpecificProps?.constants.MINUTE_LABEL, 0);
+            time = time.add(iterations * 5, componentSpecificProps?.constants.MINUTE_LABEL);
         }
         return time;
     };
-    console.log(value);
     const startTimeComputed = computeStartTime(
         componentSpecificProps?.activitiesAct,
         value?.START_TIME,
         componentSpecificProps?.defaultValue,
     );
 
-    const [startTime] = React.useState<string | undefined>(startTimeComputed.format(FORMAT_TIME));
+    const [startTime] = React.useState<string | undefined>(
+        startTimeComputed.format(componentSpecificProps?.constants.FORMAT_TIME),
+    );
     const [endTime, setEndTime] = React.useState<string | undefined>(value?.END_TIME);
 
     useEffect(() => {
@@ -79,8 +85,8 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
             componentSpecificProps?.defaultValue,
         );
         if (endTime == null || startTime != value?.START_TIME) {
-            let endTimeDay = startTimeComputed.add(5, MINUTE_LABEL);
-            setEndTime(endTimeDay.format(FORMAT_TIME));
+            let endTimeDay = startTimeComputed.add(5, componentSpecificProps?.constants.MINUTE_LABEL);
+            setEndTime(endTimeDay.format(componentSpecificProps?.constants.FORMAT_TIME));
         }
     }, [value?.START_TIME]);
 
@@ -97,6 +103,7 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
                 tipsLabel={startTimeLabel}
                 id={id}
                 value={startTime}
+                componentSpecificProps={componentSpecificProps}
             />
             <Timepicker
                 response={responses[1].response}
@@ -106,6 +113,7 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
                 tipsLabel={endTimeLabel}
                 id={id}
                 value={endTime}
+                componentSpecificProps={componentSpecificProps}
             />
         </>
     );

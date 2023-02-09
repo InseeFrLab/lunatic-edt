@@ -5,8 +5,8 @@ import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
+import { TimepickerSpecificProps } from "interface";
 import React, { memo, useCallback, useEffect } from "react";
-import { FORMAT_TIME } from "../../utils/constants/constants";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -19,27 +19,44 @@ export type TimepickerProps = {
     tipsLabel?: string;
     id?: string;
     response: { [name: string]: string };
+    componentSpecificProps?: TimepickerSpecificProps;
 };
 
 const Timepicker = memo((props: TimepickerProps) => {
-    const { id, response, handleChange, value, readOnly, disabled, label, tipsLabel } = props;
+    const {
+        id,
+        response,
+        handleChange,
+        value,
+        readOnly,
+        disabled,
+        label,
+        tipsLabel,
+        componentSpecificProps,
+    } = props;
     const { classes } = useStyles();
 
     const [valueLocal, setValue] = React.useState<Dayjs | undefined>();
 
     useEffect(() => {
-        setValue(dayjs(value, FORMAT_TIME));
+        setValue(dayjs(value, componentSpecificProps?.constants.FORMAT_TIME));
     }, [value]);
 
     useEffect(() => {
         if (valueLocal != undefined && valueLocal?.isValid())
-            handleChange(response, valueLocal?.format(FORMAT_TIME) || null);
+            handleChange(
+                response,
+                valueLocal?.format(componentSpecificProps?.constants.FORMAT_TIME) || null,
+            );
     }, [valueLocal]);
 
     function setValueLunatic(newValue: Dayjs | null) {
         if (newValue != undefined && newValue?.isValid()) {
             setValue(newValue);
-            handleChange(response, newValue?.format(FORMAT_TIME) || null);
+            handleChange(
+                response,
+                newValue?.format(componentSpecificProps?.constants.FORMAT_TIME) || null,
+            );
         }
     }
 

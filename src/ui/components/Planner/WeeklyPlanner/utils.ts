@@ -28,7 +28,6 @@ const keyWithoutSeparator = (
         currentDay.detail.push(currentDetail);
     }
     dayjs.extend(relativeTime);
-    console.log();
     const dayFormatted = dayjs(value).locale(language).format("dddd");
     currentDay = {
         hasBeenStarted: false,
