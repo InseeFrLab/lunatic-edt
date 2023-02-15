@@ -1,7 +1,8 @@
-import { CircularProgress, List, Typography } from "@mui/material";
+import { CircularProgress, IconButton, List, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { WeeklyPlannerSpecificProps } from "interface";
 import React, { memo, useEffect } from "react";
+import Info from "../../Info";
 import { v4 as uuidv4 } from "uuid";
 import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
@@ -22,6 +23,7 @@ import {
     transformToIODataStructure,
     transformToWeeklyPlannerDataType,
 } from "./utils";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 export type WeeklyPlannerProps = {
     handleChange(response: { [name: string]: string }, value: IODataStructure[]): void;
@@ -71,6 +73,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         React.useState<Date>(startDateFormated);
     const [activityData, setActivityData] = React.useState<WeeklyPlannerDataType[]>([]);
     const [needSpinner, setNeedSpinner] = React.useState<boolean>(true);
+    const [displayInfo, setDisplayInfo] = React.useState<boolean>(false);
 
     const formateDateLabel = (date: Date): string => {
         const formatedDate = formateDateToFrenchFormat(date);
@@ -122,6 +125,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         return isSubChildDisplayed ? "none" : "inline";
     };
 
+    const getInfobuleDisplay = () => {
+        return getProgressBarValue(activityData) == 0 || displayInfo;
+    };
+
     return (
         <Box id="root-box">
             <DayOverview
@@ -133,29 +140,51 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 handleChangeData={handleChange}
             ></DayOverview>
             {activityData.length !== 0 && needSpinner ? (
-                <Box display={getMainDisplay()}>
-                    <ProgressBar
-                        className={classes.progressBar}
-                        value={getProgressBarValue(activityData)}
-                        showlabel={true}
-                    />
-                    <Typography className={classes.title}>{labels.title}</Typography>
-                    <List className={classes.listContainer}>
-                        {dayList.map(d => (
-                            <DayPlanner
-                                date={d}
-                                key={uuidv4()}
-                                setDisplayDayOverview={setIsSubChildDisplayed}
-                                setDayOverviewSelectedDate={setDayOverviewSelectedDate}
-                                activityData={activityData}
-                                setActivityData={setActivityData}
-                                workSumLabel={labels.workSumLabel}
-                                presentButtonLabel={labels.presentButtonLabel}
-                                futureButtonLabel={labels.futureButtonLabel}
-                            ></DayPlanner>
-                        ))}
-                    </List>
-                </Box>
+                <>
+                    <Box display={getMainDisplay()}>
+                        <ProgressBar
+                            className={classes.progressBar}
+                            value={getProgressBarValue(activityData)}
+                            showlabel={true}
+                        />
+                        <Box className={classes.titleBox}>
+                            <Typography className={classes.title}>{labels.title}</Typography>
+                            <Tooltip
+                                title="Info"
+                                className={
+                                    getProgressBarValue(activityData) == 0
+                                        ? classes.hiddenBox
+                                        : classes.iconBox
+                                }
+                            >
+                                <IconButton onClick={() => setDisplayInfo(!displayInfo)}>
+                                    <InfoOutlinedIcon className={classes.iconInfoBox} />
+                                </IconButton>
+                            </Tooltip>
+                        </Box>
+
+                        {labels && (
+                            <Box className={getInfobuleDisplay() ? classes.infoBox : classes.hiddenBox}>
+                                <Info {...labels.infoLabels} />
+                            </Box>
+                        )}
+                        <List className={classes.listContainer}>
+                            {dayList.map(d => (
+                                <DayPlanner
+                                    date={d}
+                                    key={uuidv4()}
+                                    setDisplayDayOverview={setIsSubChildDisplayed}
+                                    setDayOverviewSelectedDate={setDayOverviewSelectedDate}
+                                    activityData={activityData}
+                                    setActivityData={setActivityData}
+                                    workSumLabel={labels.workSumLabel}
+                                    presentButtonLabel={labels.presentButtonLabel}
+                                    futureButtonLabel={labels.futureButtonLabel}
+                                ></DayPlanner>
+                            ))}
+                        </List>
+                    </Box>
+                </>
             ) : (
                 !isSubChildDisplayed && <CircularProgress />
             )}
@@ -170,7 +199,6 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
         paddingBottom: "6rem",
     },
     title: {
-        marginTop: "2rem",
         fontSize: "14px",
     },
     progressBar: {
@@ -181,6 +209,23 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
         overflowX: "hidden",
         //Orchestrator content width is limited to 350px, 175px correspond to half if it
         transform: "translateX(calc(175px - 50vw))",
+    },
+    titleBox: {
+        display: "flex",
+        marginTop: "2rem",
+    },
+    hiddenBox: {
+        display: "none",
+    },
+    infoBox: {
+        margin: "1rem 0rem",
+    },
+    iconBox: {
+        padding: "0rem 0.5rem",
+    },
+    iconInfoBox: {
+        color: theme.palette.secondary.main,
+        height: "fit-content",
     },
 }));
 

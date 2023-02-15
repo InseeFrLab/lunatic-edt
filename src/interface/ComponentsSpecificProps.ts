@@ -17,6 +17,14 @@ export type ActivityLabelProps = {
     otherButton: string;
 };
 
+export type InfoProps = {
+    normalText: string;
+    boldText: string;
+    infoIcon: string;
+    infoIconAlt: string;
+    border: boolean;
+};
+
 export type WeeklyPlannerSpecificProps = {
     surveyDate?: string;
     isSubChildDisplayed: boolean;
@@ -28,6 +36,7 @@ export type WeeklyPlannerSpecificProps = {
         workSumLabel: string;
         presentButtonLabel: string;
         futureButtonLabel: string;
+        infoLabels: InfoProps;
     };
     saveAll(): void;
     language: string;
