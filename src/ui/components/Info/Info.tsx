@@ -18,12 +18,12 @@ const Info = memo((props: InfoProps) => {
                 )}
                 <Box>
                     {normalText && (
-                        <Box className={classes.title}>
+                        <Box>
                             <p className={classes.text}>{normalText}</p>
                         </Box>
                     )}
                     {boldText && (
-                        <Box className={classes.tips}>
+                        <Box>
                             <p className={classes.textBold}>{boldText}</p>
                         </Box>
                     )}
@@ -38,12 +38,11 @@ const useStyles = makeStylesEdt({ "name": { Info } })(theme => ({
         backgroundColor: theme.variables.white,
         border: "1px dashed " + theme.variables.neutral,
         borderRadius: "13px",
-        //margin: "1rem",
+        marginTop: "1rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-between",
-        //padding: "1rem 1rem 1rem 0",
         maxWidth: "520px",
     },
     titleWithIcon: {
@@ -58,12 +57,6 @@ const useStyles = makeStylesEdt({ "name": { Info } })(theme => ({
         display: "flex",
         justifyContent: "center",
         paddingTop: "1rem",
-    },
-    title: {
-        //width: "85%",
-    },
-    tips: {
-        //width: "85%",
     },
     text: {
         color: theme.palette.action.hover,

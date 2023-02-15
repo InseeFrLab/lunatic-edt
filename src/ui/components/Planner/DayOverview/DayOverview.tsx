@@ -1,5 +1,7 @@
 import { Box, List, Typography } from "@mui/material";
+import { InfoProps } from "interface";
 import React, { memo, useEffect } from "react";
+import TooltipInfo from "../../TooltipInfo";
 import { v4 as uuidv4 } from "uuid";
 import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
 import { LunaticMultiSelectionValues } from "../../../../interface/LunaticMultiSelectionValues";
@@ -21,6 +23,7 @@ export type DayOverviewProps = {
     activityData: WeeklyPlannerDataType[];
     setActivityData(data: WeeklyPlannerDataType[]): void;
     handleChangeData(response: { [name: string]: string }, value: IODataStructure[]): void;
+    infoLabels: InfoProps;
 };
 
 /**
@@ -52,8 +55,15 @@ const fromDayDetailsToValues = (details: DayDetailType[]): LunaticMultiSelection
  */
 const DayOverview = memo((props: DayOverviewProps) => {
     const { classes } = useStyles();
-    const { date, isDisplayed, rawTimeLineData, activityData, setActivityData, handleChangeData } =
-        props;
+    const {
+        date,
+        isDisplayed,
+        rawTimeLineData,
+        activityData,
+        setActivityData,
+        handleChangeData,
+        infoLabels,
+    } = props;
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
     const [timeLineData, setTimeLineData] = React.useState<TimeLineRowType[]>(rawTimeLineData);
@@ -173,6 +183,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
                         isPrimaryMainColor={true}
                     />
                 </Box>
+                <TooltipInfo infoLabels={infoLabels} />
             </Box>
 
             <List className={classes.listContainer}>{timeLineData.map(l => renderRow(l))}</List>
