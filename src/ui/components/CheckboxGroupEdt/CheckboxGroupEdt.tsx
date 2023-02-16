@@ -96,7 +96,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                 {label && (
                     <>
                         <Box className={classes.labelSpacer}></Box>
-                        <label>{label}</label>
+                        <label>{label}&nbsp;?</label>
                     </>
                 )}
                 {tipsLabel && (

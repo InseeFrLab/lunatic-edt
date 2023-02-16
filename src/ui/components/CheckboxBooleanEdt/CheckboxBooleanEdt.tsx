@@ -92,7 +92,7 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
             )}
             <Box>
                 <Box className={classes.labelSpacer}>
-                    <label>{label}</label>
+                    <label>{label}&nbsp;?</label>
                 </Box>
                 <ToggleButtonGroup
                     orientation="horizontal"

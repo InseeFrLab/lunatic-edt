@@ -111,7 +111,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                         errorIconAlt={labels.alertAlticon}
                     ></Alert>
                     <Box className={classes.root}>
-                        <Typography className={classes.title}>{label}</Typography>
+                        <Typography className={classes.title}>{label}&nbsp;?</Typography>
                     </Box>
 
                     <Box className={classes.optionsBox}>
