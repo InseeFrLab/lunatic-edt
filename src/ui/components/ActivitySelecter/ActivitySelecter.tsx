@@ -287,6 +287,16 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         );
     };
 
+    const renderTitle = () => {
+        return selectedCategories.length === 0 ? (
+            <Typography className={classes.title}>{label}&nbsp;?</Typography>
+        ) : (
+            <Typography className={classes.title}>
+                {getTextTitle(fullScreenComponent, selectedCategories, labels, label)}
+            </Typography>
+        );
+    };
+
     /**
      * When category selected,
      * if exist subcategories, save category selectionned uncompleted
@@ -367,9 +377,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
 
                     {fullScreenComponent === FullScreenComponent.FreeInput && (
                         <Box className={classes.root}>
-                            <Typography className={classes.title}>
-                                {getTextTitle(fullScreenComponent, selectedCategories, labels, label)}
-                            </Typography>
+                            {renderTitle()}
                             <TextField
                                 value={createActivityValue}
                                 className={classes.freeInputTextField}
@@ -381,9 +389,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
 
                     {fullScreenComponent === FullScreenComponent.Main && (
                         <Box className={classes.root}>
-                            <Typography className={classes.title}>
-                                {getTextTitle(fullScreenComponent, selectedCategories, labels, label)}
-                            </Typography>
+                            {renderTitle()}
 
                             {selectedCategories.length === 0 && (
                                 <Box

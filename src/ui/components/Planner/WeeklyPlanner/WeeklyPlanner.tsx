@@ -1,4 +1,4 @@
-import { CircularProgress, List, Typography } from "@mui/material";
+import { CircularProgress, List } from "@mui/material";
 import { Box } from "@mui/system";
 import { WeeklyPlannerSpecificProps } from "interface";
 import React, { memo, useEffect } from "react";
@@ -15,6 +15,7 @@ import {
 } from "../../../utils";
 import { createCustomizableLunaticField } from "../../../utils/create-customizable-lunatic-field";
 import ProgressBar from "../../ProgressBar";
+import TooltipInfo from "../../TooltipInfo";
 import DayOverview from "../DayOverview/DayOverview";
 import DayPlanner from "../DayPlanner/DayPlanner";
 import {
@@ -122,6 +123,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         return isSubChildDisplayed ? "none" : "inline";
     };
 
+    const titleLabels = {
+        normalTitle: labels.title,
+    };
+
     return (
         <Box id="root-box">
             <DayOverview
@@ -131,31 +136,38 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 activityData={activityData}
                 setActivityData={setActivityData}
                 handleChangeData={handleChange}
+                infoLabels={labels.infoLabels}
             ></DayOverview>
             {activityData.length !== 0 && needSpinner ? (
-                <Box display={getMainDisplay()}>
-                    <ProgressBar
-                        className={classes.progressBar}
-                        value={getProgressBarValue(activityData)}
-                        showlabel={true}
-                    />
-                    <Typography className={classes.title}>{labels.title}</Typography>
-                    <List className={classes.listContainer}>
-                        {dayList.map(d => (
-                            <DayPlanner
-                                date={d}
-                                key={uuidv4()}
-                                setDisplayDayOverview={setIsSubChildDisplayed}
-                                setDayOverviewSelectedDate={setDayOverviewSelectedDate}
-                                activityData={activityData}
-                                setActivityData={setActivityData}
-                                workSumLabel={labels.workSumLabel}
-                                presentButtonLabel={labels.presentButtonLabel}
-                                futureButtonLabel={labels.futureButtonLabel}
-                            ></DayPlanner>
-                        ))}
-                    </List>
-                </Box>
+                <>
+                    <Box display={getMainDisplay()}>
+                        <ProgressBar
+                            className={classes.progressBar}
+                            value={getProgressBarValue(activityData)}
+                            showlabel={true}
+                        />
+                        <TooltipInfo
+                            infoLabels={labels.infoLabels}
+                            titleLabels={titleLabels}
+                            displayTooltip={getProgressBarValue(activityData) == 0}
+                        />
+                        <List className={classes.listContainer}>
+                            {dayList.map(d => (
+                                <DayPlanner
+                                    date={d}
+                                    key={uuidv4()}
+                                    setDisplayDayOverview={setIsSubChildDisplayed}
+                                    setDayOverviewSelectedDate={setDayOverviewSelectedDate}
+                                    activityData={activityData}
+                                    setActivityData={setActivityData}
+                                    workSumLabel={labels.workSumLabel}
+                                    presentButtonLabel={labels.presentButtonLabel}
+                                    futureButtonLabel={labels.futureButtonLabel}
+                                ></DayPlanner>
+                            ))}
+                        </List>
+                    </Box>
+                </>
             ) : (
                 !isSubChildDisplayed && <CircularProgress />
             )}
@@ -168,10 +180,6 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
         display: "flex",
         flexDirection: "column",
         paddingBottom: "6rem",
-    },
-    title: {
-        marginTop: "2rem",
-        fontSize: "14px",
     },
     progressBar: {
         padding: "1rem",

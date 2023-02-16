@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { theme } from "./../../../theme";
 
 import { ThemeProvider } from "@mui/material";
-import { WeeklyPlannerSpecificProps } from "interface";
+import { InfoProps, WeeklyPlannerSpecificProps } from "interface";
 import { IODataStructure, WeeklyPlannerDataType } from "interface/WeeklyPlannerTypes";
 import { generateStringInputFromDate } from "../../../utils";
 import { transformToIODataStructure, transformToWeeklyPlannerDataType } from "./utils";
@@ -15,6 +15,13 @@ describe("weeklyPlannerComponent", () => {
     const presentButtonLabel = "continuer";
     const futureButtonLable = "commencer";
     const title = "titre";
+    const infoLabels: InfoProps = {
+        normalText: "",
+        boldText: "",
+        infoIconAlt: "",
+        infoIcon: "",
+        border: false,
+    };
 
     // Set the surveyDate to today
     let surveyDate: Date = new Date();
@@ -46,6 +53,7 @@ describe("weeklyPlannerComponent", () => {
             workSumLabel: workSumLabel,
             presentButtonLabel: presentButtonLabel,
             futureButtonLabel: futureButtonLable,
+            infoLabels: infoLabels,
         },
         saveAll: saveAll,
         language: "fr",
