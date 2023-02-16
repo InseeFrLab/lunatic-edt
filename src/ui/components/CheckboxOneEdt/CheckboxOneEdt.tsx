@@ -103,6 +103,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         if (nextClickCallback) next(true, setDisplayAlert, nextClickCallback);
     }, [displayAlert]);
 
+    console.log(componentSpecificProps);
     return (
         <>
             {labels && (
@@ -167,15 +168,16 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                             )}
                         </ToggleButtonGroup>
                     )}
-                    {options && componentSpecificProps?.labelsSpecifics?.otherButtonLabel && (
-                        <Box>
-                            <Box className={classes.centerBox}>
-                                <Button variant="contained" onClick={onAddNewOption}>
-                                    {componentSpecificProps.labelsSpecifics?.otherButtonLabel}
-                                </Button>
+                    {(componentSpecificProps?.options ?? options) &&
+                        componentSpecificProps?.labelsSpecifics?.otherButtonLabel && (
+                            <Box>
+                                <Box className={classes.centerBox}>
+                                    <Button variant="contained" onClick={onAddNewOption}>
+                                        {componentSpecificProps.labelsSpecifics?.otherButtonLabel}
+                                    </Button>
+                                </Box>
                             </Box>
-                        </Box>
-                    )}
+                        )}
                 </Box>
             )}
             {isSubchildDisplayed && (
