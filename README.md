@@ -1,4 +1,4 @@
-# Technical documentation of Carnet EDT - ReactTS PWA
+# Technical documentation of Lunatic-EDT
 
 ## General information
 
