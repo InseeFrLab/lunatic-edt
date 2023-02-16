@@ -1,8 +1,5 @@
-import dayjs from "dayjs";
-import "dayjs/locale/fr";
-import relativeTime from "dayjs/plugin/relativeTime";
 import { DayDetailType, IODataStructure, WeeklyPlannerDataType } from "interface/WeeklyPlannerTypes";
-import { convertTime } from "../../../utils";
+import { convertTime, formateDateToFrenchFormat } from "../../../utils";
 
 export const INTERVAL = 15;
 const DAY_TIME_SEPARATOR = "_";
@@ -27,8 +24,7 @@ const keyWithoutSeparator = (
     if (currentDetail) {
         currentDay.detail.push(currentDetail);
     }
-    dayjs.extend(relativeTime);
-    const dayFormatted = dayjs(value).locale(language).format("dddd");
+    const dayFormatted = formateDateToFrenchFormat(new Date(value), language, { weekday: "long" });
     currentDay = {
         hasBeenStarted: false,
         date: value,

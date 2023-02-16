@@ -73,7 +73,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const [needSpinner, setNeedSpinner] = React.useState<boolean>(true);
 
     const formateDateLabel = (date: Date): string => {
-        const formatedDate = formateDateToFrenchFormat(date);
+        const formatedDate = formateDateToFrenchFormat(date, language);
         return formatedDate.toUpperCase();
     };
 
@@ -152,6 +152,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                                 workSumLabel={labels.workSumLabel}
                                 presentButtonLabel={labels.presentButtonLabel}
                                 futureButtonLabel={labels.futureButtonLabel}
+                                language={language}
                             ></DayPlanner>
                         ))}
                     </List>
