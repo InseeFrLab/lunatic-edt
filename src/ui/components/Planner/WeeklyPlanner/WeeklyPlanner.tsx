@@ -123,6 +123,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         return isSubChildDisplayed ? "none" : "inline";
     };
 
+    const titleLabels = {
+        normalTitle: labels.title,
+    };
+
     return (
         <Box id="root-box">
             <DayOverview
@@ -144,7 +148,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                         />
                         <TooltipInfo
                             infoLabels={labels.infoLabels}
-                            titleLabel={labels.title}
+                            titleLabels={titleLabels}
                             displayTooltip={getProgressBarValue(activityData) == 0}
                         />
                         <List className={classes.listContainer}>

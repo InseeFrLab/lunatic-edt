@@ -9,26 +9,35 @@ import Info from "../Info";
 
 export type TooltipInfoProps = {
     infoLabels: InfoProps;
-    titleLabel?: string;
+    titleLabels?: {
+        normalTitle: string;
+        boldTitle: string;
+    };
     displayTooltip?: boolean;
 };
 
 const TooltipInfo = memo((props: TooltipInfoProps) => {
-    const { infoLabels, titleLabel, displayTooltip } = props;
+    const { infoLabels, titleLabels, displayTooltip } = props;
     const { classes } = useStyles();
 
     const [displayInfo, setDisplayInfo] = React.useState<boolean>(false);
 
     return (
         <Box className={classes.root}>
-            <Box className={titleLabel ? classes.titleBox : classes.headerBox}>
-                {titleLabel && <Typography className={classes.title}>{titleLabel}</Typography>}
+            <Box className={titleLabels ? classes.titleBox : classes.headerBox}>
+                {titleLabels?.normalTitle && (
+                    <Typography className={classes.title}>{titleLabels.normalTitle}</Typography>
+                )}
                 <Tooltip title="Info" className={displayTooltip ? classes.hiddenBox : classes.iconBox}>
                     <IconButton onClick={() => setDisplayInfo(!displayInfo)}>
                         <InfoOutlinedIcon className={classes.iconInfoBox} />
                     </IconButton>
                 </Tooltip>
             </Box>
+            {titleLabels?.boldTitle && (
+                <Typography className={classes.titleBold}>{titleLabels.boldTitle}</Typography>
+            )}
+
             {infoLabels && (
                 <Box className={displayInfo || displayTooltip ? classes.infoBox : classes.hiddenBox}>
                     <Info {...infoLabels} />
@@ -45,6 +54,10 @@ const useStyles = makeStylesEdt({ "name": { TooltipInfo } })(theme => ({
     },
     title: {
         fontSize: "14px",
+    },
+    titleBold: {
+        fontSize: "18px",
+        fontWeight: "bold",
     },
     headerBox: {
         display: "flex",
