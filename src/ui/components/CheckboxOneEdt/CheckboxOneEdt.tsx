@@ -103,7 +103,6 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         if (nextClickCallback) next(true, setDisplayAlert, nextClickCallback);
     }, [displayAlert]);
 
-    console.log(componentSpecificProps);
     return (
         <>
             {labels && (
