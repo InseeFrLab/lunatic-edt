@@ -139,6 +139,7 @@ const useStyles = makeStylesEdt({ "name": { CheckboxBooleanEdt } })(theme => ({
     },
     labelSpacer: {
         margin: "1rem 0rem",
+        textAlign: "center",
     },
     buttonGroupBox: {
         "width": "100% !important",

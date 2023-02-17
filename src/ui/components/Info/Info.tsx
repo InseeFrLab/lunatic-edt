@@ -38,12 +38,12 @@ const useStyles = makeStylesEdt({ "name": { Info } })(theme => ({
         backgroundColor: theme.variables.white,
         border: "1px dashed " + theme.variables.neutral,
         borderRadius: "13px",
-        marginTop: "1rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-between",
         maxWidth: "520px",
+        margin: "1rem 0.5rem",
     },
     titleWithIcon: {
         width: "100%",

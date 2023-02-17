@@ -76,7 +76,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         FullScreenComponent.Main,
     );
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
-    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 800);
+    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 667);
     const newItemId = useRef(uuidv4());
 
     useEffect(() => {
@@ -149,7 +149,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     }, [nextClickEvent]);
 
     const handleSize = useCallback(() => {
-        const isMobile1 = window.innerWidth <= 800;
+        const isMobile1 = window.innerWidth <= 667;
         setIsMobile(isMobile1);
 
         setDisplayHeader &&
@@ -800,7 +800,7 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         fontSize: "20px",
         textAlign: "center",
         marginTop: "2rem",
-        marginBottom: "2rem",
+        marginBottom: "1rem",
     },
     activityInput: {
         width: "93%",
