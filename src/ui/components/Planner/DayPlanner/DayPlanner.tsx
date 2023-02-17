@@ -19,6 +19,7 @@ export type DayPlannerProps = {
     workSumLabel?: string;
     presentButtonLabel?: string;
     futureButtonLabel?: string;
+    language: string;
 };
 
 enum DayRelativeTimeEnum {
@@ -27,8 +28,8 @@ enum DayRelativeTimeEnum {
     Future = 1,
 }
 
-const renderDateLabel = (date: Date): string => {
-    const formatedDate: string = formateDateToFrenchFormat(date);
+const renderDateLabel = (date: Date, language: string): string => {
+    const formatedDate: string = formateDateToFrenchFormat(date, language);
     return formatedDate.charAt(0).toUpperCase() + formatedDate.slice(1);
 };
 
@@ -72,6 +73,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         workSumLabel,
         presentButtonLabel,
         futureButtonLabel,
+        language,
     } = props;
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
@@ -170,7 +172,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                 >
                     <Box className={getDayAndDotsClass()}>
                         <Typography className={cx(classes.dayLabel, classes.bold)}>
-                            {renderDateLabel(date)}
+                            {renderDateLabel(date, language)}
                         </Typography>
                         {renderMoreIcon()}
                     </Box>

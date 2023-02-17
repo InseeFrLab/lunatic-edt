@@ -10,9 +10,11 @@ export const important = (value: string): string => {
  * @param date
  * @returns
  */
-export const formateDateToFrenchFormat = (date: Date): string => {
-    const dateOptions: any = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-    return date.toLocaleDateString("fr-FR", dateOptions);
+export const formateDateToFrenchFormat = (date: Date, language: string, dateOptions?: any): string => {
+    if (!dateOptions) {
+        dateOptions = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+    }
+    return date.toLocaleDateString(language, dateOptions);
 };
 
 /**

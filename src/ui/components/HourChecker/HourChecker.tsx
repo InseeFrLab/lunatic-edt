@@ -119,7 +119,6 @@ const HourChecker = memo((props: HourCheckerProps) => {
                     >
                         {index === 0 && (
                             <ExpandLessIcon
-                                fontSize="small"
                                 className={classes.clickable}
                                 onClick={toggleHourChecker}
                                 aria-label="hourcheckertoogle"
