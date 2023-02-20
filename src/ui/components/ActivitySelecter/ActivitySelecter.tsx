@@ -76,6 +76,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     );
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
     const newItemId = useRef(uuidv4());
+    const { classes, cx } = useStyles();
 
     useEffect(() => {
         setDisplayStepper &&
@@ -83,8 +84,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 fullScreenComponent === FullScreenComponent.Main && selectedCategories.length === 0,
             );
     }, [fullScreenComponent, selectedCategories]);
-
-    const { classes, cx } = useStyles();
 
     useEffect(() => {
         const parsedValue: SelectedActivity = {
@@ -279,7 +278,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     };
 
     return (
-        <>
+        <Box>
             {componentSpecificProps && categoriesAndActivitesNomenclature && (
                 <>
                     <Alert
@@ -311,7 +310,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         icon={errorIcon}
                         errorIconAlt={labels.alertAlticon}
                     ></Alert>
-
                     {renderClickableList(
                         fullScreenComponent,
                         activitesAutoCompleteRef,
@@ -364,7 +362,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                     )}
                 </>
             )}
-        </>
+        </Box>
     );
 });
 
@@ -463,7 +461,7 @@ const renderClickableList = (
     classes: any,
 ) => {
     return (
-        fullScreenComponent === FullScreenComponent.ClickableListComp && (
+        fullScreenComponent == FullScreenComponent.ClickableListComp && (
             <ClickableList
                 className={classes.clickableList}
                 options={activitesAutoCompleteRef}
