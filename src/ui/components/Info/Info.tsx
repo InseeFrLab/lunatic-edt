@@ -5,11 +5,17 @@ import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 const Info = memo((props: InfoProps) => {
-    const { normalText, boldText, infoIcon, infoIconAlt, border } = props;
+    const { normalText, boldText, infoIcon, infoIconAlt, border, isAlertInfo } = props;
     const { classes, cx } = useStyles();
 
     return (
-        <Box className={cx(classes.root, border ? classes.borderDashedBox : "")}>
+        <Box
+            className={cx(
+                classes.root,
+                border ? classes.borderDashedBox : "",
+                isAlertInfo ? classes.alert : classes.info,
+            )}
+        >
             <Box className={cx(classes.titleWithIcon)}>
                 {infoIcon && (
                     <Box className={classes.iconContainer}>
@@ -35,7 +41,6 @@ const Info = memo((props: InfoProps) => {
 
 const useStyles = makeStylesEdt({ "name": { Info } })(theme => ({
     root: {
-        backgroundColor: theme.variables.white,
         border: "1px dashed " + theme.variables.neutral,
         borderRadius: "13px",
         marginTop: "1rem",
@@ -59,16 +64,23 @@ const useStyles = makeStylesEdt({ "name": { Info } })(theme => ({
         paddingTop: "1rem",
     },
     text: {
-        color: theme.palette.action.hover,
         fontSize: "12px",
     },
     textBold: {
-        color: theme.palette.action.hover,
         fontSize: "12px",
         fontWeight: "bold",
     },
     borderDashedBox: {
         borderStyle: "dashed",
+    },
+    alert: {
+        backgroundColor: theme.palette.error.light,
+        color: theme.palette.error.main,
+        borderColor: theme.palette.error.main,
+    },
+    info: {
+        backgroundColor: theme.variables.white,
+        color: theme.palette.action.hover,
         borderColor: theme.palette.primary.main,
     },
 }));
