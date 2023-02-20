@@ -605,25 +605,25 @@ const nextStep = (
     nextClickCallback: (routeToGoal: boolean) => void,
     addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void,
     newItemId: string,
-    displayAlert1: boolean,
-    displayAlert2: boolean,
+    continueWithUncompleted: boolean,
 ) => {
     let routeToGoal = true;
+    let displayAlert = FullScreenComponent.FreeInput
+        ? (states.createActivityValue === undefined || states.createActivityValue === "") &&
+          !continueWithUncompleted
+        : states.selectedCategory === undefined &&
+          states.selectedId === undefined &&
+          states.suggesterId === undefined &&
+          !continueWithUncompleted;
 
     switch (states.fullScreenComponent) {
         //option clickable list - when activity selected is one of sub category
         case FullScreenComponent.ClickableListComp:
-            nextStepClickableList(
-                states,
-                setDisplayAlert,
-                nextClickCallback,
-                displayAlert1,
-                routeToGoal,
-            );
+            nextStepClickableList(states, setDisplayAlert, nextClickCallback, displayAlert, routeToGoal);
             break;
         //option page principal - when activity selected is one category of first rank
         case FullScreenComponent.Main:
-            nextStepMain(setDisplayAlert, nextClickCallback, displayAlert1);
+            nextStepMain(setDisplayAlert, nextClickCallback, displayAlert);
             break;
         //option free input - when new activity or activity searched
         case FullScreenComponent.FreeInput:
@@ -633,7 +633,7 @@ const nextStep = (
                 nextClickCallback,
                 addToReferentielCallBack,
                 newItemId,
-                displayAlert2,
+                displayAlert,
                 routeToGoal,
             );
             break;
@@ -668,22 +668,13 @@ const next = (
     newItemId: string,
 ) => {
     if (nextClickEvent) {
-        let displayAlert1 =
-            states.selectedCategory === undefined &&
-            states.selectedId === undefined &&
-            states.suggesterId === undefined &&
-            !continueWithUncompleted;
-        let displayAlert2 =
-            (states.createActivityValue === undefined || states.createActivityValue === "") &&
-            !continueWithUncompleted;
         nextStep(
             states,
             setDisplayAlert,
             nextClickCallback,
             addToReferentielCallBack,
             newItemId,
-            displayAlert1,
-            displayAlert2,
+            continueWithUncompleted,
         );
     }
 };
