@@ -52,11 +52,13 @@ export type ActivitySelecterSpecificProps = {
     backClickCallback(): void;
     nextClickCallback(routeToGoal: boolean): void;
     setDisplayStepper(value: boolean): void;
+    setDisplayHeader(value: boolean): void;
     categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
     labels: ActivityLabelProps;
     errorIcon: string;
     addToReferentielCallBack(newItem: AutoCompleteActiviteOption): void;
     onSelectValue(): void;
+    widthGlobal: boolean;
 };
 
 export type IconGridCheckBoxOneSpecificProps = {

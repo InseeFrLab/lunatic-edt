@@ -8,7 +8,7 @@ import {
     SelectedActivity,
 } from "interface/ActivityTypes";
 import { ActivityLabelProps, ActivitySelecterSpecificProps } from "interface/ComponentsSpecificProps";
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../../ui/theme";
 import { splitLabelWithParenthesis } from "../../../ui/utils";
@@ -55,6 +55,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         activitesAutoCompleteRef,
         clickableListIconNoResult,
         setDisplayStepper,
+        setDisplayHeader,
         categoriesAndActivitesNomenclature,
         labels,
         errorIcon,
@@ -75,6 +76,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         FullScreenComponent.Main,
     );
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
+    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 667);
     const newItemId = useRef(uuidv4());
     const { classes, cx } = useStyles();
 
@@ -83,6 +85,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             setDisplayStepper(
                 fullScreenComponent === FullScreenComponent.Main && selectedCategories.length === 0,
             );
+
+        setDisplayHeader &&
+            setDisplayHeader(fullScreenComponent === FullScreenComponent.ClickableListComp && !isMobile);
     }, [fullScreenComponent, selectedCategories]);
 
     useEffect(() => {
@@ -141,6 +146,21 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             newItemId.current,
         );
     }, [nextClickEvent]);
+
+    const handleSize = useCallback(() => {
+        const isMobile1 = window.innerWidth <= 667;
+        setIsMobile(isMobile1);
+
+        setDisplayHeader &&
+            setDisplayHeader(fullScreenComponent === FullScreenComponent.ClickableListComp && !isMobile);
+    }, [window.innerWidth, window.innerHeight]);
+
+    useEffect(() => {
+        window.addEventListener("resize", handleSize);
+        return () => {
+            window.removeEventListener("resize", handleSize);
+        };
+    });
 
     const onChange = (
         isFullyCompleted: boolean,
@@ -312,23 +332,29 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                     ></Alert>
                     {renderClickableList(
                         fullScreenComponent,
-                        activitesAutoCompleteRef,
-                        selectedSuggesterId,
                         {
                             clickableListOnChange: clickableListOnChange,
                             createActivityCallBack: createActivityCallBack,
                         },
-                        clickableListIconNoResult,
-                        labels,
+                        {
+                            activitesAutoCompleteRef,
+                            selectedSuggesterId,
+                            clickableListIconNoResult,
+                            labels,
+                            isMobile,
+                        },
                         classes,
                     )}
 
                     {renderFreeInput(
                         fullScreenComponent,
-                        selectedCategories,
-                        labels,
-                        label,
-                        createActivityValue,
+                        {
+                            selectedCategories,
+                            labels,
+                            label,
+                            createActivityValue,
+                            isMobile,
+                        },
                         freeInputOnChange,
                         classes,
                     )}
@@ -433,9 +459,11 @@ const renderSearchInput = (
                 className={classes.activityInput}
                 onClick={() => setFullScreenComponent(FullScreenComponent.ClickableListComp)}
             >
-                <Typography className={classes.activityInputLabel}>
-                    {labels.clickableListPlaceholder}
-                </Typography>
+                {
+                    <Typography className={classes.activityInputLabel}>
+                        {labels.clickableListPlaceholder}
+                    </Typography>
+                }
                 <Search className={classes.activityInputIcon} />
             </Box>
         )
@@ -444,22 +472,32 @@ const renderSearchInput = (
 
 const renderFreeInput = (
     fullScreenComponent: FullScreenComponent,
-    selectedCategories: NomenclatureActivityOption[],
-    labels: ActivityLabelProps,
-    label: string,
-    createActivityValue: string | undefined,
+    inputs: {
+        selectedCategories: NomenclatureActivityOption[];
+        labels: ActivityLabelProps;
+        label: string;
+        createActivityValue: string | undefined;
+        isMobile: boolean;
+    },
     freeInputOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void,
     classes: any,
 ) => {
     return (
         fullScreenComponent === FullScreenComponent.FreeInput && (
             <Box className={classes.root}>
-                {renderTitle(fullScreenComponent, selectedCategories, labels, label, classes)}
+                {!inputs.isMobile &&
+                    renderTitle(
+                        fullScreenComponent,
+                        inputs.selectedCategories,
+                        inputs.labels,
+                        inputs.label,
+                        classes,
+                    )}
                 <TextField
-                    value={createActivityValue}
+                    value={inputs.createActivityValue}
                     className={classes.freeInputTextField}
                     onChange={freeInputOnChange}
-                    placeholder={labels.clickableListPlaceholder}
+                    placeholder={inputs.labels.clickableListPlaceholder}
                 ></TextField>
             </Box>
         )
@@ -468,30 +506,33 @@ const renderFreeInput = (
 
 const renderClickableList = (
     fullScreenComponent: FullScreenComponent,
-    activitesAutoCompleteRef: AutoCompleteActiviteOption[],
-    selectedSuggesterId: string | undefined,
     functions: {
         clickableListOnChange: (id: string | undefined) => void;
         createActivityCallBack: (activityLabel: string) => void;
     },
-    clickableListIconNoResult: string,
-    labels: ActivityLabelProps,
+    inputs: {
+        activitesAutoCompleteRef: AutoCompleteActiviteOption[];
+        selectedSuggesterId: string | undefined;
+        clickableListIconNoResult: string;
+        labels: ActivityLabelProps;
+        isMobile: boolean;
+    },
     classes: any,
 ) => {
     return (
         fullScreenComponent == FullScreenComponent.ClickableListComp && (
             <ClickableList
-                className={classes.clickableList}
-                options={activitesAutoCompleteRef}
-                selectedId={selectedSuggesterId}
+                className={inputs.isMobile ? classes.clickableListMobile : classes.clickableList}
+                options={inputs.activitesAutoCompleteRef}
+                selectedId={inputs.selectedSuggesterId}
                 handleChange={functions.clickableListOnChange}
                 createActivity={functions.createActivityCallBack}
-                placeholder={labels.clickableListPlaceholder}
-                notFoundLabel={labels.clickableListNotFoundLabel}
-                notFoundComment={labels.clickableListNotFoundComment}
-                addActivityButtonLabel={labels.clickableListAddActivityButton}
-                iconNoResult={clickableListIconNoResult}
-                iconNoResultAlt={labels.clickableListIconNoResultAlt}
+                placeholder={inputs.labels.clickableListPlaceholder}
+                notFoundLabel={inputs.labels.clickableListNotFoundLabel}
+                notFoundComment={inputs.labels.clickableListNotFoundComment}
+                addActivityButtonLabel={inputs.labels.clickableListAddActivityButton}
+                iconNoResult={inputs.clickableListIconNoResult}
+                iconNoResultAlt={inputs.labels.clickableListIconNoResultAlt}
                 autoFocus={true}
             ></ClickableList>
         )
@@ -748,7 +789,7 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         fontSize: "20px",
         textAlign: "center",
         marginTop: "2rem",
-        marginBottom: "2rem",
+        marginBottom: "1rem",
     },
     activityInput: {
         width: "93%",
@@ -770,6 +811,10 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         width: "300px",
         marginTop: "1rem",
     },
+    clickableListMobile: {
+        width: "100%",
+        marginTop: "0rem",
+    },
     freeInputTextField: {
         width: "100%",
         backgroundColor: theme.variables.white,
@@ -780,6 +825,7 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         flexWrap: "wrap",
         justifyContent: "space-evenly",
         cursor: "pointer",
+        padding: "1rem",
     },
     rank1Category: {
         display: "flex",
