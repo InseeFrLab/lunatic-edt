@@ -1,10 +1,11 @@
-import { Box, Checkbox, Paper, Typography } from "@mui/material";
+import { Box, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { CheckboxGroupSpecificProps } from "interface";
 import { CheckboxOption } from "interface/CheckboxOptions";
 import { memo, useCallback, useEffect, useState } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Alert from "../Alert";
+import { important } from "../../utils";
 
 export type CheckboxGroupEdtProps = {
     label?: string;
@@ -13,18 +14,31 @@ export type CheckboxGroupEdtProps = {
     id?: string;
     responses: CheckboxOption[];
     value: { [key: string]: boolean };
+    className?: string;
     componentSpecificProps?: CheckboxGroupSpecificProps;
 };
 
 const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
-    const { id, value, responses, handleChange, componentSpecificProps, label, tipsLabel } = props;
-    const { classes } = useStyles();
+    const { id, value, responses, handleChange, componentSpecificProps, label, tipsLabel, className } =
+        props;
+    const { classes, cx } = useStyles();
 
     const { backClickEvent, nextClickEvent, backClickCallback, nextClickCallback, labels, errorIcon } = {
         ...componentSpecificProps,
     };
 
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
+    const [optionsSelected, setOptionsSelected] = useState<string[]>([]);
+
+    useEffect(() => {
+        const options = [];
+        for (const key in value) {
+            if (value[key]) {
+                options.push(key);
+            }
+        }
+        setOptionsSelected(options);
+    }, []);
 
     useEffect(() => {
         if (backClickEvent && backClickCallback) {
@@ -37,11 +51,6 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
             next(false, setDisplayAlert, nextClickCallback);
         }
     }, [nextClickEvent]);
-
-    const handleOptions = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        value[event.target.value] = !value[event.target.value];
-        handleChange({ name: event.target.value }, value[event.target.value]);
-    }, []);
 
     const next = (
         continueWithUncompleted: boolean,
@@ -59,6 +68,13 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
     const handleAlert = useCallback(() => {
         if (nextClickCallback) next(true, setDisplayAlert, nextClickCallback);
     }, [displayAlert]);
+
+    const handleOptions = (_event: React.MouseEvent<HTMLElement>, selectValue: string[]) => {
+        setOptionsSelected(selectValue);
+        for (const key in value) {
+            handleChange({ name: key }, selectValue.find(value => value == key) != null);
+        }
+    };
 
     return (
         <>
@@ -80,7 +96,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                 {label && (
                     <>
                         <Box className={classes.labelSpacer}></Box>
-                        <label>{label}</label>
+                        <label>{label}&nbsp;?</label>
                     </>
                 )}
                 {tipsLabel && (
@@ -89,31 +105,37 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                         <Typography className={classes.tipsLabel}>{tipsLabel}</Typography>
                     </>
                 )}
-                {responses.map(option => (
-                    <Paper className={classes.root} elevation={0} key={"paper-" + option.id}>
-                        <div style={{ display: "flex" }}>
-                            {componentSpecificProps &&
-                                componentSpecificProps.optionsIcons &&
-                                componentSpecificProps.optionsIcons[option.id] && (
-                                    <Box className={classes.iconBox}>
-                                        <img
-                                            className={classes.icon}
-                                            src={componentSpecificProps.optionsIcons[option.id]}
-                                        />
-                                    </Box>
-                                )}
-                            <Typography color="textSecondary">{option.label}</Typography>
-                        </div>
 
-                        <Checkbox
-                            key={option.id}
-                            checked={value[option.response.name] ?? false}
+                <ToggleButtonGroup
+                    orientation="vertical"
+                    value={optionsSelected}
+                    onChange={handleOptions}
+                    id={id}
+                    aria-label={label}
+                    className={cx(className, classes.toggleButtonGroup)}
+                >
+                    {responses.map((option, index) => (
+                        <ToggleButton
+                            className={classes.toggleButton}
+                            key={option.response.name + "-" + index}
                             value={option.response.name}
-                            onChange={handleOptions}
-                            className={classes.MuiCheckbox}
-                        />
-                    </Paper>
-                ))}
+                        >
+                            <Box style={{ display: "flex" }}>
+                                {componentSpecificProps &&
+                                    componentSpecificProps.optionsIcons &&
+                                    componentSpecificProps.optionsIcons[option.id] && (
+                                        <Box className={classes.iconBox}>
+                                            <img
+                                                className={classes.icon}
+                                                src={componentSpecificProps.optionsIcons[option.id]}
+                                            />
+                                        </Box>
+                                    )}
+                                <Typography color="textSecondary">{option.label}</Typography>
+                            </Box>
+                        </ToggleButton>
+                    ))}
+                </ToggleButtonGroup>
             </div>
         </>
     );
@@ -147,6 +169,23 @@ const useStyles = makeStylesEdt({ "name": { CheckboxGroupEdt } })(theme => ({
     icon: {
         width: "25px",
         height: "25px",
+    },
+    toggleButtonGroup: {
+        marginTop: "1rem",
+    },
+    toggleButton: {
+        marginBottom: "1rem",
+        border: important("2px solid #FFFFFF"),
+        borderRadius: important("6px"),
+        backgroundColor: "#FFFFFF",
+        color: theme.palette.secondary.main,
+        justifyContent: "flex-start",
+        textAlign: "left",
+        fontWeight: "bold",
+        "&.Mui-selected": {
+            borderColor: important(theme.palette.primary.main),
+            backgroundColor: "#FFFFFF",
+        },
     },
 }));
 
