@@ -120,13 +120,13 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                 ></Alert>
             )}
             {!isSubchildDisplayed && (
-                <>
+                <Box>
                     {label && (
-                        <>
+                        <Box>
                             <Box className={classes.labelSpacer}>
-                                <label>{label}</label>
+                                <label>{label}&nbsp;?</label>
                             </Box>
-                        </>
+                        </Box>
                     )}
                     {(componentSpecificProps?.options ?? options) && (
                         <ToggleButtonGroup
@@ -167,19 +167,20 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                             )}
                         </ToggleButtonGroup>
                     )}
-                    {options && componentSpecificProps?.labelsSpecifics?.otherButtonLabel && (
-                        <>
-                            <Box className={classes.centerBox}>
-                                <Button variant="contained" onClick={onAddNewOption}>
-                                    {componentSpecificProps.labelsSpecifics?.otherButtonLabel}
-                                </Button>
+                    {(componentSpecificProps?.options ?? options) &&
+                        componentSpecificProps?.labelsSpecifics?.otherButtonLabel && (
+                            <Box>
+                                <Box className={classes.centerBox}>
+                                    <Button variant="contained" onClick={onAddNewOption}>
+                                        {componentSpecificProps.labelsSpecifics?.otherButtonLabel}
+                                    </Button>
+                                </Box>
                             </Box>
-                        </>
-                    )}
-                </>
+                        )}
+                </Box>
             )}
             {isSubchildDisplayed && (
-                <>
+                <Box>
                     <Box className={classes.labelSpacer}>
                         <label>{componentSpecificProps.labelsSpecifics?.subchildLabel}</label>
                     </Box>
@@ -191,7 +192,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                             placeholder={componentSpecificProps.labelsSpecifics?.inputPlaceholder}
                         ></TextField>
                     </Box>
-                </>
+                </Box>
             )}
         </>
     );
@@ -220,13 +221,13 @@ const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
         justifyContent: "flex-start",
         textAlign: "left",
         fontWeight: "bold",
-        minWidth: "350px",
         "&.Mui-selected": {
             borderColor: important(theme.palette.primary.main),
         },
     },
     labelSpacer: {
-        margin: "0.5rem 0rem",
+        margin: "1rem 0rem",
+        textAlign: "center",
     },
     iconBox: {
         marginRight: "0.5rem",
@@ -236,12 +237,17 @@ const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
     labelBox: {
         marginLeft: "0.25rem",
     },
+    titleBox: {
+        display: "flex",
+        alignItems: "center",
+    },
     icon: {
         width: "25px",
         height: "25px",
     },
     toggleButtonGroup: {
         marginTop: "1rem",
+        width: important("98%"),
     },
     centerBox: {
         display: "flex",

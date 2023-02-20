@@ -80,7 +80,7 @@ const Duration = memo((props: DurationProps) => {
     return (
         <>
             <Box className={classes.labelSpacer}>
-                <label>{label}</label>
+                <label>{label}&nbsp;?</label>
             </Box>
             <Box className={classes.containerBox}>
                 <Box className={classes.durationBox}>

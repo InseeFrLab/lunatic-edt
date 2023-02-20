@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
@@ -12,13 +12,14 @@ export type DatepickerProps = {
     value?: string;
     onChange(value: string | null): void;
     labelId?: string;
+    tipsLabel: string;
     id?: string;
     min?: string;
     max?: string;
 };
 
 const Datepicker = memo((props: DatepickerProps) => {
-    const { id, onChange, value, readOnly, disabled } = props;
+    const { id, onChange, value, readOnly, disabled, tipsLabel } = props;
     const { classes } = useStyles();
     const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
 
@@ -32,32 +33,43 @@ const Datepicker = memo((props: DatepickerProps) => {
     }
 
     return (
-        <LocalizationProvider adapterLocale={"fr"} dateAdapter={AdapterDayjs}>
-            <DatePicker
-                key={id}
-                disabled={disabled}
-                readOnly={readOnly}
-                openTo="day"
-                views={["day"]}
-                value={valueLocal}
-                label=" "
-                onChange={useCallback(newValue => {
-                    setValueLunatic(newValue);
-                }, [])}
-                renderInput={useCallback(
-                    params => (
-                        <TextField {...params} />
-                    ),
-                    [],
-                )}
-                componentsProps={{
-                    actionBar: {
-                        actions: ["accept"],
-                    },
-                }}
-                className={classes.input}
-            />
-        </LocalizationProvider>
+        <>
+            {tipsLabel && (
+                <>
+                    <Box className={classes.labelSpacer}>
+                        <label>{tipsLabel}&nbsp;?</label>
+                    </Box>
+                </>
+            )}
+            <>
+                <LocalizationProvider adapterLocale={"fr"} dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        key={id}
+                        disabled={disabled}
+                        readOnly={readOnly}
+                        openTo="day"
+                        views={["day"]}
+                        value={valueLocal}
+                        label=" "
+                        onChange={useCallback(newValue => {
+                            setValueLunatic(newValue);
+                        }, [])}
+                        renderInput={useCallback(
+                            params => (
+                                <TextField {...params} />
+                            ),
+                            [],
+                        )}
+                        componentsProps={{
+                            actionBar: {
+                                actions: ["accept"],
+                            },
+                        }}
+                        className={classes.input}
+                    />
+                </LocalizationProvider>
+            </>
+        </>
     );
 });
 
@@ -67,6 +79,9 @@ const useStyles = makeStylesEdt({ "name": { Datepicker } })(() => ({
         legend: {
             display: "none",
         },
+    },
+    labelSpacer: {
+        marginBottom: "1rem",
     },
 }));
 
