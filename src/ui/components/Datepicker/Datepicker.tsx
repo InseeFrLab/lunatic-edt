@@ -12,7 +12,7 @@ export type DatepickerProps = {
     value?: string;
     onChange(value: string | null): void;
     labelId?: string;
-    tipsLabel: string;
+    tipsLabel?: string;
     id?: string;
     min?: string;
     max?: string;

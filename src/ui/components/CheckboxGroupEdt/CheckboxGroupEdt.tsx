@@ -1,4 +1,4 @@
-import { Box, Checkbox, Paper, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
+import { Box, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
 import { CheckboxGroupSpecificProps } from "interface";
 import { CheckboxOption } from "interface/CheckboxOptions";
 import { memo, useCallback, useEffect, useState } from "react";
@@ -69,7 +69,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
         if (nextClickCallback) next(true, setDisplayAlert, nextClickCallback);
     }, [displayAlert]);
 
-    const handleOptions = (event: React.MouseEvent<HTMLElement>, selectValue: string[]) => {
+    const handleOptions = (_event: React.MouseEvent<HTMLElement>, selectValue: string[]) => {
         setOptionsSelected(selectValue);
         for (const key in value) {
             handleChange({ name: key }, selectValue.find(value => value == key) != null);
