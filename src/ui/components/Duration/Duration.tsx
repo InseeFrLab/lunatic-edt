@@ -50,14 +50,16 @@ const Duration = memo((props: DurationProps) => {
     const [minutes, setMinutes] = React.useState("");
 
     useEffect(() => {
-        const time = dayjs(value, componentSpecificProps?.constants.FORMAT_TIME);
-        setHour(time.hour().toString());
-        setMinutes(time.minute().toString());
+        if (value != null) {
+            const time = dayjs(value, componentSpecificProps?.constants.FORMAT_TIME);
+            setHour(time.hour().toString());
+            setMinutes(time.minute().toString());
+        }
     }, []);
 
     useEffect(() => {
-        if (hour != undefined && minutes != undefined) {
-            handleChange(response, hour + ":" + minutes || null);
+        if (hour != null && minutes != null) {
+            handleChange(response, hour + ":" + minutes);
         }
     }, [hour, minutes]);
 
@@ -70,7 +72,7 @@ const Duration = memo((props: DurationProps) => {
             setMinutes(newMin);
         }
 
-        const newValue = newHour + ":" + newMin;
+        const newValue = newHour != null && newMin != null ? newHour + ":" + newMin : null;
         handleChange(response, newValue);
     }
 
