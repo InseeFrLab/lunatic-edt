@@ -14,7 +14,6 @@ export type CheckboxGroupProps = {
 
 const CheckboxGroup = memo((props: CheckboxGroupProps) => {
     const { id, value, options, handleChange, componentSpecificProps } = props;
-    console.log(componentSpecificProps);
     const { classes } = useStyles();
 
     const handleOptions = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {

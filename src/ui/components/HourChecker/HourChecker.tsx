@@ -28,12 +28,11 @@ const calculateSelectAllValue = (
     value: { [key: string]: boolean },
     responsesValues: string[],
 ) => {
-    setSelectAll(getSelectAllValue, value, responsesValues);
+    setSelectAll(getSelectAllValue(value, responsesValues));
 };
 
 const selectOrUnselectAll = (
     currentlySelected: boolean,
-    selectAll: boolean,
     value: { [key: string]: boolean },
     responsesValues: string[],
     setCurrentOption: any,
@@ -46,7 +45,7 @@ const selectOrUnselectAll = (
         selectedOptions.push(name);
     });
     setCurrentOption(selectedOptions);
-    setSelectAll(!selectAll);
+    setSelectAll(!currentlySelected);
     saveLunaticData();
 };
 
@@ -54,6 +53,12 @@ const getClassName = (cx: any, className: any, classVisible: any, classHidden: a
     return cx(className, isOpen ? classVisible : classHidden);
 };
 
+/**
+ * This component is used to select fraction of hours.
+ * The entire hour is selectable at once clicking on the entire component
+ * After toggle the arrow button, the hour is divided per the size of reponses props,
+ * each fraction is individualy selectable.
+ */
 const HourChecker = memo((props: HourCheckerProps) => {
     const { id, value, label, responses, handleChange } = props;
     const [isOpen, setIsOpen] = React.useState(false);
@@ -65,10 +70,10 @@ const HourChecker = memo((props: HourCheckerProps) => {
 
     const [selectAll, setSelectAll] = React.useState(getSelectAllValue(value, responsesValues));
 
-    const toggleHourChecker = useCallback((e: any) => {
+    const toggleHourChecker = (e: any) => {
         e.stopPropagation();
         setIsOpen(!isOpen);
-    }, []);
+    };
 
     const handleOptions = useCallback((event: any, selectedOption: string[]) => {
         setCurrentOption(selectedOption);
@@ -89,19 +94,16 @@ const HourChecker = memo((props: HourCheckerProps) => {
         <Box className={classes.globalBox} component="div" aria-label="hourchecker">
             <Box
                 className={getClassName(cx, classes.closedBox, classes.visible, classes.hidden, !isOpen)}
-                onClick={useCallback(
-                    () =>
-                        selectOrUnselectAll(
-                            selectAll,
-                            selectAll,
-                            value,
-                            responsesValues,
-                            setCurrentOption,
-                            setSelectAll,
-                            saveLunaticData,
-                        ),
-                    [],
-                )}
+                onClick={() =>
+                    selectOrUnselectAll(
+                        selectAll,
+                        value,
+                        responsesValues,
+                        setCurrentOption,
+                        setSelectAll,
+                        saveLunaticData,
+                    )
+                }
                 aria-label={isOpen ? "hourcheckeropen" : "hourcheckerclosed"}
             >
                 {responses.map((option, index) => (
@@ -153,7 +155,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
                         {index !== 0 && index !== responses.length - 1 && (
                             <div className={classes.noIconSpacer}></div>
                         )}
-                        {index === 0 && <ExpandMoreIcon onClick={toggleHourChecker} />}
+                        {index === 0 && <ExpandMoreIcon fontSize="small" onClick={toggleHourChecker} />}
                         {index !== responses.length - 1 ? option.label : <span>&nbsp;</span>}
                         {index === responses.length - 1 && (
                             <div className={classes.iconRounder}>
@@ -223,10 +225,17 @@ const useStyles = makeStylesEdt<{ width: string }>({ "name": { HourChecker } })(
         "&.Mui-selected": {
             backgroundColor: theme.palette.action.hover,
             color: theme.variables.white,
+            "&:hover": {
+                backgroundColor: theme.palette.action.hover,
+                color: theme.variables.white,
+            },
         },
         "&:hover": {
+            backgroundColor: theme.variables.white,
             color: theme.palette.action.hover,
         },
+        fontSize: "11px",
+        fontWeight: "bold",
     },
     toggleWithIcon: {
         justifyContent: "space-between",

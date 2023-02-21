@@ -1,6 +1,11 @@
-export { default as ActivitySelecter } from "./ActivitySelecter";
+export {
+    ActivitySelecter,
+    findItemInAutoCompleteRef,
+    findItemInCategoriesNomenclature,
+} from "./ActivitySelecter";
 export { default as Button } from "./Button";
 export { default as CheckboxBoolean } from "./CheckboxBoolean";
+export { default as CheckboxBooleanEdt } from "./CheckboxBooleanEdt";
 export { default as CheckboxGroup } from "./CheckboxGroup";
 export { default as CheckboxGroupEdt } from "./CheckboxGroupEdt";
 export { default as CheckboxOne } from "./CheckboxOne";
@@ -15,3 +20,7 @@ export { default as WeeklyPlanner } from "./Planner/WeeklyPlanner";
 export { default as ProgressBar } from "./ProgressBar";
 export { default as Radio } from "./Radio";
 export { default as Timepicker } from "./Timepicker";
+export { default as ActivityTime } from "./ActivityTime";
+export { default as Duration } from "./Duration";
+export { default as Alert } from "./Alert";
+export { default as ModalEdt } from "./ModalEdt";

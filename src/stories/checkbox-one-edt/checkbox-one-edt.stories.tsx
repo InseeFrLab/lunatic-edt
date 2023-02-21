@@ -1,7 +1,8 @@
+import { CheckboxOneCustomOption, CheckboxOneSpecificProps } from "interface";
 import { getStoryFactory } from "stories/getStory";
 import { CheckboxOneEdt } from "ui";
 
-const options = [
+const options: CheckboxOneCustomOption[] = [
     {
         value: "1",
         label: "Item 1",
@@ -11,10 +12,16 @@ const options = [
         label: "Item 2",
     },
     {
-        value: "1",
+        value: "3",
         label: "Item 3",
     },
 ];
+
+let componentSpecificProps: CheckboxOneSpecificProps = {
+    options: options,
+};
+
+const value = "1";
 
 const { meta, getStory } = getStoryFactory({
     sectionName: "Composants",
@@ -24,7 +31,8 @@ const { meta, getStory } = getStoryFactory({
 export default meta;
 
 export const Default = getStory({
-    handleChange: (value: any) => console.log(value),
-    value: null,
+    handleChange: (newValue: any) => console.log(newValue),
+    value: value,
     options: options,
+    componentSpecificProps: componentSpecificProps,
 });

@@ -1,22 +1,16 @@
+import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
+import { IconGridCheckBoxOneSpecificProps } from "interface";
 import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
-import { memo, useEffect, useState, useCallback } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import { v4 as uuidv4 } from "uuid";
-import {
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    Typography,
-} from "@mui/material";
-import { IconGridCheckBoxOneSpecificProps } from "interface";
+import Alert from "../Alert";
 
 type IconGridCheckBoxOneProps = {
-    handleChange(response: { [name: string]: string }, value: string): void;
-    componentSpecificProps?: IconGridCheckBoxOneSpecificProps;
+    handleChange(response: { [name: string]: string }, value: string | undefined): void;
+    componentSpecificProps: IconGridCheckBoxOneSpecificProps;
     response: { [name: string]: string };
     label: string;
     options: CheckboxOneCustomOption[];
@@ -32,9 +26,11 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         backClickCallback,
         nextClickCallback,
         labels,
+        errorIcon,
+        onSelectValue,
     } = { ...componentSpecificProps };
 
-    const [selectedValue, setSelectedValue] = useState<string>(value);
+    const [selectedValue, setSelectedValue] = useState<string | undefined>(value);
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
 
     const { classes, cx } = useStyles();
@@ -47,14 +43,18 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
 
     useEffect(() => {
         if (nextClickEvent) {
-            next(false);
+            next(false, setDisplayAlert, nextClickCallback);
         }
     }, [nextClickEvent]);
 
-    const next = (continueWithUncompleted: boolean) => {
+    const next = (
+        continueWithUncompleted: boolean,
+        setDisplayAlert: (display: boolean) => void,
+        nextClickCallback: () => void,
+    ) => {
         if (nextClickCallback) {
-            if ((selectedValue === null || selectedValue === "") && !continueWithUncompleted) {
-                handleChange(response, "");
+            if ((selectedValue == null || selectedValue == "") && !continueWithUncompleted) {
+                handleChange(response, undefined);
                 setDisplayAlert(true);
             } else {
                 nextClickCallback();
@@ -63,15 +63,19 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
     };
 
     const optionOnClick = (option: CheckboxOneCustomOption) => {
-        setSelectedValue(option.value);
-        handleChange(response, option.value);
+        const value = option.value == selectedValue ? undefined : option.value;
+        setSelectedValue(value);
+        handleChange(response, value);
+        if (onSelectValue && value != null) {
+            onSelectValue();
+        }
     };
 
-    const handleAlert = useCallback(() => next(true), []);
+    const handleAlert = useCallback(() => {
+        next(true, setDisplayAlert, nextClickCallback);
+    }, [displayAlert]);
 
-    const handleAlertClose = useCallback(() => {
-        setDisplayAlert(false);
-    }, []);
+    const onClick = useCallback((option: CheckboxOneCustomOption) => () => optionOnClick(option), []);
 
     const renderOption = (option: CheckboxOneCustomOption) => {
         return (
@@ -82,7 +86,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                         : classes.option
                 }
                 key={uuidv4()}
-                onClick={useCallback(() => optionOnClick(option), [])}
+                onClick={onClick(option)}
             >
                 {optionsIcons && <img className={classes.icon} src={optionsIcons[option.value]} />}
                 <Typography className={classes.optionLabel}>{option.label}</Typography>
@@ -94,30 +98,24 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         <>
             {componentSpecificProps && labels && optionsIcons && (
                 <>
-                    <Dialog
-                        open={displayAlert}
-                        onClose={handleAlertClose}
-                        aria-labelledby="alert-dialog-title"
-                        aria-describedby="alert-dialog-description"
-                    >
-                        <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                                {labels.alertMessage}
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleAlert}>{labels.alertIgnore}</Button>
-                            <Button onClick={handleAlertClose} autoFocus>
-                                {labels.alertComplete}
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
+                    <Alert
+                        isAlertDisplayed={displayAlert}
+                        onCompleteCallBack={() => setDisplayAlert(false)}
+                        onCancelCallBack={handleAlert}
+                        labels={{
+                            content: labels.alertMessage,
+                            cancel: labels.alertIgnore,
+                            complete: labels.alertComplete,
+                        }}
+                        icon={errorIcon || ""}
+                        errorIconAlt={labels.alertAlticon}
+                    ></Alert>
                     <Box className={classes.root}>
                         <Typography className={classes.title}>{label}</Typography>
                     </Box>
 
                     <Box className={classes.optionsBox}>
-                        {options.map(o => {
+                        {options?.map(o => {
                             return renderOption(o);
                         })}
                     </Box>
@@ -154,9 +152,9 @@ const useStyles = makeStylesEdt({ "name": { IconGridCheckBoxOne } })(theme => ({
         width: "45.5%",
         marginTop: "4%",
         borderRadius: "15px",
+        border: "2px solid transparent",
     },
     selectedOption: {
-        border: "2px solid",
         borderColor: theme.palette.primary.main,
     },
     optionLabel: {

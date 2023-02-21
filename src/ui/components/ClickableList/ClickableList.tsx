@@ -8,14 +8,18 @@ import {
     Icon,
     TextField,
 } from "@mui/material";
-import { RawActiviteOption } from "interface/RawActiviteOption";
-import React, { memo } from "react";
+import elasticlunr, { Index } from "elasticlunrjs";
+import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
+import { stemmer } from "./stemmer";
+import stopWords from "./stop_words_french.json";
+
+import React, { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type ClickableListProps = {
     placeholder: string;
-    options: RawActiviteOption[];
+    options: AutoCompleteActiviteOption[];
     selectedId?: string;
     handleChange(id: string | undefined): void;
     createActivity(value: string | undefined): void;
@@ -46,53 +50,59 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
     const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
+    const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
+        elasticlunr.clearStopWords();
+        elasticlunr.addStopWords(stopWords);
+        const temp: Index<AutoCompleteActiviteOption> = elasticlunr();
+        temp.addField("label");
+        temp.addField("synonymes");
+        temp.setRef("id");
+        temp.pipeline.add(
+            elasticlunr.trimmer,
+            elasticlunr.stopWordFilter,
+            str => str.normalize("NFD").replace(/\p{Diacritic}/gu, ""), // remove accents
+            str => stemmer(str),
+        );
 
-    const selectedvalue: RawActiviteOption = options.filter(e => e.id === selectedId)[0];
+        for (const doc of options) {
+            temp.addDoc(doc);
+        }
+        return temp;
+    });
+
+    const selectedvalue: AutoCompleteActiviteOption = options.filter(e => e.id === selectedId)[0];
 
     const { classes, cx } = useStyles();
 
     /**
-     * Remove accents from string
-     * @param value
-     * @returns
-     */
-    const removeAccents = (value: string): string => {
-        return value.normalize("NFD").replace(/\p{Diacritic}/gu, "");
-    };
-
-    /**
      * Filter options to be returned according to user search input
-     * @param options
+     * @param ref
      * @param state
      * @returns
      */
     const filterOptions = (
-        options: RawActiviteOption[],
-        state: FilterOptionsState<RawActiviteOption>,
-    ) => {
-        let newOptions: RawActiviteOption[] = [];
-
+        ref: AutoCompleteActiviteOption[],
+        state: FilterOptionsState<AutoCompleteActiviteOption>,
+    ): AutoCompleteActiviteOption[] => {
         if (state.inputValue.length > 1) {
             setDisplayAddIcon(true);
-            setCurrentInputValue(state.inputValue);
         } else {
             setDisplayAddIcon(false);
         }
+        setCurrentInputValue(state.inputValue);
+        const value = state.inputValue;
+        const res =
+            index.search(value, {
+                fields: {
+                    label: { boost: 2 },
+                    synonymes: { boost: 1 },
+                },
+                expand: true,
+            }) || [];
 
-        options.forEach((element: RawActiviteOption) => {
-            const stateInputValue = state.inputValue;
-            const label = removeAccents(element.label.toLowerCase());
-            const synonymes = removeAccents(element.synonymes.toLowerCase()).replace(",", "");
-            const stateInput = removeAccents(stateInputValue.toLowerCase());
+        const results: AutoCompleteActiviteOption[] = res.map(r => ref.filter(o => o.id === r.ref)[0]);
 
-            if (
-                stateInputValue.length > 1 &&
-                (label.includes(stateInput) || synonymes.includes(stateInput))
-            ) {
-                newOptions.push(element);
-            }
-        });
-        return newOptions;
+        return results;
     };
 
     /**
@@ -116,6 +126,11 @@ const ClickableList = memo((props: ClickableListProps) => {
         );
     };
 
+    const createActivityCallback = useCallback(
+        () => createActivity(currentInputValue),
+        [currentInputValue],
+    );
+
     /**
      * Render no result component
      * @returns
@@ -130,7 +145,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                     className={classes.addActivityButton}
                     variant="contained"
                     startIcon={<Add />}
-                    onClick={() => createActivity(currentInputValue)}
+                    onClick={createActivityCallback}
                 >
                     {addActivityButtonLabel}
                 </Button>
@@ -143,7 +158,11 @@ const ClickableList = memo((props: ClickableListProps) => {
      * @returns
      */
     const renderNoOption = () => {
-        return displayAddIcon ? renderNoResults() : <></>;
+        return displayAddIcon && currentInputValue && currentInputValue?.length > 2 ? (
+            renderNoResults()
+        ) : (
+            <></>
+        );
     };
 
     return (
@@ -164,9 +183,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             noOptionsText={renderNoOption()}
             onClose={() => setDisplayAddIcon(false)}
             fullWidth={true}
-            popupIcon={
-                <Icon children={renderIcon()} onClick={createActivity.bind(this, currentInputValue)} />
-            }
+            popupIcon={<Icon children={renderIcon()} onClick={createActivityCallback} />}
             classes={{ popupIndicator: classes.popupIndicator }}
         />
     );

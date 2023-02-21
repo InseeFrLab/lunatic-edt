@@ -3,9 +3,10 @@ import { Box } from "@mui/system";
 import { WeeklyPlannerSpecificProps } from "interface";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { WeeklyPlannerDataType, WeeklyPlannerValue } from "../../../../interface/WeeklyPlannerTypes";
+import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
 import {
+    formateDateToFrenchFormat,
     generateDateFromStringInput,
     generateDayOverviewTimelineRawData,
     generateStringInputFromDate,
@@ -16,10 +17,15 @@ import { createCustomizableLunaticField } from "../../../utils/create-customizab
 import ProgressBar from "../../ProgressBar";
 import DayOverview from "../DayOverview/DayOverview";
 import DayPlanner from "../DayPlanner/DayPlanner";
+import {
+    getProgressBarValue,
+    transformToIODataStructure,
+    transformToWeeklyPlannerDataType,
+} from "./utils";
 
 export type WeeklyPlannerProps = {
-    handleChange(response: { [name: string]: string }, value: string): void;
-    value: string;
+    handleChange(response: { [name: string]: string }, value: IODataStructure[]): void;
+    value: IODataStructure[];
     componentSpecificProps: WeeklyPlannerSpecificProps;
 };
 
@@ -39,16 +45,24 @@ const generateDayList = (startDate: Date): Date[] => {
 };
 
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
-    const { classes } = useStyles();
     let { value, handleChange, componentSpecificProps } = props;
 
-    const { surveyDate, isSubChildDisplayed, setIsSubChildDisplayed, labels } = {
+    const {
+        surveyDate,
+        isSubChildDisplayed,
+        setIsSubChildDisplayed,
+        labels,
+        saveAll,
+        setDisplayedDayHeader,
+        language,
+    } = {
         ...componentSpecificProps,
     };
+    const { classes } = useStyles();
 
-    const values: WeeklyPlannerValue = JSON.parse(value);
+    const data: WeeklyPlannerDataType[] | undefined =
+        value.length > 1 ? transformToWeeklyPlannerDataType(value, language) : undefined;
     const startDate: string = surveyDate || "";
-    const data: WeeklyPlannerDataType[] | undefined = values?.data;
 
     const startDateFormated: Date = setDateTimeToZero(generateDateFromStringInput(startDate));
     const dayList = generateDayList(startDateFormated);
@@ -58,9 +72,18 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const [activityData, setActivityData] = React.useState<WeeklyPlannerDataType[]>([]);
     const [needSpinner, setNeedSpinner] = React.useState<boolean>(true);
 
+    const formateDateLabel = (date: Date): string => {
+        const formatedDate = formateDateToFrenchFormat(date, language);
+        return formatedDate.toUpperCase();
+    };
+
     useEffect(() => {
         setNeedSpinner(false);
     }, [isSubChildDisplayed]);
+
+    useEffect(() => {
+        setDisplayedDayHeader(formateDateLabel(dayOverviewSelectedDate));
+    }, [dayOverviewSelectedDate]);
 
     // Complete activity data with default values for all days of the week if it was not the case in data input
     useEffect(() => {
@@ -79,37 +102,41 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 temp.push(dayBloc);
             }
         });
-        setActivityData(temp);
+        // loop through saved data to check if some are out of the week range after survey date update
+        const dayListAsString: string[] = dayList.map(d => generateStringInputFromDate(d));
+        const clearedTemp = temp
+            .filter(dayBloc => dayListAsString.includes(dayBloc.date))
+            .sort((a, b) => a.date.localeCompare(b.date));
+
+        setActivityData(clearedTemp);
+        const toStore = transformToIODataStructure(clearedTemp);
+        handleChange({ name: "WEEKLYPLANNER" }, toStore);
     }, []);
 
     useEffect(() => {
-        handleChange({ name: "WEEKLYPLANNER" }, JSON.stringify({ "data": activityData }));
         setNeedSpinner(true);
+        saveAll();
     }, [activityData]);
 
-    /**
-     * Returns number between 0 and 100 depending on how many days of the week for which editing has been started
-     * at the end discrete values between 1/7 and 7/7 rounded as %
-     * @returns
-     */
-    const getProgressBarValue = (): number => {
-        return Math.round((activityData.filter(a => a.hasBeenStarted === true).length / 7) * 100);
+    const getMainDisplay = () => {
+        return isSubChildDisplayed ? "none" : "inline";
     };
 
     return (
-        <Box>
+        <Box id="root-box">
             <DayOverview
                 isDisplayed={isSubChildDisplayed}
                 date={dayOverviewSelectedDate}
                 rawTimeLineData={generateDayOverviewTimelineRawData()}
                 activityData={activityData}
                 setActivityData={setActivityData}
+                handleChangeData={handleChange}
             ></DayOverview>
             {activityData.length !== 0 && needSpinner ? (
-                <Box display={isSubChildDisplayed ? "none" : "inline"}>
+                <Box display={getMainDisplay()}>
                     <ProgressBar
                         className={classes.progressBar}
-                        value={getProgressBarValue()}
+                        value={getProgressBarValue(activityData)}
                         showlabel={true}
                     />
                     <Typography className={classes.title}>{labels.title}</Typography>
@@ -125,6 +152,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                                 workSumLabel={labels.workSumLabel}
                                 presentButtonLabel={labels.presentButtonLabel}
                                 futureButtonLabel={labels.futureButtonLabel}
+                                language={language}
                             ></DayPlanner>
                         ))}
                     </List>
@@ -140,18 +168,20 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
     listContainer: {
         display: "flex",
         flexDirection: "column",
+        paddingBottom: "6rem",
     },
     title: {
-        marginTop: "5rem",
+        marginTop: "2rem",
         fontSize: "14px",
     },
     progressBar: {
         padding: "1rem",
         backgroundColor: theme.variables.white,
-        position: "absolute",
-        left: "0",
-        top: "4.1rem",
+        position: "relative",
+        width: "100vw !important",
         overflowX: "hidden",
+        //Orchestrator content width is limited to 350px, 175px correspond to half if it
+        transform: "translateX(calc(175px - 50vw))",
     },
 }));
 

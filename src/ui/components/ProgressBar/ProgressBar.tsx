@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
 import LinearProgress, { LinearProgressProps } from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 
-function LinearProgressWithLabel(props: LinearProgressProps & { value: number; showlabel: boolean }) {
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number; showlabel: string }) {
     let labelTranslateX = props.value === 0 ? props.value : props.value - 2;
     const { classes } = useStyles();
     return (
@@ -28,7 +28,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number; s
 }
 
 export type ProgressBarProps = {
-    value: number;
+    value?: number;
     showlabel?: boolean;
     id?: string;
     className?: string;
@@ -39,9 +39,13 @@ const ProgressBar = memo((props: ProgressBarProps) => {
     //TODO : to complete when we know how to override/use it from lunatic
     const { value, showlabel = false, id, className, isPrimaryMainColor = false } = props;
 
-    const [progress] = React.useState(value);
+    const [progress, setProgress] = React.useState(value);
 
     const { classes, cx } = useStyles();
+
+    useEffect(() => {
+        setProgress(value);
+    }, [value]);
 
     return (
         <Box
@@ -52,7 +56,11 @@ const ProgressBar = memo((props: ProgressBarProps) => {
             )}
             aria-label="progressbar"
         >
-            <LinearProgressWithLabel id={id} value={progress} showlabel={showlabel} />
+            <LinearProgressWithLabel
+                id={id}
+                value={progress || 0}
+                showlabel={showlabel ? "true" : "false"}
+            />
         </Box>
     );
 });

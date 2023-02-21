@@ -1,6 +1,6 @@
 {
     "name": "lunatic-edt",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "description": "Library of questionnaire components for EDT survey",
     "repository": {
         "type": "git",
@@ -55,13 +55,17 @@
         "transform": {
             "^.+\\.(ts|tsx|js|jsx)$": "ts-jest"
         },
-        "testResultsProcessor": "jest-sonar-reporter"
+        "testResultsProcessor": "jest-sonar-reporter",
+        "testPathIgnorePatterns": [
+            "/src/*/dist",
+            "dist"
+        ]
     },
     "devDependencies": {
         "@babel/core": "^7.18.13",
         "@commitlint/cli": "^17.0.3",
         "@commitlint/config-conventional": "^17.0.3",
-        "@inseefr/lunatic": "^0.4.31-v2",
+        "@inseefr/lunatic": "2.0.6-v2",
         "@storybook/addon-a11y": "^6.5.12",
         "@storybook/addon-actions": "^6.5.12",
         "@storybook/addon-essentials": "^6.5.12",
@@ -107,7 +111,9 @@
         "@mui/icons-material": "^5.10.9",
         "@mui/material": "^5.10.9",
         "@mui/x-date-pickers": "^5.0.8",
+        "@types/elasticlunrjs": "^1.0.0",
         "dayjs": "^1.11.5",
+        "elasticlunrjs": "^1.0.1",
         "tss-react": "^4.0.0",
         "uuid": "^9.0.0"
     }

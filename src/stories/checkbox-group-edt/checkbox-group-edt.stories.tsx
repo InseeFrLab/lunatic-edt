@@ -33,7 +33,7 @@ const { meta, getStory } = getStoryFactory({
 export default meta;
 
 export const Default = getStory({
-    handleChange: (value: any) => console.log(value),
+    handleChange: (newValue: any) => console.log(newValue),
     value: value,
-    options: options,
+    responses: options,
 });

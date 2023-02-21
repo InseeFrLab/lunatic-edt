@@ -1564,12 +1564,12 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@inseefr/lunatic@^0.4.31-v2":
-  version "0.4.31-v2"
-  resolved "https://registry.yarnpkg.com/@inseefr/lunatic/-/lunatic-0.4.31-v2.tgz#151c156f82372a2602dbf39cf78f825bbb1e7e7c"
-  integrity sha512-uIKIh7XZrYVx7EK9d8d7IJgDiujihf0Bd3RPmQPJ+oxSdcg0mpwDIJeQWow2QpyZSsfl5WvqSv+BYHdMgGnbcg==
+"@inseefr/lunatic@2.0.6-v2":
+  version "2.0.6-v2"
+  resolved "https://registry.yarnpkg.com/@inseefr/lunatic/-/lunatic-2.0.6-v2.tgz#64cc92f973b470d5ef997cf5d8449b71bbf90ccc"
+  integrity sha512-+RlrvU97O/VRc+2Ihn8ESmVFaGvazbL0UeSktI0yAymH/94Ppjg7vEhx7WHlWvjSbYjvUmjCIXf+Eav2jlIIcg==
   dependencies:
-    "@inseefr/trevas" "^0.1.15"
+    "@inseefr/trevas" "^0.1.16"
     "@inseefr/vtl-2.0-antlr-tools" "^0.1.0-bundle"
     antlr4 "4.8.0"
     classnames "^2.3.1"
@@ -1588,10 +1588,10 @@
     snowball "^0.3.1"
     string-tokenizer "^0.0.8"
 
-"@inseefr/trevas@^0.1.15":
-  version "0.1.16"
-  resolved "https://registry.yarnpkg.com/@inseefr/trevas/-/trevas-0.1.16.tgz#179bbde45b0b67b70bae3e26848049f84701b2f1"
-  integrity sha512-VCsPEzCtHpYHQljIErn86lWhEZWg0iAlxkl46ZgyfDrMpfD4wsByH3pUKKSidz24396Em3CqvOQ1EfPHUE+7mw==
+"@inseefr/trevas@^0.1.16":
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/@inseefr/trevas/-/trevas-0.1.17.tgz#747ee1b2c712b0d5b277760ea27ce1fb78f65415"
+  integrity sha512-hQ6mXtcID6kmbpQPuJpyjiBMzGnsC2MAFKIt3qjHBCpYOXbgzl+VteSi+Sj0q4J2EQAx45drIcIZdX7FOf4EUw==
   dependencies:
     "@inseefr/vtl-2.0-antlr-tools" "0.1.0"
     antlr4 "4.8.0"
@@ -3228,6 +3228,11 @@
   integrity sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==
   dependencies:
     "@types/ms" "*"
+
+"@types/elasticlunrjs@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@types/elasticlunrjs/-/elasticlunrjs-1.0.0.tgz#50e7a68f10710c28152c8576e8ea71c9a9257f35"
+  integrity sha512-DpO3XXuhDB7+a/T0I6ndC1bU16cKIMZl7JQfPgG5ZZnMCk9xQuG+i2M1KMlv5J3FwkTaKViVkXgGP95buLTPsw==
 
 "@types/eslint-scope@^3.7.3":
   version "3.7.4"
@@ -6180,6 +6185,11 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
+
+elasticlunrjs@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/elasticlunrjs/-/elasticlunrjs-1.0.1.tgz#a1479765e79fb11188c2af358789be5747ddca25"
+  integrity sha512-Si+Y2Kef7AC6UVA0bgSOG20xtszLeUFmk4Yj2C73tP7OuIciwErU4ReQ8nZnT4NoB2JtcI7ia0Dr+HgoxcVFyw==
 
 electron-to-chromium@^1.4.251:
   version "1.4.284"

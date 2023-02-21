@@ -19,6 +19,7 @@ export type DayPlannerProps = {
     workSumLabel?: string;
     presentButtonLabel?: string;
     futureButtonLabel?: string;
+    language: string;
 };
 
 enum DayRelativeTimeEnum {
@@ -27,8 +28,8 @@ enum DayRelativeTimeEnum {
     Future = 1,
 }
 
-const renderDateLabel = (date: Date): string => {
-    const formatedDate: string = formateDateToFrenchFormat(date);
+const renderDateLabel = (date: Date, language: string): string => {
+    const formatedDate: string = formateDateToFrenchFormat(date, language);
     return formatedDate.charAt(0).toUpperCase() + formatedDate.slice(1);
 };
 
@@ -55,6 +56,12 @@ const setDay = (setDayRelativeTime: any, date: Date, todayDate: Date) => {
     } else setDayRelativeTime(DayRelativeTimeEnum.Past);
 };
 
+/**
+ * This component is the one shown inside WeeklyPlanner component when the user still have to
+ * choose a day to fullfil.
+ * It allows the user to select the day he wants to fullfil and also give information about the status
+ * of the completion of this day.
+ */
 const DayPlanner = React.memo((props: DayPlannerProps) => {
     const { classes, cx } = useStyles();
     const {
@@ -66,6 +73,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         workSumLabel,
         presentButtonLabel,
         futureButtonLabel,
+        language,
     } = props;
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
@@ -83,9 +91,9 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         const dayBloc: WeeklyPlannerDataType = activityData.filter(
             d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
         )[0];
-        const sum: number = dayBloc?.detail.reduce((sum, val) => sum + val.duration, 0);
+        const sum: number = dayBloc?.detail.reduce((acc, val) => acc + val.duration, 0);
         setWorkedHoursSum(sum);
-        setHasBeenStarted(dayBloc.hasBeenStarted);
+        setHasBeenStarted(dayBloc?.hasBeenStarted);
     }, [activityData]);
 
     /**
@@ -141,28 +149,32 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         }
     };
 
+    const getMainContainerComplementaryClass = () => {
+        return dayRelativeTime === 0 ? classes.mainContainerPresent : "";
+    };
+    const getDayAndDotsClass = () => {
+        return dayRelativeTime === -1 ? classes.dayAndDotsContainer : "";
+    };
+    const renderMoreIcon = () => {
+        return dayRelativeTime === -1 ? (
+            <MoreHorizIcon className={classes.clickable} onClick={buttonsOnClick}></MoreHorizIcon>
+        ) : (
+            <></>
+        );
+    };
+
     return (
         <>
             {dayRelativeTime !== undefined ? (
                 <Box
-                    className={cx(
-                        classes.mainContainer,
-                        dayRelativeTime === 0 ? classes.mainContainerPresent : "",
-                    )}
+                    className={cx(classes.mainContainer, getMainContainerComplementaryClass())}
                     aria-label="dayplanner"
                 >
-                    <Box className={dayRelativeTime === -1 ? classes.dayAndDotsContainer : ""}>
+                    <Box className={getDayAndDotsClass()}>
                         <Typography className={cx(classes.dayLabel, classes.bold)}>
-                            {renderDateLabel(date)}
+                            {renderDateLabel(date, language)}
                         </Typography>
-                        {dayRelativeTime === -1 ? (
-                            <MoreHorizIcon
-                                className={classes.clickable}
-                                onClick={buttonsOnClick}
-                            ></MoreHorizIcon>
-                        ) : (
-                            <></>
-                        )}
+                        {renderMoreIcon()}
                     </Box>
                     {renderBottomPart()}
                 </Box>
@@ -179,7 +191,7 @@ const useStyles = makeStylesEdt({ "name": { DayPlanner } })(theme => ({
     mainContainer: {
         marginTop: "1.25rem",
         padding: "1rem",
-        width: "100%",
+        width: "350px",
         borderRadius: "5px",
         backgroundColor: theme.palette.background.paper,
     },

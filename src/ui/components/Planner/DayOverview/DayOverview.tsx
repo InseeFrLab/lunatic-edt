@@ -3,16 +3,16 @@ import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
 import { LunaticMultiSelectionValues } from "../../../../interface/LunaticMultiSelectionValues";
-import { DayDetailType, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
-import { makeStylesEdt } from "../../../theme";
 import {
-    convertTime,
-    formateDateToFrenchFormat,
-    generateDateFromStringInput,
-    setDateTimeToZero,
-} from "../../../utils";
+    DayDetailType,
+    IODataStructure,
+    WeeklyPlannerDataType,
+} from "../../../../interface/WeeklyPlannerTypes";
+import { makeStylesEdt } from "../../../theme";
+import { convertTime, generateDateFromStringInput, setDateTimeToZero } from "../../../utils";
 import HourChecker from "../../HourChecker";
 import ProgressBar from "../../ProgressBar";
+import { INTERVAL, transformToIODataStructure } from "../WeeklyPlanner/utils";
 
 export type DayOverviewProps = {
     date: Date;
@@ -20,16 +20,7 @@ export type DayOverviewProps = {
     rawTimeLineData: TimeLineRowType[];
     activityData: WeeklyPlannerDataType[];
     setActivityData(data: WeeklyPlannerDataType[]): void;
-};
-
-/**
- * Returns a formated string from Date
- * @param date
- * @returns
- */
-const formateDateLabel = (date: Date): string => {
-    const formatedDate = formateDateToFrenchFormat(date);
-    return formatedDate.toUpperCase();
+    handleChangeData(response: { [name: string]: string }, value: IODataStructure[]): void;
 };
 
 /**
@@ -46,20 +37,23 @@ const fromDayDetailsToValues = (details: DayDetailType[]): LunaticMultiSelection
         time.setHours(Number(splittedTime[0]));
         time.setMinutes(Number(splittedTime[1]));
 
-        const intervalInMinutes = 15;
-
-        for (let i = 0; i < b.duration / intervalInMinutes; i++) {
+        for (let i = 0; i < b.duration / INTERVAL; i++) {
             const key = convertTime(time);
             values[key] = true;
-            time.setMinutes(time.getMinutes() + intervalInMinutes);
+            time.setMinutes(time.getMinutes() + INTERVAL);
         }
     });
     return values;
 };
 
+/**
+ * This component is the one shown inside WeeklyPlanner component when the user choose a day to fullfil.
+ * It shows to the user a list of 24 Hourchecker components corresponding to an entire day.
+ */
 const DayOverview = memo((props: DayOverviewProps) => {
     const { classes } = useStyles();
-    const { date, isDisplayed, rawTimeLineData, activityData, setActivityData } = props;
+    const { date, isDisplayed, rawTimeLineData, activityData, setActivityData, handleChangeData } =
+        props;
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
     const [timeLineData, setTimeLineData] = React.useState<TimeLineRowType[]>(rawTimeLineData);
@@ -124,9 +118,9 @@ const DayOverview = memo((props: DayOverviewProps) => {
             if (value && startHour === "start") {
                 startHour = key;
                 endHour = key;
-                durationTime = durationTime + 15;
+                durationTime = durationTime + INTERVAL;
             } else if (value) {
-                durationTime = durationTime + 15;
+                durationTime = durationTime + INTERVAL;
                 endHour = key;
             }
             if (!value && endHour !== "end") {
@@ -141,7 +135,19 @@ const DayOverview = memo((props: DayOverviewProps) => {
             }
         });
 
+        if (endHour !== "end") {
+            details.push({
+                start: startHour,
+                end: endHour,
+                duration: durationTime,
+            });
+        }
+
         dayBloc.detail = details;
+
+        const toStore = transformToIODataStructure(temp);
+        handleChangeData({ name: "WEEKLYPLANNER" }, toStore);
+
         setActivityData(temp);
     };
 
@@ -159,9 +165,8 @@ const DayOverview = memo((props: DayOverviewProps) => {
 
     return (
         <Box className={classes.mainContainer} display={componentDisplay} aria-label="dayoverview">
-            <Box className={classes.absoluteBox}>
+            <Box className={classes.headerContainerBox}>
                 <Box className={classes.headerContainer}>
-                    <Typography className={classes.dayLabel}>{formateDateLabel(date)}</Typography>
                     <ProgressBar
                         className={classes.progressBar}
                         value={Math.round((new Date().getHours() / 24) * 100)}
@@ -179,13 +184,13 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     mainContainer: {
         flexDirection: "column",
     },
-    absoluteBox: {
-        position: "absolute",
-        left: "0",
-        top: "0",
-        overflowX: "hidden",
-        width: "100%",
+    headerContainerBox: {
         zIndex: "1",
+        position: "relative",
+        width: "100vw !important",
+        overflowX: "hidden",
+        //Orchestrator content width is limited to 350px, 175px correspond to half of it
+        transform: "translateX(calc(175px - 50vw))",
     },
     headerContainer: {
         backgroundColor: theme.variables.white,
@@ -205,6 +210,7 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
         display: "flex",
         flexDirection: "column",
         paddingTop: "2rem",
+        paddingBottom: "6rem",
     },
     rowContainer: {
         display: "flex",
@@ -212,8 +218,7 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
         marginBottom: "0.5rem",
     },
     rowLabel: {
-        width: "40px",
-        marginRight: "1rem",
+        width: "50px",
     },
     hourLabel: {
         color: theme.palette.info.main,
