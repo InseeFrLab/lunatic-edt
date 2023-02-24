@@ -50,9 +50,27 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
     const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
+
+    const skipApostrophes = (labelWithApostrophe: string) => {
+        const labelWitoutApostrophe = labelWithApostrophe.toLowerCase().replace("s’", "se ");
+        return labelWithApostrophe.toLowerCase().indexOf("s’") >= 0
+            ? labelWitoutApostrophe
+            : labelWithApostrophe;
+    };
+
     const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
+        let optionsSplit = options.map(opt => {
+            const newOption: AutoCompleteActiviteOption = {
+                id: opt.id,
+                label: skipApostrophes(opt.label),
+                synonymes: opt.synonymes,
+            };
+            return newOption;
+        });
+
         elasticlunr.clearStopWords();
         elasticlunr.addStopWords(stopWords);
+
         const temp: Index<AutoCompleteActiviteOption> = elasticlunr();
         temp.addField("label");
         temp.addField("synonymes");
@@ -60,11 +78,15 @@ const ClickableList = memo((props: ClickableListProps) => {
         temp.pipeline.add(
             elasticlunr.trimmer,
             elasticlunr.stopWordFilter,
-            str => str.normalize("NFD").replace(/\p{Diacritic}/gu, ""), // remove accents
+            str =>
+                str
+                    .normalize("NFD")
+                    .replace(/\p{Diacritic}/gu, "")
+                    .replace(/'/g, " "), // remove accents
             str => stemmer(str),
         );
 
-        for (const doc of options) {
+        for (const doc of optionsSplit) {
             temp.addDoc(doc);
         }
         return temp;
@@ -90,7 +112,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             setDisplayAddIcon(false);
         }
         setCurrentInputValue(state.inputValue);
-        const value = state.inputValue;
+        const value = state.inputValue.replace("'", " ");
         const res =
             index.search(value, {
                 fields: {
@@ -101,7 +123,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             }) || [];
 
         const results: AutoCompleteActiviteOption[] = res.map(r => ref.filter(o => o.id === r.ref)[0]);
-
+        console.log(results);
         return results;
     };
 
