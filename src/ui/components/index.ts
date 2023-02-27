@@ -24,3 +24,4 @@ export { default as ActivityTime } from "./ActivityTime";
 export { default as Duration } from "./Duration";
 export { default as Alert } from "./Alert";
 export { default as ModalEdt } from "./ModalEdt";
+export { default as TooltipInfo } from "./TooltipInfo";
