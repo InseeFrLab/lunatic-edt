@@ -3,9 +3,9 @@ import { CheckboxGroupSpecificProps } from "interface";
 import { CheckboxOption } from "interface/CheckboxOptions";
 import { memo, useCallback, useEffect, useState } from "react";
 import { makeStylesEdt } from "../../theme";
+import { important } from "../../utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Alert from "../Alert";
-import { important } from "../../utils";
 
 export type CheckboxGroupEdtProps = {
     label?: string;
@@ -120,7 +120,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                             key={option.response.name + "-" + index}
                             value={option.response.name}
                         >
-                            <Box style={{ display: "flex" }}>
+                            <Box className={classes.toggleButtonContent}>
                                 {componentSpecificProps &&
                                     componentSpecificProps.optionsIcons &&
                                     componentSpecificProps.optionsIcons[option.id] && (
@@ -186,6 +186,9 @@ const useStyles = makeStylesEdt({ "name": { CheckboxGroupEdt } })(theme => ({
             borderColor: important(theme.palette.primary.main),
             backgroundColor: "#FFFFFF",
         },
+    },
+    toggleButtonContent: {
+        display: "flex",
     },
 }));
 
