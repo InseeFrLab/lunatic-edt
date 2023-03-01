@@ -20,6 +20,7 @@ export type ActivityLabelProps = {
 export type InfoProps = {
     normalText?: string;
     boldText?: string;
+    isAlertInfo?: boolean;
     infoIcon: string;
     infoIconAlt: string;
     border: boolean;
