@@ -116,5 +116,8 @@
         "elasticlunrjs": "^1.0.1",
         "tss-react": "^4.0.0",
         "uuid": "^9.0.0"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }
