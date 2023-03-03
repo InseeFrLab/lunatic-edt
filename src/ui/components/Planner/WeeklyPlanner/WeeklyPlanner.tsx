@@ -163,6 +163,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                                     workSumLabel={labels.workSumLabel}
                                     presentButtonLabel={labels.presentButtonLabel}
                                     futureButtonLabel={labels.futureButtonLabel}
+                                    editButtonLabel={labels.editButtonLabel}
                                     language={language}
                                 ></DayPlanner>
                             ))}

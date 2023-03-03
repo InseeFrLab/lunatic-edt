@@ -1,5 +1,5 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Popover, Typography } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
 import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
@@ -8,7 +8,6 @@ import {
     generateDateFromStringInput,
     setDateTimeToZero,
 } from "../../../utils";
-import ProgressBar from "../../ProgressBar";
 
 export type DayPlannerProps = {
     date: Date;
@@ -19,6 +18,7 @@ export type DayPlannerProps = {
     workSumLabel?: string;
     presentButtonLabel?: string;
     futureButtonLabel?: string;
+    editButtonLabel?: string;
     language: string;
 };
 
@@ -73,12 +73,17 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         workSumLabel,
         presentButtonLabel,
         futureButtonLabel,
+        editButtonLabel,
         language,
     } = props;
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
     const [workedHoursSum, setWorkedHoursSum] = React.useState<number>(0);
     const [hasBeenStarted, setHasBeenStarted] = React.useState<boolean>();
+
+    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const openPopOver = Boolean(anchorEl);
+    const id = openPopOver ? "edit-popover" : undefined;
 
     const todayDate: Date = setDateTimeToZero(new Date());
 
@@ -159,9 +164,40 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     const getDayAndDotsClass = () => {
         return dayRelativeTime === -1 ? classes.dayAndDotsContainer : "";
     };
+
+    const onEditCard = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+        setAnchorEl(e.currentTarget as HTMLButtonElement);
+    }, []);
+
+    const handleClose = useCallback(
+        (e: React.MouseEvent) => {
+            setAnchorEl(null);
+            e.stopPropagation();
+        },
+        [anchorEl],
+    );
+
     const renderMoreIcon = () => {
         return dayRelativeTime === -1 ? (
-            <MoreHorizIcon className={classes.clickable} onClick={buttonsOnClick}></MoreHorizIcon>
+            <Box>
+                <MoreHorizIcon className={classes.clickable} onClick={onEditCard}></MoreHorizIcon>
+                <Popover
+                    id={id}
+                    open={openPopOver}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
+                    }}
+                    className={classes.popOver}
+                >
+                    <Typography onClick={buttonsOnClick} className={classes.clickableText}>
+                        {editButtonLabel}
+                    </Typography>
+                </Popover>
+            </Box>
         ) : (
             <></>
         );
@@ -238,6 +274,18 @@ const useStyles = makeStylesEdt({ "name": { DayPlanner } })(theme => ({
     },
     bold: {
         fontWeight: "bold",
+    },
+    popOver: {
+        "& .MuiPopover-paper": {
+            backgroundColor: theme.variables.white,
+            padding: "0.5rem",
+        },
+    },
+    clickableText: {
+        cursor: "pointer",
+        "&:hover": {
+            color: theme.palette.primary.light,
+        },
     },
 }));
 
