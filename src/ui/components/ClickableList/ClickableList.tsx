@@ -123,7 +123,6 @@ const ClickableList = memo((props: ClickableListProps) => {
             }) || [];
 
         const results: AutoCompleteActiviteOption[] = res.map(r => ref.filter(o => o.id === r.ref)[0]);
-        console.log(results);
         return results;
     };
 

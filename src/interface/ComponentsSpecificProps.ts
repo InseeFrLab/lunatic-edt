@@ -37,6 +37,7 @@ export type WeeklyPlannerSpecificProps = {
         workSumLabel: string;
         presentButtonLabel: string;
         futureButtonLabel: string;
+        editButtonLabel: string;
         infoLabels: InfoProps;
     };
     saveAll(): void;

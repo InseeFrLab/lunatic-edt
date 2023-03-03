@@ -665,14 +665,14 @@ const nextStep = (
     continueWithUncompleted: boolean,
 ) => {
     let routeToGoal = true;
-    let displayAlert = FullScreenComponent.FreeInput
-        ? (states.createActivityValue === undefined || states.createActivityValue === "") &&
-          !continueWithUncompleted
-        : states.selectedCategory === undefined &&
-          states.selectedId === undefined &&
-          states.suggesterId === undefined &&
-          !continueWithUncompleted;
-
+    let displayAlert =
+        states.fullScreenComponent == FullScreenComponent.FreeInput
+            ? (states.createActivityValue === undefined || states.createActivityValue === "") &&
+              !continueWithUncompleted
+            : states.selectedCategory === undefined &&
+              states.selectedId === undefined &&
+              states.suggesterId === undefined &&
+              !continueWithUncompleted;
     switch (states.fullScreenComponent) {
         //option clickable list - when activity selected is one of sub category
         case FullScreenComponent.ClickableListComp:
