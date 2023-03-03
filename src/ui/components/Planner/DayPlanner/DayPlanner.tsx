@@ -125,10 +125,14 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
             return (
                 <Box className={classes.buttonBox}>
                     {dayRelativeTime === 0 && (
-                        <ProgressBar
-                            className={classes.progressBar}
-                            value={Math.round((new Date().getHours() / 24) * 100)}
-                        />
+                        <Box className={classes.textBox}>
+                            <Typography className={classes.workTimeText}>
+                                {workSumLabel}
+                                <span className={classes.bold}>
+                                    {getFormatedWorkedSum(workedHoursSum)}
+                                </span>
+                            </Typography>
+                        </Box>
                     )}
                     <Button className={classes.button} onClick={buttonsOnClick}>
                         {presentButtonLabel}
