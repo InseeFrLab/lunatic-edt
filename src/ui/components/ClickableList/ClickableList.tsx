@@ -118,21 +118,26 @@ const ClickableList = memo((props: ClickableListProps) => {
         } else {
             setDisplayAddIcon(false);
         }
-        setCurrentInputValue(state.inputValue);
-        const value = state.inputValue.replace("'", " ");
 
-        const res =
-            index.search(value, {
-                fields: {
-                    label: { boost: 2 },
-                    synonymes: { boost: 1 },
-                },
-                expand: true,
-            }) || [];
+        if (filterStopWords(state.inputValue).length > 2) {
+            setCurrentInputValue(state.inputValue);
+            const value = state.inputValue.replace("'", " ");
 
-        const results: AutoCompleteActiviteOption[] = res.map(r => ref.filter(o => o.id === r.ref)[0]);
-        console.log(results);
-        return results;
+            const res =
+                index.search(value, {
+                    fields: {
+                        label: { boost: 2 },
+                        synonymes: { boost: 1 },
+                    },
+                    expand: true,
+                }) || [];
+
+            const results: AutoCompleteActiviteOption[] = res.map(
+                r => ref.filter(o => o.id === r.ref)[0],
+            );
+            return results;
+        }
+        return [];
     };
 
     /**
@@ -184,11 +189,34 @@ const ClickableList = memo((props: ClickableListProps) => {
     };
 
     /**
-     * Render no option component
+     * Remove the words included in stopwords that are in the input + spaces.
+     *
+     */
+    const filterStopWords = (value: string | undefined): string => {
+        if (value == null) return "";
+
+        let inputWithoutStopWords = value;
+
+        stopWords.forEach(stopWord => {
+            if (inputWithoutStopWords != null && inputWithoutStopWords.includes(stopWord)) {
+                inputWithoutStopWords = inputWithoutStopWords.replace(stopWord + " ", "");
+            }
+        });
+
+        inputWithoutStopWords = inputWithoutStopWords.replaceAll(" ", "");
+        return inputWithoutStopWords;
+    };
+
+    /**
+     * Render no option component.
      * @returns
      */
     const renderNoOption = () => {
-        return displayAddIcon && currentInputValue && currentInputValue?.length > 2 ? (
+        // not counts the words included in stopwords that are in the input.
+        // With this, we render noresults only when input without stopwords and spaces has a lenght > 2
+        const inputWithoutStopWords = filterStopWords(currentInputValue);
+
+        return displayAddIcon && inputWithoutStopWords && inputWithoutStopWords?.length > 2 ? (
             renderNoResults()
         ) : (
             <></>
