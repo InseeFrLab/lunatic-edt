@@ -52,22 +52,29 @@ const ClickableList = memo((props: ClickableListProps) => {
     const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
 
     const skipApostrophes = (labelWithApostrophe: string) => {
-        const labelWitoutApostrophe = labelWithApostrophe.toLowerCase().replace("s’", "se ");
-        return labelWithApostrophe.toLowerCase().indexOf("s’") >= 0
+        let labelWitoutApostrophe = labelWithApostrophe.toLowerCase().replace("s’", "se ");
+        //labelWitoutApostrophe = labelWitoutApostrophe.replaceAll("’"," ");
+
+        return labelWithApostrophe.toLowerCase().indexOf("’") >= 0
             ? labelWitoutApostrophe
             : labelWithApostrophe;
+        //return labelWitoutApostrophe;
     };
 
-    const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
-        let optionsSplit = options.map(opt => {
+    let optionsFiltered: AutoCompleteActiviteOption[] = [];
+
+    options.forEach(opt => {
+        if (optionsFiltered.find(option => option.label == opt.label) == null) {
             const newOption: AutoCompleteActiviteOption = {
                 id: opt.id,
                 label: skipApostrophes(opt.label),
                 synonymes: opt.synonymes,
             };
-            return newOption;
-        });
+            optionsFiltered.push(newOption);
+        }
+    });
 
+    const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
         elasticlunr.clearStopWords();
         elasticlunr.addStopWords(stopWords);
 
@@ -86,7 +93,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             str => stemmer(str),
         );
 
-        for (const doc of optionsSplit) {
+        for (const doc of optionsFiltered) {
             temp.addDoc(doc);
         }
         return temp;
@@ -113,6 +120,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         }
         setCurrentInputValue(state.inputValue);
         const value = state.inputValue.replace("'", " ");
+
         const res =
             index.search(value, {
                 fields: {
@@ -123,6 +131,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             }) || [];
 
         const results: AutoCompleteActiviteOption[] = res.map(r => ref.filter(o => o.id === r.ref)[0]);
+        console.log(results);
         return results;
     };
 
@@ -189,7 +198,7 @@ const ClickableList = memo((props: ClickableListProps) => {
     return (
         <Autocomplete
             className={cx(classes.root, className)}
-            options={options}
+            options={optionsFiltered}
             defaultValue={selectedvalue}
             onChange={(_event, value) => handleChange(value?.id)}
             renderInput={params => renderTextField(params)}
@@ -200,7 +209,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                 </li>
             )}
             getOptionLabel={option => option.label}
-            filterOptions={filterOptions}
+            filterOptions={(options, inputValue) => filterOptions(options, inputValue)}
             noOptionsText={renderNoOption()}
             onClose={() => setDisplayAddIcon(false)}
             fullWidth={true}
