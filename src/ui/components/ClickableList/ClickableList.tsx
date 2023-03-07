@@ -7,6 +7,7 @@ import {
     FilterOptionsState,
     Icon,
     Paper,
+    Popper,
     TextField,
 } from "@mui/material";
 import elasticlunr, { Index } from "elasticlunrjs";
@@ -226,9 +227,33 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     const renderListOptions = (children: ReactNode) => {
         return (
-            <Paper className={isMobile ? classes.listOptionsMobile : classes.listOptionsDesktop}>
+            <Paper
+                className={isMobile ? classes.listOptionsMobile : classes.listOptionsDesktop}
+                onMouseDown={event => event.preventDefault()}
+            >
                 {children}
             </Paper>
+        );
+    };
+
+    /**
+     * Render list of options and button for add new activity
+     */
+    const renderListBoxComponent = (props: any) => {
+        return (
+            <>
+                <ul {...props} />
+                <Box className={classes.noResults}>
+                    <Button
+                        className={classes.addActivityButton}
+                        variant="contained"
+                        startIcon={<Add />}
+                        onClick={() => createActivity(currentInputValue)}
+                    >
+                        {addActivityButtonLabel}
+                    </Button>
+                </Box>
+            </>
         );
     };
 
@@ -253,6 +278,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             popupIcon={<Icon children={renderIcon()} onClick={createActivityCallback} />}
             classes={{ popupIndicator: classes.popupIndicator }}
             PaperComponent={({ children }) => renderListOptions(children)}
+            ListboxComponent={listboxProps => renderListBoxComponent(listboxProps)}
         />
     );
 });
