@@ -1,10 +1,10 @@
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { IconButton, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { InfoProps } from "interface";
 import React, { memo } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Info from "../Info";
 
 export type TooltipInfoProps = {
@@ -28,15 +28,15 @@ const TooltipInfo = memo((props: TooltipInfoProps) => {
                 {titleLabels?.normalTitle && (
                     <Typography className={classes.title}>{titleLabels.normalTitle}</Typography>
                 )}
+                {titleLabels?.boldTitle && (
+                    <Typography className={classes.titleBold}>{titleLabels.boldTitle}</Typography>
+                )}
                 <Tooltip title="Info" className={displayTooltip ? classes.hiddenBox : classes.iconBox}>
                     <IconButton onClick={() => setDisplayInfo(!displayInfo)}>
                         <InfoOutlinedIcon className={classes.iconInfoBox} />
                     </IconButton>
                 </Tooltip>
             </Box>
-            {titleLabels?.boldTitle && (
-                <Typography className={classes.titleBold}>{titleLabels.boldTitle}</Typography>
-            )}
 
             {infoLabels && (
                 <Box className={displayInfo || displayTooltip ? classes.infoBox : classes.hiddenBox}>
@@ -66,10 +66,8 @@ const useStyles = makeStylesEdt({ "name": { TooltipInfo } })(theme => ({
     },
     titleBox: {
         display: "flex",
-        marginTop: "2rem",
     },
     infoBox: {
-        margin: "1rem 0rem",
         display: "flex",
         justifyContent: "center",
     },
