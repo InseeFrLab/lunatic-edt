@@ -53,12 +53,9 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     const skipApostrophes = (labelWithApostrophe: string) => {
         let labelWitoutApostrophe = labelWithApostrophe.toLowerCase().replace("s’", "se ");
-        //labelWitoutApostrophe = labelWitoutApostrophe.replaceAll("’"," ");
-
         return labelWithApostrophe.toLowerCase().indexOf("’") >= 0
             ? labelWitoutApostrophe
             : labelWithApostrophe;
-        //return labelWitoutApostrophe;
     };
 
     let optionsFiltered: AutoCompleteActiviteOption[] = [];
@@ -82,6 +79,8 @@ const ClickableList = memo((props: ClickableListProps) => {
         temp.addField("label");
         temp.addField("synonymes");
         temp.setRef("id");
+
+        temp.pipeline.reset();
         temp.pipeline.add(
             elasticlunr.trimmer,
             elasticlunr.stopWordFilter,
@@ -118,11 +117,10 @@ const ClickableList = memo((props: ClickableListProps) => {
         } else {
             setDisplayAddIcon(false);
         }
-
-        if (filterStopWords(state.inputValue).length > 2) {
+        const inputValue = filterStopWords(state.inputValue);
+        if (inputValue.length > 2) {
             setCurrentInputValue(state.inputValue);
             const value = state.inputValue.replace("'", " ");
-
             const res =
                 index.search(value, {
                     fields: {
