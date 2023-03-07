@@ -15,6 +15,7 @@ export type ActivityLabelProps = {
     clickableListAddActivityButton: string;
     clickableListIconNoResultAlt: string;
     otherButton: string;
+    saveButton: string;
 };
 
 export type InfoProps = {
