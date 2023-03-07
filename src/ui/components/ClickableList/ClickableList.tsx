@@ -6,6 +6,7 @@ import {
     Button,
     FilterOptionsState,
     Icon,
+    Paper,
     TextField,
 } from "@mui/material";
 import elasticlunr, { Index } from "elasticlunrjs";
@@ -13,7 +14,7 @@ import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
 import { stemmer } from "./stemmer";
 import stopWords from "./stop_words_french.json";
 
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, ReactNode } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -30,6 +31,7 @@ export type ClickableListProps = {
     iconNoResultAlt: string;
     className?: string;
     autoFocus?: boolean;
+    isMobile?: boolean;
 };
 
 const ClickableList = memo((props: ClickableListProps) => {
@@ -46,6 +48,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         iconNoResultAlt,
         className,
         autoFocus = false,
+        isMobile = false,
     } = props;
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
@@ -221,6 +224,14 @@ const ClickableList = memo((props: ClickableListProps) => {
         );
     };
 
+    const renderListOptions = (children: ReactNode) => {
+        return (
+            <Paper className={isMobile ? classes.listOptionsMobile : classes.listOptionsDesktop}>
+                {children}
+            </Paper>
+        );
+    };
+
     return (
         <Autocomplete
             className={cx(classes.root, className)}
@@ -241,6 +252,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             fullWidth={true}
             popupIcon={<Icon children={renderIcon()} onClick={createActivityCallback} />}
             classes={{ popupIndicator: classes.popupIndicator }}
+            PaperComponent={({ children }) => renderListOptions(children)}
         />
     );
 });
@@ -279,6 +291,12 @@ const useStyles = makeStylesEdt({ "name": { ClickableList } })(theme => ({
     optionIcon: {
         marginRight: "0.5rem",
         color: theme.palette.primary.main,
+    },
+    listOptionsDesktop: {
+        height: "60vh",
+    },
+    listOptionsMobile: {
+        height: "85vh",
     },
 }));
 

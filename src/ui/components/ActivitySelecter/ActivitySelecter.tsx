@@ -534,6 +534,7 @@ const renderClickableList = (
                 iconNoResult={inputs.clickableListIconNoResult}
                 iconNoResultAlt={inputs.labels.clickableListIconNoResultAlt}
                 autoFocus={true}
+                isMobile={inputs.isMobile}
             ></ClickableList>
         )
     );
