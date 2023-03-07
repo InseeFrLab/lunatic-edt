@@ -7,7 +7,6 @@ import {
     FilterOptionsState,
     Icon,
     Paper,
-    Popper,
     TextField,
 } from "@mui/material";
 import elasticlunr, { Index } from "elasticlunrjs";
