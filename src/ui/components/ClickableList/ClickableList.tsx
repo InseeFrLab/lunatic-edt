@@ -279,6 +279,11 @@ const ClickableList = memo((props: ClickableListProps) => {
             classes={{ popupIndicator: classes.popupIndicator }}
             PaperComponent={({ children }) => renderListOptions(children)}
             ListboxComponent={listboxProps => renderListBoxComponent(listboxProps)}
+            ListboxProps={{
+                style: {
+                    maxHeight: "75vh",
+                },
+            }}
         />
     );
 });
