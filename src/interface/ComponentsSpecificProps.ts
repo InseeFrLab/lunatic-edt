@@ -15,6 +15,7 @@ export type ActivityLabelProps = {
     clickableListAddActivityButton: string;
     clickableListIconNoResultAlt: string;
     otherButton: string;
+    saveButton: string;
 };
 
 export type InfoProps = {
@@ -23,6 +24,7 @@ export type InfoProps = {
     isAlertInfo?: boolean;
     infoIcon: string;
     infoIconAlt: string;
+    infoIconTop?: boolean;
     border: boolean;
 };
 
@@ -37,7 +39,7 @@ export type WeeklyPlannerSpecificProps = {
         workSumLabel: string;
         presentButtonLabel: string;
         futureButtonLabel: string;
-        editButtonLabel: string;
+        editButtonLabel?: string;
         infoLabels: InfoProps;
     };
     saveAll(): void;

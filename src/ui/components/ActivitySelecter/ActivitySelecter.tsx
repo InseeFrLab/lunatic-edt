@@ -1,4 +1,4 @@
-import { ChevronRight, Extension, Search } from "@mui/icons-material";
+import { Add, ChevronRight, Extension, Search } from "@mui/icons-material";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import {
     AutoCompleteActiviteOption,
@@ -347,16 +347,22 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                     )}
 
                     {renderFreeInput(
-                        fullScreenComponent,
                         {
                             selectedCategories,
+                            createActivityValue,
+                            fullScreenComponent,
+                        },
+                        {
                             labels,
                             label,
-                            createActivityValue,
                             isMobile,
                         },
-                        freeInputOnChange,
+                        {
+                            nextClickCallback,
+                            freeInputOnChange,
+                        },
                         classes,
+                        cx,
                     )}
 
                     {fullScreenComponent === FullScreenComponent.Main && (
@@ -404,7 +410,7 @@ const renderTitle = (
     classes: any,
 ) => {
     return selectedCategories.length === 0 ? (
-        <Typography className={classes.title}>{label}&nbsp;?</Typography>
+        <Typography className={classes.title}>{labels.addActivity}&nbsp;?</Typography>
     ) : (
         <Typography className={classes.title}>
             {getTextTitle(fullScreenComponent, selectedCategories, labels, label)}
@@ -471,34 +477,48 @@ const renderSearchInput = (
 };
 
 const renderFreeInput = (
-    fullScreenComponent: FullScreenComponent,
-    inputs: {
+    states: {
         selectedCategories: NomenclatureActivityOption[];
+        createActivityValue: string | undefined;
+        fullScreenComponent: FullScreenComponent;
+    },
+    props: {
         labels: ActivityLabelProps;
         label: string;
-        createActivityValue: string | undefined;
         isMobile: boolean;
     },
-    freeInputOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void,
+    functions: {
+        nextClickCallback: (routeToGoal: boolean) => void;
+        freeInputOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    },
     classes: any,
+    cx: any,
 ) => {
     return (
-        fullScreenComponent === FullScreenComponent.FreeInput && (
-            <Box className={classes.root}>
-                {!inputs.isMobile &&
-                    renderTitle(
-                        fullScreenComponent,
-                        inputs.selectedCategories,
-                        inputs.labels,
-                        inputs.label,
-                        classes,
-                    )}
+        states.fullScreenComponent === FullScreenComponent.FreeInput && (
+            <Box className={cx(classes.root, props.isMobile ? classes.freeInputMobileBox : "")}>
+                {renderTitle(
+                    states.fullScreenComponent,
+                    states.selectedCategories,
+                    props.labels,
+                    props.label,
+                    classes,
+                )}
                 <TextField
-                    value={inputs.createActivityValue}
+                    value={states.createActivityValue}
                     className={classes.freeInputTextField}
-                    onChange={freeInputOnChange}
-                    placeholder={inputs.labels.clickableListPlaceholder}
+                    onChange={functions.freeInputOnChange}
+                    placeholder={props.labels.clickableListPlaceholder}
                 ></TextField>
+
+                <Button
+                    className={classes.addActivityButton}
+                    variant="contained"
+                    startIcon={<Add />}
+                    onClick={() => functions.nextClickCallback(true)}
+                >
+                    {props.labels.saveButton}
+                </Button>
             </Box>
         )
     );
@@ -534,6 +554,7 @@ const renderClickableList = (
                 iconNoResult={inputs.clickableListIconNoResult}
                 iconNoResultAlt={inputs.labels.clickableListIconNoResultAlt}
                 autoFocus={true}
+                isMobile={inputs.isMobile}
             ></ClickableList>
         )
     );
@@ -896,6 +917,18 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         width: "60%",
         marginTop: "2rem",
         color: theme.variables.white,
+    },
+    addActivityButton: {
+        margin: "2rem 0rem",
+    },
+    freeInputMobileBox: {
+        height: "85vh",
+        justifyContent: "center",
+        padding: "0rem 2rem",
+    },
+    freeInputBox: {
+        height: "60vh",
+        justifyContent: "center",
     },
 }));
 

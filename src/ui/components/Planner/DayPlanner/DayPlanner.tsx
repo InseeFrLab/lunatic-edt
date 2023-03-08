@@ -20,6 +20,7 @@ export type DayPlannerProps = {
     futureButtonLabel?: string;
     editButtonLabel?: string;
     language: string;
+    getFormatedWorkedSum: (workedHoursSum: number) => string;
 };
 
 enum DayRelativeTimeEnum {
@@ -31,21 +32,6 @@ enum DayRelativeTimeEnum {
 const renderDateLabel = (date: Date, language: string): string => {
     const formatedDate: string = formateDateToFrenchFormat(date, language);
     return formatedDate.charAt(0).toUpperCase() + formatedDate.slice(1);
-};
-
-/**
- * Returns total sum of work for the day formatted as h:mm
- * @returns
- */
-const getFormatedWorkedSum = (workedHoursSum: number): string => {
-    const tempDate = new Date();
-    tempDate.setHours(0);
-    tempDate.setMinutes(workedHoursSum);
-    return (
-        tempDate.getHours() +
-        ":" +
-        (tempDate.getMinutes() === 0 ? "00" : tempDate.getMinutes().toString())
-    );
 };
 
 const setDay = (setDayRelativeTime: any, date: Date, todayDate: Date) => {
@@ -75,6 +61,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         futureButtonLabel,
         editButtonLabel,
         language,
+        getFormatedWorkedSum,
     } = props;
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();

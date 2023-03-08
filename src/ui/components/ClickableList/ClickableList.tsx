@@ -6,6 +6,7 @@ import {
     Button,
     FilterOptionsState,
     Icon,
+    Paper,
     TextField,
 } from "@mui/material";
 import elasticlunr, { Index } from "elasticlunrjs";
@@ -13,7 +14,7 @@ import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
 import { stemmer } from "./stemmer";
 import stopWords from "./stop_words_french.json";
 
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, ReactNode } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -30,6 +31,7 @@ export type ClickableListProps = {
     iconNoResultAlt: string;
     className?: string;
     autoFocus?: boolean;
+    isMobile?: boolean;
 };
 
 const ClickableList = memo((props: ClickableListProps) => {
@@ -46,28 +48,33 @@ const ClickableList = memo((props: ClickableListProps) => {
         iconNoResultAlt,
         className,
         autoFocus = false,
+        isMobile = false,
     } = props;
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
     const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
 
     const skipApostrophes = (labelWithApostrophe: string) => {
-        const labelWitoutApostrophe = labelWithApostrophe.toLowerCase().replace("s’", "se ");
-        return labelWithApostrophe.toLowerCase().indexOf("s’") >= 0
+        let labelWitoutApostrophe = labelWithApostrophe.toLowerCase().replace("s’", "se ");
+        return labelWithApostrophe.toLowerCase().indexOf("’") >= 0
             ? labelWitoutApostrophe
             : labelWithApostrophe;
     };
 
-    const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
-        let optionsSplit = options.map(opt => {
+    let optionsFiltered: AutoCompleteActiviteOption[] = [];
+
+    options.forEach(opt => {
+        if (optionsFiltered.find(option => option.label == opt.label) == null) {
             const newOption: AutoCompleteActiviteOption = {
                 id: opt.id,
                 label: skipApostrophes(opt.label),
                 synonymes: opt.synonymes,
             };
-            return newOption;
-        });
+            optionsFiltered.push(newOption);
+        }
+    });
 
+    const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
         elasticlunr.clearStopWords();
         elasticlunr.addStopWords(stopWords);
 
@@ -75,6 +82,8 @@ const ClickableList = memo((props: ClickableListProps) => {
         temp.addField("label");
         temp.addField("synonymes");
         temp.setRef("id");
+
+        temp.pipeline.reset();
         temp.pipeline.add(
             elasticlunr.trimmer,
             elasticlunr.stopWordFilter,
@@ -86,7 +95,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             str => stemmer(str),
         );
 
-        for (const doc of optionsSplit) {
+        for (const doc of optionsFiltered) {
             temp.addDoc(doc);
         }
         return temp;
@@ -111,19 +120,25 @@ const ClickableList = memo((props: ClickableListProps) => {
         } else {
             setDisplayAddIcon(false);
         }
-        setCurrentInputValue(state.inputValue);
-        const value = state.inputValue.replace("'", " ");
-        const res =
-            index.search(value, {
-                fields: {
-                    label: { boost: 2 },
-                    synonymes: { boost: 1 },
-                },
-                expand: true,
-            }) || [];
+        const inputValue = filterStopWords(state.inputValue);
+        if (inputValue.length > 2) {
+            setCurrentInputValue(state.inputValue);
+            const value = state.inputValue.replace("'", " ");
+            const res =
+                index.search(value, {
+                    fields: {
+                        label: { boost: 2 },
+                        synonymes: { boost: 1 },
+                    },
+                    expand: true,
+                }) || [];
 
-        const results: AutoCompleteActiviteOption[] = res.map(r => ref.filter(o => o.id === r.ref)[0]);
-        return results;
+            const results: AutoCompleteActiviteOption[] = res.map(
+                r => ref.filter(o => o.id === r.ref)[0],
+            );
+            return results;
+        }
+        return [];
     };
 
     /**
@@ -175,21 +190,76 @@ const ClickableList = memo((props: ClickableListProps) => {
     };
 
     /**
-     * Render no option component
+     * Remove the words included in stopwords that are in the input + spaces.
+     *
+     */
+    const filterStopWords = (value: string | undefined): string => {
+        if (value == null) return "";
+
+        let inputWithoutStopWords = value;
+
+        stopWords.forEach(stopWord => {
+            if (inputWithoutStopWords != null && inputWithoutStopWords.includes(stopWord)) {
+                inputWithoutStopWords = inputWithoutStopWords.replace(stopWord + " ", "");
+            }
+        });
+
+        inputWithoutStopWords = inputWithoutStopWords.replaceAll(" ", "");
+        return inputWithoutStopWords;
+    };
+
+    /**
+     * Render no option component.
      * @returns
      */
     const renderNoOption = () => {
-        return displayAddIcon && currentInputValue && currentInputValue?.length > 2 ? (
+        // not counts the words included in stopwords that are in the input.
+        // With this, we render noresults only when input without stopwords and spaces has a lenght > 2
+        const inputWithoutStopWords = filterStopWords(currentInputValue);
+
+        return displayAddIcon && inputWithoutStopWords && inputWithoutStopWords?.length > 2 ? (
             renderNoResults()
         ) : (
             <></>
         );
     };
 
+    const renderListOptions = (children: ReactNode) => {
+        return (
+            <Paper
+                className={isMobile ? classes.listOptionsMobile : classes.listOptionsDesktop}
+                onMouseDown={event => event.preventDefault()}
+            >
+                {children}
+            </Paper>
+        );
+    };
+
+    /**
+     * Render list of options and button for add new activity
+     */
+    const renderListBoxComponent = (props: any) => {
+        return (
+            <>
+                <ul {...props} />
+                <Box className={classes.noResults}>
+                    <Button
+                        className={classes.addActivityButton}
+                        variant="contained"
+                        startIcon={<Add />}
+                        onClick={() => createActivity(currentInputValue)}
+                    >
+                        {addActivityButtonLabel}
+                    </Button>
+                </Box>
+            </>
+        );
+    };
+
     return (
         <Autocomplete
             className={cx(classes.root, className)}
-            options={options}
+            options={optionsFiltered}
             defaultValue={selectedvalue}
             onChange={(_event, value) => handleChange(value?.id)}
             renderInput={params => renderTextField(params)}
@@ -200,12 +270,19 @@ const ClickableList = memo((props: ClickableListProps) => {
                 </li>
             )}
             getOptionLabel={option => option.label}
-            filterOptions={filterOptions}
+            filterOptions={(options, inputValue) => filterOptions(options, inputValue)}
             noOptionsText={renderNoOption()}
             onClose={() => setDisplayAddIcon(false)}
             fullWidth={true}
             popupIcon={<Icon children={renderIcon()} onClick={createActivityCallback} />}
             classes={{ popupIndicator: classes.popupIndicator }}
+            PaperComponent={({ children }) => renderListOptions(children)}
+            ListboxComponent={listboxProps => renderListBoxComponent(listboxProps)}
+            ListboxProps={{
+                style: {
+                    maxHeight: "75vh",
+                },
+            }}
         />
     );
 });
@@ -244,6 +321,12 @@ const useStyles = makeStylesEdt({ "name": { ClickableList } })(theme => ({
     optionIcon: {
         marginRight: "0.5rem",
         color: theme.palette.primary.main,
+    },
+    listOptionsDesktop: {
+        height: "60vh",
+    },
+    listOptionsMobile: {
+        height: "85vh",
     },
 }));
 

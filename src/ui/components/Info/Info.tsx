@@ -5,7 +5,15 @@ import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 const Info = memo((props: InfoProps) => {
-    const { normalText, boldText, infoIcon, infoIconAlt, border, isAlertInfo } = props;
+    const {
+        normalText,
+        boldText,
+        infoIcon,
+        infoIconAlt,
+        border,
+        isAlertInfo,
+        infoIconTop = false,
+    } = props;
     const { classes, cx } = useStyles();
 
     return (
@@ -16,8 +24,13 @@ const Info = memo((props: InfoProps) => {
                 isAlertInfo ? classes.alert : classes.info,
             )}
         >
+            {infoIconTop && infoIcon && (
+                <Box className={classes.iconContainerTop}>
+                    <img src={infoIcon} alt={infoIconAlt} />
+                </Box>
+            )}
             <Box className={cx(classes.titleWithIcon)}>
-                {infoIcon && (
+                {!infoIconTop && infoIcon && (
                     <Box className={classes.iconContainer}>
                         <img src={infoIcon} alt={infoIconAlt} />
                     </Box>
@@ -48,7 +61,8 @@ const useStyles = makeStylesEdt({ "name": { Info } })(theme => ({
         alignItems: "center",
         justifyContent: "space-between",
         maxWidth: "520px",
-        margin: "1rem 0.5rem",
+        padding: "0.5rem",
+        marginTop: "1rem",
     },
     titleWithIcon: {
         width: "100%",
@@ -59,6 +73,11 @@ const useStyles = makeStylesEdt({ "name": { Info } })(theme => ({
     },
     iconContainer: {
         width: "25%",
+        display: "flex",
+        justifyContent: "center",
+        paddingTop: "1rem",
+    },
+    iconContainerTop: {
         display: "flex",
         justifyContent: "center",
         paddingTop: "1rem",
