@@ -24,6 +24,9 @@ export type DayOverviewProps = {
     setActivityData(data: WeeklyPlannerDataType[]): void;
     handleChangeData(response: { [name: string]: string }, value: IODataStructure[]): void;
     infoLabels: InfoProps;
+    workSumLabel: string;
+    workedHoursSum: number;
+    getFormatedWorkedSum: (workedHoursSum: number) => string;
 };
 
 /**
@@ -49,6 +52,29 @@ const fromDayDetailsToValues = (details: DayDetailType[]): LunaticMultiSelection
     return values;
 };
 
+const renderHeader = (
+    isDisplayed: boolean,
+    classes: any,
+    workSumLabel: string,
+    workedHoursSum: number,
+    getFormatedWorkedSum: (workedHoursSum: number) => string,
+) => {
+    return !isDisplayed ? (
+        <ProgressBar
+            className={classes.progressBar}
+            value={Math.round((new Date().getHours() / 24) * 100)}
+            isPrimaryMainColor={true}
+        />
+    ) : (
+        <Box className={classes.textBox}>
+            <Typography className={classes.workTimeText}>
+                {workSumLabel}
+                <span className={classes.bold}>{getFormatedWorkedSum(workedHoursSum)}</span>
+            </Typography>
+        </Box>
+    );
+};
+
 /**
  * This component is the one shown inside WeeklyPlanner component when the user choose a day to fullfil.
  * It shows to the user a list of 24 Hourchecker components corresponding to an entire day.
@@ -63,6 +89,9 @@ const DayOverview = memo((props: DayOverviewProps) => {
         setActivityData,
         handleChangeData,
         infoLabels,
+        workSumLabel,
+        workedHoursSum,
+        getFormatedWorkedSum,
     } = props;
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
@@ -177,11 +206,13 @@ const DayOverview = memo((props: DayOverviewProps) => {
         <Box className={classes.mainContainer} display={componentDisplay} aria-label="dayoverview">
             <Box className={classes.headerContainerBox}>
                 <Box className={classes.headerContainer}>
-                    <ProgressBar
-                        className={classes.progressBar}
-                        value={Math.round((new Date().getHours() / 24) * 100)}
-                        isPrimaryMainColor={true}
-                    />
+                    {renderHeader(
+                        isDisplayed,
+                        classes,
+                        workSumLabel,
+                        workedHoursSum,
+                        getFormatedWorkedSum,
+                    )}
                 </Box>
                 <TooltipInfo infoLabels={infoLabels} />
             </Box>
@@ -234,6 +265,15 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     hourLabel: {
         color: theme.palette.info.main,
         fontSize: "12px",
+    },
+    textBox: {
+        paddingLeft: "1.5rem",
+    },
+    workTimeText: {
+        fontSize: "14px",
+    },
+    bold: {
+        fontWeight: "bold",
     },
 }));
 

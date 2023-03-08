@@ -127,6 +127,31 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         normalTitle: labels.title,
     };
 
+    const getWorkedHoursSum = () => {
+        const dayBloc: WeeklyPlannerDataType = activityData.filter(
+            d =>
+                setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() ===
+                dayOverviewSelectedDate.getTime(),
+        )[0];
+        const sum: number = dayBloc?.detail.reduce((acc, val) => acc + val.duration, 0);
+        return sum;
+    };
+
+    /**
+     * Returns total sum of work for the day formatted as h:mm
+     * @returns
+     */
+    const getFormatedWorkedSum = (workedHoursSum: number): string => {
+        const tempDate = new Date();
+        tempDate.setHours(0);
+        tempDate.setMinutes(workedHoursSum);
+        return (
+            tempDate.getHours() +
+            ":" +
+            (tempDate.getMinutes() === 0 ? "00" : tempDate.getMinutes().toString())
+        );
+    };
+
     return (
         <Box id="root-box">
             <DayOverview
@@ -137,6 +162,9 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 setActivityData={setActivityData}
                 handleChangeData={handleChange}
                 infoLabels={labels.infoLabels}
+                workSumLabel={labels.workSumLabel}
+                workedHoursSum={getWorkedHoursSum()}
+                getFormatedWorkedSum={getFormatedWorkedSum}
             ></DayOverview>
             {activityData.length !== 0 && needSpinner ? (
                 <>
@@ -165,6 +193,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                                     futureButtonLabel={labels.futureButtonLabel}
                                     editButtonLabel={labels.editButtonLabel}
                                     language={language}
+                                    getFormatedWorkedSum={getFormatedWorkedSum}
                                 ></DayPlanner>
                             ))}
                         </List>
