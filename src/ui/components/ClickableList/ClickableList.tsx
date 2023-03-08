@@ -63,15 +63,17 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     let optionsFiltered: AutoCompleteActiviteOption[] = [];
 
-    options.forEach(opt => {
-        if (optionsFiltered.find(option => option.label == opt.label) == null) {
-            const newOption: AutoCompleteActiviteOption = {
-                id: opt.id,
-                label: skipApostrophes(opt.label),
-                synonymes: opt.synonymes,
-            };
-            optionsFiltered.push(newOption);
-        }
+    optionsFiltered = options.filter(
+        (option, i, arr) => arr.findIndex(opt => opt.label === option.label) === i,
+    );
+
+    const optionsFilteredMap = optionsFiltered.map(opt => {
+        const newOption: AutoCompleteActiviteOption = {
+            id: opt.id,
+            label: skipApostrophes(opt.label),
+            synonymes: opt.synonymes,
+        };
+        return newOption;
     });
 
     const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
@@ -95,7 +97,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             str => stemmer(str),
         );
 
-        for (const doc of optionsFiltered) {
+        for (const doc of optionsFilteredMap) {
             temp.addDoc(doc);
         }
         return temp;
@@ -203,7 +205,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                 inputWithoutStopWords = inputWithoutStopWords.replace(stopWord + " ", "");
             }
         });
-
+        inputWithoutStopWords = inputWithoutStopWords.replaceAll("'", "");
         inputWithoutStopWords = inputWithoutStopWords.replaceAll(" ", "");
         return inputWithoutStopWords;
     };
@@ -280,7 +282,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             ListboxComponent={listboxProps => renderListBoxComponent(listboxProps)}
             ListboxProps={{
                 style: {
-                    maxHeight: "75vh",
+                    maxHeight: isMobile ? "75vh" : "50vh",
                 },
             }}
         />
