@@ -11,4 +11,5 @@ export type CheckboxOptionResponse = {
 export type CheckboxOneCustomOption = {
     label: string;
     value: string;
+    iconName?: string;
 };
