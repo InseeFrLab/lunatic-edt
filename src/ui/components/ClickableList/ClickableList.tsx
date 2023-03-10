@@ -61,6 +61,13 @@ const ClickableList = memo((props: ClickableListProps) => {
             : labelWithApostrophe;
     };
 
+    const removeAccents = (value: string) => {
+        return value
+            .normalize("NFD")
+            .replace(/\p{Diacritic}/gu, "")
+            .replace(/'/g, " ");
+    };
+
     let optionsFiltered: AutoCompleteActiviteOption[] = [];
 
     optionsFiltered = options.filter(
@@ -70,7 +77,7 @@ const ClickableList = memo((props: ClickableListProps) => {
     const optionsFilteredMap = optionsFiltered.map(opt => {
         const newOption: AutoCompleteActiviteOption = {
             id: opt.id,
-            label: skipApostrophes(opt.label),
+            label: removeAccents(skipApostrophes(opt.label)).replaceAll("’", "'"),
             synonymes: opt.synonymes,
         };
         return newOption;
@@ -123,8 +130,9 @@ const ClickableList = memo((props: ClickableListProps) => {
             setDisplayAddIcon(false);
         }
         const inputValue = filterStopWords(state.inputValue);
-        if (inputValue.length > 2) {
-            setCurrentInputValue(state.inputValue);
+        setCurrentInputValue(state.inputValue);
+
+        if (inputValue.length > 3) {
             const value = state.inputValue.replace("'", " ");
             const res =
                 index.search(value, {
@@ -201,7 +209,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         let inputWithoutStopWords = value;
 
         stopWords.forEach(stopWord => {
-            if (inputWithoutStopWords != null && inputWithoutStopWords.includes(stopWord)) {
+            if (inputWithoutStopWords != null && inputWithoutStopWords.includes(stopWord + " ")) {
                 inputWithoutStopWords = inputWithoutStopWords.replace(stopWord + " ", "");
             }
         });
@@ -216,10 +224,10 @@ const ClickableList = memo((props: ClickableListProps) => {
      */
     const renderNoOption = () => {
         // not counts the words included in stopwords that are in the input.
-        // With this, we render noresults only when input without stopwords and spaces has a lenght > 2
+        // With this, we render noresults only when input without stopwords and spaces has a lenght > 3
         const inputWithoutStopWords = filterStopWords(currentInputValue);
 
-        return displayAddIcon && inputWithoutStopWords && inputWithoutStopWords?.length > 2 ? (
+        return displayAddIcon && inputWithoutStopWords && inputWithoutStopWords?.length > 3 ? (
             renderNoResults()
         ) : (
             <></>
