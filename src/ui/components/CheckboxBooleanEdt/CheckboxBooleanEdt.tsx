@@ -63,7 +63,6 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
         nextClickCallback: () => void,
     ) => {
         if (localValue == null && !continueWithUncompleted) {
-            handleChange(response, null);
             setDisplayAlert(true);
         } else {
             nextClickCallback();
@@ -104,12 +103,12 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
                     className={cx(classes.buttonGroupBox, className)}
                     disabled={disabled}
                 >
-                    <ToggleButton className={classes.MuiToggleButton} value={false} aria-label="no">
+                    <ToggleButton className={classes.MuiToggleButton} value={"false"} aria-label="no">
                         Non
                     </ToggleButton>
                     <ToggleButton
                         className={cx(classes.MuiToggleButton, classes.separator)}
-                        value={true}
+                        value={"true"}
                         aria-label="yes"
                     >
                         Oui
