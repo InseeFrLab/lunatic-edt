@@ -54,11 +54,23 @@ const ClickableList = memo((props: ClickableListProps) => {
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
     const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
 
+    const pronounAbbreviations = ["l", "d", "m", "s", "t"];
+
+    /**
+     * Activities with abbreviated pronouns (ex: de -> d')
+     * are not searched because pronouns are not skipped
+     * @param labelWithApostrophe
+     * @returns activity label with pronoun + apostroph replace
+     * with pronoun without abbreviation
+     */
     const skipApostrophes = (labelWithApostrophe: string) => {
-        let labelWitoutApostrophe = labelWithApostrophe.toLowerCase().replace("s’", "se ");
-        return labelWithApostrophe.toLowerCase().indexOf("’") >= 0
-            ? labelWitoutApostrophe
-            : labelWithApostrophe;
+        let label = labelWithApostrophe.toLowerCase();
+        pronounAbbreviations.forEach(abbrev => {
+            if (label != null && label.includes(abbrev + "’")) {
+                label = label.replace(abbrev + "’", abbrev + "e ");
+            }
+        });
+        return label;
     };
 
     const removeAccents = (value: string) => {
