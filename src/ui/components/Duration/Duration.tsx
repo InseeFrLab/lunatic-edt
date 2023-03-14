@@ -1,20 +1,17 @@
 import { Box, InputLabel, MenuItem, Select } from "@mui/material";
-import dayjs from "dayjs";
 import "dayjs/locale/fr";
-import { TimepickerSpecificProps } from "interface";
 import React, { memo, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type DurationProps = {
     value?: string;
-    handleChange(response: { [name: string]: string }, value: string | null): void;
+    handleChange(response: { [name: string]: string }, value: string | undefined): void;
     label?: string;
     hourLabel?: string;
     andLabel?: string;
     minLabel?: string;
     response: { [name: string]: string };
-    componentSpecificProps?: TimepickerSpecificProps;
 };
 
 const enum DurationEnum {
@@ -33,16 +30,7 @@ const getNumElements = (typeDuration: string) => {
 };
 
 const Duration = memo((props: DurationProps) => {
-    const {
-        handleChange,
-        value,
-        label,
-        hourLabel,
-        andLabel,
-        minLabel,
-        response,
-        componentSpecificProps,
-    } = props;
+    const { handleChange, value, label, hourLabel, andLabel, minLabel, response } = props;
 
     const { classes } = useStyles();
 
@@ -51,28 +39,32 @@ const Duration = memo((props: DurationProps) => {
 
     useEffect(() => {
         if (value != null) {
-            const time = dayjs(value, componentSpecificProps?.constants.FORMAT_TIME);
-            setHour(time.hour().toString());
-            setMinutes(time.minute().toString());
+            setHour(value.split(":")[0]);
+            setMinutes(value.split(":")[1]);
         }
     }, []);
 
     useEffect(() => {
-        if (hour != null && minutes != null) {
-            handleChange(response, hour + ":" + minutes);
+        const hours = isNaN(Number(hour)) || hour == null || hour.length == 0 ? undefined : hour;
+        const min =
+            isNaN(Number(minutes)) || minutes == null || minutes.length == 0 ? undefined : minutes;
+
+        if (hours == null && min == null) {
+            handleChange(response, undefined);
+        } else {
+            const newValue = (hours ?? "0") + ":" + (min ?? "0");
+            handleChange(response, newValue);
         }
     }, [hour, minutes]);
 
     function setValueLunatic(newHour: string, newMin: string) {
-        if (newHour != undefined) {
-            setHour(newHour);
-        }
+        const hours = isNaN(Number(newHour)) || newHour == null ? "0" : newHour;
+        setHour(hours);
 
-        if (newMin != undefined) {
-            setMinutes(newMin);
-        }
+        const minutes = isNaN(Number(newMin)) || newMin == null ? "0" : newMin;
+        setMinutes(minutes);
 
-        const newValue = newHour != null && newMin != null ? newHour + ":" + newMin : null;
+        const newValue = hours + ":" + minutes;
         handleChange(response, newValue);
     }
 

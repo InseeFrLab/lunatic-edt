@@ -410,7 +410,7 @@ const renderTitle = (
     classes: any,
 ) => {
     return selectedCategories.length === 0 ? (
-        <Typography className={classes.title}>{labels.addActivity}&nbsp;?</Typography>
+        <Typography className={classes.title}>{label}&nbsp;?</Typography>
     ) : (
         <Typography className={classes.title}>
             {getTextTitle(fullScreenComponent, selectedCategories, labels, label)}
@@ -501,7 +501,7 @@ const renderFreeInput = (
                     states.fullScreenComponent,
                     states.selectedCategories,
                     props.labels,
-                    props.label,
+                    props.labels.addActivity,
                     classes,
                 )}
                 <TextField
