@@ -90,7 +90,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         const newOption: AutoCompleteActiviteOption = {
             id: opt.id,
             label: removeAccents(skipApostrophes(opt.label)).replaceAll("’", "'"),
-            synonymes: opt.synonymes,
+            synonymes: opt.synonymes.replaceAll(";", "; "),
         };
         return newOption;
     });
