@@ -4,6 +4,7 @@ import {
     SelectedActivity,
 } from "interface/ActivityTypes";
 import { FullScreenComponent } from "./ActivitySelecter";
+import pairSynonymes from "./synonymes-misspellings.json";
 
 /**
  * Find category of activity
@@ -202,4 +203,65 @@ export const selectFinalCategory = (
     setSelectedId(id);
     setLabelOfSelectedId(label);
     if (id != null) onSelectValue();
+};
+
+const pronounAbbreviations = ["l", "d", "m", "s", "t"];
+
+/**
+ * Activities with abbreviated pronouns (ex: de -> d')
+ * are not searched because pronouns are not skipped
+ * @param labelWithApostrophe
+ * @returns activity label with pronoun + apostroph replace
+ * with pronoun without abbreviation
+ */
+export const skipApostrophes = (labelWithApostrophe: string) => {
+    let label = labelWithApostrophe.toLowerCase();
+    pronounAbbreviations.forEach(abbrev => {
+        if (label != null && label.includes(abbrev + "’")) {
+            label = label.replace(abbrev + "’", abbrev + "e ");
+        }
+    });
+    return label;
+};
+
+/**
+ * Remove accents
+ * @param value
+ * @returns
+ */
+export const removeAccents = (value: string) => {
+    return value
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .replace(/'/g, " ");
+};
+
+/**
+ * Add synonymes of misspellings
+ * @param option
+ * @returns
+ */
+export const addMisspellings = (option: AutoCompleteActiviteOption) => {
+    let labelWithMisspelling = "";
+
+    pairSynonymes.forEach(pairSynonyme => {
+        const term = pairSynonyme.termination[0];
+        pairSynonyme.misspelling.forEach(misspelling => {
+            if (option.label.includes(term)) {
+                const labelToReplace = option.label.replaceAll(term, misspelling) + "; ";
+                labelWithMisspelling =
+                    labelWithMisspelling +
+                    (labelWithMisspelling.includes(labelToReplace) ? "" : labelToReplace);
+            }
+            if (option.label.includes(misspelling)) {
+                const labelToReplace = option.label.replaceAll(misspelling, term) + "; ";
+                labelWithMisspelling =
+                    labelWithMisspelling +
+                    (labelWithMisspelling.includes(labelToReplace) ? "" : labelToReplace);
+            }
+        });
+    });
+    option.synonymes = option.synonymes + "; " + labelWithMisspelling;
+
+    return option;
 };

@@ -21,6 +21,8 @@ import { createCustomizableLunaticField } from "../../utils/create-customizable-
 export type ClickableListProps = {
     placeholder: string;
     options: AutoCompleteActiviteOption[];
+    optionsFiltered: AutoCompleteActiviteOption[];
+    optionsFilteredMap: AutoCompleteActiviteOption[];
     selectedId?: string;
     handleChange(id: string | undefined): void;
     createActivity(value: string | undefined): void;
@@ -38,6 +40,8 @@ const ClickableList = memo((props: ClickableListProps) => {
     let {
         placeholder,
         options,
+        optionsFiltered,
+        optionsFilteredMap,
         selectedId,
         handleChange,
         createActivity,
@@ -53,47 +57,6 @@ const ClickableList = memo((props: ClickableListProps) => {
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
     const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
-
-    const pronounAbbreviations = ["l", "d", "m", "s", "t"];
-
-    /**
-     * Activities with abbreviated pronouns (ex: de -> d')
-     * are not searched because pronouns are not skipped
-     * @param labelWithApostrophe
-     * @returns activity label with pronoun + apostroph replace
-     * with pronoun without abbreviation
-     */
-    const skipApostrophes = (labelWithApostrophe: string) => {
-        let label = labelWithApostrophe.toLowerCase();
-        pronounAbbreviations.forEach(abbrev => {
-            if (label != null && label.includes(abbrev + "’")) {
-                label = label.replace(abbrev + "’", abbrev + "e ");
-            }
-        });
-        return label;
-    };
-
-    const removeAccents = (value: string) => {
-        return value
-            .normalize("NFD")
-            .replace(/\p{Diacritic}/gu, "")
-            .replace(/'/g, " ");
-    };
-
-    let optionsFiltered: AutoCompleteActiviteOption[] = [];
-
-    optionsFiltered = options.filter(
-        (option, i, arr) => arr.findIndex(opt => opt.label === option.label) === i,
-    );
-
-    const optionsFilteredMap = optionsFiltered.map(opt => {
-        const newOption: AutoCompleteActiviteOption = {
-            id: opt.id,
-            label: removeAccents(skipApostrophes(opt.label)).replaceAll("’", "'"),
-            synonymes: opt.synonymes.replaceAll(";", "; "),
-        };
-        return newOption;
-    });
 
     const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
         elasticlunr.clearStopWords();
