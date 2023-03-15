@@ -16,12 +16,15 @@ import { createCustomizableLunaticField } from "../../utils/create-customizable-
 import Alert from "../Alert";
 import ClickableList from "../ClickableList";
 import {
+    addMisspellings,
     findRank1Category,
     processActivityAutocomplete,
     processActivityCategory,
     processNewActivity,
+    removeAccents,
     selectFinalCategory,
     selectSubCategory,
+    skipApostrophes,
 } from "./activityUtils";
 
 type ActivitySelecterProps = {
@@ -539,11 +542,26 @@ const renderClickableList = (
     },
     classes: any,
 ) => {
+    const optionsFiltered: AutoCompleteActiviteOption[] = inputs.activitesAutoCompleteRef.filter(
+        (option, i, arr) => arr.findIndex(opt => opt.label === option.label) === i,
+    );
+
+    const optionsFilteredMap = optionsFiltered.map(opt => {
+        const newOption: AutoCompleteActiviteOption = {
+            id: opt.id,
+            label: removeAccents(skipApostrophes(addMisspellings(opt).label)).replaceAll("’", "'"),
+            synonymes: opt.synonymes.replaceAll(";", "; "),
+        };
+        return newOption;
+    });
+
     return (
         fullScreenComponent == FullScreenComponent.ClickableListComp && (
             <ClickableList
                 className={inputs.isMobile ? classes.clickableListMobile : classes.clickableList}
                 options={inputs.activitesAutoCompleteRef}
+                optionsFiltered={optionsFiltered}
+                optionsFilteredMap={optionsFilteredMap}
                 selectedId={inputs.selectedSuggesterId}
                 handleChange={functions.clickableListOnChange}
                 createActivity={functions.createActivityCallBack}

@@ -30,9 +30,8 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         onSelectValue,
     } = { ...componentSpecificProps };
 
-    const [selectedValue, setSelectedValue] = useState<string | undefined>(value);
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
-
+    let selectedValue: string | undefined = value;
     const { classes, cx } = useStyles();
 
     useEffect(() => {
@@ -63,8 +62,13 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
     };
 
     const optionOnClick = (option: CheckboxOneCustomOption) => {
-        const value = option.value == selectedValue ? undefined : option.value;
-        setSelectedValue(value);
+        let value;
+        if (selectedValue != undefined) {
+            value = option.value == selectedValue ? undefined : option.value;
+        } else {
+            value = option.value;
+        }
+        selectedValue = value;
         handleChange(response, value);
         if (onSelectValue && value != null) {
             onSelectValue();

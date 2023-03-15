@@ -50,9 +50,27 @@ const Timepicker = memo((props: TimepickerProps) => {
             );
     }, [valueLocal]);
 
+    /**
+     * Round min to next/previous interval of 5
+     * @param min
+     * @returns
+     */
+    const round5 = (min: number) => {
+        const minRestTo5 = min % 5;
+        if (minRestTo5 > 0) {
+            if (minRestTo5 > 2) {
+                return min - minRestTo5 + 5;
+            } else {
+                return min - minRestTo5;
+            }
+        } else return min;
+    };
+
     function setValueLunatic(newValue: Dayjs | null) {
         if (newValue != undefined && newValue?.isValid()) {
-            setValue(newValue);
+            const min = newValue.minute();
+            const newValueRound5 = newValue.set("minutes", round5(min));
+            setValue(newValueRound5);
             handleChange(
                 response,
                 newValue?.format(componentSpecificProps?.constants.FORMAT_TIME) || null,
