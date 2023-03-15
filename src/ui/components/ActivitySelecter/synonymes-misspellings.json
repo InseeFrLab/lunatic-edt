@@ -16,5 +16,12 @@
     { "termination": ["euil"], "misspelling": ["ueil"] },
     { "termination": ["mb"], "misspelling": ["nb"] },
     { "termination": ["mm"], "misspelling": ["nm"] },
-    { "termination": ["mp"], "misspelling": ["np"] }
+    { "termination": ["mp"], "misspelling": ["np"] },
+    { "termination": ["t"], "misspelling": ["tt"] },
+    { "termination": ["r"], "misspelling": ["rr"] },
+    { "termination": ["y"], "misspelling": ["ll"] },
+    { "termination": ["ain"], "misspelling": ["un"] },
+    { "termination": ["ai"], "misspelling": ["et", "e"] },
+    { "termination": ["an"], "misspelling": ["en"] },
+    { "termination": ["n"], "misspelling": ["mm"] }
 ]
