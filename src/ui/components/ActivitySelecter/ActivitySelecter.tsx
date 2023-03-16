@@ -354,15 +354,33 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             selectedCategories,
                             createActivityValue,
                             fullScreenComponent,
+                            selectedCategory: selectRank1Category?.id,
+                            selectedId: selectedId,
+                            suggesterId: selectedSuggesterId,
                         },
                         {
                             labels,
                             label,
                             isMobile,
+                            newItemId: newItemId.current,
+                            displayAlert:
+                                fullScreenComponent == FullScreenComponent.FreeInput
+                                    ? (createActivityValue === undefined ||
+                                          createActivityValue === "") &&
+                                      !true
+                                    : selectRank1Category?.id === undefined &&
+                                      selectedId === undefined &&
+                                      selectedSuggesterId === undefined &&
+                                      !true,
+                            routeToGoal: selectedCategories[selectedCategories.length - 1]
+                                ? false
+                                : true,
                         },
                         {
                             nextClickCallback,
                             freeInputOnChange,
+                            addToReferentielCallBack,
+                            setDisplayAlert,
                         },
                         classes,
                         cx,
@@ -484,15 +502,23 @@ const renderFreeInput = (
         selectedCategories: NomenclatureActivityOption[];
         createActivityValue: string | undefined;
         fullScreenComponent: FullScreenComponent;
+        selectedCategory: string | undefined;
+        selectedId: string | undefined;
+        suggesterId: string | undefined;
     },
     props: {
         labels: ActivityLabelProps;
         label: string;
         isMobile: boolean;
+        newItemId: string;
+        displayAlert: boolean;
+        routeToGoal: boolean;
     },
     functions: {
         nextClickCallback: (routeToGoal: boolean) => void;
         freeInputOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+        addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void;
+        setDisplayAlert: (display: boolean) => void;
     },
     classes: any,
     cx: any,
@@ -518,7 +544,17 @@ const renderFreeInput = (
                     className={classes.addActivityButton}
                     variant="contained"
                     startIcon={<Add />}
-                    onClick={() => functions.nextClickCallback(true)}
+                    onClick={() =>
+                        nextStepFreeInput(
+                            states,
+                            functions.setDisplayAlert,
+                            functions.nextClickCallback,
+                            functions.addToReferentielCallBack,
+                            props.newItemId,
+                            props.displayAlert,
+                            props.routeToGoal,
+                        )
+                    }
                 >
                     {props.labels.saveButton}
                 </Button>

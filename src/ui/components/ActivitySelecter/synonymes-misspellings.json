@@ -23,5 +23,5 @@
     { "termination": ["ain"], "misspelling": ["un"] },
     { "termination": ["ai"], "misspelling": ["et", "e"] },
     { "termination": ["an"], "misspelling": ["en"] },
-    { "termination": ["n"], "misspelling": ["mm"] }
+    { "termination": ["n"], "misspelling": ["nn"] }
 ]

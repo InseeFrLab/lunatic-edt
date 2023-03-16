@@ -1,6 +1,6 @@
 import {
-    NomenclatureActivityOption,
     AutoCompleteActiviteOption,
+    NomenclatureActivityOption,
     SelectedActivity,
 } from "interface/ActivityTypes";
 import { FullScreenComponent } from "./ActivitySelecter";
@@ -43,6 +43,13 @@ export const findItemInAutoCompleteRef = (
     ref: AutoCompleteActiviteOption[],
 ): AutoCompleteActiviteOption | undefined => {
     return ref.find(a => a.id === id);
+};
+
+export const findItemInAutoCompleteRefByLabel = (
+    label: string | undefined,
+    ref: AutoCompleteActiviteOption[],
+): AutoCompleteActiviteOption | undefined => {
+    return ref.find(a => a.label === label);
 };
 
 /**
