@@ -76,7 +76,7 @@ const useStyles = makeStylesEdt({ "name": { TooltipInfo } })(theme => ({
     },
     iconInfoBox: {
         color: theme.palette.secondary.main,
-        height: "fit-content",
+        height: "initial",
     },
     hiddenBox: {
         display: "none",
