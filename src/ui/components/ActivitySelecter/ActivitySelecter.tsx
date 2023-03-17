@@ -606,6 +606,7 @@ const renderClickableList = (
                 notFoundLabel={inputs.labels.clickableListNotFoundLabel}
                 notFoundComment={inputs.labels.clickableListNotFoundComment}
                 addActivityButtonLabel={inputs.labels.clickableListAddActivityButton}
+                noRechercheLabel={inputs.labels.clickableListNoRechercheLabel}
                 iconNoResult={inputs.clickableListIconNoResult}
                 iconNoResultAlt={inputs.labels.clickableListIconNoResultAlt}
                 autoFocus={true}
