@@ -146,6 +146,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             setDisplayAlert,
             nextClickCallback,
             addToReferentielCallBack,
+            onChange,
             newItemId.current,
         );
     }, [nextClickEvent]);
@@ -177,7 +178,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             label: activityLabel,
             isFullyCompleted: isFullyCompleted,
         };
-
         handleChange(idBindingDep, selection.id);
         handleChange(suggesterIdBindingDep, selection.suggesterId);
         handleChange(labelBindingDep, selection.label);
@@ -322,6 +322,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                 setDisplayAlert,
                                 nextClickCallback,
                                 addToReferentielCallBack,
+                                onChange,
                                 newItemId.current,
                             )
                         }
@@ -736,6 +737,7 @@ const nextStep = (
     setDisplayAlert: (display: boolean) => void,
     nextClickCallback: (routeToGoal: boolean) => void,
     addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void,
+    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     newItemId: string,
     continueWithUncompleted: boolean,
 ) => {
@@ -755,6 +757,24 @@ const nextStep = (
             break;
         //option page principal - when activity selected is one category of first rank
         case FullScreenComponent.Main:
+            if (states.selectedCategories.length === 0) {
+                displayAlert =
+                    states.selectedCategory === undefined &&
+                    states.suggesterId === undefined &&
+                    !continueWithUncompleted;
+                onChange(false, states.selectedCategory, undefined, undefined);
+            } else {
+                displayAlert =
+                    states.selectedId === undefined &&
+                    states.suggesterId === undefined &&
+                    !continueWithUncompleted;
+                onChange(
+                    states.selectedId != null,
+                    states.selectedId ?? states.selectedCategory,
+                    undefined,
+                    undefined,
+                );
+            }
             nextStepMain(setDisplayAlert, nextClickCallback, displayAlert);
             break;
         //option free input - when new activity or activity searched
@@ -797,6 +817,7 @@ const next = (
     setDisplayAlert: (display: boolean) => void,
     nextClickCallback: (routeToGoal: boolean) => void,
     addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void,
+    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     newItemId: string,
 ) => {
     if (nextClickEvent) {
@@ -805,6 +826,7 @@ const next = (
             setDisplayAlert,
             nextClickCallback,
             addToReferentielCallBack,
+            onChange,
             newItemId,
             continueWithUncompleted,
         );
