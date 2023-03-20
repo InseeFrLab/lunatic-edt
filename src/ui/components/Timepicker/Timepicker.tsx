@@ -58,11 +58,7 @@ const Timepicker = memo((props: TimepickerProps) => {
     const round5 = (min: number) => {
         const minRestTo5 = min % 5;
         if (minRestTo5 > 0) {
-            if (minRestTo5 > 2) {
-                return min - minRestTo5 + 5;
-            } else {
-                return min - minRestTo5;
-            }
+            return min - minRestTo5 + 5;
         } else return min;
     };
 

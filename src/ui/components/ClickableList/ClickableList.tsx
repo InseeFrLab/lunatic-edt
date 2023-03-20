@@ -13,9 +13,9 @@ import elasticlunr, { Index } from "elasticlunrjs";
 import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
 import { stemmer } from "./stemmer";
 import stopWords from "./stop_words_french.json";
-
-import React, { memo, useCallback, ReactNode } from "react";
+import React, { memo, ReactNode, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
+import { important } from "../../utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type ClickableListProps = {
@@ -29,6 +29,7 @@ export type ClickableListProps = {
     notFoundLabel: string;
     notFoundComment: string;
     addActivityButtonLabel: string;
+    notSearchLabel: string;
     iconNoResult: string;
     iconNoResultAlt: string;
     className?: string;
@@ -48,6 +49,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         notFoundLabel,
         notFoundComment,
         addActivityButtonLabel,
+        notSearchLabel,
         iconNoResult,
         iconNoResultAlt,
         className,
@@ -205,16 +207,17 @@ const ClickableList = memo((props: ClickableListProps) => {
         return displayAddIcon && inputWithoutStopWords && inputWithoutStopWords?.length > 3 ? (
             renderNoResults()
         ) : (
-            <></>
+            <>{notSearchLabel}</>
         );
     };
 
     const renderListOptions = (children: ReactNode) => {
+        const className = cx(
+            isMobile ? classes.listOptionsMobile : classes.listOptionsDesktop,
+            filterStopWords(currentInputValue)?.length <= 3 ? classes.notSearch : "",
+        );
         return (
-            <Paper
-                className={isMobile ? classes.listOptionsMobile : classes.listOptionsDesktop}
-                onMouseDown={event => event.preventDefault()}
-            >
+            <Paper className={className} onMouseDown={event => event.preventDefault()}>
                 {children}
             </Paper>
         );
@@ -312,6 +315,9 @@ const useStyles = makeStylesEdt({ "name": { ClickableList } })(theme => ({
     },
     listOptionsMobile: {
         height: "85vh",
+    },
+    notSearch: {
+        height: important("10vh"),
     },
 }));
 
