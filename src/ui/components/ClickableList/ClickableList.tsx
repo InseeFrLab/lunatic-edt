@@ -29,7 +29,7 @@ export type ClickableListProps = {
     notFoundLabel: string;
     notFoundComment: string;
     addActivityButtonLabel: string;
-    noRechercheLabel: string;
+    notSearchLabel: string;
     iconNoResult: string;
     iconNoResultAlt: string;
     className?: string;
@@ -49,7 +49,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         notFoundLabel,
         notFoundComment,
         addActivityButtonLabel,
-        noRechercheLabel,
+        notSearchLabel,
         iconNoResult,
         iconNoResultAlt,
         className,
@@ -207,14 +207,14 @@ const ClickableList = memo((props: ClickableListProps) => {
         return displayAddIcon && inputWithoutStopWords && inputWithoutStopWords?.length > 3 ? (
             renderNoResults()
         ) : (
-            <>{noRechercheLabel}</>
+            <>{notSearchLabel}</>
         );
     };
 
     const renderListOptions = (children: ReactNode) => {
         const className = cx(
             isMobile ? classes.listOptionsMobile : classes.listOptionsDesktop,
-            filterStopWords(currentInputValue)?.length <= 3 ? classes.notRecherche : "",
+            filterStopWords(currentInputValue)?.length <= 3 ? classes.notSearch : "",
         );
         return (
             <Paper className={className} onMouseDown={event => event.preventDefault()}>
@@ -316,7 +316,7 @@ const useStyles = makeStylesEdt({ "name": { ClickableList } })(theme => ({
     listOptionsMobile: {
         height: "85vh",
     },
-    notRecherche: {
+    notSearch: {
         height: important("10vh"),
     },
 }));

@@ -14,7 +14,7 @@ export type ActivityLabelProps = {
     clickableListNotFoundComment: string;
     clickableListAddActivityButton: string;
     clickableListIconNoResultAlt: string;
-    clickableListNoRechercheLabel: string;
+    clickableListNotSearchLabel: string;
     otherButton: string;
     saveButton: string;
 };
