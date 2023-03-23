@@ -430,9 +430,13 @@ const renderTitle = (
     labels: ActivityLabelProps,
     label: string,
     classes: any,
+    hasQuestionMark = true,
 ) => {
     return selectedCategories.length === 0 ? (
-        <Typography className={classes.title}>{label}&nbsp;?</Typography>
+        <Typography className={classes.title}>
+            {label}
+            {hasQuestionMark ? <>&nbsp;?</> : <></>}
+        </Typography>
     ) : (
         <Typography className={classes.title}>
             {getTextTitle(fullScreenComponent, selectedCategories, labels, label)}
@@ -533,6 +537,7 @@ const renderFreeInput = (
                     props.labels,
                     props.labels.addActivity,
                     classes,
+                    false,
                 )}
                 <TextField
                     value={states.createActivityValue}
