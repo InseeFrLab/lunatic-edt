@@ -24,7 +24,9 @@ export type ClickableListProps = {
     optionsFiltered: AutoCompleteActiviteOption[];
     optionsFilteredMap: AutoCompleteActiviteOption[];
     selectedId?: string;
-    handleChange(id: string | undefined): void;
+    historyInputSuggesterValue: string;
+    handleChange(id: string | undefined, historyInputSuggester?: string): void;
+    handleChangeHistorySuggester(historyInputSuggester?: string): void;
     createActivity(value: string | undefined): void;
     notFoundLabel: string;
     notFoundComment: string;
@@ -32,6 +34,7 @@ export type ClickableListProps = {
     notSearchLabel: string;
     iconNoResult: string;
     iconNoResultAlt: string;
+    separatorSuggester: string;
     className?: string;
     autoFocus?: boolean;
     isMobile?: boolean;
@@ -44,7 +47,9 @@ const ClickableList = memo((props: ClickableListProps) => {
         optionsFiltered,
         optionsFilteredMap,
         selectedId,
+        historyInputSuggesterValue,
         handleChange,
+        handleChangeHistorySuggester,
         createActivity,
         notFoundLabel,
         notFoundComment,
@@ -55,10 +60,13 @@ const ClickableList = memo((props: ClickableListProps) => {
         className,
         autoFocus = false,
         isMobile = false,
+        separatorSuggester,
     } = props;
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
     const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
+    const separator = separatorSuggester;
+    let values = historyInputSuggesterValue;
 
     const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
         elasticlunr.clearStopWords();
@@ -92,6 +100,26 @@ const ClickableList = memo((props: ClickableListProps) => {
     const { classes, cx } = useStyles();
 
     /**
+     * Set history of input
+     */
+    const setInputSuggester = (inputValue: string) => {
+        const historyInputSuggesterValues = values.length != 0 ? values?.split(separator) : null;
+
+        if (
+            values == null ||
+            values.length == 0 ||
+            (historyInputSuggesterValues != null &&
+                historyInputSuggesterValues.length > 2 &&
+                historyInputSuggesterValues[historyInputSuggesterValues.length - 2] != inputValue)
+        ) {
+            if (inputValue != null) {
+                values += (inputValue ?? "") + separator;
+                handleChangeHistorySuggester(values);
+            }
+        }
+    };
+
+    /**
      * Filter options to be returned according to user search input
      * @param ref
      * @param state
@@ -123,6 +151,8 @@ const ClickableList = memo((props: ClickableListProps) => {
             const results: AutoCompleteActiviteOption[] = res.map(
                 r => ref.filter(o => o.id === r.ref)[0],
             );
+            setInputSuggester(state.inputValue);
+
             return results;
         }
         return [];
@@ -203,7 +233,6 @@ const ClickableList = memo((props: ClickableListProps) => {
         // not counts the words included in stopwords that are in the input.
         // With this, we render noresults only when input without stopwords and spaces has a lenght > 3
         const inputWithoutStopWords = filterStopWords(currentInputValue);
-
         return displayAddIcon && inputWithoutStopWords && inputWithoutStopWords?.length > 3 ? (
             renderNoResults()
         ) : (
@@ -249,7 +278,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             className={cx(classes.root, className)}
             options={optionsFiltered}
             defaultValue={selectedvalue}
-            onChange={(_event, value) => handleChange(value?.id)}
+            onChange={(_event, value) => handleChange(value?.id, value?.label)}
             renderInput={params => renderTextField(params)}
             renderOption={(properties, option) => (
                 <li {...properties} className={classes.option}>

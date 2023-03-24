@@ -30,7 +30,7 @@ import {
 type ActivitySelecterProps = {
     handleChange(response: responseType, value: string | boolean | undefined): void;
     componentSpecificProps: ActivitySelecterSpecificProps;
-    responses: [responsesType, responsesType, responsesType, responsesType];
+    responses: [responsesType, responsesType, responsesType, responsesType, responsesType];
     label: string;
     value: { [key: string]: string | boolean };
 };
@@ -48,6 +48,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const suggesterIdBindingDep = responses[1].response;
     const labelBindingDep = responses[2].response;
     const isFullyCompletedBindingDep = responses[3].response;
+    const historyInputSuggesterDep = responses[4].response;
 
     let {
         backClickEvent,
@@ -64,6 +65,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         errorIcon,
         addToReferentielCallBack,
         onSelectValue,
+        separatorSuggester,
     } = { ...componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
@@ -82,6 +84,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 667);
     const newItemId = useRef(uuidv4());
     const { classes, cx } = useStyles();
+    let historyInputSuggesterValue = "";
 
     useEffect(() => {
         setDisplayStepper &&
@@ -171,32 +174,41 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         id?: string,
         suggesterId?: string,
         activityLabel?: string,
+        historyInputSuggester?: string,
     ) => {
         const selection: SelectedActivity = {
             id: id,
             suggesterId: suggesterId,
             label: activityLabel,
             isFullyCompleted: isFullyCompleted,
+            historyInputSuggester: historyInputSuggester,
         };
         handleChange(idBindingDep, selection.id);
         handleChange(suggesterIdBindingDep, selection.suggesterId);
         handleChange(labelBindingDep, selection.label);
         handleChange(isFullyCompletedBindingDep, selection.isFullyCompleted);
+        handleChange(historyInputSuggesterDep, selection.historyInputSuggester);
     };
 
     const createActivityCallBack = (activityLabel: string) => {
-        onChange(true, undefined, undefined, activityLabel);
+        onChange(true, undefined, undefined, activityLabel, historyInputSuggesterValue);
         setFullScreenComponent(FullScreenComponent.FreeInput);
         setCreateActivityValue(activityLabel);
     };
 
-    const clickableListOnChange = (id: string | undefined) => {
+    const clickableListOnChange = (id: string | undefined, historyInputSuggester?: string) => {
         setSelectedSuggesterId(id);
         let isFully = false;
         if (id) {
             isFully = true;
         }
-        onChange(isFully, undefined, id);
+        historyInputSuggesterValue += historyInputSuggester;
+        onChange(isFully, undefined, id, undefined, historyInputSuggesterValue);
+    };
+
+    const clickableListHistoryOnChange = (historyInputSuggester?: string) => {
+        if (historyInputSuggesterValue != historyInputSuggester)
+            historyInputSuggesterValue += historyInputSuggester;
     };
 
     const freeInputOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -339,13 +351,16 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         {
                             clickableListOnChange: clickableListOnChange,
                             createActivityCallBack: createActivityCallBack,
+                            clickableListHistoryOnChange: clickableListHistoryOnChange,
                         },
                         {
                             activitesAutoCompleteRef,
                             selectedSuggesterId,
                             clickableListIconNoResult,
+                            historyInputSuggesterValue,
                             labels,
                             isMobile,
+                            separatorSuggester,
                         },
                         classes,
                     )}
@@ -572,15 +587,18 @@ const renderFreeInput = (
 const renderClickableList = (
     fullScreenComponent: FullScreenComponent,
     functions: {
-        clickableListOnChange: (id: string | undefined) => void;
+        clickableListOnChange: (id: string | undefined, historyInputSuggester?: string) => void;
         createActivityCallBack: (activityLabel: string) => void;
+        clickableListHistoryOnChange: (historyInputSuggester: string) => void;
     },
     inputs: {
         activitesAutoCompleteRef: AutoCompleteActiviteOption[];
         selectedSuggesterId: string | undefined;
         clickableListIconNoResult: string;
+        historyInputSuggesterValue: string;
         labels: ActivityLabelProps;
         isMobile: boolean;
+        separatorSuggester: string;
     },
     classes: any,
 ) => {
@@ -605,7 +623,9 @@ const renderClickableList = (
                 optionsFiltered={optionsFiltered}
                 optionsFilteredMap={optionsFilteredMap}
                 selectedId={inputs.selectedSuggesterId}
+                historyInputSuggesterValue={inputs.historyInputSuggesterValue}
                 handleChange={functions.clickableListOnChange}
+                handleChangeHistorySuggester={functions.clickableListHistoryOnChange}
                 createActivity={functions.createActivityCallBack}
                 placeholder={inputs.labels.clickableListPlaceholder}
                 notFoundLabel={inputs.labels.clickableListNotFoundLabel}
@@ -616,6 +636,7 @@ const renderClickableList = (
                 iconNoResultAlt={inputs.labels.clickableListIconNoResultAlt}
                 autoFocus={true}
                 isMobile={inputs.isMobile}
+                separatorSuggester={inputs.separatorSuggester}
             ></ClickableList>
         )
     );
