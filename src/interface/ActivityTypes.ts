@@ -10,6 +10,7 @@ export type SelectedActivity = {
     suggesterId?: string;
     label?: string;
     isFullyCompleted: boolean;
+    historyInputSuggester?: string;
 };
 
 export type AutoCompleteActiviteOption = {

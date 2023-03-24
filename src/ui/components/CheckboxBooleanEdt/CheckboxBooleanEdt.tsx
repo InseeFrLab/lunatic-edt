@@ -48,14 +48,23 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
             next(false, setDisplayAlert, nextClickCallback);
         }
     }, [nextClickEvent]);
-
     const handleOptions = useCallback((_event: React.MouseEvent<HTMLElement>, value: any) => {
         setLocalValue(value);
-        handleChange(response, value);
-        if (onSelectValue && value != null) {
-            onSelectValue();
+
+        if (value != null) {
+            handleChange(response, value);
         }
     }, []);
+
+    useEffect(() => {
+        if (localValue != value && localValue != null) {
+            if (nextClickCallback) {
+                next(true, setDisplayAlert, nextClickCallback);
+            } else {
+                if (onSelectValue) onSelectValue();
+            }
+        }
+    }, [localValue]);
 
     const next = (
         continueWithUncompleted: boolean,

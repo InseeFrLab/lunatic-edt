@@ -63,6 +63,7 @@ export type ActivitySelecterSpecificProps = {
     addToReferentielCallBack(newItem: AutoCompleteActiviteOption): void;
     onSelectValue(): void;
     widthGlobal?: boolean;
+    separatorSuggester: string;
 };
 
 export type IconGridCheckBoxOneSpecificProps = {
