@@ -3,6 +3,7 @@ import {
     NomenclatureActivityOption,
     SelectedActivity,
 } from "interface/ActivityTypes";
+import { ActivitySelecterNavigationEnum } from "../../../enumeration/ActivitySelecterNavigationEnum";
 import { FullScreenComponent } from "./ActivitySelecter";
 import pairSynonymes from "./synonymes-misspellings.json";
 
@@ -187,10 +188,12 @@ export const selectSubCategory = (
     selectedCategories: NomenclatureActivityOption[],
     setSelectedCategories: (activities: NomenclatureActivityOption[]) => void,
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
 ) => {
     const id = selectedId == selection.id ? undefined : selection.id;
     const temp = [...selectedCategories];
     temp.push(selection);
+    appendHistoryActivitySelecter(selection.label);
     setSelectedCategories(temp);
     onChange(false, id, undefined, undefined);
 };
@@ -203,12 +206,14 @@ export const selectFinalCategory = (
     setLabelOfSelectedId: (label?: string) => void,
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     onSelectValue: () => void,
+    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
 ) => {
     const id = selectedId == selection.id ? undefined : selection.id;
     const label = labelOfSelectedId == selection.label ? undefined : selection.label;
     onChange(true, id, undefined, undefined);
     setSelectedId(id);
     setLabelOfSelectedId(label);
+    appendHistoryActivitySelecter(label || "");
     if (id != null) onSelectValue();
 };
 
