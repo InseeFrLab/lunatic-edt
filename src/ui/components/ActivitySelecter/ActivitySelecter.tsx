@@ -95,7 +95,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const newItemId = useRef(uuidv4());
     const { classes, cx } = useStyles();
     let historyInputSuggesterValue = "";
-    let historyActivitySelecterValue = "";
+    let historyActivitySelecterValue = value[historyActivitySelecterBindingDep.name]
+        ? (value[historyActivitySelecterBindingDep.name] as string)
+        : "";
 
     useEffect(() => {
         setDisplayStepper &&
@@ -134,7 +136,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             setCreateActivityValue,
             setSelectedCategories,
         );
-        historyActivitySelecterValue = value[historyActivitySelecterBindingDep.name] as string;
     }, []);
 
     useEffect(() => {
@@ -214,6 +215,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
 
     const createActivityCallBack = (activityLabel: string) => {
         onChange(true, undefined, undefined, activityLabel, historyInputSuggesterValue);
+        appendHistoryActivitySelecter(ActivitySelecterNavigationEnum.ADD_ACTIVITY_BUTTON);
         setFullScreenComponent(FullScreenComponent.FreeInput);
         setCreateActivityValue(activityLabel);
     };
@@ -237,8 +239,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         actionOrSelection: ActivitySelecterNavigationEnum | string,
     ) => {
         historyActivitySelecterValue =
-            historyActivitySelecterValue + actionOrSelection + separatorSuggester;
-        console.log(historyActivitySelecterValue);
+            historyActivitySelecterValue + (actionOrSelection as string) + separatorSuggester;
         handleChange(historyActivitySelecterBindingDep, historyActivitySelecterValue);
     };
 
