@@ -96,6 +96,7 @@ export type CheckboxGroupSpecificProps = {
         alertAlticon?: string;
     };
     errorIcon?: string;
+    helpStep?: number;
 };
 
 export type CheckboxOneSpecificProps = {

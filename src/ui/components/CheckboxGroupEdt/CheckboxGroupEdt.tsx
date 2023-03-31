@@ -23,7 +23,15 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
         props;
     const { classes, cx } = useStyles();
 
-    const { backClickEvent, nextClickEvent, backClickCallback, nextClickCallback, labels, errorIcon } = {
+    const {
+        backClickEvent,
+        nextClickEvent,
+        backClickCallback,
+        nextClickCallback,
+        labels,
+        errorIcon,
+        helpStep,
+    } = {
         ...componentSpecificProps,
     };
 
@@ -116,7 +124,12 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                 >
                     {responses.map((option, index) => (
                         <ToggleButton
-                            className={classes.toggleButton}
+                            className={cx(
+                                classes.toggleButton,
+                                helpStep == 1 && index in [2, 3, 4]
+                                    ? classes.toggleButtonContentHelp
+                                    : "",
+                            )}
                             key={option.response.name + "-" + index}
                             value={option.response.name}
                         >
@@ -189,6 +202,10 @@ const useStyles = makeStylesEdt({ "name": { CheckboxGroupEdt } })(theme => ({
     },
     toggleButtonContent: {
         display: "flex",
+    },
+    toggleButtonContentHelp: {
+        zIndex: "1400",
+        pointerEvents: "none",
     },
 }));
 
