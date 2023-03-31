@@ -130,6 +130,8 @@ export type TimepickerSpecificProps = {
     defaultValue?: boolean;
     gapToFillIndex?: number;
     constants: any;
+    helpStep?: number;
+    helpImage?: string;
 };
 
 export type CheckboxBooleanEdtSpecificProps = {

@@ -34,7 +34,7 @@ const Timepicker = memo((props: TimepickerProps) => {
         tipsLabel,
         componentSpecificProps,
     } = props;
-    const { classes } = useStyles();
+    const { classes, cx } = useStyles();
 
     const [valueLocal, setValue] = React.useState<Dayjs | undefined>();
 
@@ -79,7 +79,7 @@ const Timepicker = memo((props: TimepickerProps) => {
             <Box className={classes.labelSpacer}>
                 <label>{label}</label>
             </Box>
-            <Box className={classes.root}>
+            <Box className={cx(classes.root, classes.helpBox)}>
                 <Box className={classes.tipsLabel}>
                     <p>{tipsLabel}</p>
                 </Box>
@@ -125,6 +125,10 @@ const useStyles = makeStylesEdt({ "name": { Timepicker } })(theme => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+    },
+    helpBox: {
+        position: "relative",
+        zIndex: "1400",
     },
     labelSpacer: {
         marginBottom: "1rem",

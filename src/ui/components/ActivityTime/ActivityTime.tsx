@@ -105,16 +105,21 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
                 value={startTime}
                 componentSpecificProps={componentSpecificProps}
             />
-            <Timepicker
-                response={responses[1].response}
-                handleChange={handleChange}
-                disabled={disabled}
-                readOnly={readOnly}
-                tipsLabel={endTimeLabel}
-                id={id}
-                value={endTime}
-                componentSpecificProps={componentSpecificProps}
-            />
+            {componentSpecificProps?.helpStep != null && (
+                <img src={componentSpecificProps?.helpImage} className={classes.imageHelpBox} />
+            )}
+            {componentSpecificProps?.helpStep == null && (
+                <Timepicker
+                    response={responses[1].response}
+                    handleChange={handleChange}
+                    disabled={disabled}
+                    readOnly={readOnly}
+                    tipsLabel={endTimeLabel}
+                    id={id}
+                    value={endTime}
+                    componentSpecificProps={componentSpecificProps}
+                />
+            )}
         </>
     );
 });
@@ -140,6 +145,13 @@ const useStyles = makeStylesEdt({ "name": { ActivityTime } })(theme => ({
         fontSize: "14px",
         color: theme.palette.info.main,
         fontWeight: "bold",
+    },
+    imageHelpBox: {
+        zIndex: "4000",
+        position: "relative",
+        marginTop: "-3rem",
+        width: "85%",
+        marginLeft: "1.75rem",
     },
 }));
 
