@@ -66,6 +66,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         addToReferentielCallBack,
         onSelectValue,
         separatorSuggester,
+        helpStep,
     } = { ...componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
@@ -103,6 +104,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             label: value[labelBindingDep.name] as string,
             isFullyCompleted: value[isFullyCompletedBindingDep.name] as boolean,
         };
+        if (helpStep == 3) parsedValue.id = "100";
+
         setSelectRank1Category(findRank1Category(parsedValue, categoriesAndActivitesNomenclature));
 
         processActivityCategory(
@@ -264,6 +267,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             <Box
                 className={cx(
                     classes.rank1Category,
+                    helpStep == 1 && ["100", "200"].includes(category.id)
+                        ? classes.rank1CategoryHelp
+                        : "",
                     selectRank1Category?.id == category.id ? classes.rank1CategorySelected : undefined,
                 )}
                 key={uuidv4()}
@@ -416,7 +422,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                 selectedCategories,
                                 setFullScreenComponent,
                                 labels,
+                                helpStep,
                                 classes,
+                                cx,
                             )}
 
                             {renderCategories(
@@ -498,12 +506,14 @@ const renderSearchInput = (
     selectedCategories: NomenclatureActivityOption[],
     setFullScreenComponent: (comp: FullScreenComponent) => void,
     labels: ActivityLabelProps,
+    helpStep: number | undefined,
     classes: any,
+    cx: any,
 ) => {
     return (
         selectedCategories.length === 0 && (
             <Box
-                className={classes.activityInput}
+                className={cx(classes.activityInput, helpStep == 2 ? classes.activityInputHelp : "")}
                 onClick={() => setFullScreenComponent(FullScreenComponent.ClickableListComp)}
             >
                 {
@@ -899,7 +909,7 @@ const getSubRankCategoryClassName = (
     if (category.id === selectedId) {
         return cx(classes.subRankCategory, classes.selectedSubRankCategory);
     }
-    return classes.subRankCategory;
+    return cx(classes.subRankCategory, category.id == "130" ? classes.rank1CategoryHelp : "");
 };
 
 const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
@@ -922,6 +932,9 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         marginBottom: "1rem",
         backgroundColor: theme.variables.white,
         borderRadius: "5px",
+    },
+    activityInputHelp: {
+        zIndex: "1400",
     },
     activityInputLabel: {
         fontSize: "16px",
@@ -959,6 +972,9 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         width: "45.5%",
         marginTop: "4%",
         borderRadius: "15px",
+    },
+    rank1CategoryHelp: {
+        zIndex: "1400",
     },
     rank1CategorySelected: {
         border: "2px solid #4973D2 !important",

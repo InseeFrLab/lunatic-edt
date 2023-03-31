@@ -64,6 +64,7 @@ export type ActivitySelecterSpecificProps = {
     onSelectValue(): void;
     widthGlobal?: boolean;
     separatorSuggester: string;
+    helpStep?: number;
 };
 
 export type IconGridCheckBoxOneSpecificProps = {
