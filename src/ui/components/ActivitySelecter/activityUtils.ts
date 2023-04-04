@@ -300,7 +300,7 @@ export const activitesFiltredMap = (optionsFiltered: AutoCompleteActiviteOption[
     return optionsFilteredMap;
 };
 
-export const useIndex = (optionsFiltered: AutoCompleteActiviteOption[]) => {
+export function CreateIndex(optionsFiltered: AutoCompleteActiviteOption[]) {
     const optionsFilteredMap = activitesFiltredMap(optionsFiltered);
     const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
         elasticlunr.clearStopWords();
@@ -317,4 +317,4 @@ export const useIndex = (optionsFiltered: AutoCompleteActiviteOption[]) => {
         return temp;
     });
     return index;
-};
+}

@@ -18,13 +18,13 @@ import Alert from "../Alert";
 import ClickableList from "../ClickableList";
 import {
     activitesFiltredUnique,
+    CreateIndex,
     findRank1Category,
     processActivityAutocomplete,
     processActivityCategory,
     processNewActivity,
     selectFinalCategory,
     selectSubCategory,
-    useIndex,
 } from "./activityUtils";
 
 type ActivitySelecterProps = {
@@ -167,11 +167,13 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 selectedCategories: selectedCategories,
                 createActivityValue: createActivityValue,
             },
-            setDisplayAlert,
-            nextClickCallback,
-            addToReferentielCallBack,
-            appendHistoryActivitySelecter,
-            onChange,
+            {
+                setDisplayAlert,
+                nextClickCallback,
+                addToReferentielCallBack,
+                appendHistoryActivitySelecter,
+                onChange,
+            },
             newItemId.current,
         );
     }, [nextClickEvent]);
@@ -274,6 +276,14 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 key={uuidv4()}
                 onClick={() => {
                     categoriesActivitiesBoxClick(
+                        {
+                            selectedCategories,
+                            selectedId,
+                            labelOfSelectedId,
+                            setSelectedId,
+                            setLabelOfSelectedId,
+                            setSelectedCategories,
+                        },
                         category,
                         onChange,
                         onSelectValue,
@@ -308,6 +318,14 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 key={uuidv4()}
                 onClick={() =>
                     categoriesActivitiesBoxClick(
+                        {
+                            selectedCategories,
+                            selectedId,
+                            labelOfSelectedId,
+                            setSelectedId,
+                            setLabelOfSelectedId,
+                            setSelectedCategories,
+                        },
                         category,
                         onChange,
                         onSelectValue,
@@ -322,45 +340,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 )}
             </Box>
         );
-    };
-
-    /**
-     * When category selected,
-     * if exist subcategories, save category selectionned uncompleted
-     * other save category completed
-     * @param selection
-     * @param onChange
-     * @param onSelectValue
-     */
-    const categoriesActivitiesBoxClick = (
-        selection: NomenclatureActivityOption,
-        onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
-        onSelectValue: () => void,
-        appendHistoryActivitySelecter: (
-            actionOrSelection: ActivitySelecterNavigationEnum | string,
-        ) => void,
-    ) => {
-        if (selection.subs) {
-            selectSubCategory(
-                selection,
-                selectedId,
-                selectedCategories,
-                setSelectedCategories,
-                onChange,
-                appendHistoryActivitySelecter,
-            );
-        } else {
-            selectFinalCategory(
-                selection,
-                selectedId,
-                labelOfSelectedId,
-                setSelectedId,
-                setLabelOfSelectedId,
-                onChange,
-                onSelectValue,
-                appendHistoryActivitySelecter,
-            );
-        }
     };
 
     return (
@@ -382,11 +361,13 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                     selectedCategories: selectedCategories,
                                     createActivityValue: createActivityValue,
                                 },
-                                setDisplayAlert,
-                                nextClickCallback,
-                                addToReferentielCallBack,
-                                appendHistoryActivitySelecter,
-                                onChange,
+                                {
+                                    setDisplayAlert,
+                                    nextClickCallback,
+                                    addToReferentielCallBack,
+                                    appendHistoryActivitySelecter,
+                                    onChange,
+                                },
                                 newItemId.current,
                             )
                         }
@@ -495,6 +476,51 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         </Box>
     );
 });
+
+/**
+ * When category selected,
+ * if exist subcategories, save category selectionned uncompleted
+ * other save category completed
+ * @param selection
+ * @param onChange
+ * @param onSelectValue
+ */
+const categoriesActivitiesBoxClick = (
+    states: {
+        selectedCategories: NomenclatureActivityOption[];
+        selectedId: string | undefined;
+        labelOfSelectedId: string | undefined;
+        setSelectedId: (id?: string) => void;
+        setLabelOfSelectedId: (label?: string) => void;
+        setSelectedCategories: (activities: NomenclatureActivityOption[]) => void;
+    },
+    selection: NomenclatureActivityOption,
+    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+    onSelectValue: () => void,
+    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
+) => {
+    if (selection.subs) {
+        selectSubCategory(
+            selection,
+            states.selectedId,
+            states.selectedCategories,
+            states.setSelectedCategories,
+            onChange,
+            appendHistoryActivitySelecter,
+        );
+    } else {
+        selectFinalCategory(
+            selection,
+            states.selectedId,
+            states.labelOfSelectedId,
+            states.setSelectedId,
+            states.setLabelOfSelectedId,
+            onChange,
+            onSelectValue,
+            appendHistoryActivitySelecter,
+        );
+    }
+};
 
 const renderTitle = (
     fullScreenComponent: FullScreenComponent,
@@ -642,10 +668,7 @@ const renderFreeInput = (
                     onClick={() =>
                         nextStepFreeInput(
                             states,
-                            functions.setDisplayAlert,
-                            functions.nextClickCallback,
-                            functions.addToReferentielCallBack,
-                            functions.appendHistoryActivitySelecter,
+                            functions,
                             props.newItemId,
                             props.displayAlert,
                             props.routeToGoal,
@@ -680,7 +703,6 @@ const renderClickableList = (
     const optionsFiltered: AutoCompleteActiviteOption[] = activitesFiltredUnique(
         inputs.activitesAutoCompleteRef,
     );
-    const index = useIndex(optionsFiltered);
     const selectedvalue: AutoCompleteActiviteOption = inputs.activitesAutoCompleteRef.filter(
         e => e.id === inputs.selectedSuggesterId,
     )[0];
@@ -690,7 +712,7 @@ const renderClickableList = (
             <ClickableList
                 className={inputs.isMobile ? classes.clickableListMobile : classes.clickableList}
                 optionsFiltered={optionsFiltered}
-                index={index}
+                index={CreateIndex(optionsFiltered)}
                 selectedValue={selectedvalue}
                 historyInputSuggesterValue={inputs.historyInputSuggesterValue}
                 handleChange={functions.clickableListOnChange}
@@ -801,28 +823,32 @@ const nextStepFreeInput = (
         selectedCategories: NomenclatureActivityOption[];
         createActivityValue: string | undefined;
     },
-    setDisplayAlert: (display: boolean) => void,
-    nextClickCallback: (routeToGoal: boolean) => void,
-    addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void,
-    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
+    functions: {
+        setDisplayAlert: (display: boolean) => void;
+        nextClickCallback: (routeToGoal: boolean) => void;
+        addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void;
+        appendHistoryActivitySelecter: (
+            actionOrSelection: ActivitySelecterNavigationEnum | string,
+        ) => void;
+    },
     newItemId: string,
     displayAlert2: boolean,
     routeToGoal: boolean,
 ) => {
     if (displayAlert2) {
-        setDisplayAlert(true);
+        functions.setDisplayAlert(true);
     } else {
         if (states.selectedCategories[states.selectedCategories.length - 1]) {
             routeToGoal = false;
         }
-        addToReferentielCallBack({
+        functions.addToReferentielCallBack({
             id: newItemId,
             label: states.createActivityValue || "",
             synonymes: "",
         });
-        appendHistoryActivitySelecter(ActivitySelecterNavigationEnum.SAVE_BUTTON);
-        appendHistoryActivitySelecter(states.createActivityValue || "");
-        nextClickCallback(routeToGoal);
+        functions.appendHistoryActivitySelecter(ActivitySelecterNavigationEnum.SAVE_BUTTON);
+        functions.appendHistoryActivitySelecter(states.createActivityValue || "");
+        functions.nextClickCallback(routeToGoal);
     }
 };
 
@@ -835,11 +861,15 @@ const nextStep = (
         selectedCategories: NomenclatureActivityOption[];
         createActivityValue: string | undefined;
     },
-    setDisplayAlert: (display: boolean) => void,
-    nextClickCallback: (routeToGoal: boolean) => void,
-    addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void,
-    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
-    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+    functions: {
+        setDisplayAlert: (display: boolean) => void;
+        nextClickCallback: (routeToGoal: boolean) => void;
+        addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void;
+        appendHistoryActivitySelecter: (
+            actionOrSelection: ActivitySelecterNavigationEnum | string,
+        ) => void;
+        onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void;
+    },
     newItemId: string,
     continueWithUncompleted: boolean,
 ) => {
@@ -855,7 +885,13 @@ const nextStep = (
     switch (states.fullScreenComponent) {
         //option clickable list - when activity selected is one of sub category
         case FullScreenComponent.ClickableListComp:
-            nextStepClickableList(states, setDisplayAlert, nextClickCallback, displayAlert, routeToGoal);
+            nextStepClickableList(
+                states,
+                functions.setDisplayAlert,
+                functions.nextClickCallback,
+                displayAlert,
+                routeToGoal,
+            );
             break;
         //option page principal - when activity selected is one category of first rank
         case FullScreenComponent.Main:
@@ -864,33 +900,24 @@ const nextStep = (
                     states.selectedCategory === undefined &&
                     states.suggesterId === undefined &&
                     !continueWithUncompleted;
-                onChange(false, states.selectedCategory, undefined, undefined);
+                functions.onChange(false, states.selectedCategory, undefined, undefined);
             } else {
                 displayAlert =
                     states.selectedId === undefined &&
                     states.suggesterId === undefined &&
                     !continueWithUncompleted;
-                onChange(
+                functions.onChange(
                     states.selectedId != null,
                     states.selectedId ?? states.selectedCategory,
                     undefined,
                     undefined,
                 );
             }
-            nextStepMain(setDisplayAlert, nextClickCallback, displayAlert);
+            nextStepMain(functions.setDisplayAlert, functions.nextClickCallback, displayAlert);
             break;
         //option free input - when new activity or activity searched
         case FullScreenComponent.FreeInput:
-            nextStepFreeInput(
-                states,
-                setDisplayAlert,
-                nextClickCallback,
-                addToReferentielCallBack,
-                appendHistoryActivitySelecter,
-                newItemId,
-                displayAlert,
-                routeToGoal,
-            );
+            nextStepFreeInput(states, functions, newItemId, displayAlert, routeToGoal);
             break;
         default:
             break;
@@ -917,24 +944,19 @@ const next = (
         selectedCategories: NomenclatureActivityOption[];
         createActivityValue: string | undefined;
     },
-    setDisplayAlert: (display: boolean) => void,
-    nextClickCallback: (routeToGoal: boolean) => void,
-    addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void,
-    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
-    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+    functions: {
+        setDisplayAlert: (display: boolean) => void;
+        nextClickCallback: (routeToGoal: boolean) => void;
+        addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void;
+        appendHistoryActivitySelecter: (
+            actionOrSelection: ActivitySelecterNavigationEnum | string,
+        ) => void;
+        onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void;
+    },
     newItemId: string,
 ) => {
     if (nextClickEvent) {
-        nextStep(
-            states,
-            setDisplayAlert,
-            nextClickCallback,
-            addToReferentielCallBack,
-            appendHistoryActivitySelecter,
-            onChange,
-            newItemId,
-            continueWithUncompleted,
-        );
+        nextStep(states, functions, newItemId, continueWithUncompleted);
     }
 };
 
