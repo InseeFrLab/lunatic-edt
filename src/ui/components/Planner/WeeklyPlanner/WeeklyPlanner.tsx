@@ -45,6 +45,21 @@ const generateDayList = (startDate: Date): Date[] => {
     return dayList;
 };
 
+/**
+ * Returns total sum of work for the day formatted as h:mm
+ * @returns
+ */
+const getFormatedWorkedSum = (workedHoursSum: number): string => {
+    const tempDate = new Date();
+    tempDate.setHours(0);
+    tempDate.setMinutes(workedHoursSum);
+    return (
+        tempDate.getHours() +
+        ":" +
+        (tempDate.getMinutes() === 0 ? "00" : tempDate.getMinutes().toString())
+    );
+};
+
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     let { value, handleChange, componentSpecificProps } = props;
 
@@ -136,21 +151,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         )[0];
         const sum: number = dayBloc?.detail.reduce((acc, val) => acc + val.duration, 0);
         return sum;
-    };
-
-    /**
-     * Returns total sum of work for the day formatted as h:mm
-     * @returns
-     */
-    const getFormatedWorkedSum = (workedHoursSum: number): string => {
-        const tempDate = new Date();
-        tempDate.setHours(0);
-        tempDate.setMinutes(workedHoursSum);
-        return (
-            tempDate.getHours() +
-            ":" +
-            (tempDate.getMinutes() === 0 ? "00" : tempDate.getMinutes().toString())
-        );
     };
 
     const renderHelp = () => {

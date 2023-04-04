@@ -18,13 +18,13 @@ import Alert from "../Alert";
 import ClickableList from "../ClickableList";
 import {
     activitesFiltredUnique,
-    CreateIndex,
     findRank1Category,
     processActivityAutocomplete,
     processActivityCategory,
     processNewActivity,
     selectFinalCategory,
     selectSubCategory,
+    CreateIndex,
 } from "./activityUtils";
 
 type ActivitySelecterProps = {
@@ -298,50 +298,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         );
     };
 
-    /**
-     * Show categories of rank 1
-     * @param category
-     * @returns
-     */
-    const renderRank1Category = (category: NomenclatureActivityOption) => {
-        const id = Number(category.id);
-        const { mainLabel, secondLabel } = splitLabelWithParenthesis(category.label);
-        return (
-            <Box
-                className={cx(
-                    classes.rank1Category,
-                    helpStep == 1 && ["100", "200"].includes(category.id)
-                        ? classes.rank1CategoryHelp
-                        : "",
-                    selectRank1Category?.id == category.id ? classes.rank1CategorySelected : undefined,
-                )}
-                key={uuidv4()}
-                onClick={() =>
-                    categoriesActivitiesBoxClick(
-                        {
-                            selectedCategories,
-                            selectedId,
-                            labelOfSelectedId,
-                            setSelectedId,
-                            setLabelOfSelectedId,
-                            setSelectedCategories,
-                        },
-                        category,
-                        onChange,
-                        onSelectValue,
-                        appendHistoryActivitySelecter,
-                    )
-                }
-            >
-                <img className={classes.icon} src={categoriesIcons[id]} />
-                <Typography className={classes.rank1MainLabel}>{mainLabel}</Typography>
-                {secondLabel && (
-                    <Typography className={classes.rank1SecondLabel}>{secondLabel}</Typography>
-                )}
-            </Box>
-        );
-    };
-
     return (
         <Box>
             {componentSpecificProps && categoriesAndActivitesNomenclature && (
@@ -457,17 +413,33 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             )}
 
                             {renderCategories(
-                                selectedCategories,
-                                categoriesAndActivitesNomenclature,
                                 {
-                                    setFullScreenComponent: setFullScreenComponent,
-                                    renderRank1Category: renderRank1Category,
-                                    renderSubRankCategory: renderSubRankCategory,
-                                    appendHistoryActivitySelecter: appendHistoryActivitySelecter,
+                                    selectedCategories,
+                                    selectedId,
+                                    labelOfSelectedId,
+                                    createActivityValue,
+                                    fullScreenComponent,
+                                    selectedCategory: selectRank1Category?.id,
+                                    suggesterId: selectedSuggesterId,
+                                    setSelectedCategories,
+                                    setSelectedId,
+                                    setLabelOfSelectedId,
+                                },
+                                {
+                                    setFullScreenComponent,
+                                    renderSubRankCategory,
+                                    appendHistoryActivitySelecter,
+                                    onSelectValue,
+                                },
+                                {
+                                    categoriesAndActivitesNomenclature,
+                                    labels,
+                                    categoriesIcons,
+                                    helpStep,
                                 },
                                 onChange,
-                                labels,
                                 classes,
+                                cx,
                             )}
                         </Box>
                     )}
@@ -476,6 +448,69 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         </Box>
     );
 });
+
+/**
+ * Show categories of rank 1
+ * @param category
+ * @returns
+ */
+const renderRank1Category = (
+    category: NomenclatureActivityOption,
+    states: {
+        selectedCategories: NomenclatureActivityOption[];
+        createActivityValue: string | undefined;
+        fullScreenComponent: FullScreenComponent;
+        selectedCategory: string | undefined;
+        selectedId: string | undefined;
+        suggesterId: string | undefined;
+        labelOfSelectedId: string | undefined;
+        setSelectedId: (id?: string) => void;
+        setLabelOfSelectedId: (label?: string) => void;
+        setSelectedCategories: (activities: NomenclatureActivityOption[]) => void;
+    },
+    functions: {
+        onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void;
+        onSelectValue: () => void;
+        appendHistoryActivitySelecter: (
+            actionOrSelection: ActivitySelecterNavigationEnum | string,
+        ) => void;
+    },
+    inputs: {
+        categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
+        categoriesIcons: { [id: string]: string };
+        helpStep: number | undefined;
+    },
+    classes: any,
+    cx: any,
+) => {
+    const id = Number(category.id);
+    const { mainLabel, secondLabel } = splitLabelWithParenthesis(category.label);
+    return (
+        <Box
+            className={cx(
+                classes.rank1Category,
+                inputs.helpStep == 1 && ["100", "200"].includes(category.id)
+                    ? classes.rank1CategoryHelp
+                    : "",
+                states.selectedCategory == category.id ? classes.rank1CategorySelected : undefined,
+            )}
+            key={uuidv4()}
+            onClick={() =>
+                categoriesActivitiesBoxClick(
+                    states,
+                    category,
+                    functions.onChange,
+                    functions.onSelectValue,
+                    functions.appendHistoryActivitySelecter,
+                )
+            }
+        >
+            <img className={classes.icon} src={inputs.categoriesIcons[id]} />
+            <Typography className={classes.rank1MainLabel}>{mainLabel}</Typography>
+            {secondLabel && <Typography className={classes.rank1SecondLabel}>{secondLabel}</Typography>}
+        </Box>
+    );
+};
 
 /**
  * When category selected,
@@ -509,16 +544,7 @@ const categoriesActivitiesBoxClick = (
             appendHistoryActivitySelecter,
         );
     } else {
-        selectFinalCategory(
-            selection,
-            states.selectedId,
-            states.labelOfSelectedId,
-            states.setSelectedId,
-            states.setLabelOfSelectedId,
-            onChange,
-            onSelectValue,
-            appendHistoryActivitySelecter,
-        );
+        selectFinalCategory(selection, states, onChange, onSelectValue, appendHistoryActivitySelecter);
     }
 };
 
@@ -543,29 +569,56 @@ const renderTitle = (
 };
 
 const renderCategories = (
-    selectedCategories: NomenclatureActivityOption[],
-    categoriesAndActivitesNomenclature: NomenclatureActivityOption[],
+    states: {
+        selectedCategories: NomenclatureActivityOption[];
+        selectedId: string | undefined;
+        labelOfSelectedId: string | undefined;
+        createActivityValue: string | undefined;
+        fullScreenComponent: FullScreenComponent;
+        selectedCategory: string | undefined;
+        suggesterId: string | undefined;
+        setSelectedId: (id?: string) => void;
+        setLabelOfSelectedId: (label?: string) => void;
+        setSelectedCategories: (activities: NomenclatureActivityOption[]) => void;
+    },
     functions: {
         setFullScreenComponent: (comp: FullScreenComponent) => void;
-        renderRank1Category: (category: NomenclatureActivityOption) => JSX.Element;
         renderSubRankCategory: (category: NomenclatureActivityOption) => JSX.Element;
         appendHistoryActivitySelecter: (
             actionOrSelection: ActivitySelecterNavigationEnum | string,
         ) => void;
+        onSelectValue: () => void;
+    },
+    inputs: {
+        categoriesIcons: { [id: string]: string };
+        categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
+        labels: ActivityLabelProps;
+        helpStep: number | undefined;
     },
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
-    labels: ActivityLabelProps,
     classes: any,
+    cx: any,
 ) => {
-    return selectedCategories.length === 0 ? (
+    return states.selectedCategories.length === 0 ? (
         <Box className={classes.rank1CategoriesBox}>
-            {categoriesAndActivitesNomenclature.map(d => {
-                return functions.renderRank1Category(d);
+            {inputs.categoriesAndActivitesNomenclature.map(d => {
+                return renderRank1Category(
+                    d,
+                    states,
+                    {
+                        appendHistoryActivitySelecter: functions.appendHistoryActivitySelecter,
+                        onChange: onChange,
+                        onSelectValue: functions.onSelectValue,
+                    },
+                    inputs,
+                    classes,
+                    cx,
+                );
             })}
         </Box>
     ) : (
         <Box className={classes.rank1CategoriesBox}>
-            {selectedCategories[selectedCategories.length - 1]?.subs?.map(s => {
+            {states.selectedCategories[states.selectedCategories.length - 1]?.subs?.map(s => {
                 return functions.renderSubRankCategory(s);
             })}
             <Button
@@ -573,13 +626,13 @@ const renderCategories = (
                 onClick={() =>
                     clickAutreButton(
                         functions.setFullScreenComponent,
-                        selectedCategories,
+                        states.selectedCategories,
                         onChange,
                         functions.appendHistoryActivitySelecter,
                     )
                 }
             >
-                {labels.otherButton}
+                {inputs.labels.otherButton}
             </Button>
         </Box>
     );
@@ -706,13 +759,14 @@ const renderClickableList = (
     const selectedvalue: AutoCompleteActiviteOption = inputs.activitesAutoCompleteRef.filter(
         e => e.id === inputs.selectedSuggesterId,
     )[0];
+    const index = CreateIndex(optionsFiltered);
 
     return (
         fullScreenComponent == FullScreenComponent.ClickableListComp && (
             <ClickableList
                 className={inputs.isMobile ? classes.clickableListMobile : classes.clickableList}
                 optionsFiltered={optionsFiltered}
-                index={CreateIndex(optionsFiltered)}
+                index={index}
                 selectedValue={selectedvalue}
                 historyInputSuggesterValue={inputs.historyInputSuggesterValue}
                 handleChange={functions.clickableListOnChange}

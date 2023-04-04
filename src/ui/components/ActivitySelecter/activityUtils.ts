@@ -203,19 +203,21 @@ export const selectSubCategory = (
 
 export const selectFinalCategory = (
     selection: NomenclatureActivityOption,
-    selectedId: string | undefined,
-    labelOfSelectedId: string | undefined,
-    setSelectedId: (id?: string) => void,
-    setLabelOfSelectedId: (label?: string) => void,
+    states: {
+        selectedId: string | undefined;
+        labelOfSelectedId: string | undefined;
+        setSelectedId: (id?: string) => void;
+        setLabelOfSelectedId: (label?: string) => void;
+    },
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     onSelectValue: () => void,
     appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
 ) => {
-    const id = selectedId == selection.id ? undefined : selection.id;
-    const label = labelOfSelectedId == selection.label ? undefined : selection.label;
+    const id = states.selectedId == selection.id ? undefined : selection.id;
+    const label = states.labelOfSelectedId == selection.label ? undefined : selection.label;
     onChange(true, id, undefined, undefined);
-    setSelectedId(id);
-    setLabelOfSelectedId(label);
+    states.setSelectedId(id);
+    states.setLabelOfSelectedId(label);
     appendHistoryActivitySelecter(label || "");
     if (id != null) onSelectValue();
 };
@@ -300,7 +302,7 @@ export const activitesFiltredMap = (optionsFiltered: AutoCompleteActiviteOption[
     return optionsFilteredMap;
 };
 
-export function CreateIndex(optionsFiltered: AutoCompleteActiviteOption[]) {
+export const CreateIndex = (optionsFiltered: AutoCompleteActiviteOption[]) => {
     const optionsFilteredMap = activitesFiltredMap(optionsFiltered);
     const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
         elasticlunr.clearStopWords();
@@ -317,4 +319,4 @@ export function CreateIndex(optionsFiltered: AutoCompleteActiviteOption[]) {
         return temp;
     });
     return index;
-}
+};
