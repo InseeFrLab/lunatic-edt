@@ -10,6 +10,7 @@ import {
 import { ActivityLabelProps, ActivitySelecterSpecificProps } from "interface/ComponentsSpecificProps";
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { ActivitySelecterNavigationEnum } from "../../../enumeration/ActivitySelecterNavigationEnum";
 import { makeStylesEdt } from "../../../ui/theme";
 import { splitLabelWithParenthesis } from "../../../ui/utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
@@ -29,7 +30,14 @@ import {
 type ActivitySelecterProps = {
     handleChange(response: responseType, value: string | boolean | undefined): void;
     componentSpecificProps: ActivitySelecterSpecificProps;
-    responses: [responsesType, responsesType, responsesType, responsesType, responsesType];
+    responses: [
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+    ];
     label: string;
     value: { [key: string]: string | boolean };
 };
@@ -48,6 +56,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const labelBindingDep = responses[2].response;
     const isFullyCompletedBindingDep = responses[3].response;
     const historyInputSuggesterDep = responses[4].response;
+    const historyActivitySelecterBindingDep = responses[5].response;
 
     let {
         backClickEvent,
@@ -85,6 +94,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const newItemId = useRef(uuidv4());
     const { classes, cx } = useStyles();
     let historyInputSuggesterValue = "";
+    let historyActivitySelecterValue = value[historyActivitySelecterBindingDep.name]
+        ? (value[historyActivitySelecterBindingDep.name] as string)
+        : "";
 
     useEffect(() => {
         setDisplayStepper &&
@@ -126,14 +138,21 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     }, []);
 
     useEffect(() => {
-        back(backClickEvent, fullScreenComponent, backClickCallback, selectedCategories, {
-            setSelectedId: setSelectedId,
-            setLabelOfSelectedId: setLabelOfSelectedId,
-            setSelectedSuggesterId: setSelectedSuggesterId,
-            setSelectedCategories: setSelectedCategories,
-            setCreateActivityValue: setCreateActivityValue,
-            setFullScreenComponent: setFullScreenComponent,
-        });
+        back(
+            backClickEvent,
+            fullScreenComponent,
+            backClickCallback,
+            appendHistoryActivitySelecter,
+            selectedCategories,
+            {
+                setSelectedId: setSelectedId,
+                setLabelOfSelectedId: setLabelOfSelectedId,
+                setSelectedSuggesterId: setSelectedSuggesterId,
+                setSelectedCategories: setSelectedCategories,
+                setCreateActivityValue: setCreateActivityValue,
+                setFullScreenComponent: setFullScreenComponent,
+            },
+        );
     }, [backClickEvent]);
 
     useEffect(() => {
@@ -151,6 +170,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             setDisplayAlert,
             nextClickCallback,
             addToReferentielCallBack,
+            appendHistoryActivitySelecter,
             onChange,
             newItemId.current,
         );
@@ -194,6 +214,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
 
     const createActivityCallBack = (activityLabel: string) => {
         onChange(true, undefined, undefined, activityLabel, historyInputSuggesterValue);
+        appendHistoryActivitySelecter(ActivitySelecterNavigationEnum.ADD_ACTIVITY_BUTTON);
         setFullScreenComponent(FullScreenComponent.FreeInput);
         setCreateActivityValue(activityLabel);
     };
@@ -211,6 +232,14 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const clickableListHistoryOnChange = (historyInputSuggester?: string) => {
         if (historyInputSuggesterValue != historyInputSuggester)
             historyInputSuggesterValue += historyInputSuggester;
+    };
+
+    const appendHistoryActivitySelecter = (
+        actionOrSelection: ActivitySelecterNavigationEnum | string,
+    ) => {
+        historyActivitySelecterValue =
+            historyActivitySelecterValue + (actionOrSelection as string) + separatorSuggester;
+        handleChange(historyActivitySelecterBindingDep, historyActivitySelecterValue);
     };
 
     const freeInputOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -244,7 +273,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 )}
                 key={uuidv4()}
                 onClick={() => {
-                    categoriesActivitiesBoxClick(category, onChange, onSelectValue);
+                    categoriesActivitiesBoxClick(
+                        category,
+                        onChange,
+                        onSelectValue,
+                        appendHistoryActivitySelecter,
+                    );
                 }}
             >
                 <Extension className={classes.optionIcon} />
@@ -272,7 +306,14 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                     selectRank1Category?.id == category.id ? classes.rank1CategorySelected : undefined,
                 )}
                 key={uuidv4()}
-                onClick={() => categoriesActivitiesBoxClick(category, onChange, onSelectValue)}
+                onClick={() =>
+                    categoriesActivitiesBoxClick(
+                        category,
+                        onChange,
+                        onSelectValue,
+                        appendHistoryActivitySelecter,
+                    )
+                }
             >
                 <img className={classes.icon} src={categoriesIcons[id]} />
                 <Typography className={classes.rank1MainLabel}>{mainLabel}</Typography>
@@ -295,6 +336,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         selection: NomenclatureActivityOption,
         onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
         onSelectValue: () => void,
+        appendHistoryActivitySelecter: (
+            actionOrSelection: ActivitySelecterNavigationEnum | string,
+        ) => void,
     ) => {
         if (selection.subs) {
             selectSubCategory(
@@ -303,6 +347,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 selectedCategories,
                 setSelectedCategories,
                 onChange,
+                appendHistoryActivitySelecter,
             );
         } else {
             selectFinalCategory(
@@ -313,6 +358,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 setLabelOfSelectedId,
                 onChange,
                 onSelectValue,
+                appendHistoryActivitySelecter,
             );
         }
     };
@@ -339,6 +385,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                 setDisplayAlert,
                                 nextClickCallback,
                                 addToReferentielCallBack,
+                                appendHistoryActivitySelecter,
                                 onChange,
                                 newItemId.current,
                             )
@@ -401,6 +448,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             nextClickCallback,
                             freeInputOnChange,
                             addToReferentielCallBack,
+                            appendHistoryActivitySelecter,
                             setDisplayAlert,
                         },
                         classes,
@@ -420,6 +468,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             {renderSearchInput(
                                 selectedCategories,
                                 setFullScreenComponent,
+                                appendHistoryActivitySelecter,
                                 labels,
                                 helpStep,
                                 classes,
@@ -433,6 +482,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                     setFullScreenComponent: setFullScreenComponent,
                                     renderRank1Category: renderRank1Category,
                                     renderSubRankCategory: renderSubRankCategory,
+                                    appendHistoryActivitySelecter: appendHistoryActivitySelecter,
                                 },
                                 onChange,
                                 labels,
@@ -473,6 +523,9 @@ const renderCategories = (
         setFullScreenComponent: (comp: FullScreenComponent) => void;
         renderRank1Category: (category: NomenclatureActivityOption) => JSX.Element;
         renderSubRankCategory: (category: NomenclatureActivityOption) => JSX.Element;
+        appendHistoryActivitySelecter: (
+            actionOrSelection: ActivitySelecterNavigationEnum | string,
+        ) => void;
     },
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     labels: ActivityLabelProps,
@@ -492,7 +545,12 @@ const renderCategories = (
             <Button
                 className={classes.buttonOther}
                 onClick={() =>
-                    clickAutreButton(functions.setFullScreenComponent, selectedCategories, onChange)
+                    clickAutreButton(
+                        functions.setFullScreenComponent,
+                        selectedCategories,
+                        onChange,
+                        functions.appendHistoryActivitySelecter,
+                    )
                 }
             >
                 {labels.otherButton}
@@ -504,6 +562,7 @@ const renderCategories = (
 const renderSearchInput = (
     selectedCategories: NomenclatureActivityOption[],
     setFullScreenComponent: (comp: FullScreenComponent) => void,
+    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
     labels: ActivityLabelProps,
     helpStep: number | undefined,
     classes: any,
@@ -513,7 +572,10 @@ const renderSearchInput = (
         selectedCategories.length === 0 && (
             <Box
                 className={cx(classes.activityInput, helpStep == 2 ? classes.activityInputHelp : "")}
-                onClick={() => setFullScreenComponent(FullScreenComponent.ClickableListComp)}
+                onClick={() => {
+                    appendHistoryActivitySelecter(ActivitySelecterNavigationEnum.SUGGESTER);
+                    setFullScreenComponent(FullScreenComponent.ClickableListComp);
+                }}
             >
                 {
                     <Typography className={classes.activityInputLabel}>
@@ -547,6 +609,9 @@ const renderFreeInput = (
         nextClickCallback: (routeToGoal: boolean) => void;
         freeInputOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
         addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void;
+        appendHistoryActivitySelecter: (
+            actionOrSelection: ActivitySelecterNavigationEnum | string,
+        ) => void;
         setDisplayAlert: (display: boolean) => void;
     },
     classes: any,
@@ -580,6 +645,7 @@ const renderFreeInput = (
                             functions.setDisplayAlert,
                             functions.nextClickCallback,
                             functions.addToReferentielCallBack,
+                            functions.appendHistoryActivitySelecter,
                             props.newItemId,
                             props.displayAlert,
                             props.routeToGoal,
@@ -649,6 +715,7 @@ const back = (
     backClickEvent: React.MouseEvent | undefined,
     fullScreenComponent: FullScreenComponent,
     backClickCallback: () => void,
+    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
     selectedCategories: NomenclatureActivityOption[],
     setters: {
         setSelectedId: (id?: string) => void;
@@ -666,6 +733,7 @@ const back = (
             return;
         }
         const temp = [...selectedCategories];
+        appendHistoryActivitySelecter(ActivitySelecterNavigationEnum.PREVIOUS_BUTTON);
 
         switch (fullScreenComponent) {
             case FullScreenComponent.Main:
@@ -736,6 +804,7 @@ const nextStepFreeInput = (
     setDisplayAlert: (display: boolean) => void,
     nextClickCallback: (routeToGoal: boolean) => void,
     addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void,
+    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
     newItemId: string,
     displayAlert2: boolean,
     routeToGoal: boolean,
@@ -751,6 +820,8 @@ const nextStepFreeInput = (
             label: states.createActivityValue || "",
             synonymes: "",
         });
+        appendHistoryActivitySelecter(ActivitySelecterNavigationEnum.SAVE_BUTTON);
+        appendHistoryActivitySelecter(states.createActivityValue || "");
         nextClickCallback(routeToGoal);
     }
 };
@@ -767,6 +838,7 @@ const nextStep = (
     setDisplayAlert: (display: boolean) => void,
     nextClickCallback: (routeToGoal: boolean) => void,
     addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void,
+    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     newItemId: string,
     continueWithUncompleted: boolean,
@@ -814,6 +886,7 @@ const nextStep = (
                 setDisplayAlert,
                 nextClickCallback,
                 addToReferentielCallBack,
+                appendHistoryActivitySelecter,
                 newItemId,
                 displayAlert,
                 routeToGoal,
@@ -847,6 +920,7 @@ const next = (
     setDisplayAlert: (display: boolean) => void,
     nextClickCallback: (routeToGoal: boolean) => void,
     addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void,
+    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     newItemId: string,
 ) => {
@@ -856,6 +930,7 @@ const next = (
             setDisplayAlert,
             nextClickCallback,
             addToReferentielCallBack,
+            appendHistoryActivitySelecter,
             onChange,
             newItemId,
             continueWithUncompleted,
@@ -867,7 +942,9 @@ const clickAutreButton = (
     setFullScreenComponent: (comp: FullScreenComponent) => void,
     selectedCategories: NomenclatureActivityOption[],
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
 ) => {
+    appendHistoryActivitySelecter(ActivitySelecterNavigationEnum.OTHER_BUTTON);
     setFullScreenComponent(FullScreenComponent.FreeInput);
     // If we enter free input value from "Autre" button, then save id of last selected category
     let id = undefined;
