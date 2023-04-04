@@ -2,7 +2,6 @@ import { Box, Button, Modal } from "@mui/material";
 import { Fragment, memo } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 type ModalProps = {
     isModalDisplayed: boolean;
@@ -15,10 +14,20 @@ type ModalProps = {
     };
     icon: string;
     iconAlt: string;
+    arrowForwardIcon: string;
+    arrowForwardIconAlt: string;
 };
 
 const ModalEdt = memo((props: ModalProps) => {
-    const { isModalDisplayed, onCompleteCallBack, labels, icon, iconAlt } = props;
+    const {
+        isModalDisplayed,
+        onCompleteCallBack,
+        labels,
+        icon,
+        iconAlt,
+        arrowForwardIcon,
+        arrowForwardIconAlt,
+    } = props;
     const { classes, cx } = useStyles();
 
     return (
@@ -44,7 +53,13 @@ const ModalEdt = memo((props: ModalProps) => {
                                 variant="contained"
                                 onClick={onCompleteCallBack}
                                 className={classes.buttonNext}
-                                endIcon={<ArrowForwardIosIcon className={classes.arrowIcon} />}
+                                endIcon={
+                                    <img
+                                        src={arrowForwardIcon}
+                                        alt={arrowForwardIconAlt}
+                                        className={classes.arrowIcon}
+                                    />
+                                }
                             >
                                 {labels?.buttonLabel}
                             </Button>

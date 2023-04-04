@@ -1,11 +1,10 @@
-import { Add, ChevronRight, Extension, Search } from "@mui/icons-material";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import {
     AutoCompleteActiviteOption,
     NomenclatureActivityOption,
-    responsesType,
-    responseType,
     SelectedActivity,
+    responseType,
+    responsesType,
 } from "interface/ActivityTypes";
 import { ActivityLabelProps, ActivitySelecterSpecificProps } from "interface/ComponentsSpecificProps";
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
@@ -75,6 +74,14 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         onSelectValue,
         separatorSuggester,
         helpStep,
+        chevronRightIcon,
+        chevronRightIconAlt,
+        searchIcon,
+        searchIconAlt,
+        extensionIcon,
+        extensionIconAlt,
+        addIcon,
+        addIconAlt,
     } = { ...componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
@@ -291,9 +298,15 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                     );
                 }}
             >
-                <Extension className={classes.optionIcon} />
+                <img src={extensionIcon} alt={extensionIconAlt} className={classes.optionIcon} />
                 <Typography className={classes.subRankLabel}>{category.label}</Typography>
-                {category.subs && <ChevronRight className={classes.chevronIcon} />}
+                {category.subs && (
+                    <img
+                        src={chevronRightIcon}
+                        alt={chevronRightIconAlt}
+                        className={classes.chevronIcon}
+                    />
+                )}
             </Box>
         );
     };
@@ -434,6 +447,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         },
                         classes,
                         cx,
+                        addIcon,
+                        addIconAlt,
                     )}
 
                     {fullScreenComponent === FullScreenComponent.Main && (
@@ -454,6 +469,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                 helpStep,
                                 classes,
                                 cx,
+                                searchIcon,
+                                searchIconAlt,
                             )}
 
                             {renderCategories(
@@ -593,6 +610,8 @@ const renderSearchInput = (
     helpStep: number | undefined,
     classes: any,
     cx: any,
+    searchIcon: string,
+    searchIconAlt: string,
 ) => {
     return (
         selectedCategories.length === 0 && (
@@ -608,7 +627,7 @@ const renderSearchInput = (
                         {labels.clickableListPlaceholder}
                     </Typography>
                 }
-                <Search className={classes.activityInputIcon} />
+                <img src={searchIcon} alt={searchIconAlt} className={classes.activityInputIcon} />
             </Box>
         )
     );
@@ -642,6 +661,8 @@ const renderFreeInput = (
     },
     classes: any,
     cx: any,
+    addIcon: string,
+    addIconAlt: string,
 ) => {
     return (
         states.fullScreenComponent === FullScreenComponent.FreeInput && (
@@ -664,7 +685,7 @@ const renderFreeInput = (
                 <Button
                     className={classes.addActivityButton}
                     variant="contained"
-                    startIcon={<Add />}
+                    startIcon={<img src={addIcon} alt={addIconAlt} />}
                     onClick={() =>
                         nextStepFreeInput(
                             states,

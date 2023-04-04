@@ -1,4 +1,3 @@
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { IconButton, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { InfoProps } from "interface";
@@ -14,10 +13,12 @@ export type TooltipInfoProps = {
         boldTitle: string;
     };
     displayTooltip?: boolean;
+    infoIcon: string;
+    infoIconAlt: string;
 };
 
 const TooltipInfo = memo((props: TooltipInfoProps) => {
-    const { infoLabels, titleLabels, displayTooltip } = props;
+    const { infoLabels, titleLabels, displayTooltip, infoIcon, infoIconAlt } = props;
     const { classes } = useStyles();
 
     const [displayInfo, setDisplayInfo] = React.useState<boolean>(false);
@@ -33,7 +34,7 @@ const TooltipInfo = memo((props: TooltipInfoProps) => {
                 )}
                 <Tooltip title="Info" className={displayTooltip ? classes.hiddenBox : classes.iconBox}>
                     <IconButton onClick={() => setDisplayInfo(!displayInfo)}>
-                        <InfoOutlinedIcon className={classes.iconInfoBox} />
+                        <img src={infoIcon} alt={infoIconAlt} className={classes.iconInfoBox} />
                     </IconButton>
                 </Tooltip>
             </Box>

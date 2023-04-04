@@ -19,6 +19,8 @@ const options: CheckboxOneCustomOption[] = [
 
 let componentSpecificProps: CheckboxOneSpecificProps = {
     options: options,
+    extensionIcon: "",
+    extensionIconAlt: "",
 };
 
 const value = "1";
