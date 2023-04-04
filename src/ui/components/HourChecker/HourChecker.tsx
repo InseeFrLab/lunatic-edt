@@ -3,7 +3,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import WorkIcon from "@mui/icons-material/Work";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { HourCheckerOption } from "interface/HourCheckerOptions";
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -13,6 +13,7 @@ export type HourCheckerProps = {
     responses: HourCheckerOption[];
     value: { [key: string]: boolean };
     label?: string;
+    helpStep?: number;
 };
 
 const getSelectAllValue = (value: { [key: string]: boolean }, responsesValues: string[]): boolean => {
@@ -60,7 +61,7 @@ const getClassName = (cx: any, className: any, classVisible: any, classHidden: a
  * each fraction is individualy selectable.
  */
 const HourChecker = memo((props: HourCheckerProps) => {
-    const { id, value, label, responses, handleChange } = props;
+    const { id, value, label, responses, handleChange, helpStep } = props;
     const [isOpen, setIsOpen] = React.useState(false);
 
     const { classes, cx } = useStyles({ "width": `calc(100% / ${responses.length})` });
@@ -69,6 +70,12 @@ const HourChecker = memo((props: HourCheckerProps) => {
     const [currentOption, setCurrentOption] = React.useState(responsesValues);
 
     const [selectAll, setSelectAll] = React.useState(getSelectAllValue(value, responsesValues));
+
+    useEffect(() => {
+        if (helpStep == 4 && value["5h15"]) {
+            setIsOpen(true);
+        }
+    }, [isOpen]);
 
     const toggleHourChecker = (e: any) => {
         e.stopPropagation();

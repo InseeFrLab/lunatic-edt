@@ -45,6 +45,7 @@ export type WeeklyPlannerSpecificProps = {
     };
     saveAll(): void;
     language: string;
+    helpStep?: number;
 };
 
 export type ActivitySelecterSpecificProps = {

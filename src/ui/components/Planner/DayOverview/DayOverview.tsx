@@ -27,6 +27,7 @@ export type DayOverviewProps = {
     workSumLabel: string;
     workedHoursSum: number;
     getFormatedWorkedSum: (workedHoursSum: number) => string;
+    helpStep?: number;
 };
 
 /**
@@ -80,7 +81,7 @@ const renderHeader = (
  * It shows to the user a list of 24 Hourchecker components corresponding to an entire day.
  */
 const DayOverview = memo((props: DayOverviewProps) => {
-    const { classes } = useStyles();
+    const { classes, cx } = useStyles();
     const {
         date,
         isDisplayed,
@@ -92,6 +93,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
         workSumLabel,
         workedHoursSum,
         getFormatedWorkedSum,
+        helpStep,
     } = props;
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
@@ -191,13 +193,39 @@ const DayOverview = memo((props: DayOverviewProps) => {
     };
 
     const renderRow = (h: TimeLineRowType): any => {
+        const helpPage =
+            (helpStep == 2 && h.label == "3h00") ||
+            (helpStep == 3 && h.label == "4h00") ||
+            (helpStep == 4 && h.label == "5h00");
+        let valueSelected: LunaticMultiSelectionValues = {};
+
+        if (helpStep == 2) {
+            valueSelected = {
+                "3h15": true,
+                "3h30": true,
+                "3h45": true,
+                "4h0": true,
+            };
+        } else if (helpStep == 4) {
+            valueSelected = {
+                "5h15": true,
+                "5h30": true,
+                "5h45": false,
+                "6h0": false,
+            };
+        }
+
         return (
-            <Box className={classes.rowContainer} key={uuidv4()}>
+            <Box className={cx(classes.rowContainer, helpPage ? classes.helpRow : "")} key={uuidv4()}>
                 <Box className={classes.rowLabel}>
                     <Typography className={classes.hourLabel}>{h.label}</Typography>
                 </Box>
 
-                <HourChecker responses={h.options} value={h.value} />
+                <HourChecker
+                    responses={h.options}
+                    value={helpPage ? valueSelected : h.value}
+                    helpStep={helpStep}
+                />
             </Box>
         );
     };
@@ -274,6 +302,10 @@ const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     },
     bold: {
         fontWeight: "bold",
+    },
+    helpRow: {
+        zIndex: "1400",
+        pointerEvents: "none",
     },
 }));
 
