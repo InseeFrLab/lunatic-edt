@@ -59,6 +59,8 @@ describe("weeklyPlannerComponent", () => {
         },
         saveAll: saveAll,
         language: "fr",
+        moreIcon: "",
+        moreIconAlt: "",
     };
 
     const renderElement = (valueData: IODataStructure[]): RenderResult => {

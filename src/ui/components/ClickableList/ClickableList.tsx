@@ -1,4 +1,3 @@
-import { Add, Extension, Search } from "@mui/icons-material";
 import {
     Autocomplete,
     AutocompleteRenderInputParams,
@@ -11,7 +10,7 @@ import {
 } from "@mui/material";
 import elasticlunr from "elasticlunrjs";
 import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
-import React, { memo, ReactNode, useCallback } from "react";
+import React, { ReactNode, memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
@@ -36,6 +35,12 @@ export type ClickableListProps = {
     className?: string;
     autoFocus?: boolean;
     isMobile?: boolean;
+    iconAdd: string;
+    iconAddAlt: string;
+    iconExtension: string;
+    iconExtensionAlt: string;
+    iconSearch: string;
+    iconSearchAlt: string;
 };
 
 const ClickableList = memo((props: ClickableListProps) => {
@@ -58,6 +63,12 @@ const ClickableList = memo((props: ClickableListProps) => {
         className,
         autoFocus = false,
         isMobile = false,
+        iconAdd,
+        iconAddAlt,
+        iconExtension,
+        iconExtensionAlt,
+        iconSearch,
+        iconSearchAlt,
     } = props;
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
@@ -131,7 +142,11 @@ const ClickableList = memo((props: ClickableListProps) => {
      * @returns
      */
     const renderIcon = () => {
-        return displayAddIcon ? <Add /> : <Search />;
+        return displayAddIcon ? (
+            <img src={iconAdd} alt={iconAddAlt} />
+        ) : (
+            <img src={iconSearch} alt={iconSearchAlt} />
+        );
     };
 
     /**
@@ -165,7 +180,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                 <Button
                     className={classes.addActivityButton}
                     variant="contained"
-                    startIcon={<Add />}
+                    startIcon={<img src={iconAdd} alt={iconAddAlt} />}
                     onClick={createActivityCallback}
                 >
                     {addActivityButtonLabel}
@@ -231,7 +246,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                     <Button
                         className={classes.addActivityButton}
                         variant="contained"
-                        startIcon={<Add />}
+                        startIcon={<img src={iconAdd} alt={iconAddAlt} />}
                         onClick={() => createActivity(currentInputValue)}
                     >
                         {addActivityButtonLabel}
@@ -250,7 +265,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             renderInput={params => renderTextField(params)}
             renderOption={(properties, option) => (
                 <li {...properties} className={classes.option}>
-                    <Extension className={classes.optionIcon} />
+                    <img src={iconExtension} alt={iconExtensionAlt} className={classes.optionIcon} />
                     {option.label}
                 </li>
             )}

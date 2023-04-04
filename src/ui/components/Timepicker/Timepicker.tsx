@@ -1,4 +1,3 @@
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
@@ -20,6 +19,8 @@ export type TimepickerProps = {
     id?: string;
     response: { [name: string]: string };
     componentSpecificProps?: TimepickerSpecificProps;
+    arrowDownIcon: string;
+    arrowDownIconAlt: string;
 };
 
 const Timepicker = memo((props: TimepickerProps) => {
@@ -33,6 +34,8 @@ const Timepicker = memo((props: TimepickerProps) => {
         label,
         tipsLabel,
         componentSpecificProps,
+        arrowDownIcon,
+        arrowDownIconAlt,
     } = props;
     const { classes, cx } = useStyles();
 
@@ -74,6 +77,10 @@ const Timepicker = memo((props: TimepickerProps) => {
         }
     }
 
+    const getArrowDownIcon = () => {
+        return <img src={arrowDownIcon} alt={arrowDownIconAlt} />;
+    };
+
     return (
         <>
             <Box className={classes.labelSpacer}>
@@ -95,7 +102,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                             setValueLunatic(newValue);
                         }, [])}
                         components={{
-                            OpenPickerIcon: KeyboardArrowDownIcon,
+                            OpenPickerIcon: getArrowDownIcon,
                         }}
                         renderInput={useCallback(
                             params => (
