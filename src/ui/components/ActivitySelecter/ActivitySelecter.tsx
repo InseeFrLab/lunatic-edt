@@ -16,15 +16,14 @@ import { createCustomizableLunaticField } from "../../utils/create-customizable-
 import Alert from "../Alert";
 import ClickableList from "../ClickableList";
 import {
-    addMisspellings,
+    activitesFiltredUnique,
     findRank1Category,
     processActivityAutocomplete,
     processActivityCategory,
     processNewActivity,
-    removeAccents,
     selectFinalCategory,
     selectSubCategory,
-    skipApostrophes,
+    useIndex,
 } from "./activityUtils";
 
 type ActivitySelecterProps = {
@@ -612,27 +611,21 @@ const renderClickableList = (
     },
     classes: any,
 ) => {
-    const optionsFiltered: AutoCompleteActiviteOption[] = inputs.activitesAutoCompleteRef.filter(
-        (option, i, arr) => arr.findIndex(opt => opt.label === option.label) === i,
+    const optionsFiltered: AutoCompleteActiviteOption[] = activitesFiltredUnique(
+        inputs.activitesAutoCompleteRef,
     );
-
-    const optionsFilteredMap = optionsFiltered.map(opt => {
-        const newOption: AutoCompleteActiviteOption = {
-            id: opt.id,
-            label: removeAccents(skipApostrophes(addMisspellings(opt).label)).replaceAll("’", "'"),
-            synonymes: opt.synonymes.replaceAll(";", "; "),
-        };
-        return newOption;
-    });
+    const index = useIndex(optionsFiltered);
+    const selectedvalue: AutoCompleteActiviteOption = inputs.activitesAutoCompleteRef.filter(
+        e => e.id === inputs.selectedSuggesterId,
+    )[0];
 
     return (
         fullScreenComponent == FullScreenComponent.ClickableListComp && (
             <ClickableList
                 className={inputs.isMobile ? classes.clickableListMobile : classes.clickableList}
-                options={inputs.activitesAutoCompleteRef}
                 optionsFiltered={optionsFiltered}
-                optionsFilteredMap={optionsFilteredMap}
-                selectedId={inputs.selectedSuggesterId}
+                index={index}
+                selectedValue={selectedvalue}
                 historyInputSuggesterValue={inputs.historyInputSuggesterValue}
                 handleChange={functions.clickableListOnChange}
                 handleChangeHistorySuggester={functions.clickableListHistoryOnChange}
@@ -640,14 +633,14 @@ const renderClickableList = (
                 placeholder={inputs.labels.clickableListPlaceholder}
                 notFoundLabel={inputs.labels.clickableListNotFoundLabel}
                 notFoundComment={inputs.labels.clickableListNotFoundComment}
-                addActivityButtonLabel={inputs.labels.clickableListAddActivityButton}
                 notSearchLabel={inputs.labels.clickableListNotSearchLabel}
+                addActivityButtonLabel={inputs.labels.clickableListAddActivityButton}
                 iconNoResult={inputs.clickableListIconNoResult}
                 iconNoResultAlt={inputs.labels.clickableListIconNoResultAlt}
                 autoFocus={true}
                 isMobile={inputs.isMobile}
                 separatorSuggester={inputs.separatorSuggester}
-            ></ClickableList>
+            />
         )
     );
 };

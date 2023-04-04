@@ -1,8 +1,11 @@
+import elasticlunr, { Index } from "elasticlunrjs";
 import {
     AutoCompleteActiviteOption,
     NomenclatureActivityOption,
     SelectedActivity,
 } from "interface/ActivityTypes";
+import React from "react";
+import stopWords from "../ClickableList//stop_words_french.json";
 import { FullScreenComponent } from "./ActivitySelecter";
 import pairSynonymes from "./synonymes-misspellings.json";
 
@@ -271,4 +274,42 @@ export const addMisspellings = (option: AutoCompleteActiviteOption) => {
     option.synonymes = option.synonymes + "; " + labelWithMisspelling;
 
     return option;
+};
+
+export const activitesFiltredUnique = (activitesAutoCompleteRef: AutoCompleteActiviteOption[]) => {
+    const optionsFiltered: AutoCompleteActiviteOption[] = activitesAutoCompleteRef.filter(
+        (option, i, arr) => arr.findIndex(opt => opt.label === option.label) === i,
+    );
+    return optionsFiltered;
+};
+
+export const activitesFiltredMap = (optionsFiltered: AutoCompleteActiviteOption[]) => {
+    const optionsFilteredMap = optionsFiltered.map(opt => {
+        const newOption: AutoCompleteActiviteOption = {
+            id: opt.id,
+            label: removeAccents(skipApostrophes(addMisspellings(opt).label)).replaceAll("’", "'"),
+            synonymes: opt.synonymes.replaceAll(";", "; "),
+        };
+        return newOption;
+    });
+    return optionsFilteredMap;
+};
+
+export const useIndex = (optionsFiltered: AutoCompleteActiviteOption[]) => {
+    const optionsFilteredMap = activitesFiltredMap(optionsFiltered);
+    const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
+        elasticlunr.clearStopWords();
+        elasticlunr.addStopWords(stopWords);
+
+        const temp: Index<AutoCompleteActiviteOption> = elasticlunr();
+        temp.addField("label");
+        temp.addField("synonymes");
+        temp.setRef("id");
+
+        for (const doc of optionsFilteredMap) {
+            temp.addDoc(doc);
+        }
+        return temp;
+    });
+    return index;
 };

@@ -9,21 +9,19 @@ import {
     Paper,
     TextField,
 } from "@mui/material";
-import elasticlunr, { Index } from "elasticlunrjs";
+import elasticlunr from "elasticlunrjs";
 import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
-import { stemmer } from "./stemmer";
-import stopWords from "./stop_words_french.json";
 import React, { memo, ReactNode, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
+import stopWords from "./stop_words_french.json";
 
 export type ClickableListProps = {
     placeholder: string;
-    options: AutoCompleteActiviteOption[];
     optionsFiltered: AutoCompleteActiviteOption[];
-    optionsFilteredMap: AutoCompleteActiviteOption[];
-    selectedId?: string;
+    index: elasticlunr.Index<AutoCompleteActiviteOption>;
+    selectedValue: AutoCompleteActiviteOption;
     historyInputSuggesterValue: string;
     handleChange(id: string | undefined, historyInputSuggester?: string): void;
     handleChangeHistorySuggester(historyInputSuggester?: string): void;
@@ -43,10 +41,9 @@ export type ClickableListProps = {
 const ClickableList = memo((props: ClickableListProps) => {
     let {
         placeholder,
-        options,
         optionsFiltered,
-        optionsFilteredMap,
-        selectedId,
+        index,
+        selectedValue,
         historyInputSuggesterValue,
         handleChange,
         handleChangeHistorySuggester,
@@ -57,45 +54,16 @@ const ClickableList = memo((props: ClickableListProps) => {
         notSearchLabel,
         iconNoResult,
         iconNoResultAlt,
+        separatorSuggester,
         className,
         autoFocus = false,
         isMobile = false,
-        separatorSuggester,
     } = props;
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
     const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
     const separator = separatorSuggester;
     let values = historyInputSuggesterValue;
-
-    const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
-        elasticlunr.clearStopWords();
-        elasticlunr.addStopWords(stopWords);
-
-        const temp: Index<AutoCompleteActiviteOption> = elasticlunr();
-        temp.addField("label");
-        temp.addField("synonymes");
-        temp.setRef("id");
-
-        temp.pipeline.reset();
-        temp.pipeline.add(
-            elasticlunr.trimmer,
-            elasticlunr.stopWordFilter,
-            str =>
-                str
-                    .normalize("NFD")
-                    .replace(/\p{Diacritic}/gu, "")
-                    .replace(/'/g, " "), // remove accents
-            str => stemmer(str),
-        );
-
-        for (const doc of optionsFilteredMap) {
-            temp.addDoc(doc);
-        }
-        return temp;
-    });
-
-    const selectedvalue: AutoCompleteActiviteOption = options.filter(e => e.id === selectedId)[0];
 
     const { classes, cx } = useStyles();
 
@@ -277,7 +245,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         <Autocomplete
             className={cx(classes.root, className)}
             options={optionsFiltered}
-            defaultValue={selectedvalue}
+            defaultValue={selectedValue}
             onChange={(_event, value) => handleChange(value?.id, value?.label)}
             renderInput={params => renderTextField(params)}
             renderOption={(properties, option) => (
