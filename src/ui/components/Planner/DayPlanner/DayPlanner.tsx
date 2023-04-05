@@ -1,4 +1,3 @@
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Box, Button, CircularProgress, Popover, Typography } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
 import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
@@ -21,6 +20,8 @@ export type DayPlannerProps = {
     editButtonLabel?: string;
     language: string;
     getFormatedWorkedSum: (workedHoursSum: number) => string;
+    moreIcon: string;
+    moreIconAlt: string;
 };
 
 enum DayRelativeTimeEnum {
@@ -62,6 +63,8 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         editButtonLabel,
         language,
         getFormatedWorkedSum,
+        moreIcon,
+        moreIconAlt,
     } = props;
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
@@ -168,7 +171,12 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     const renderMoreIcon = () => {
         return dayRelativeTime === -1 ? (
             <Box>
-                <MoreHorizIcon className={classes.clickable} onClick={onEditCard}></MoreHorizIcon>
+                <img
+                    src={moreIcon}
+                    alt={moreIconAlt}
+                    className={classes.clickable}
+                    onClick={onEditCard}
+                />
                 <Popover
                     id={id}
                     open={openPopOver}

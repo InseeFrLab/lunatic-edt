@@ -1,4 +1,3 @@
-import { Extension } from "@mui/icons-material";
 import { Box, Button, TextField, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { CheckboxOneSpecificProps } from "interface";
 import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
@@ -159,7 +158,11 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                             </Box>
                                         )}
                                         {componentSpecificProps?.defaultIcon && (
-                                            <Extension className={classes.iconBox} />
+                                            <img
+                                                src={componentSpecificProps.extensionIcon}
+                                                alt={componentSpecificProps.extensionIconAlt}
+                                                className={classes.iconBox}
+                                            />
                                         )}
                                         <Box className={classes.labelBox}>{option.label}</Box>
                                     </ToggleButton>

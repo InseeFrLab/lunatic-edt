@@ -1,6 +1,6 @@
 {
     "name": "@inseefrlab/lunatic-edt",
-    "version": "0.8.1",
+    "version": "0.8.2",
     "description": "Library of questionnaire components for EDT survey",
     "repository": {
         "type": "git",
@@ -108,7 +108,6 @@
         "@date-io/dayjs": "^2.16.0",
         "@emotion/react": "^11.10.4",
         "@emotion/styled": "^11.10.4",
-        "@mui/icons-material": "^5.10.9",
         "@mui/material": "^5.10.9",
         "@mui/x-date-pickers": "^5.0.8",
         "@types/elasticlunrjs": "^1.0.0",

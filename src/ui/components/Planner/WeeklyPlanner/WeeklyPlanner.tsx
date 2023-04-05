@@ -45,6 +45,21 @@ const generateDayList = (startDate: Date): Date[] => {
     return dayList;
 };
 
+/**
+ * Returns total sum of work for the day formatted as h:mm
+ * @returns
+ */
+const getFormatedWorkedSum = (workedHoursSum: number): string => {
+    const tempDate = new Date();
+    tempDate.setHours(0);
+    tempDate.setMinutes(workedHoursSum);
+    return (
+        tempDate.getHours() +
+        ":" +
+        (tempDate.getMinutes() === 0 ? "00" : tempDate.getMinutes().toString())
+    );
+};
+
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     let { value, handleChange, componentSpecificProps } = props;
 
@@ -56,6 +71,9 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         saveAll,
         setDisplayedDayHeader,
         language,
+        helpStep,
+        moreIcon,
+        moreIconAlt,
     } = {
         ...componentSpecificProps,
     };
@@ -137,25 +155,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         return sum;
     };
 
-    /**
-     * Returns total sum of work for the day formatted as h:mm
-     * @returns
-     */
-    const getFormatedWorkedSum = (workedHoursSum: number): string => {
-        const tempDate = new Date();
-        tempDate.setHours(0);
-        tempDate.setMinutes(workedHoursSum);
+    const renderHelp = () => {
         return (
-            tempDate.getHours() +
-            ":" +
-            (tempDate.getMinutes() === 0 ? "00" : tempDate.getMinutes().toString())
-        );
-    };
-
-    return (
-        <Box id="root-box">
             <DayOverview
-                isDisplayed={isSubChildDisplayed}
+                isDisplayed={true}
                 date={dayOverviewSelectedDate}
                 rawTimeLineData={generateDayOverviewTimelineRawData()}
                 activityData={activityData}
@@ -165,45 +168,69 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 workSumLabel={labels.workSumLabel}
                 workedHoursSum={getWorkedHoursSum()}
                 getFormatedWorkedSum={getFormatedWorkedSum}
+                helpStep={helpStep}
             ></DayOverview>
-            {activityData.length !== 0 && needSpinner ? (
-                <>
-                    <Box display={getMainDisplay()}>
-                        <ProgressBar
-                            className={classes.progressBar}
-                            value={getProgressBarValue(activityData)}
-                            showlabel={true}
-                        />
-                        <TooltipInfo
-                            infoLabels={labels.infoLabels}
-                            titleLabels={titleLabels}
-                            displayTooltip={getProgressBarValue(activityData) == 0}
-                        />
-                        <List className={classes.listContainer}>
-                            {dayList.map(d => (
-                                <DayPlanner
-                                    date={d}
-                                    key={uuidv4()}
-                                    setDisplayDayOverview={setIsSubChildDisplayed}
-                                    setDayOverviewSelectedDate={setDayOverviewSelectedDate}
-                                    activityData={activityData}
-                                    setActivityData={setActivityData}
-                                    workSumLabel={labels.workSumLabel}
-                                    presentButtonLabel={labels.presentButtonLabel}
-                                    futureButtonLabel={labels.futureButtonLabel}
-                                    editButtonLabel={labels.editButtonLabel}
-                                    language={language}
-                                    getFormatedWorkedSum={getFormatedWorkedSum}
-                                ></DayPlanner>
-                            ))}
-                        </List>
-                    </Box>
-                </>
-            ) : (
-                !isSubChildDisplayed && <CircularProgress />
-            )}
-        </Box>
-    );
+        );
+    };
+
+    const renderWeeklyPlanner = () => {
+        return (
+            <Box id="root-box">
+                <DayOverview
+                    isDisplayed={isSubChildDisplayed}
+                    date={dayOverviewSelectedDate}
+                    rawTimeLineData={generateDayOverviewTimelineRawData()}
+                    activityData={activityData}
+                    setActivityData={setActivityData}
+                    handleChangeData={handleChange}
+                    infoLabels={labels.infoLabels}
+                    workSumLabel={labels.workSumLabel}
+                    workedHoursSum={getWorkedHoursSum()}
+                    getFormatedWorkedSum={getFormatedWorkedSum}
+                ></DayOverview>
+                {activityData.length !== 0 && needSpinner ? (
+                    <>
+                        <Box display={getMainDisplay()}>
+                            <ProgressBar
+                                className={classes.progressBar}
+                                value={getProgressBarValue(activityData)}
+                                showlabel={true}
+                            />
+                            <TooltipInfo
+                                infoLabels={labels.infoLabels}
+                                titleLabels={titleLabels}
+                                displayTooltip={getProgressBarValue(activityData) == 0}
+                            />
+                            <List className={classes.listContainer}>
+                                {dayList.map(d => (
+                                    <DayPlanner
+                                        date={d}
+                                        key={uuidv4()}
+                                        setDisplayDayOverview={setIsSubChildDisplayed}
+                                        setDayOverviewSelectedDate={setDayOverviewSelectedDate}
+                                        activityData={activityData}
+                                        setActivityData={setActivityData}
+                                        workSumLabel={labels.workSumLabel}
+                                        presentButtonLabel={labels.presentButtonLabel}
+                                        futureButtonLabel={labels.futureButtonLabel}
+                                        editButtonLabel={labels.editButtonLabel}
+                                        language={language}
+                                        getFormatedWorkedSum={getFormatedWorkedSum}
+                                        moreIcon={moreIcon}
+                                        moreIconAlt={moreIconAlt}
+                                    ></DayPlanner>
+                                ))}
+                            </List>
+                        </Box>
+                    </>
+                ) : (
+                    !isSubChildDisplayed && <CircularProgress />
+                )}
+            </Box>
+        );
+    };
+
+    return helpStep == null ? renderWeeklyPlanner() : renderHelp();
 });
 
 const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({

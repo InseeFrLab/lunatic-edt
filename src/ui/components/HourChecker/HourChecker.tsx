@@ -1,9 +1,6 @@
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import WorkIcon from "@mui/icons-material/Work";
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { HourCheckerOption } from "interface/HourCheckerOptions";
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -13,6 +10,13 @@ export type HourCheckerProps = {
     responses: HourCheckerOption[];
     value: { [key: string]: boolean };
     label?: string;
+    helpStep?: number;
+    expandLessIcon: string;
+    expandLessIconAlt: string;
+    expandMoreIcon: string;
+    expandMoreIconAlt: string;
+    workIcon: string;
+    workIconAlt: string;
 };
 
 const getSelectAllValue = (value: { [key: string]: boolean }, responsesValues: string[]): boolean => {
@@ -60,7 +64,20 @@ const getClassName = (cx: any, className: any, classVisible: any, classHidden: a
  * each fraction is individualy selectable.
  */
 const HourChecker = memo((props: HourCheckerProps) => {
-    const { id, value, label, responses, handleChange } = props;
+    const {
+        id,
+        value,
+        label,
+        responses,
+        handleChange,
+        helpStep,
+        expandLessIcon,
+        expandLessIconAlt,
+        expandMoreIcon,
+        expandMoreIconAlt,
+        workIcon,
+        workIconAlt,
+    } = props;
     const [isOpen, setIsOpen] = React.useState(false);
 
     const { classes, cx } = useStyles({ "width": `calc(100% / ${responses.length})` });
@@ -69,6 +86,12 @@ const HourChecker = memo((props: HourCheckerProps) => {
     const [currentOption, setCurrentOption] = React.useState(responsesValues);
 
     const [selectAll, setSelectAll] = React.useState(getSelectAllValue(value, responsesValues));
+
+    useEffect(() => {
+        if (helpStep == 4 && value["5h15"]) {
+            setIsOpen(true);
+        }
+    }, [isOpen]);
 
     const toggleHourChecker = (e: any) => {
         e.stopPropagation();
@@ -118,15 +141,17 @@ const HourChecker = memo((props: HourCheckerProps) => {
                         aria-label={value[option.response.name] ? "hourselected" : "hournotselected"}
                     >
                         {index === 0 && (
-                            <ExpandLessIcon
+                            <img
+                                src={expandLessIcon}
+                                alt={expandLessIconAlt}
                                 className={classes.clickable}
                                 onClick={toggleHourChecker}
                                 aria-label="hourcheckertoogle"
-                            ></ExpandLessIcon>
+                            />
                         )}
                         {index === responses.length - 1 && (
                             <div className={classes.iconRounder}>
-                                <WorkIcon fontSize="small"></WorkIcon>
+                                <img src={workIcon} alt={workIconAlt} />
                             </div>
                         )}
                     </Box>
@@ -155,11 +180,17 @@ const HourChecker = memo((props: HourCheckerProps) => {
                         {index !== 0 && index !== responses.length - 1 && (
                             <div className={classes.noIconSpacer}></div>
                         )}
-                        {index === 0 && <ExpandMoreIcon fontSize="small" onClick={toggleHourChecker} />}
+                        {index === 0 && (
+                            <img
+                                src={expandMoreIcon}
+                                alt={expandMoreIconAlt}
+                                onClick={toggleHourChecker}
+                            />
+                        )}
                         {index !== responses.length - 1 ? option.label : <span>&nbsp;</span>}
                         {index === responses.length - 1 && (
                             <div className={classes.iconRounder}>
-                                <WorkIcon fontSize="small" />
+                                <img src={workIcon} alt={workIconAlt} />
                             </div>
                         )}
                     </ToggleButton>

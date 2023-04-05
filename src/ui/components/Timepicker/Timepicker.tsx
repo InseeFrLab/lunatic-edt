@@ -1,4 +1,3 @@
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
@@ -20,6 +19,8 @@ export type TimepickerProps = {
     id?: string;
     response: { [name: string]: string };
     componentSpecificProps?: TimepickerSpecificProps;
+    arrowDownIcon: string;
+    arrowDownIconAlt: string;
 };
 
 const Timepicker = memo((props: TimepickerProps) => {
@@ -33,8 +34,10 @@ const Timepicker = memo((props: TimepickerProps) => {
         label,
         tipsLabel,
         componentSpecificProps,
+        arrowDownIcon,
+        arrowDownIconAlt,
     } = props;
-    const { classes } = useStyles();
+    const { classes, cx } = useStyles();
 
     const [valueLocal, setValue] = React.useState<Dayjs | undefined>();
 
@@ -74,12 +77,16 @@ const Timepicker = memo((props: TimepickerProps) => {
         }
     }
 
+    const getArrowDownIcon = () => {
+        return <img src={arrowDownIcon} alt={arrowDownIconAlt} />;
+    };
+
     return (
         <>
             <Box className={classes.labelSpacer}>
                 <label>{label}</label>
             </Box>
-            <Box className={classes.root}>
+            <Box className={cx(classes.root, componentSpecificProps?.helpStep ? classes.helpBox : "")}>
                 <Box className={classes.tipsLabel}>
                     <p>{tipsLabel}</p>
                 </Box>
@@ -95,7 +102,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                             setValueLunatic(newValue);
                         }, [])}
                         components={{
-                            OpenPickerIcon: KeyboardArrowDownIcon,
+                            OpenPickerIcon: getArrowDownIcon,
                         }}
                         renderInput={useCallback(
                             params => (
@@ -125,6 +132,10 @@ const useStyles = makeStylesEdt({ "name": { Timepicker } })(theme => ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+    },
+    helpBox: {
+        position: "relative",
+        zIndex: "1400",
     },
     labelSpacer: {
         marginBottom: "1rem",

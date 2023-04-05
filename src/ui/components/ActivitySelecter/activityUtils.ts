@@ -1,8 +1,12 @@
+import elasticlunr, { Index } from "elasticlunrjs";
 import {
     AutoCompleteActiviteOption,
     NomenclatureActivityOption,
     SelectedActivity,
 } from "interface/ActivityTypes";
+import React from "react";
+import { ActivitySelecterNavigationEnum } from "../../../enumeration/ActivitySelecterNavigationEnum";
+import stopWords from "../ClickableList//stop_words_french.json";
 import { FullScreenComponent } from "./ActivitySelecter";
 import pairSynonymes from "./synonymes-misspellings.json";
 
@@ -187,28 +191,34 @@ export const selectSubCategory = (
     selectedCategories: NomenclatureActivityOption[],
     setSelectedCategories: (activities: NomenclatureActivityOption[]) => void,
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
 ) => {
     const id = selectedId == selection.id ? undefined : selection.id;
     const temp = [...selectedCategories];
     temp.push(selection);
+    appendHistoryActivitySelecter(selection.label);
     setSelectedCategories(temp);
     onChange(false, id, undefined, undefined);
 };
 
 export const selectFinalCategory = (
     selection: NomenclatureActivityOption,
-    selectedId: string | undefined,
-    labelOfSelectedId: string | undefined,
-    setSelectedId: (id?: string) => void,
-    setLabelOfSelectedId: (label?: string) => void,
+    states: {
+        selectedId: string | undefined;
+        labelOfSelectedId: string | undefined;
+        setSelectedId: (id?: string) => void;
+        setLabelOfSelectedId: (label?: string) => void;
+    },
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     onSelectValue: () => void,
+    appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
 ) => {
-    const id = selectedId == selection.id ? undefined : selection.id;
-    const label = labelOfSelectedId == selection.label ? undefined : selection.label;
+    const id = states.selectedId == selection.id ? undefined : selection.id;
+    const label = states.labelOfSelectedId == selection.label ? undefined : selection.label;
     onChange(true, id, undefined, undefined);
-    setSelectedId(id);
-    setLabelOfSelectedId(label);
+    states.setSelectedId(id);
+    states.setLabelOfSelectedId(label);
+    appendHistoryActivitySelecter(label || "");
     if (id != null) onSelectValue();
 };
 
@@ -271,4 +281,42 @@ export const addMisspellings = (option: AutoCompleteActiviteOption) => {
     option.synonymes = option.synonymes + "; " + labelWithMisspelling;
 
     return option;
+};
+
+export const activitesFiltredUnique = (activitesAutoCompleteRef: AutoCompleteActiviteOption[]) => {
+    const optionsFiltered: AutoCompleteActiviteOption[] = activitesAutoCompleteRef.filter(
+        (option, i, arr) => arr.findIndex(opt => opt.label === option.label) === i,
+    );
+    return optionsFiltered;
+};
+
+export const activitesFiltredMap = (optionsFiltered: AutoCompleteActiviteOption[]) => {
+    const optionsFilteredMap = optionsFiltered.map(opt => {
+        const newOption: AutoCompleteActiviteOption = {
+            id: opt.id,
+            label: removeAccents(skipApostrophes(addMisspellings(opt).label)).replaceAll("’", "'"),
+            synonymes: opt.synonymes.replaceAll(";", "; "),
+        };
+        return newOption;
+    });
+    return optionsFilteredMap;
+};
+
+export const CreateIndex = (optionsFiltered: AutoCompleteActiviteOption[]) => {
+    const optionsFilteredMap = activitesFiltredMap(optionsFiltered);
+    const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
+        elasticlunr.clearStopWords();
+        elasticlunr.addStopWords(stopWords);
+
+        const temp: Index<AutoCompleteActiviteOption> = elasticlunr();
+        temp.addField("label");
+        temp.addField("synonymes");
+        temp.setRef("id");
+
+        for (const doc of optionsFilteredMap) {
+            temp.addDoc(doc);
+        }
+        return temp;
+    });
+    return index;
 };
