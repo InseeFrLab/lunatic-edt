@@ -1179,7 +1179,6 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         width: "100%",
         padding: "1rem",
         alignItems: "center",
-        justifyContent: "space-between",
     },
     selectedSubRankCategory: {
         borderColor: theme.palette.primary.main,
@@ -1188,6 +1187,7 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         fontSize: "14px",
         color: theme.palette.text.secondary,
         width: "80%",
+        paddingLeft: "0.5rem",
     },
     optionIcon: {
         marginRight: "0.5rem",
