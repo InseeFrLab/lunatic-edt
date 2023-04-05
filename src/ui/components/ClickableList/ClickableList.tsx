@@ -35,7 +35,8 @@ export type ClickableListProps = {
     className?: string;
     autoFocus?: boolean;
     isMobile?: boolean;
-    iconAdd: string;
+    iconAddWhite: string;
+    iconAddLightBlue: string;
     iconAddAlt: string;
     iconExtension: string;
     iconExtensionAlt: string;
@@ -63,7 +64,8 @@ const ClickableList = memo((props: ClickableListProps) => {
         className,
         autoFocus = false,
         isMobile = false,
-        iconAdd,
+        iconAddWhite,
+        iconAddLightBlue,
         iconAddAlt,
         iconExtension,
         iconExtensionAlt,
@@ -143,7 +145,7 @@ const ClickableList = memo((props: ClickableListProps) => {
      */
     const renderIcon = () => {
         return displayAddIcon ? (
-            <img src={iconAdd} alt={iconAddAlt} />
+            <img src={iconAddLightBlue} alt={iconAddAlt} />
         ) : (
             <img src={iconSearch} alt={iconSearchAlt} />
         );
@@ -180,7 +182,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                 <Button
                     className={classes.addActivityButton}
                     variant="contained"
-                    startIcon={<img src={iconAdd} alt={iconAddAlt} />}
+                    startIcon={<img src={iconAddWhite} alt={iconAddAlt} />}
                     onClick={createActivityCallback}
                 >
                     {addActivityButtonLabel}
@@ -246,7 +248,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                     <Button
                         className={classes.addActivityButton}
                         variant="contained"
-                        startIcon={<img src={iconAdd} alt={iconAddAlt} />}
+                        startIcon={<img src={iconAddWhite} alt={iconAddAlt} />}
                         onClick={() => createActivity(currentInputValue)}
                     >
                         {addActivityButtonLabel}

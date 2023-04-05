@@ -16,6 +16,7 @@ import { createCustomizableLunaticField } from "../../utils/create-customizable-
 import Alert from "../Alert";
 import ClickableList from "../ClickableList";
 import {
+    CreateIndex,
     activitesFiltredUnique,
     findRank1Category,
     processActivityAutocomplete,
@@ -23,7 +24,6 @@ import {
     processNewActivity,
     selectFinalCategory,
     selectSubCategory,
-    CreateIndex,
 } from "./activityUtils";
 
 type ActivitySelecterProps = {
@@ -80,7 +80,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         searchIconAlt,
         extensionIcon,
         extensionIconAlt,
-        addIcon,
+        addWhiteIcon,
+        addLightBlueIcon,
         addIconAlt,
     } = { ...componentSpecificProps };
 
@@ -365,6 +366,13 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             separatorSuggester,
                         },
                         classes,
+                        addLightBlueIcon,
+                        addWhiteIcon,
+                        addIconAlt,
+                        extensionIcon,
+                        extensionIconAlt,
+                        searchIcon,
+                        searchIconAlt,
                     )}
 
                     {renderFreeInput(
@@ -403,7 +411,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         },
                         classes,
                         cx,
-                        addIcon,
+                        addWhiteIcon,
                         addIconAlt,
                     )}
 
@@ -773,6 +781,13 @@ const renderClickableList = (
         separatorSuggester: string;
     },
     classes: any,
+    iconAddLightBlue: string,
+    iconAddWhite: string,
+    iconAddAlt: string,
+    iconExtension: string,
+    iconExtensionAlt: string,
+    iconSearch: string,
+    iconSearchAlt: string,
 ) => {
     const optionsFiltered: AutoCompleteActiviteOption[] = activitesFiltredUnique(
         inputs.activitesAutoCompleteRef,
@@ -803,6 +818,13 @@ const renderClickableList = (
                 autoFocus={true}
                 isMobile={inputs.isMobile}
                 separatorSuggester={inputs.separatorSuggester}
+                iconAddWhite={iconAddWhite}
+                iconAddLightBlue={iconAddLightBlue}
+                iconAddAlt={iconAddAlt}
+                iconExtension={iconExtension}
+                iconExtensionAlt={iconExtensionAlt}
+                iconSearch={iconSearch}
+                iconSearchAlt={iconSearchAlt}
             />
         )
     );

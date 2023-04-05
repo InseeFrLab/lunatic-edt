@@ -74,7 +74,8 @@ export type ActivitySelecterSpecificProps = {
     searchIconAlt: string;
     extensionIcon: string;
     extensionIconAlt: string;
-    addIcon: string;
+    addLightBlueIcon: string;
+    addWhiteIcon: string;
     addIconAlt: string;
 };
 
