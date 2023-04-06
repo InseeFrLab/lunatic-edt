@@ -1,7 +1,6 @@
 import { Box, List, Typography } from "@mui/material";
 import { InfoProps } from "interface";
 import React, { memo, useEffect } from "react";
-import TooltipInfo from "../../TooltipInfo";
 import { v4 as uuidv4 } from "uuid";
 import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
 import { LunaticMultiSelectionValues } from "../../../../interface/LunaticMultiSelectionValues";
@@ -14,6 +13,7 @@ import { makeStylesEdt } from "../../../theme";
 import { convertTime, generateDateFromStringInput, setDateTimeToZero } from "../../../utils";
 import HourChecker from "../../HourChecker";
 import ProgressBar from "../../ProgressBar";
+import TooltipInfo from "../../TooltipInfo";
 import { INTERVAL, transformToIODataStructure } from "../WeeklyPlanner/utils";
 
 export type DayOverviewProps = {
@@ -28,6 +28,14 @@ export type DayOverviewProps = {
     workedHoursSum: number;
     getFormatedWorkedSum: (workedHoursSum: number) => string;
     helpStep?: number;
+    expandLessIcon: string;
+    expandLessIconAlt: string;
+    expandMoreIcon: string;
+    expandMoreIconAlt: string;
+    expandLessWhiteIcon: string;
+    expandMoreWhiteIcon: string;
+    workIcon: string;
+    workIconAlt: string;
 };
 
 /**
@@ -94,6 +102,14 @@ const DayOverview = memo((props: DayOverviewProps) => {
         workedHoursSum,
         getFormatedWorkedSum,
         helpStep,
+        expandLessIcon,
+        expandLessIconAlt,
+        expandMoreIcon,
+        expandMoreIconAlt,
+        expandLessWhiteIcon,
+        expandMoreWhiteIcon,
+        workIcon,
+        workIconAlt,
     } = props;
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
@@ -225,6 +241,14 @@ const DayOverview = memo((props: DayOverviewProps) => {
                     responses={h.options}
                     value={helpPage ? valueSelected : h.value}
                     helpStep={helpStep}
+                    expandLessIcon={expandLessIcon}
+                    expandLessIconAlt={expandLessIconAlt}
+                    expandMoreIcon={expandMoreIcon}
+                    expandMoreIconAlt={expandMoreIconAlt}
+                    expandLessWhiteIcon={expandLessWhiteIcon}
+                    expandMoreWhiteIcon={expandMoreWhiteIcon}
+                    workIcon={workIcon}
+                    workIconAlt={workIconAlt}
                 />
             </Box>
         );

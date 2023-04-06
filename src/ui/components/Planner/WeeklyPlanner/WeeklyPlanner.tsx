@@ -74,6 +74,14 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         helpStep,
         moreIcon,
         moreIconAlt,
+        expandLessIcon,
+        expandLessIconAlt,
+        expandMoreIcon,
+        expandMoreIconAlt,
+        expandLessWhiteIcon,
+        expandMoreWhiteIcon,
+        workIcon,
+        workIconAlt,
     } = {
         ...componentSpecificProps,
     };
@@ -169,6 +177,14 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 workedHoursSum={getWorkedHoursSum()}
                 getFormatedWorkedSum={getFormatedWorkedSum}
                 helpStep={helpStep}
+                expandLessIcon={expandLessIcon}
+                expandLessIconAlt={expandLessIconAlt}
+                expandMoreIcon={expandMoreIcon}
+                expandMoreIconAlt={expandMoreIconAlt}
+                expandLessWhiteIcon={expandLessWhiteIcon}
+                expandMoreWhiteIcon={expandMoreWhiteIcon}
+                workIcon={workIcon}
+                workIconAlt={workIconAlt}
             ></DayOverview>
         );
     };
@@ -187,6 +203,14 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                     workSumLabel={labels.workSumLabel}
                     workedHoursSum={getWorkedHoursSum()}
                     getFormatedWorkedSum={getFormatedWorkedSum}
+                    expandLessIcon={expandLessIcon}
+                    expandLessIconAlt={expandLessIconAlt}
+                    expandMoreIcon={expandMoreIcon}
+                    expandMoreIconAlt={expandMoreIconAlt}
+                    expandLessWhiteIcon={expandLessWhiteIcon}
+                    expandMoreWhiteIcon={expandMoreWhiteIcon}
+                    workIcon={workIcon}
+                    workIconAlt={workIconAlt}
                 ></DayOverview>
                 {activityData.length !== 0 && needSpinner ? (
                     <>

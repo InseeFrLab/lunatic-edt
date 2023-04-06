@@ -15,6 +15,8 @@ export type HourCheckerProps = {
     expandLessIconAlt: string;
     expandMoreIcon: string;
     expandMoreIconAlt: string;
+    expandLessWhiteIcon: string;
+    expandMoreWhiteIcon: string;
     workIcon: string;
     workIconAlt: string;
 };
@@ -75,6 +77,8 @@ const HourChecker = memo((props: HourCheckerProps) => {
         expandLessIconAlt,
         expandMoreIcon,
         expandMoreIconAlt,
+        expandLessWhiteIcon,
+        expandMoreWhiteIcon,
         workIcon,
         workIconAlt,
     } = props;
@@ -142,7 +146,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
                     >
                         {index === 0 && (
                             <img
-                                src={expandLessIcon}
+                                src={value[option.response.name] ? expandLessWhiteIcon : expandLessIcon}
                                 alt={expandLessIconAlt}
                                 className={classes.clickable}
                                 onClick={toggleHourChecker}
@@ -182,7 +186,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
                         )}
                         {index === 0 && (
                             <img
-                                src={expandMoreIcon}
+                                src={value[option.response.name] ? expandMoreWhiteIcon : expandMoreIcon}
                                 alt={expandMoreIconAlt}
                                 onClick={toggleHourChecker}
                             />
