@@ -19,8 +19,6 @@ export type TimepickerProps = {
     id?: string;
     response: { [name: string]: string };
     componentSpecificProps?: TimepickerSpecificProps;
-    arrowDownIcon: string;
-    arrowDownIconAlt: string;
 };
 
 const Timepicker = memo((props: TimepickerProps) => {
@@ -34,8 +32,6 @@ const Timepicker = memo((props: TimepickerProps) => {
         label,
         tipsLabel,
         componentSpecificProps,
-        arrowDownIcon,
-        arrowDownIconAlt,
     } = props;
     const { classes, cx } = useStyles();
 
@@ -78,7 +74,12 @@ const Timepicker = memo((props: TimepickerProps) => {
     }
 
     const getArrowDownIcon = () => {
-        return <img src={arrowDownIcon} alt={arrowDownIconAlt} />;
+        return (
+            <img
+                src={componentSpecificProps?.arrowDownIcon}
+                alt={componentSpecificProps?.arrowDownIconAlt}
+            />
+        );
     };
 
     return (

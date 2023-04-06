@@ -48,6 +48,14 @@ export type WeeklyPlannerSpecificProps = {
     helpStep?: number;
     moreIcon: string;
     moreIconAlt: string;
+    expandLessIcon: string;
+    expandLessIconAlt: string;
+    expandMoreIcon: string;
+    expandMoreIconAlt: string;
+    expandLessWhiteIcon: string;
+    expandMoreWhiteIcon: string;
+    workIcon: string;
+    workIconAlt: string;
 };
 
 export type ActivitySelecterSpecificProps = {
@@ -146,6 +154,8 @@ export type TimepickerSpecificProps = {
     constants: any;
     helpStep?: number;
     helpImage?: string;
+    arrowDownIcon: string;
+    arrowDownIconAlt: string;
 };
 
 export type CheckboxBooleanEdtSpecificProps = {
