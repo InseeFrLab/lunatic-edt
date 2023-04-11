@@ -1,4 +1,4 @@
-import { TextField } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -73,15 +73,6 @@ const Timepicker = memo((props: TimepickerProps) => {
         }
     }
 
-    const getArrowDownIcon = () => {
-        return (
-            <img
-                src={componentSpecificProps?.arrowDownIcon}
-                alt={componentSpecificProps?.arrowDownIconAlt}
-            />
-        );
-    };
-
     return (
         <>
             <Box className={classes.labelSpacer}>
@@ -102,15 +93,22 @@ const Timepicker = memo((props: TimepickerProps) => {
                         onChange={useCallback(newValue => {
                             setValueLunatic(newValue);
                         }, [])}
-                        components={{
-                            OpenPickerIcon: getArrowDownIcon,
-                        }}
                         renderInput={useCallback(
                             params => (
                                 <TextField size="small" {...params} sx={{ svg: { color: "#1F4076" } }} />
                             ),
                             [],
                         )}
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <img
+                                        src={componentSpecificProps?.arrowDownIcon}
+                                        alt={componentSpecificProps?.arrowDownIconAlt}
+                                    />
+                                </InputAdornment>
+                            ),
+                        }}
                         className={classes.input}
                         minutesStep={5}
                     />
