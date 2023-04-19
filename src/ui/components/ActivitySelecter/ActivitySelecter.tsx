@@ -19,12 +19,15 @@ import {
     CreateIndex,
     activitesFiltredUnique,
     findRank1Category,
+    getInputValue,
     processActivityAutocomplete,
     processActivityCategory,
     processNewActivity,
     selectFinalCategory,
     selectSubCategory,
+    updateNewValue,
 } from "./activityUtils";
+import { FreeInput } from "../FreeInput";
 
 type ActivitySelecterProps = {
     handleChange(response: responseType, value: string | boolean | undefined): void;
@@ -99,6 +102,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     );
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
     const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 667);
+    const [newValue, setNewValue] = useState<string | undefined>();
+
     const newItemId = useRef(uuidv4());
     const { classes, cx } = useStyles();
     let historyInputSuggesterValue = "";
@@ -123,8 +128,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             label: value[labelBindingDep.name] as string,
             isFullyCompleted: value[isFullyCompletedBindingDep.name] as boolean,
         };
+        setNewValue(parsedValue.label);
         if (helpStep == 3) parsedValue.id = "100";
-
         setSelectRank1Category(findRank1Category(parsedValue, categoriesAndActivitesNomenclature));
 
         processActivityCategory(
@@ -174,6 +179,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 fullScreenComponent: fullScreenComponent,
                 selectedCategories: selectedCategories,
                 createActivityValue: createActivityValue,
+                freeInput: newValue,
             },
             {
                 setDisplayAlert,
@@ -252,20 +258,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         handleChange(historyActivitySelecterBindingDep, historyActivitySelecterValue);
     };
 
-    const freeInputOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setCreateActivityValue(e.target.value);
-        // If we enter free input value from "Autre" button, then save id of last selected category
-        let id = undefined;
-        let isFully = false;
-        if (selectedCategories.length > 0) {
-            id = selectedCategories[selectedCategories.length - 1].id;
-        }
-        if (e.target.value !== "") {
-            isFully = true;
-        }
-        onChange(isFully, id, undefined, e.target.value);
-    };
-
     /**
      * Show categories of rank 2 or 3
      * @param category category du first rank
@@ -330,6 +322,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                     fullScreenComponent: fullScreenComponent,
                                     selectedCategories: selectedCategories,
                                     createActivityValue: createActivityValue,
+                                    freeInput: newValue,
                                 },
                                 {
                                     setDisplayAlert,
@@ -383,6 +376,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             selectedCategory: selectRank1Category?.id,
                             selectedId: selectedId,
                             suggesterId: selectedSuggesterId,
+                            freeInput: newValue,
                         },
                         {
                             labels,
@@ -404,10 +398,11 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         },
                         {
                             nextClickCallback,
-                            freeInputOnChange,
                             addToReferentielCallBack,
                             appendHistoryActivitySelecter,
                             setDisplayAlert,
+                            onChange,
+                            handleChange,
                         },
                         classes,
                         cx,
@@ -702,6 +697,7 @@ const renderFreeInput = (
         selectedCategory: string | undefined;
         selectedId: string | undefined;
         suggesterId: string | undefined;
+        freeInput: string | undefined;
     },
     props: {
         labels: ActivityLabelProps;
@@ -713,12 +709,13 @@ const renderFreeInput = (
     },
     functions: {
         nextClickCallback: (routeToGoal: boolean) => void;
-        freeInputOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
         addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void;
         appendHistoryActivitySelecter: (
             actionOrSelection: ActivitySelecterNavigationEnum | string,
         ) => void;
         setDisplayAlert: (display: boolean) => void;
+        onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void;
+        handleChange(response: responseType, value: string | boolean | undefined): void;
     },
     classes: any,
     cx: any,
@@ -727,35 +724,33 @@ const renderFreeInput = (
 ) => {
     return (
         states.fullScreenComponent === FullScreenComponent.FreeInput && (
-            <Box className={cx(classes.root, props.isMobile ? classes.freeInputMobileBox : "")}>
-                {renderTitle(
-                    states.fullScreenComponent,
-                    states.selectedCategories,
-                    props.labels,
-                    props.labels.addActivity,
-                    classes,
-                    false,
-                )}
-                <TextField
-                    value={states.createActivityValue}
-                    className={classes.freeInputTextField}
-                    onChange={functions.freeInputOnChange}
-                    placeholder={props.labels.clickableListPlaceholder}
-                ></TextField>
-
+            <Box className={cx(classes.freeInputBox, props.isMobile ? classes.freeInputBoxMobile : "")}>
+                <FreeInput
+                    states={states}
+                    specifiqueProps={props}
+                    functions={functions}
+                    renderTitle={renderTitle}
+                    updateNewValue={updateNewValue}
+                />
                 <Button
                     className={classes.addActivityButton}
                     variant="contained"
                     startIcon={<img src={addIcon} alt={addIconAlt} />}
-                    onClick={() =>
+                    onClick={() => {
+                        navNextStep(
+                            getInputValue(),
+                            functions.onChange,
+                            functions.nextClickCallback,
+                            props.routeToGoal,
+                        );
                         nextStepFreeInput(
                             states,
                             functions,
                             props.newItemId,
                             props.displayAlert,
                             props.routeToGoal,
-                        )
-                    }
+                        );
+                    }}
                 >
                     {props.labels.saveButton}
                 </Button>
@@ -911,6 +906,17 @@ const nextStepMain = (
     } else nextClickCallback(false);
 };
 
+const navNextStep = (
+    value: string | undefined,
+    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+    nextClickCallback: (routeToGoal: boolean) => void,
+    routeToGoal: boolean,
+) => {
+    console.log(value);
+    updateNewValue(value, onChange);
+    nextClickCallback(routeToGoal);
+};
+
 const nextStepFreeInput = (
     states: {
         selectedCategory: string | undefined;
@@ -919,6 +925,7 @@ const nextStepFreeInput = (
         fullScreenComponent: FullScreenComponent;
         selectedCategories: NomenclatureActivityOption[];
         createActivityValue: string | undefined;
+        freeInput: string | undefined;
     },
     functions: {
         setDisplayAlert: (display: boolean) => void;
@@ -926,6 +933,13 @@ const nextStepFreeInput = (
         addToReferentielCallBack: (newItem: AutoCompleteActiviteOption) => void;
         appendHistoryActivitySelecter: (
             actionOrSelection: ActivitySelecterNavigationEnum | string,
+        ) => void;
+        onChange: (
+            isFullyCompleted: boolean,
+            id?: string,
+            suggesterId?: string,
+            activityLabel?: string,
+            historyInputSuggester?: string,
         ) => void;
     },
     newItemId: string,
@@ -943,6 +957,12 @@ const nextStepFreeInput = (
             label: states.createActivityValue || "",
             synonymes: "",
         });
+        functions.onChange(
+            true,
+            states.selectedCategories[states.selectedCategories.length - 1]?.id,
+            undefined,
+            states.freeInput,
+        );
         functions.appendHistoryActivitySelecter(ActivitySelecterNavigationEnum.SAVE_BUTTON);
         functions.appendHistoryActivitySelecter(states.createActivityValue || "");
         functions.nextClickCallback(routeToGoal);
@@ -957,6 +977,7 @@ const nextStep = (
         fullScreenComponent: FullScreenComponent;
         selectedCategories: NomenclatureActivityOption[];
         createActivityValue: string | undefined;
+        freeInput: string | undefined;
     },
     functions: {
         setDisplayAlert: (display: boolean) => void;
@@ -965,7 +986,13 @@ const nextStep = (
         appendHistoryActivitySelecter: (
             actionOrSelection: ActivitySelecterNavigationEnum | string,
         ) => void;
-        onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void;
+        onChange: (
+            isFullyCompleted: boolean,
+            id?: string,
+            suggesterId?: string,
+            activityLabel?: string,
+            historyInputSuggester?: string,
+        ) => void;
     },
     newItemId: string,
     continueWithUncompleted: boolean,
@@ -1040,6 +1067,7 @@ const next = (
         fullScreenComponent: FullScreenComponent;
         selectedCategories: NomenclatureActivityOption[];
         createActivityValue: string | undefined;
+        freeInput: string | undefined;
     },
     functions: {
         setDisplayAlert: (display: boolean) => void;
@@ -1048,7 +1076,13 @@ const next = (
         appendHistoryActivitySelecter: (
             actionOrSelection: ActivitySelecterNavigationEnum | string,
         ) => void;
-        onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void;
+        onChange: (
+            isFullyCompleted: boolean,
+            id?: string,
+            suggesterId?: string,
+            activityLabel?: string,
+            historyInputSuggester?: string,
+        ) => void;
     },
     newItemId: string,
 ) => {
@@ -1202,6 +1236,9 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
         padding: "1rem",
         alignItems: "center",
     },
+    subRankCategoryMobile: {
+        marginTop: "3rem",
+    },
     selectedSubRankCategory: {
         borderColor: theme.palette.primary.main,
     },
@@ -1229,13 +1266,13 @@ const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
     addActivityButton: {
         margin: "2rem 0rem",
     },
-    freeInputMobileBox: {
-        height: "85vh",
-        justifyContent: "center",
-        padding: "0rem 2rem",
-    },
     freeInputBox: {
-        height: "60vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    freeInputBoxMobile: {
+        height: "85vh",
         justifyContent: "center",
     },
 }));

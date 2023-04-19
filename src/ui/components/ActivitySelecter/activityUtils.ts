@@ -320,3 +320,17 @@ export const CreateIndex = (optionsFiltered: AutoCompleteActiviteOption[]) => {
     });
     return index;
 };
+
+let inputValue: string | undefined;
+
+export const updateNewValue = (
+    value: string | undefined,
+    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+) => {
+    onChange(true, undefined, undefined, value);
+    inputValue = value;
+};
+
+export const getInputValue = (): string | undefined => {
+    return inputValue;
+};
