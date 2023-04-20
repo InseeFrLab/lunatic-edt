@@ -497,7 +497,7 @@ const renderRank1Category = (
     },
     inputs: {
         categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
-        categoriesIcons: { [id: string]: string };
+        categoriesIcons: { [id: string]: { icon: string; altIcon: string } };
         helpStep: number | undefined;
     },
     classes: any,
@@ -525,7 +525,11 @@ const renderRank1Category = (
                 )
             }
         >
-            <img className={classes.icon} src={inputs.categoriesIcons[id]} />
+            <img
+                className={classes.icon}
+                src={inputs.categoriesIcons[id].icon}
+                alt={inputs.categoriesIcons[id].altIcon}
+            />
             <Typography className={classes.rank1MainLabel}>{mainLabel}</Typography>
             {secondLabel && <Typography className={classes.rank1SecondLabel}>{secondLabel}</Typography>}
         </Box>
@@ -610,7 +614,7 @@ const renderCategories = (
         onSelectValue: () => void;
     },
     inputs: {
-        categoriesIcons: { [id: string]: string };
+        categoriesIcons: { [id: string]: { icon: string; altIcon: string } };
         categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
         labels: ActivityLabelProps;
         helpStep: number | undefined;

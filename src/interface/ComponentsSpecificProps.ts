@@ -59,7 +59,7 @@ export type WeeklyPlannerSpecificProps = {
 };
 
 export type ActivitySelecterSpecificProps = {
-    categoriesIcons: { [id: string]: string };
+    categoriesIcons: { [id: string]: { icon: string; altIcon: string } };
     clickableListIconNoResult: string;
     activitesAutoCompleteRef: AutoCompleteActiviteOption[];
     backClickEvent: React.MouseEvent | undefined;
