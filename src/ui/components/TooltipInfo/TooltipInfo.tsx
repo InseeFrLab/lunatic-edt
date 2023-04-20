@@ -13,12 +13,10 @@ export type TooltipInfoProps = {
         boldTitle: string;
     };
     displayTooltip?: boolean;
-    infoIcon: string;
-    infoIconAlt: string;
 };
 
 const TooltipInfo = memo((props: TooltipInfoProps) => {
-    const { infoLabels, titleLabels, displayTooltip, infoIcon, infoIconAlt } = props;
+    const { infoLabels, titleLabels, displayTooltip } = props;
     const { classes } = useStyles();
 
     const [displayInfo, setDisplayInfo] = React.useState<boolean>(false);
@@ -34,7 +32,11 @@ const TooltipInfo = memo((props: TooltipInfoProps) => {
                 )}
                 <Tooltip title="Info" className={displayTooltip ? classes.hiddenBox : classes.iconBox}>
                     <IconButton onClick={() => setDisplayInfo(!displayInfo)}>
-                        <img src={infoIcon} alt={infoIconAlt} className={classes.iconInfoBox} />
+                        <img
+                            src={infoLabels.infoIcon}
+                            alt={infoLabels.infoIconAlt}
+                            className={classes.iconInfoBox}
+                        />
                     </IconButton>
                 </Tooltip>
             </Box>
@@ -77,7 +79,8 @@ const useStyles = makeStylesEdt({ "name": { TooltipInfo } })(theme => ({
     },
     iconInfoBox: {
         color: theme.palette.secondary.main,
-        height: "initial",
+        height: "1.5rem",
+        marginBottom: "2px",
     },
     hiddenBox: {
         display: "none",
