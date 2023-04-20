@@ -92,7 +92,13 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                 key={uuidv4()}
                 onClick={onClick(option)}
             >
-                {optionsIcons && <img className={classes.icon} src={optionsIcons[option.value]} />}
+                {optionsIcons && (
+                    <img
+                        className={classes.icon}
+                        src={optionsIcons[option.value].icon}
+                        alt={optionsIcons[option.value].altIcon}
+                    />
+                )}
                 <Typography className={classes.optionLabel}>{option.label}</Typography>
             </Box>
         );

@@ -88,7 +88,7 @@ export type ActivitySelecterSpecificProps = {
 };
 
 export type IconGridCheckBoxOneSpecificProps = {
-    optionsIcons: { [id: string]: string };
+    optionsIcons: { [id: string]: { icon: string; altIcon: string } };
     backClickEvent: React.MouseEvent | undefined;
     nextClickEvent: React.MouseEvent | undefined;
     backClickCallback(): void;
@@ -104,7 +104,7 @@ export type IconGridCheckBoxOneSpecificProps = {
 };
 
 export type CheckboxGroupSpecificProps = {
-    optionsIcons: { [id: string]: string };
+    optionsIcons: { [id: string]: { icon: string; altIcon: string } };
     backClickEvent?: React.MouseEvent;
     nextClickEvent?: React.MouseEvent;
     backClickCallback?(): void;
@@ -122,6 +122,7 @@ export type CheckboxGroupSpecificProps = {
 export type CheckboxOneSpecificProps = {
     options?: CheckboxOneCustomOption[];
     icon?: string;
+    altIcon?: string;
     defaultIcon?: boolean;
     labelsSpecifics?: CheckBoxOneSpecificPropsLabels;
     labels?: {

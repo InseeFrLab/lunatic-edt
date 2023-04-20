@@ -154,6 +154,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                                 <img
                                                     className={classes.icon}
                                                     src={componentSpecificProps?.icon}
+                                                    alt={componentSpecificProps?.altIcon}
                                                 />
                                             </Box>
                                         )}
