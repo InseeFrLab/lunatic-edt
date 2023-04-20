@@ -75,9 +75,11 @@ const Timepicker = memo((props: TimepickerProps) => {
 
     return (
         <>
-            <Box className={classes.labelSpacer}>
-                <label>{label}</label>
-            </Box>
+            {label && (
+                <Box className={classes.labelSpacer}>
+                    <label>{label}</label>
+                </Box>
+            )}
             <Box className={cx(classes.root, componentSpecificProps?.helpStep ? classes.helpBox : "")}>
                 <Box className={classes.tipsLabel}>
                     <p>{tipsLabel}</p>
@@ -111,6 +113,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                         }}
                         className={classes.input}
                         minutesStep={5}
+                        label={" "}
                     />
                 </LocalizationProvider>
             </Box>
