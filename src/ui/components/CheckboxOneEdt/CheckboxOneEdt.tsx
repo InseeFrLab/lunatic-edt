@@ -123,7 +123,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                     {label && (
                         <Box>
                             <Box className={classes.labelSpacer}>
-                                <label>{label}&nbsp;?</label>
+                                <h1 className={classes.h1}>{label}&nbsp;?</h1>
                             </Box>
                         </Box>
                     )}
@@ -261,6 +261,12 @@ const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
         width: "100%",
         backgroundColor: theme.variables.white,
         borderRadius: "5px",
+    },
+    h1: {
+        fontSize: "18px",
+        margin: 0,
+        lineHeight: "1.5rem",
+        fontWeight: "bold",
     },
 }));
 
