@@ -81,7 +81,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
 
     const onClick = useCallback((option: CheckboxOneCustomOption) => () => optionOnClick(option), []);
 
-    const renderOption = (option: CheckboxOneCustomOption) => {
+    const renderOption = (option: CheckboxOneCustomOption, index: number) => {
         return (
             <Box
                 className={
@@ -91,6 +91,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                 }
                 key={uuidv4()}
                 onClick={onClick(option)}
+                tabIndex={index + 1}
             >
                 {optionsIcons && (
                     <img
@@ -103,6 +104,8 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
             </Box>
         );
     };
+
+    console.log(options);
 
     return (
         <>
@@ -125,8 +128,8 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                     </Box>
 
                     <Box className={classes.optionsBox}>
-                        {options?.map(o => {
-                            return renderOption(o);
+                        {options?.map((o, index) => {
+                            return renderOption(o, index);
                         })}
                     </Box>
                 </>

@@ -25,6 +25,8 @@ export type InfoProps = {
     isAlertInfo?: boolean;
     infoIcon: string;
     infoIconAlt: string;
+    infoIconTooltip: string;
+    infoIconTooltipAlt: string;
     infoIconTop?: boolean;
     border: boolean;
 };

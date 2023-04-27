@@ -148,6 +148,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                         }
                                         key={option.value + "-" + index}
                                         value={option.value}
+                                        tabIndex={index + 1}
                                     >
                                         {componentSpecificProps?.icon && (
                                             <Box className={classes.iconBox}>
