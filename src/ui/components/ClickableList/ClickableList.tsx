@@ -159,7 +159,17 @@ const ClickableList = memo((props: ClickableListProps) => {
     const renderTextField = (params: AutocompleteRenderInputParams) => {
         return (
             <>
-                <TextField {...params} autoFocus={autoFocus} placeholder={placeholder} />
+                <TextField
+                    {...params}
+                    autoFocus={autoFocus}
+                    placeholder={placeholder}
+                    label={placeholder}
+                    sx={{
+                        "& legend": { display: "none" },
+                        "& fieldset": { top: 0 },
+                        "& label": { display: "none" },
+                    }}
+                />
             </>
         );
     };

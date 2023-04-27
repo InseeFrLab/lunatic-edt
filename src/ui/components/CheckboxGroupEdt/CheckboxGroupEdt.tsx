@@ -132,15 +132,20 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                             )}
                             key={option.response.name + "-" + index}
                             value={option.response.name}
+                            tabIndex={index + 1}
                         >
                             <Box className={classes.toggleButtonContent}>
                                 {componentSpecificProps &&
                                     componentSpecificProps.optionsIcons &&
-                                    componentSpecificProps.optionsIcons[option.id] && (
+                                    componentSpecificProps.optionsIcons[option.id].icon && (
                                         <Box className={classes.iconBox}>
                                             <img
                                                 className={classes.icon}
-                                                src={componentSpecificProps.optionsIcons[option.id]}
+                                                src={componentSpecificProps.optionsIcons[option.id].icon}
+                                                alt={
+                                                    componentSpecificProps.optionsIcons[option.id]
+                                                        .altIcon
+                                                }
                                             />
                                         </Box>
                                     )}

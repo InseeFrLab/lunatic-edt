@@ -67,6 +67,12 @@ const FreeInput = memo((props: FreeInputProps) => {
                 onChange={freeInputOnChange}
                 onBlur={e => updateNewValue(createActivityValue, functions.onChange)}
                 placeholder={specifiqueProps.labels.clickableListPlaceholder}
+                label={specifiqueProps.label}
+                sx={{
+                    "& legend": { display: "none" },
+                    "& fieldset": { top: 0 },
+                    "& label": { display: "none" },
+                }}
             ></TextField>
         </Box>
     );

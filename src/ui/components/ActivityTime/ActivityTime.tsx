@@ -92,9 +92,11 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
 
     return (
         <>
-            <Box className={classes.labelSpacer}>
-                <label>{label}</label>
-            </Box>
+            {label && (
+                <Box className={classes.labelSpacer}>
+                    <label>{label}</label>
+                </Box>
+            )}
             <Timepicker
                 response={responses[0].response}
                 handleChange={handleChange}

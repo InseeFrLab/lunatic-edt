@@ -271,6 +271,7 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
         overflowX: "hidden",
         //Orchestrator content width is limited to 350px, 175px correspond to half if it
         transform: "translateX(calc(175px - 50vw))",
+        marginBottom: "1rem",
     },
 }));
 

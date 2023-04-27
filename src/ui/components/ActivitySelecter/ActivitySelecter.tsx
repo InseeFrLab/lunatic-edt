@@ -263,7 +263,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
      * @param category category du first rank
      * @returns
      */
-    const renderSubRankCategory = (category: NomenclatureActivityOption) => {
+    const renderSubRankCategory = (category: NomenclatureActivityOption, index: number) => {
         return (
             <Box
                 className={getSubRankCategoryClassName(
@@ -290,6 +290,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         appendHistoryActivitySelecter,
                     );
                 }}
+                tabIndex={index + 1}
             >
                 <img src={extensionIcon} alt={extensionIconAlt} className={classes.optionIcon} />
                 <Typography className={classes.subRankLabel}>{category.label}</Typography>
@@ -497,9 +498,10 @@ const renderRank1Category = (
     },
     inputs: {
         categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
-        categoriesIcons: { [id: string]: string };
+        categoriesIcons: { [id: string]: { icon: string; altIcon: string } };
         helpStep: number | undefined;
     },
+    index: number,
     classes: any,
     cx: any,
 ) => {
@@ -524,8 +526,13 @@ const renderRank1Category = (
                     functions.appendHistoryActivitySelecter,
                 )
             }
+            tabIndex={index + 1}
         >
-            <img className={classes.icon} src={inputs.categoriesIcons[id]} />
+            <img
+                className={classes.icon}
+                src={inputs.categoriesIcons[id].icon}
+                alt={inputs.categoriesIcons[id].altIcon}
+            />
             <Typography className={classes.rank1MainLabel}>{mainLabel}</Typography>
             {secondLabel && <Typography className={classes.rank1SecondLabel}>{secondLabel}</Typography>}
         </Box>
@@ -603,14 +610,14 @@ const renderCategories = (
     },
     functions: {
         setFullScreenComponent: (comp: FullScreenComponent) => void;
-        renderSubRankCategory: (category: NomenclatureActivityOption) => JSX.Element;
+        renderSubRankCategory: (category: NomenclatureActivityOption, index: number) => JSX.Element;
         appendHistoryActivitySelecter: (
             actionOrSelection: ActivitySelecterNavigationEnum | string,
         ) => void;
         onSelectValue: () => void;
     },
     inputs: {
-        categoriesIcons: { [id: string]: string };
+        categoriesIcons: { [id: string]: { icon: string; altIcon: string } };
         categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
         labels: ActivityLabelProps;
         helpStep: number | undefined;
@@ -621,7 +628,7 @@ const renderCategories = (
 ) => {
     return states.selectedCategories.length === 0 ? (
         <Box className={classes.rank1CategoriesBox}>
-            {inputs.categoriesAndActivitesNomenclature.map(d => {
+            {inputs.categoriesAndActivitesNomenclature.map((d, index) => {
                 return renderRank1Category(
                     d,
                     states,
@@ -631,6 +638,7 @@ const renderCategories = (
                         onSelectValue: functions.onSelectValue,
                     },
                     inputs,
+                    index,
                     classes,
                     cx,
                 );
@@ -638,8 +646,8 @@ const renderCategories = (
         </Box>
     ) : (
         <Box className={classes.rank1CategoriesBox}>
-            {states.selectedCategories[states.selectedCategories.length - 1]?.subs?.map(s => {
-                return functions.renderSubRankCategory(s);
+            {states.selectedCategories[states.selectedCategories.length - 1]?.subs?.map((s, index) => {
+                return functions.renderSubRankCategory(s, index);
             })}
             <Button
                 className={classes.buttonOther}
