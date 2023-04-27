@@ -146,8 +146,8 @@ const HourChecker = memo((props: HourCheckerProps) => {
                     >
                         {index === 0 && (
                             <img
-                                src={value[option.response.name] ? expandLessWhiteIcon : expandLessIcon}
-                                alt={expandLessIconAlt}
+                                src={value[option.response.name] ? expandMoreWhiteIcon : expandMoreIcon}
+                                alt={expandMoreIconAlt}
                                 className={classes.clickable}
                                 onClick={toggleHourChecker}
                                 aria-label="hourcheckertoogle"
@@ -186,8 +186,8 @@ const HourChecker = memo((props: HourCheckerProps) => {
                         )}
                         {index === 0 && (
                             <img
-                                src={value[option.response.name] ? expandMoreWhiteIcon : expandMoreIcon}
-                                alt={expandMoreIconAlt}
+                                src={value[option.response.name] ? expandLessWhiteIcon : expandLessIcon}
+                                alt={expandLessIconAlt}
                                 onClick={toggleHourChecker}
                             />
                         )}
