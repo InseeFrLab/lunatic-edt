@@ -1,1 +1,1 @@
-export { default as FreeInput } from "./FreeInput";
+export { default } from "./FreeInput";

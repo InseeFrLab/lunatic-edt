@@ -65,7 +65,7 @@ const FreeInput = memo((props: FreeInputProps) => {
                 value={createActivityValue}
                 className={classes.freeInputTextField}
                 onChange={freeInputOnChange}
-                onBlur={e => updateNewValue(createActivityValue, functions.onChange)}
+                onBlur={() => updateNewValue(createActivityValue, functions.onChange)}
                 placeholder={specifiqueProps.labels.clickableListPlaceholder}
                 label={specifiqueProps.label}
                 sx={{

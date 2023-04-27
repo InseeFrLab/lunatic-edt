@@ -1,4 +1,4 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import {
     AutoCompleteActiviteOption,
     NomenclatureActivityOption,
@@ -15,6 +15,7 @@ import { splitLabelWithParenthesis } from "../../../ui/utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Alert from "../Alert";
 import ClickableList from "../ClickableList";
+import FreeInput from "../FreeInput";
 import {
     CreateIndex,
     activitesFiltredUnique,
@@ -27,7 +28,6 @@ import {
     selectSubCategory,
     updateNewValue,
 } from "./activityUtils";
-import { FreeInput } from "../FreeInput";
 
 type ActivitySelecterProps = {
     handleChange(response: responseType, value: string | boolean | undefined): void;
