@@ -42,8 +42,8 @@ const TooltipInfo = memo((props: TooltipInfoProps) => {
                 <Tooltip title="Info" className={displayTooltip ? classes.hiddenBox : classes.iconBox}>
                     <IconButton onClick={() => setDisplayInfo(!displayInfo)}>
                         <img
-                            src={infoLabels.infoIcon}
-                            alt={infoLabels.infoIconAlt}
+                            src={infoLabels.infoIconTooltip}
+                            alt={infoLabels.infoIconTooltipAlt}
                             className={classes.iconInfoBox}
                         />
                     </IconButton>
