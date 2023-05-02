@@ -920,7 +920,6 @@ const navNextStep = (
     nextClickCallback: (routeToGoal: boolean) => void,
     routeToGoal: boolean,
 ) => {
-    console.log(value);
     updateNewValue(value, onChange);
     nextClickCallback(routeToGoal);
 };

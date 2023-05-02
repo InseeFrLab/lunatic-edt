@@ -105,8 +105,6 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         );
     };
 
-    console.log(options);
-
     return (
         <>
             {componentSpecificProps && labels && optionsIcons && (
