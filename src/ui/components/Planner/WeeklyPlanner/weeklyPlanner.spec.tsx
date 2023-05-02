@@ -21,6 +21,8 @@ describe("weeklyPlannerComponent", () => {
         boldText: "",
         infoIconAlt: "",
         infoIcon: "",
+        infoIconTooltip: "",
+        infoIconTooltipAlt: "",
         border: false,
     };
 

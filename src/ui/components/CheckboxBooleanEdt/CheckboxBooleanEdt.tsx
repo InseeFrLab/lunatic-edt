@@ -100,7 +100,7 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
             )}
             <Box>
                 <Box className={classes.labelSpacer}>
-                    <label>{label}&nbsp;?</label>
+                    <h1 className={classes.h1}>{label}&nbsp;?</h1>
                 </Box>
                 <ToggleButtonGroup
                     orientation="horizontal"
@@ -152,6 +152,12 @@ const useStyles = makeStylesEdt({ "name": { CheckboxBooleanEdt } })(theme => ({
     buttonGroupBox: {
         "width": "100% !important",
         "justifyContent": "center",
+    },
+    h1: {
+        fontSize: "18px",
+        margin: 0,
+        lineHeight: "1.5rem",
+        fontWeight: "bold",
     },
 }));
 

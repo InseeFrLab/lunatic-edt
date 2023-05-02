@@ -11,17 +11,26 @@ export type TooltipInfoProps = {
     titleLabels?: {
         normalTitle: string;
         boldTitle: string;
+        typeTitle: string;
     };
     displayTooltip?: boolean;
-    infoIcon: string;
-    infoIconAlt: string;
 };
 
 const TooltipInfo = memo((props: TooltipInfoProps) => {
-    const { infoLabels, titleLabels, displayTooltip, infoIcon, infoIconAlt } = props;
-    const { classes } = useStyles();
+    const { infoLabels, titleLabels, displayTooltip } = props;
+    const { classes, cx } = useStyles();
 
     const [displayInfo, setDisplayInfo] = React.useState<boolean>(false);
+
+    const displayTitle = () => {
+        if (titleLabels?.typeTitle == "h1") {
+            return <h1 className={cx(classes.titleBold, classes.h1)}>{titleLabels.boldTitle}</h1>;
+        } else if (titleLabels?.typeTitle == "h2") {
+            return <h2 className={cx(classes.titleBold, classes.h2)}>{titleLabels.boldTitle}</h2>;
+        } else {
+            return <Typography className={classes.titleBold}>{titleLabels?.boldTitle}</Typography>;
+        }
+    };
 
     return (
         <Box className={classes.root}>
@@ -29,12 +38,14 @@ const TooltipInfo = memo((props: TooltipInfoProps) => {
                 {titleLabels?.normalTitle && (
                     <Typography className={classes.title}>{titleLabels.normalTitle}</Typography>
                 )}
-                {titleLabels?.boldTitle && (
-                    <Typography className={classes.titleBold}>{titleLabels.boldTitle}</Typography>
-                )}
+                {titleLabels?.boldTitle && displayTitle()}
                 <Tooltip title="Info" className={displayTooltip ? classes.hiddenBox : classes.iconBox}>
                     <IconButton onClick={() => setDisplayInfo(!displayInfo)}>
-                        <img src={infoIcon} alt={infoIconAlt} className={classes.iconInfoBox} />
+                        <img
+                            src={infoLabels.infoIconTooltip}
+                            alt={infoLabels.infoIconTooltipAlt}
+                            className={classes.iconInfoBox}
+                        />
                     </IconButton>
                 </Tooltip>
             </Box>
@@ -77,10 +88,23 @@ const useStyles = makeStylesEdt({ "name": { TooltipInfo } })(theme => ({
     },
     iconInfoBox: {
         color: theme.palette.secondary.main,
-        height: "initial",
+        height: "1.5rem",
+        marginBottom: "2px",
     },
     hiddenBox: {
         display: "none",
+    },
+    h1: {
+        fontSize: "18px",
+        margin: 0,
+        lineHeight: "1.5rem",
+        fontWeight: "bold",
+    },
+    h2: {
+        fontSize: "18px",
+        margin: 0,
+        lineHeight: "1.5rem",
+        fontWeight: "bold",
     },
 }));
 

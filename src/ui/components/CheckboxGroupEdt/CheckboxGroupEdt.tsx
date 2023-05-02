@@ -104,7 +104,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                 {label && (
                     <>
                         <Box className={classes.labelSpacer}></Box>
-                        <label>{label}&nbsp;?</label>
+                        <h1 className={classes.h1}>{label}&nbsp;?</h1>
                     </>
                 )}
                 {tipsLabel && (
@@ -132,15 +132,20 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                             )}
                             key={option.response.name + "-" + index}
                             value={option.response.name}
+                            tabIndex={index + 1}
                         >
                             <Box className={classes.toggleButtonContent}>
                                 {componentSpecificProps &&
                                     componentSpecificProps.optionsIcons &&
-                                    componentSpecificProps.optionsIcons[option.id] && (
+                                    componentSpecificProps.optionsIcons[option.id].icon && (
                                         <Box className={classes.iconBox}>
                                             <img
                                                 className={classes.icon}
-                                                src={componentSpecificProps.optionsIcons[option.id]}
+                                                src={componentSpecificProps.optionsIcons[option.id].icon}
+                                                alt={
+                                                    componentSpecificProps.optionsIcons[option.id]
+                                                        .altIcon
+                                                }
                                             />
                                         </Box>
                                     )}
@@ -206,6 +211,12 @@ const useStyles = makeStylesEdt({ "name": { CheckboxGroupEdt } })(theme => ({
     toggleButtonContentHelp: {
         zIndex: "1400",
         pointerEvents: "none",
+    },
+    h1: {
+        fontSize: "18px",
+        margin: 0,
+        lineHeight: "1.5rem",
+        fontWeight: "bold",
     },
 }));
 

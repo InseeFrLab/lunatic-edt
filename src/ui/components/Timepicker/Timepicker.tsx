@@ -75,9 +75,11 @@ const Timepicker = memo((props: TimepickerProps) => {
 
     return (
         <>
-            <Box className={classes.labelSpacer}>
-                <label>{label}</label>
-            </Box>
+            {label && (
+                <Box className={classes.labelSpacer}>
+                    <h1 className={classes.h1}>{label}</h1>
+                </Box>
+            )}
             <Box className={cx(classes.root, componentSpecificProps?.helpStep ? classes.helpBox : "")}>
                 <Box className={classes.tipsLabel}>
                     <p>{tipsLabel}</p>
@@ -95,7 +97,16 @@ const Timepicker = memo((props: TimepickerProps) => {
                         }, [])}
                         renderInput={useCallback(
                             params => (
-                                <TextField size="small" {...params} sx={{ svg: { color: "#1F4076" } }} />
+                                <TextField
+                                    size="small"
+                                    {...params}
+                                    sx={{
+                                        svg: { color: "#1F4076" },
+                                        "& legend": { display: "none" },
+                                        "& fieldset": { top: 0 },
+                                        "& label": { display: "none" },
+                                    }}
+                                />
                             ),
                             [],
                         )}
@@ -111,6 +122,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                         }}
                         className={classes.input}
                         minutesStep={5}
+                        label={label ?? tipsLabel}
                     />
                 </LocalizationProvider>
             </Box>
@@ -142,6 +154,12 @@ const useStyles = makeStylesEdt({ "name": { Timepicker } })(theme => ({
     tipsLabel: {
         fontSize: "14px",
         color: theme.palette.info.main,
+        fontWeight: "bold",
+    },
+    h1: {
+        fontSize: "18px",
+        margin: 0,
+        lineHeight: "1.5rem",
         fontWeight: "bold",
     },
 }));

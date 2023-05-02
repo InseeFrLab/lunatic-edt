@@ -123,7 +123,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                     {label && (
                         <Box>
                             <Box className={classes.labelSpacer}>
-                                <label>{label}&nbsp;?</label>
+                                <h1 className={classes.h1}>{label}&nbsp;?</h1>
                             </Box>
                         </Box>
                     )}
@@ -148,12 +148,14 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                         }
                                         key={option.value + "-" + index}
                                         value={option.value}
+                                        tabIndex={index + 1}
                                     >
                                         {componentSpecificProps?.icon && (
                                             <Box className={classes.iconBox}>
                                                 <img
                                                     className={classes.icon}
                                                     src={componentSpecificProps?.icon}
+                                                    alt={componentSpecificProps?.altIcon}
                                                 />
                                             </Box>
                                         )}
@@ -260,6 +262,12 @@ const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
         width: "100%",
         backgroundColor: theme.variables.white,
         borderRadius: "5px",
+    },
+    h1: {
+        fontSize: "18px",
+        margin: 0,
+        lineHeight: "1.5rem",
+        fontWeight: "bold",
     },
 }));
 

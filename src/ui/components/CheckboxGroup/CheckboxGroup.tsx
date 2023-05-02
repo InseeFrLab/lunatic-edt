@@ -28,10 +28,11 @@ const CheckboxGroup = memo((props: CheckboxGroupProps) => {
                     <div style={{ display: "flex" }}>
                         {componentSpecificProps &&
                             componentSpecificProps.optionsIcons &&
-                            componentSpecificProps.optionsIcons[option.id] && (
+                            componentSpecificProps.optionsIcons[option.id].icon && (
                                 <img
                                     className={classes.icon}
-                                    src={componentSpecificProps.optionsIcons[option.id]}
+                                    src={componentSpecificProps.optionsIcons[option.id].icon}
+                                    alt={componentSpecificProps.optionsIcons[option.id].altIcon}
                                 />
                             )}
                         <Typography color="textSecondary">{option.label}</Typography>

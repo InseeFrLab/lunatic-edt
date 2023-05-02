@@ -26,3 +26,4 @@ export { default as ProgressBar } from "./ProgressBar";
 export { default as Radio } from "./Radio";
 export { default as Timepicker } from "./Timepicker";
 export { default as TooltipInfo } from "./TooltipInfo";
+export { default as FreeInput } from "./FreeInput";
