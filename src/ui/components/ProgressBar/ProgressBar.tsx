@@ -10,7 +10,7 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number; s
     return (
         <Box className={classes.linearProgressBox}>
             <Box className={classes.barBox}>
-                <LinearProgress variant="determinate" {...props} />
+                <LinearProgress variant="determinate" {...props} aria-label="linear-progressbar" />
             </Box>
             <Box className={classes.labelBox}>
                 {props.showlabel && (

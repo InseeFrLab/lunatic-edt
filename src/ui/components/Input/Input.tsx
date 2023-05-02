@@ -22,7 +22,6 @@ export const Input = memo((props: InputProps) => {
     return (
         <TextField
             id={id}
-            aria-required={mandatory}
             labelled-by={labelledBy}
             disabled={disabled}
             placeholder={placeholder}
@@ -39,6 +38,7 @@ export const Input = memo((props: InputProps) => {
             size="small"
             variant="outlined"
             className={classes.input}
+            aria-label="input"
         />
     );
 });
