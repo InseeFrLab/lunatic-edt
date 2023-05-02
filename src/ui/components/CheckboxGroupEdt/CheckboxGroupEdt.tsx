@@ -104,7 +104,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                 {label && (
                     <>
                         <Box className={classes.labelSpacer}></Box>
-                        <label>{label}&nbsp;?</label>
+                        <h1 className={classes.h1}>{label}&nbsp;?</h1>
                     </>
                 )}
                 {tipsLabel && (
@@ -211,6 +211,12 @@ const useStyles = makeStylesEdt({ "name": { CheckboxGroupEdt } })(theme => ({
     toggleButtonContentHelp: {
         zIndex: "1400",
         pointerEvents: "none",
+    },
+    h1: {
+        fontSize: "18px",
+        margin: 0,
+        lineHeight: "1.5rem",
+        fontWeight: "bold",
     },
 }));
 

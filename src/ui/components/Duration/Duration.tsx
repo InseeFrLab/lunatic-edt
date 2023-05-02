@@ -74,7 +74,7 @@ const Duration = memo((props: DurationProps) => {
     return (
         <>
             <Box className={classes.labelSpacer}>
-                <label>{label}&nbsp;?</label>
+                <h1 className={classes.h1}>{label}&nbsp;?</h1>
             </Box>
             <Box className={classes.containerBox}>
                 <Box className={classes.durationBox}>
@@ -86,7 +86,7 @@ const Duration = memo((props: DurationProps) => {
                         )}
                         <Select
                             className={classes.selectBox}
-                            labelId={hourLabel ? "durationHour-label" : undefined}
+                            labelId={"durationHour-label"}
                             id={"durationHour-select"}
                             value={hour}
                             onChange={newValue => setValueLunatic(newValue.target.value, minutes)}
@@ -112,13 +112,13 @@ const Duration = memo((props: DurationProps) => {
                     </Box>
                     <Box className={classes.durationInnerBox}>
                         {minLabel && (
-                            <InputLabel id={"durationHour-label"} className={classes.innerLabel}>
+                            <InputLabel id={"durationMin-label"} className={classes.innerLabel}>
                                 {minLabel}
                             </InputLabel>
                         )}
                         <Select
                             className={classes.selectBox}
-                            labelId={minLabel ? "durationMin-label" : undefined}
+                            labelId={"durationMin-label"}
                             id={"durationMin-select"}
                             value={minutes}
                             onChange={newValue => setValueLunatic(hour, newValue.target.value)}
@@ -179,6 +179,12 @@ const useStyles = makeStylesEdt({ "name": { Duration } })(theme => ({
     },
     menuSelectBox: {
         height: "30%",
+    },
+    h1: {
+        fontSize: "18px",
+        margin: 0,
+        lineHeight: "1.5rem",
+        fontWeight: "bold",
     },
 }));
 

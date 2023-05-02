@@ -77,7 +77,7 @@ const Timepicker = memo((props: TimepickerProps) => {
         <>
             {label && (
                 <Box className={classes.labelSpacer}>
-                    <label>{label}</label>
+                    <h1 className={classes.h1}>{label}</h1>
                 </Box>
             )}
             <Box className={cx(classes.root, componentSpecificProps?.helpStep ? classes.helpBox : "")}>
@@ -154,6 +154,12 @@ const useStyles = makeStylesEdt({ "name": { Timepicker } })(theme => ({
     tipsLabel: {
         fontSize: "14px",
         color: theme.palette.info.main,
+        fontWeight: "bold",
+    },
+    h1: {
+        fontSize: "18px",
+        margin: 0,
+        lineHeight: "1.5rem",
         fontWeight: "bold",
     },
 }));
