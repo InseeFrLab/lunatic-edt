@@ -149,6 +149,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                         key={option.value + "-" + index}
                                         value={option.value}
                                         tabIndex={index + 1}
+                                        id={"checkboxone-" + index}
                                     >
                                         {componentSpecificProps?.icon && (
                                             <Box className={classes.iconBox}>
@@ -176,7 +177,11 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                         componentSpecificProps?.labelsSpecifics?.otherButtonLabel && (
                             <Box>
                                 <Box className={classes.centerBox}>
-                                    <Button variant="contained" onClick={onAddNewOption}>
+                                    <Button
+                                        variant="contained"
+                                        onClick={onAddNewOption}
+                                        id="add-new-option"
+                                    >
                                         {componentSpecificProps.labelsSpecifics?.otherButtonLabel}
                                     </Button>
                                 </Box>

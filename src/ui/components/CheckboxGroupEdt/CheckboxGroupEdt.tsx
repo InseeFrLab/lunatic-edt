@@ -133,6 +133,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                             key={option.response.name + "-" + index}
                             value={option.response.name}
                             tabIndex={index + 1}
+                            id={"checkboxgroup-" + index}
                         >
                             <Box className={classes.toggleButtonContent}>
                                 {componentSpecificProps &&

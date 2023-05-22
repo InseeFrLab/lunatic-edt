@@ -291,6 +291,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                     );
                 }}
                 tabIndex={index + 1}
+                id={"subrankCategory-" + index}
             >
                 <img src={extensionIcon} alt={extensionIconAlt} className={classes.optionIcon} />
                 <Typography className={classes.subRankLabel}>{category.label}</Typography>
@@ -527,6 +528,7 @@ const renderRank1Category = (
                 )
             }
             tabIndex={index + 1}
+            id={"rankCategory-" + index}
         >
             <img
                 className={classes.icon}

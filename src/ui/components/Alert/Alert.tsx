@@ -46,10 +46,15 @@ const Alert = memo((props: AlertProps) => {
                                 className={classes.cancelButton}
                                 variant="outlined"
                                 onClick={() => onCancelCallBack(true)}
+                                id={"button-cancel"}
                             >
                                 {labels.cancel}
                             </Button>
-                            <Button variant="contained" onClick={onCompleteCallBack}>
+                            <Button
+                                variant="contained"
+                                onClick={onCompleteCallBack}
+                                id={"button-complete"}
+                            >
                                 {labels.complete}
                             </Button>
                         </Box>
