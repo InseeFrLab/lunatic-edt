@@ -92,6 +92,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                 key={uuidv4()}
                 onClick={onClick(option)}
                 tabIndex={index + 1}
+                id={"icongridcheckboxone-" + index}
             >
                 {optionsIcons && (
                     <img

@@ -98,7 +98,11 @@ const Duration = memo((props: DurationProps) => {
                         >
                             {listHourElements?.map(option => {
                                 return (
-                                    <MenuItem key={"durationHour-" + option} value={option}>
+                                    <MenuItem
+                                        key={"durationHour-" + option}
+                                        value={option}
+                                        id={"hour-" + option}
+                                    >
                                         {option}h
                                     </MenuItem>
                                 );
@@ -130,7 +134,11 @@ const Duration = memo((props: DurationProps) => {
                         >
                             {listMinElements?.map(option => {
                                 return (
-                                    <MenuItem key={"durationMin-" + option} value={option}>
+                                    <MenuItem
+                                        key={"durationMin-" + option}
+                                        value={option}
+                                        id={"min-" + option}
+                                    >
                                         {option}mn
                                     </MenuItem>
                                 );
