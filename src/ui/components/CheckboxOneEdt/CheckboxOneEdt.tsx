@@ -14,13 +14,13 @@ export type CheckboxOneProps = {
     label?: string;
     options: CheckboxOneCustomOption[];
     value: string | null;
-    response: { [name: string]: string };
+    responses: { [name: string]: string }[];
     className?: string;
     componentSpecificProps: CheckboxOneSpecificProps;
 };
 
 const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
-    const { id, value, label, options, className, handleChange, response, componentSpecificProps } =
+    const { id, value, label, options, className, handleChange, responses, componentSpecificProps } =
         props;
     const {
         backClickEvent,
@@ -58,7 +58,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     const handleOptions = useCallback(
         (_event: React.MouseEvent<HTMLElement>, selectedOption: string) => {
             setCurrentOption(selectedOption);
-            handleChange(response, selectedOption);
+            handleChange(responses[0], selectedOption);
             if (onSelectValue && selectedOption != null) {
                 onSelectValue();
             }
@@ -72,7 +72,8 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     const newOptionOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setNewOptionValue(e.target.value);
-        handleChange(response, newItemId.current);
+        handleChange(responses[0], newItemId.current);
+        handleChange(responses[1], newOptionValue);
     };
 
     const next = (
@@ -85,7 +86,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
             (newOptionValue == null || newOptionValue == "") &&
             !continueWithUncompleted
         ) {
-            handleChange(response, undefined);
+            handleChange(responses[0], undefined);
             setDisplayAlert(true);
         } else {
             if (addToReferentielCallBack && newOptionValue) {
