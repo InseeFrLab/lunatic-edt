@@ -14,14 +14,24 @@ export type CheckboxOneProps = {
     label?: string;
     options: CheckboxOneCustomOption[];
     value: string | null;
-    responses: { [name: string]: string }[];
+    response: { [name: string]: string };
+    bindingDependencies: string[];
     className?: string;
     componentSpecificProps: CheckboxOneSpecificProps;
 };
 
 const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
-    const { id, value, label, options, className, handleChange, responses, componentSpecificProps } =
-        props;
+    const {
+        id,
+        value,
+        label,
+        options,
+        className,
+        handleChange,
+        response,
+        bindingDependencies,
+        componentSpecificProps,
+    } = props;
     const {
         backClickEvent,
         nextClickEvent,
@@ -58,7 +68,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     const handleOptions = useCallback(
         (_event: React.MouseEvent<HTMLElement>, selectedOption: string) => {
             setCurrentOption(selectedOption);
-            handleChange(responses[0], selectedOption);
+            handleChange(response, selectedOption);
             if (onSelectValue && selectedOption != null) {
                 onSelectValue();
             }
@@ -72,8 +82,8 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     const newOptionOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setNewOptionValue(e.target.value);
-        handleChange(responses[0], newItemId.current);
-        handleChange(responses[1], newOptionValue);
+        handleChange({ "name": bindingDependencies[0] }, newItemId.current);
+        handleChange({ "name": bindingDependencies[1] }, e.target.value);
     };
 
     const next = (
@@ -86,7 +96,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
             (newOptionValue == null || newOptionValue == "") &&
             !continueWithUncompleted
         ) {
-            handleChange(responses[0], undefined);
+            handleChange(response, undefined);
             setDisplayAlert(true);
         } else {
             if (addToReferentielCallBack && newOptionValue) {
