@@ -86,6 +86,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         addWhiteIcon,
         addLightBlueIcon,
         addIconAlt,
+        modifiable = true,
     } = { ...componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
@@ -105,7 +106,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const [newValue, setNewValue] = useState<string | undefined>();
 
     const newItemId = useRef(uuidv4());
-    const { classes, cx } = useStyles();
+    const { classes, cx } = useStyles({ "modifiable": modifiable });
     let historyInputSuggesterValue = "";
     let historyActivitySelecterValue = value[historyActivitySelecterBindingDep.name]
         ? (value[historyActivitySelecterBindingDep.name] as string)
@@ -288,6 +289,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         onChange,
                         onSelectValue,
                         appendHistoryActivitySelecter,
+                        modifiable,
                     );
                 }}
                 tabIndex={index + 1}
@@ -359,6 +361,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             labels,
                             isMobile,
                             separatorSuggester,
+                            modifiable,
                         },
                         classes,
                         addLightBlueIcon,
@@ -397,6 +400,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             routeToGoal: selectedCategories[selectedCategories.length - 1]
                                 ? false
                                 : true,
+                            modifiable: modifiable,
                         },
                         {
                             nextClickCallback,
@@ -458,6 +462,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                     labels,
                                     categoriesIcons,
                                     helpStep,
+                                    modifiable,
                                 },
                                 onChange,
                                 classes,
@@ -501,6 +506,7 @@ const renderRank1Category = (
         categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
         categoriesIcons: { [id: string]: { icon: string; altIcon: string } };
         helpStep: number | undefined;
+        modifiable: boolean | undefined;
     },
     index: number,
     classes: any,
@@ -516,6 +522,7 @@ const renderRank1Category = (
                     ? classes.rank1CategoryHelp
                     : "",
                 states.selectedCategory == category.id ? classes.rank1CategorySelected : undefined,
+                !inputs.modifiable ? classes.disabled : "",
             )}
             key={uuidv4()}
             onClick={() =>
@@ -525,6 +532,7 @@ const renderRank1Category = (
                     functions.onChange,
                     functions.onSelectValue,
                     functions.appendHistoryActivitySelecter,
+                    inputs.modifiable,
                 )
             }
             tabIndex={index + 1}
@@ -562,18 +570,27 @@ const categoriesActivitiesBoxClick = (
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     onSelectValue: () => void,
     appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
+    modifiable: boolean | undefined,
 ) => {
-    if (selection.subs) {
-        selectSubCategory(
-            selection,
-            states.selectedId,
-            states.selectedCategories,
-            states.setSelectedCategories,
-            onChange,
-            appendHistoryActivitySelecter,
-        );
-    } else {
-        selectFinalCategory(selection, states, onChange, onSelectValue, appendHistoryActivitySelecter);
+    if (modifiable) {
+        if (selection.subs) {
+            selectSubCategory(
+                selection,
+                states.selectedId,
+                states.selectedCategories,
+                states.setSelectedCategories,
+                onChange,
+                appendHistoryActivitySelecter,
+            );
+        } else {
+            selectFinalCategory(
+                selection,
+                states,
+                onChange,
+                onSelectValue,
+                appendHistoryActivitySelecter,
+            );
+        }
     }
 };
 
@@ -623,6 +640,7 @@ const renderCategories = (
         categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
         labels: ActivityLabelProps;
         helpStep: number | undefined;
+        modifiable: boolean | undefined;
     },
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     classes: any,
@@ -716,6 +734,7 @@ const renderFreeInput = (
         newItemId: string;
         displayAlert: boolean;
         routeToGoal: boolean;
+        modifiable: boolean;
     },
     functions: {
         nextClickCallback: (routeToGoal: boolean) => void;
@@ -761,6 +780,7 @@ const renderFreeInput = (
                             props.routeToGoal,
                         );
                     }}
+                    disabled={!props.modifiable}
                 >
                     {props.labels.saveButton}
                 </Button>
@@ -784,6 +804,7 @@ const renderClickableList = (
         labels: ActivityLabelProps;
         isMobile: boolean;
         separatorSuggester: string;
+        modifiable: boolean;
     },
     classes: any,
     iconAddLightBlue: string,
@@ -830,6 +851,7 @@ const renderClickableList = (
                 iconExtensionAlt={iconExtensionAlt}
                 iconSearch={iconSearch}
                 iconSearchAlt={iconSearchAlt}
+                modifiable={inputs.modifiable}
             />
         )
     );
@@ -1144,146 +1166,157 @@ const getSubRankCategoryClassName = (
     return cx(classes.subRankCategory, category.id == "130" ? classes.rank1CategoryHelp : "");
 };
 
-const useStyles = makeStylesEdt({ "name": { ActivitySelecter } })(theme => ({
-    root: {
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-    },
-    title: {
-        color: theme.palette.info.main,
-        fontSize: "20px",
-        textAlign: "center",
-        marginTop: "2rem",
-        marginBottom: "1rem",
-    },
-    activityInput: {
-        width: "93%",
-        display: "flex",
-        justifyContent: "space-between",
-        marginBottom: "1rem",
-        backgroundColor: theme.variables.white,
-        borderRadius: "5px",
-    },
-    activityInputHelp: {
-        zIndex: "1400",
-    },
-    activityInputLabel: {
-        fontSize: "16px",
-        color: "#5A6C95",
-        margin: "1rem",
-    },
-    activityInputIcon: {
-        margin: "1rem",
-    },
-    clickableList: {
-        width: "300px",
-        marginTop: "1rem",
-    },
-    clickableListMobile: {
-        width: "100%",
-        marginTop: "0rem",
-    },
-    freeInputTextField: {
-        width: "100%",
-        backgroundColor: theme.variables.white,
-        borderRadius: "5px",
-    },
-    rank1CategoriesBox: {
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "space-evenly",
-        cursor: "pointer",
-        padding: "1rem",
-    },
-    rank1Category: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        backgroundColor: theme.variables.white,
-        width: "45.5%",
-        marginTop: "4%",
-        borderRadius: "15px",
-    },
-    rank1CategoryHelp: {
-        zIndex: "1400",
-    },
-    rank1CategorySelected: {
-        border: "2px solid #4973D2 !important",
-        fontWeight: "bold",
-    },
-    icon: {
-        width: "80px",
-        height: "45px",
-        marginTop: "1rem",
-    },
-    rank1MainLabel: {
-        fontSize: "14px",
-        textAlign: "center",
-        color: theme.palette.text.secondary,
-        fontWeight: "bold",
-        marginTop: "1rem",
-        marginRight: "0.5rem",
-        marginBottom: "0.5rem",
-        marginLeft: "0.5rem",
-    },
-    rank1SecondLabel: {
-        fontSize: "12px",
-        textAlign: "center",
-        marginTop: "0.5rem",
-        marginRight: "0.5rem",
-        marginBottom: "1rem",
-        marginLeft: "0.5rem",
-    },
-    subRankCategory: {
-        border: "2px solid transparent",
-        display: "flex",
-        backgroundColor: theme.variables.white,
-        marginTop: "4%",
-        borderRadius: "6px",
-        width: "100%",
-        padding: "1rem",
-        alignItems: "center",
-    },
-    subRankCategoryMobile: {
-        marginTop: "3rem",
-    },
-    selectedSubRankCategory: {
-        borderColor: theme.palette.primary.main,
-    },
-    subRankLabel: {
-        fontSize: "14px",
-        color: theme.palette.text.secondary,
-        width: "80%",
-        paddingLeft: "0.5rem",
-    },
-    optionIcon: {
-        marginRight: "0.5rem",
-        color: theme.palette.primary.main,
-        width: "10%",
-    },
-    chevronIcon: {
-        color: theme.palette.primary.main,
-        width: "10%",
-    },
-    buttonOther: {
-        backgroundColor: theme.palette.primary.main,
-        width: "60%",
-        marginTop: "2rem",
-        color: theme.variables.white,
-    },
-    addActivityButton: {
-        margin: "2rem 0rem",
-    },
-    freeInputBox: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-    },
-    freeInputBoxMobile: {
-        height: "85vh",
-        justifyContent: "center",
-    },
-}));
+const useStyles = makeStylesEdt<{ modifiable: boolean }>({ "name": { ActivitySelecter } })(
+    (theme, { modifiable }) => ({
+        root: {
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+        },
+        title: {
+            color: theme.palette.info.main,
+            fontSize: "20px",
+            textAlign: "center",
+            marginTop: "2rem",
+            marginBottom: "1rem",
+        },
+        activityInput: {
+            width: "93%",
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "1rem",
+            backgroundColor: theme.variables.white,
+            borderRadius: "5px",
+        },
+        activityInputHelp: {
+            zIndex: "1400",
+        },
+        activityInputLabel: {
+            fontSize: "16px",
+            color: "#5A6C95",
+            margin: "1rem",
+        },
+        activityInputIcon: {
+            margin: "1rem",
+        },
+        clickableList: {
+            width: "300px",
+            marginTop: "1rem",
+        },
+        clickableListMobile: {
+            width: "100%",
+            marginTop: "0rem",
+        },
+        freeInputTextField: {
+            width: "100%",
+            backgroundColor: theme.variables.white,
+            borderRadius: "5px",
+        },
+        rank1CategoriesBox: {
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-evenly",
+            cursor: "pointer",
+            padding: "1rem",
+        },
+        rank1Category: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            backgroundColor: theme.variables.white,
+            width: "45.5%",
+            marginTop: "4%",
+            borderRadius: "15px",
+        },
+        rank1CategoryHelp: {
+            zIndex: "1400",
+            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+            cursor: !modifiable ? "default" : "",
+        },
+        rank1CategorySelected: {
+            border: "2px solid #4973D2 !important",
+            fontWeight: "bold",
+            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+            cursor: !modifiable ? "default" : "",
+        },
+        icon: {
+            width: "80px",
+            height: "45px",
+            marginTop: "1rem",
+        },
+        rank1MainLabel: {
+            fontSize: "14px",
+            textAlign: "center",
+            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : theme.palette.text.secondary,
+            fontWeight: "bold",
+            marginTop: "1rem",
+            marginRight: "0.5rem",
+            marginBottom: "0.5rem",
+            marginLeft: "0.5rem",
+        },
+        rank1SecondLabel: {
+            fontSize: "12px",
+            textAlign: "center",
+            marginTop: "0.5rem",
+            marginRight: "0.5rem",
+            marginBottom: "1rem",
+            marginLeft: "0.5rem",
+            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+        },
+        subRankCategory: {
+            border: "2px solid transparent",
+            display: "flex",
+            backgroundColor: theme.variables.white,
+            marginTop: "4%",
+            borderRadius: "6px",
+            width: "100%",
+            padding: "1rem",
+            alignItems: "center",
+            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+            cursor: !modifiable ? "default" : "",
+        },
+        subRankCategoryMobile: {
+            marginTop: "3rem",
+        },
+        selectedSubRankCategory: {
+            borderColor: theme.palette.primary.main,
+            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+            cursor: !modifiable ? "default" : "",
+        },
+        subRankLabel: {
+            fontSize: "14px",
+            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : theme.palette.text.secondary,
+            width: "80%",
+            paddingLeft: "0.5rem",
+        },
+        optionIcon: {
+            marginRight: "0.5rem",
+            color: theme.palette.primary.main,
+            width: "10%",
+        },
+        chevronIcon: {
+            color: theme.palette.primary.main,
+            width: "10%",
+        },
+        buttonOther: {
+            backgroundColor: theme.palette.primary.main,
+            width: "60%",
+            marginTop: "2rem",
+            color: theme.variables.white,
+        },
+        addActivityButton: {
+            margin: "2rem 0rem",
+        },
+        freeInputBox: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+        },
+        freeInputBoxMobile: {
+            height: "85vh",
+            justifyContent: "center",
+        },
+    }),
+);
 
 export default createCustomizableLunaticField(ActivitySelecter, "ActivitySelecter");

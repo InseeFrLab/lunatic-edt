@@ -10,8 +10,6 @@ import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
 export type TimepickerProps = {
-    disabled?: boolean;
-    readOnly?: boolean;
     value?: string;
     handleChange(response: { [name: string]: string }, value: string | null): void;
     label?: string;
@@ -22,17 +20,7 @@ export type TimepickerProps = {
 };
 
 const Timepicker = memo((props: TimepickerProps) => {
-    const {
-        id,
-        response,
-        handleChange,
-        value,
-        readOnly,
-        disabled,
-        label,
-        tipsLabel,
-        componentSpecificProps,
-    } = props;
+    const { id, response, handleChange, value, label, tipsLabel, componentSpecificProps } = props;
     const { classes, cx } = useStyles();
 
     const [valueLocal, setValue] = React.useState<Dayjs | undefined>();
@@ -87,8 +75,8 @@ const Timepicker = memo((props: TimepickerProps) => {
                 <LocalizationProvider adapterLocale={"fr"} dateAdapter={AdapterDayjs}>
                     <TimePicker
                         key={id}
-                        disabled={disabled}
-                        readOnly={readOnly}
+                        disabled={!componentSpecificProps?.modifiable}
+                        readOnly={!componentSpecificProps?.modifiable}
                         openTo="hours"
                         views={["hours", "minutes"]}
                         value={valueLocal}

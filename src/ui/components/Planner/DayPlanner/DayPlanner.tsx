@@ -22,6 +22,7 @@ export type DayPlannerProps = {
     getFormatedWorkedSum: (workedHoursSum: number) => string;
     moreIcon: string;
     moreIconAlt: string;
+    modifiable?: boolean;
 };
 
 enum DayRelativeTimeEnum {
@@ -65,6 +66,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         getFormatedWorkedSum,
         moreIcon,
         moreIconAlt,
+        modifiable = true,
     } = props;
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
@@ -209,7 +211,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                         <Typography className={cx(classes.dayLabel, classes.bold)}>
                             {renderDateLabel(date, language)}
                         </Typography>
-                        {renderMoreIcon()}
+                        {modifiable && renderMoreIcon()}
                     </Box>
                     {renderBottomPart()}
                 </Box>

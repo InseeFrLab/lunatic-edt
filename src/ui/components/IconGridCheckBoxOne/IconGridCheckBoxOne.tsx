@@ -28,11 +28,12 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         labels,
         errorIcon,
         onSelectValue,
+        modifiable = true,
     } = { ...componentSpecificProps };
 
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
     let selectedValue: string | undefined = value;
-    const { classes, cx } = useStyles();
+    const { classes, cx } = useStyles({ "modifiable": modifiable });
 
     useEffect(() => {
         if (backClickEvent && backClickCallback) {
@@ -90,7 +91,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                         : classes.option
                 }
                 key={uuidv4()}
-                onClick={onClick(option)}
+                onClick={modifiable ? onClick(option) : undefined}
                 tabIndex={index + 1}
                 id={"icongridcheckboxone-" + index}
             >
@@ -137,53 +138,57 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
     );
 });
 
-const useStyles = makeStylesEdt({ "name": { IconGridCheckBoxOne } })(theme => ({
-    root: {
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-    },
-    title: {
-        color: theme.palette.info.main,
-        fontSize: "20px",
-        textAlign: "center",
-        marginTop: "2rem",
-        marginBottom: "2rem",
-    },
-    optionsBox: {
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "space-evenly",
-        cursor: "pointer",
-    },
-    option: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        backgroundColor: theme.variables.white,
-        width: "45.5%",
-        marginTop: "4%",
-        borderRadius: "15px",
-        border: "2px solid transparent",
-    },
-    selectedOption: {
-        borderColor: theme.palette.primary.main,
-    },
-    optionLabel: {
-        fontSize: "14px",
-        textAlign: "center",
-        color: theme.palette.text.secondary,
-        fontWeight: "bold",
-        marginTop: "1rem",
-        marginRight: "0.5rem",
-        marginBottom: "0.5rem",
-        marginLeft: "0.5rem",
-    },
-    icon: {
-        width: "80px",
-        height: "45px",
-        marginTop: "1rem",
-    },
-}));
+const useStyles = makeStylesEdt<{ modifiable: boolean }>({ "name": { IconGridCheckBoxOne } })(
+    (theme, { modifiable }) => ({
+        root: {
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+        },
+        title: {
+            color: theme.palette.info.main,
+            fontSize: "20px",
+            textAlign: "center",
+            marginTop: "2rem",
+            marginBottom: "2rem",
+        },
+        optionsBox: {
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-evenly",
+            cursor: "pointer",
+        },
+        option: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            backgroundColor: theme.variables.white,
+            width: "45.5%",
+            marginTop: "4%",
+            borderRadius: "15px",
+            border: "2px solid transparent",
+            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+            cursor: !modifiable ? "default" : "",
+        },
+        selectedOption: {
+            borderColor: theme.palette.primary.main,
+        },
+        optionLabel: {
+            fontSize: "14px",
+            textAlign: "center",
+            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : theme.palette.text.secondary,
+            fontWeight: "bold",
+            marginTop: "1rem",
+            marginRight: "0.5rem",
+            marginBottom: "0.5rem",
+            marginLeft: "0.5rem",
+        },
+        icon: {
+            width: "80px",
+            height: "45px",
+            marginTop: "1rem",
+        },
+    }),
+);
 
 export default createCustomizableLunaticField(IconGridCheckBoxOne, "IconGridCheckBoxOne");

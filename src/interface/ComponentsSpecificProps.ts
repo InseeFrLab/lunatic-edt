@@ -58,6 +58,7 @@ export type WeeklyPlannerSpecificProps = {
     expandMoreWhiteIcon: string;
     workIcon: string;
     workIconAlt: string;
+    modifiable?: boolean;
 };
 
 export type ActivitySelecterSpecificProps = {
@@ -87,6 +88,7 @@ export type ActivitySelecterSpecificProps = {
     addLightBlueIcon: string;
     addWhiteIcon: string;
     addIconAlt: string;
+    modifiable?: boolean;
 };
 
 export type IconGridCheckBoxOneSpecificProps = {
@@ -103,6 +105,7 @@ export type IconGridCheckBoxOneSpecificProps = {
     };
     errorIcon: string;
     onSelectValue?(): void;
+    modifiable?: boolean;
 };
 
 export type CheckboxGroupSpecificProps = {
@@ -119,6 +122,7 @@ export type CheckboxGroupSpecificProps = {
     };
     errorIcon?: string;
     helpStep?: number;
+    modifiable?: boolean;
 };
 
 export type CheckboxOneSpecificProps = {
@@ -142,6 +146,7 @@ export type CheckboxOneSpecificProps = {
     onSelectValue?(): void;
     extensionIcon: string;
     extensionIconAlt: string;
+    modifiable?: boolean;
 };
 
 export type CheckBoxOneSpecificPropsLabels = {
@@ -159,6 +164,9 @@ export type TimepickerSpecificProps = {
     helpImage?: string;
     arrowDownIcon: string;
     arrowDownIconAlt: string;
+    //readOnly?: boolean;
+    //disabled?: boolean;
+    modifiable?: boolean;
 };
 
 export type CheckboxBooleanEdtSpecificProps = {
@@ -174,4 +182,5 @@ export type CheckboxBooleanEdtSpecificProps = {
     };
     onSelectValue?(): void;
     errorIcon?: string;
+    modifiable?: boolean;
 };

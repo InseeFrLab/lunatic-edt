@@ -42,6 +42,7 @@ export type ClickableListProps = {
     iconExtensionAlt: string;
     iconSearch: string;
     iconSearchAlt: string;
+    modifiable?: boolean;
 };
 
 const ClickableList = memo((props: ClickableListProps) => {
@@ -71,6 +72,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         iconExtensionAlt,
         iconSearch,
         iconSearchAlt,
+        modifiable = true,
     } = props;
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
@@ -194,6 +196,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                     variant="contained"
                     startIcon={<img src={iconAddWhite} alt={iconAddAlt} />}
                     onClick={createActivityCallback}
+                    disabled={!modifiable}
                 >
                     {addActivityButtonLabel}
                 </Button>
@@ -260,6 +263,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                         variant="contained"
                         startIcon={<img src={iconAddWhite} alt={iconAddAlt} />}
                         onClick={() => createActivity(currentInputValue)}
+                        disabled={!modifiable}
                     >
                         {addActivityButtonLabel}
                     </Button>

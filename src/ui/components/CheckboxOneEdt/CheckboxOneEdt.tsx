@@ -41,10 +41,11 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         errorIcon,
         addToReferentielCallBack,
         onSelectValue,
+        modifiable = true,
     } = {
         ...componentSpecificProps,
     };
-    const { classes, cx } = useStyles();
+    const { classes, cx } = useStyles({ "modifiable": modifiable });
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(value ?? undefined);
     const [isSubchildDisplayed, setIsSubchildDisplayed] = React.useState<boolean>(false);
     const [newOptionValue, setNewOptionValue] = React.useState<string | undefined>(undefined);
@@ -143,7 +144,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                             orientation="vertical"
                             value={currentOption}
                             exclusive
-                            onChange={handleOptions}
+                            onChange={modifiable ? handleOptions : undefined}
                             id={id}
                             aria-label={label}
                             className={cx(className, classes.toggleButtonGroup)}
@@ -161,6 +162,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                         value={option.value}
                                         tabIndex={index + 1}
                                         id={"checkboxone-" + index}
+                                        disabled={!modifiable}
                                     >
                                         {componentSpecificProps?.icon && (
                                             <Box className={classes.iconBox}>
@@ -192,6 +194,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                         variant="contained"
                                         onClick={onAddNewOption}
                                         id="add-new-option"
+                                        disabled={!modifiable}
                                     >
                                         {componentSpecificProps.labelsSpecifics?.otherButtonLabel}
                                     </Button>
@@ -219,72 +222,75 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     );
 });
 
-const useStyles = makeStylesEdt({ "name": { CheckboxOneEdt } })(theme => ({
-    MuiToggleButton: {
-        marginBottom: "0.5rem",
-        border: important("2px solid #FFFFFF"),
-        borderRadius: important("6px"),
-        backgroundColor: "#FFFFFF",
-        color: theme.palette.secondary.main,
-        "&.Mui-selected": {
-            borderColor: important(theme.palette.primary.main),
-            fontWeight: "bold",
+const useStyles = makeStylesEdt<{ modifiable: boolean }>({ "name": { CheckboxOneEdt } })(
+    (theme, { modifiable }) => ({
+        MuiToggleButton: {
+            marginBottom: "0.5rem",
+            border: important("2px solid #FFFFFF"),
+            borderRadius: important("6px"),
             backgroundColor: "#FFFFFF",
             color: theme.palette.secondary.main,
+            "&.Mui-selected": {
+                borderColor: important(theme.palette.primary.main),
+                fontWeight: "bold",
+                backgroundColor: "#FFFFFF",
+                color: theme.palette.secondary.main,
+            },
         },
-    },
-    MuiToggleButtonIcon: {
-        marginBottom: "0.5rem",
-        border: important("2px solid #FFFFFF"),
-        borderRadius: important("6px"),
-        backgroundColor: "#FFFFFF",
-        color: theme.palette.secondary.main,
-        justifyContent: "flex-start",
-        textAlign: "left",
-        fontWeight: "bold",
-        "&.Mui-selected": {
-            borderColor: important(theme.palette.primary.main),
+        MuiToggleButtonIcon: {
+            marginBottom: "0.5rem",
+            border: important("2px solid #FFFFFF"),
+            borderRadius: important("6px"),
+            backgroundColor: "#FFFFFF",
+            color: theme.palette.secondary.main,
+            justifyContent: "flex-start",
+            textAlign: "left",
+            fontWeight: "bold",
+            "&.Mui-selected": {
+                borderColor: important(theme.palette.primary.main),
+            },
         },
-    },
-    labelSpacer: {
-        margin: "1rem 0rem",
-        textAlign: "center",
-    },
-    iconBox: {
-        marginRight: "0.5rem",
-        color: theme.palette.primary.main,
-        width: "25px",
-    },
-    labelBox: {
-        marginLeft: "0.25rem",
-    },
-    titleBox: {
-        display: "flex",
-        alignItems: "center",
-    },
-    icon: {
-        width: "25px",
-        height: "25px",
-    },
-    toggleButtonGroup: {
-        marginTop: "1rem",
-        width: important("98%"),
-    },
-    centerBox: {
-        display: "flex",
-        justifyContent: "center",
-    },
-    newOptionTextField: {
-        width: "100%",
-        backgroundColor: theme.variables.white,
-        borderRadius: "5px",
-    },
-    h1: {
-        fontSize: "18px",
-        margin: 0,
-        lineHeight: "1.5rem",
-        fontWeight: "bold",
-    },
-}));
+        labelSpacer: {
+            margin: "1rem 0rem",
+            textAlign: "center",
+        },
+        iconBox: {
+            marginRight: "0.5rem",
+            color: theme.palette.primary.main,
+            width: "25px",
+        },
+        labelBox: {
+            marginLeft: "0.25rem",
+            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+        },
+        titleBox: {
+            display: "flex",
+            alignItems: "center",
+        },
+        icon: {
+            width: "25px",
+            height: "25px",
+        },
+        toggleButtonGroup: {
+            marginTop: "1rem",
+            width: important("98%"),
+        },
+        centerBox: {
+            display: "flex",
+            justifyContent: "center",
+        },
+        newOptionTextField: {
+            width: "100%",
+            backgroundColor: theme.variables.white,
+            borderRadius: "5px",
+        },
+        h1: {
+            fontSize: "18px",
+            margin: 0,
+            lineHeight: "1.5rem",
+            fontWeight: "bold",
+        },
+    }),
+);
 
 export default createCustomizableLunaticField(CheckboxOneEdt, "CheckboxOneEdt");
