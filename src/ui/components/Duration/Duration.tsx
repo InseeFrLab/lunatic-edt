@@ -3,6 +3,7 @@ import "dayjs/locale/fr";
 import React, { memo, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
+import { TimepickerSpecificProps } from "interface";
 
 export type DurationProps = {
     value?: string;
@@ -12,6 +13,7 @@ export type DurationProps = {
     andLabel?: string;
     minLabel?: string;
     response: { [name: string]: string };
+    componentSpecificProps?: TimepickerSpecificProps;
 };
 
 const enum DurationEnum {
@@ -30,7 +32,16 @@ const getNumElements = (typeDuration: string) => {
 };
 
 const Duration = memo((props: DurationProps) => {
-    const { handleChange, value, label, hourLabel, andLabel, minLabel, response } = props;
+    const {
+        handleChange,
+        value,
+        label,
+        hourLabel,
+        andLabel,
+        minLabel,
+        response,
+        componentSpecificProps,
+    } = props;
 
     const { classes } = useStyles();
 
@@ -95,6 +106,7 @@ const Duration = memo((props: DurationProps) => {
                                     root: classes.menuSelectBox,
                                 },
                             }}
+                            disabled={!componentSpecificProps?.modifiable}
                         >
                             {listHourElements?.map(option => {
                                 return (
@@ -131,6 +143,7 @@ const Duration = memo((props: DurationProps) => {
                                     root: classes.menuSelectBox,
                                 },
                             }}
+                            disabled={!componentSpecificProps?.modifiable}
                         >
                             {listMinElements?.map(option => {
                                 return (

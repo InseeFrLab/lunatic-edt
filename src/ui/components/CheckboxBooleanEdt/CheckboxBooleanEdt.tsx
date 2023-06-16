@@ -30,6 +30,7 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
         labels,
         errorIcon,
         onSelectValue,
+        modifiable = true,
     } = {
         ...componentSpecificProps,
     };
@@ -110,7 +111,7 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
                     id={id}
                     aria-label={label}
                     className={cx(classes.buttonGroupBox, className)}
-                    disabled={disabled}
+                    disabled={modifiable ? disabled : true}
                 >
                     <ToggleButton
                         className={classes.MuiToggleButton}

@@ -21,7 +21,6 @@ export type CheckboxGroupEdtProps = {
 const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
     const { id, value, responses, handleChange, componentSpecificProps, label, tipsLabel, className } =
         props;
-    const { classes, cx } = useStyles();
 
     const {
         backClickEvent,
@@ -31,9 +30,12 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
         labels,
         errorIcon,
         helpStep,
+        modifiable = true,
     } = {
         ...componentSpecificProps,
     };
+
+    const { classes, cx } = useStyles({ "modifiable": modifiable });
 
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
     const [optionsSelected, setOptionsSelected] = useState<string[]>([]);
@@ -117,7 +119,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                 <ToggleButtonGroup
                     orientation="vertical"
                     value={optionsSelected}
-                    onChange={handleOptions}
+                    onChange={modifiable ? handleOptions : undefined}
                     id={id}
                     aria-label={label}
                     className={cx(className, classes.toggleButtonGroup)}
@@ -134,6 +136,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                             value={option.response.name}
                             tabIndex={index + 1}
                             id={"checkboxgroup-" + index}
+                            disabled={!modifiable}
                         >
                             <Box className={classes.toggleButtonContent}>
                                 {componentSpecificProps &&
@@ -150,7 +153,9 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                                             />
                                         </Box>
                                     )}
-                                <Typography color="textSecondary">{option.label}</Typography>
+                                <Typography color="textSecondary" className={classes.labelBox}>
+                                    {option.label}
+                                </Typography>
                             </Box>
                         </ToggleButton>
                     ))}
@@ -160,65 +165,70 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
     );
 });
 
-const useStyles = makeStylesEdt({ "name": { CheckboxGroupEdt } })(theme => ({
-    root: {
-        maxWidth: "100%",
-        margin: "1rem 0",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingLeft: "0.5rem",
-        backgroundColor: theme.variables.white,
-        padding: "0.5rem 0rem 0.25rem 1rem",
-    },
-    MuiCheckbox: {
-        color: theme.variables.neutral,
-    },
-    labelSpacer: {
-        height: "1rem",
-    },
-    tipsLabel: {
-        color: theme.palette.text.secondary,
-    },
-    iconBox: {
-        display: "flex",
-        alignItems: "center",
-        marginRight: "1rem",
-    },
-    icon: {
-        width: "25px",
-        height: "25px",
-    },
-    toggleButtonGroup: {
-        marginTop: "1rem",
-    },
-    toggleButton: {
-        marginBottom: "1rem",
-        border: important("2px solid #FFFFFF"),
-        borderRadius: important("6px"),
-        backgroundColor: "#FFFFFF",
-        color: theme.palette.secondary.main,
-        justifyContent: "flex-start",
-        textAlign: "left",
-        fontWeight: "bold",
-        "&.Mui-selected": {
-            borderColor: important(theme.palette.primary.main),
-            backgroundColor: "#FFFFFF",
+const useStyles = makeStylesEdt<{ modifiable: boolean }>({ "name": { CheckboxGroupEdt } })(
+    (theme, { modifiable }) => ({
+        root: {
+            maxWidth: "100%",
+            margin: "1rem 0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingLeft: "0.5rem",
+            backgroundColor: theme.variables.white,
+            padding: "0.5rem 0rem 0.25rem 1rem",
         },
-    },
-    toggleButtonContent: {
-        display: "flex",
-    },
-    toggleButtonContentHelp: {
-        zIndex: "1400",
-        pointerEvents: "none",
-    },
-    h1: {
-        fontSize: "18px",
-        margin: 0,
-        lineHeight: "1.5rem",
-        fontWeight: "bold",
-    },
-}));
+        MuiCheckbox: {
+            color: theme.variables.neutral,
+        },
+        labelSpacer: {
+            height: "1rem",
+        },
+        tipsLabel: {
+            color: theme.palette.text.secondary,
+        },
+        iconBox: {
+            display: "flex",
+            alignItems: "center",
+            marginRight: "1rem",
+        },
+        icon: {
+            width: "25px",
+            height: "25px",
+        },
+        toggleButtonGroup: {
+            marginTop: "1rem",
+        },
+        toggleButton: {
+            marginBottom: "1rem",
+            border: important("2px solid #FFFFFF"),
+            borderRadius: important("6px"),
+            backgroundColor: "#FFFFFF",
+            color: theme.palette.secondary.main,
+            justifyContent: "flex-start",
+            textAlign: "left",
+            fontWeight: "bold",
+            "&.Mui-selected": {
+                borderColor: important(theme.palette.primary.main),
+                backgroundColor: "#FFFFFF",
+            },
+        },
+        toggleButtonContent: {
+            display: "flex",
+        },
+        toggleButtonContentHelp: {
+            zIndex: "1400",
+            pointerEvents: "none",
+        },
+        h1: {
+            fontSize: "18px",
+            margin: 0,
+            lineHeight: "1.5rem",
+            fontWeight: "bold",
+        },
+        labelBox: {
+            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+        },
+    }),
+);
 
 export default createCustomizableLunaticField(CheckboxGroupEdt, "CheckboxGroupEdt");

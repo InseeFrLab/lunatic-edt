@@ -5,10 +5,9 @@ import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
 import React, { memo, useCallback, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
+import { TimepickerSpecificProps } from "interface";
 
 export type DatepickerProps = {
-    disabled?: boolean;
-    readOnly?: boolean;
     value?: string;
     onChange(value: string | null): void;
     labelId?: string;
@@ -17,10 +16,11 @@ export type DatepickerProps = {
     id?: string;
     min?: string;
     max?: string;
+    componentSpecificProps?: TimepickerSpecificProps;
 };
 
 const Datepicker = memo((props: DatepickerProps) => {
-    const { id, onChange, value, readOnly, disabled, label, labelId, tipsLabel } = props;
+    const { id, onChange, value, label, labelId, tipsLabel, componentSpecificProps } = props;
     const { classes } = useStyles();
     const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
 
@@ -46,8 +46,8 @@ const Datepicker = memo((props: DatepickerProps) => {
                 <LocalizationProvider adapterLocale={"fr"} dateAdapter={AdapterDayjs}>
                     <DatePicker
                         key={id}
-                        disabled={disabled}
-                        readOnly={readOnly}
+                        disabled={!componentSpecificProps?.modifiable}
+                        readOnly={!componentSpecificProps?.modifiable}
                         openTo="day"
                         views={["day"]}
                         value={valueLocal}

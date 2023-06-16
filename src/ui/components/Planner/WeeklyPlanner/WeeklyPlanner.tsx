@@ -82,6 +82,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         expandMoreWhiteIcon,
         workIcon,
         workIconAlt,
+        modifiable = true,
     } = {
         ...componentSpecificProps,
     };
@@ -242,6 +243,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                                         getFormatedWorkedSum={getFormatedWorkedSum}
                                         moreIcon={moreIcon}
                                         moreIconAlt={moreIconAlt}
+                                        modifiable={modifiable}
                                     ></DayPlanner>
                                 ))}
                             </List>
