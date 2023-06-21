@@ -20,6 +20,7 @@ export type ActivityTimeProps = {
     id?: string;
     responses: { response: { [name: string]: string } }[];
     componentSpecificProps?: TimepickerSpecificProps;
+    variables: Map<string, any>;
 };
 
 const ActivityTime = memo((props: ActivityTimeProps) => {
@@ -30,12 +31,17 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
         readOnly,
         disabled,
         label,
-        value,
         startTimeLabel,
         endTimeLabel,
         componentSpecificProps,
+        variables,
     } = props;
     const { classes } = useStyles();
+
+    const value = {
+        START_TIME: variables.get("START_TIME"),
+        END_TIME: variables.get("END_TIME"),
+    };
 
     const computeStartTime = (
         activities: Activity[] | undefined,

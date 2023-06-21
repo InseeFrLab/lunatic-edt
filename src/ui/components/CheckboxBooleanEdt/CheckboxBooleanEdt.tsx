@@ -15,14 +15,26 @@ export type CheckboxBooleanEdtProps = {
     handleChange(response: { [name: string]: string }, value: any): void;
     response: { [name: string]: string };
     componentSpecificProps: CheckboxBooleanEdtSpecificProps;
+    bindingDependencies: string[];
+    variables: Map<string, any>;
 };
 
 const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
-    const { id, label, disabled, value, className, handleChange, response, componentSpecificProps } =
-        props;
+    let {
+        id,
+        label,
+        disabled,
+        value,
+        className,
+        handleChange,
+        response,
+        componentSpecificProps,
+        bindingDependencies,
+        variables,
+    } = props;
     const { classes, cx } = useStyles();
 
-    const {
+    let {
         backClickEvent,
         nextClickEvent,
         backClickCallback,
@@ -34,6 +46,8 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
     } = {
         ...componentSpecificProps,
     };
+
+    value = variables.get(bindingDependencies[0]);
 
     const [localValue, setLocalValue] = React.useState(value);
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
@@ -49,6 +63,7 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
             next(false, setDisplayAlert, nextClickCallback);
         }
     }, [nextClickEvent]);
+
     const handleOptions = useCallback((_event: React.MouseEvent<HTMLElement>, value: any) => {
         setLocalValue(value);
 

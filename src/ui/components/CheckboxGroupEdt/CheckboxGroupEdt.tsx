@@ -16,11 +16,23 @@ export type CheckboxGroupEdtProps = {
     value: { [key: string]: boolean };
     className?: string;
     componentSpecificProps?: CheckboxGroupSpecificProps;
+    variables: Map<string, any>;
+    bindingDependencies: string[];
 };
 
 const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
-    const { id, value, responses, handleChange, componentSpecificProps, label, tipsLabel, className } =
-        props;
+    const {
+        id,
+        value,
+        responses,
+        handleChange,
+        componentSpecificProps,
+        label,
+        tipsLabel,
+        className,
+        bindingDependencies,
+        variables,
+    } = props;
 
     const {
         backClickEvent,
@@ -34,6 +46,9 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
     } = {
         ...componentSpecificProps,
     };
+    bindingDependencies.forEach((bindingDependency: string) => {
+        value[bindingDependency] = variables.get(bindingDependency);
+    });
 
     const { classes, cx } = useStyles({ "modifiable": modifiable });
 
