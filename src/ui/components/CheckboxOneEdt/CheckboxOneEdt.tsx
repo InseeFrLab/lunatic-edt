@@ -18,10 +18,11 @@ export type CheckboxOneProps = {
     bindingDependencies: string[];
     className?: string;
     componentSpecificProps: CheckboxOneSpecificProps;
+    variables: Map<string, any>;
 };
 
 const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
-    const {
+    let {
         id,
         value,
         label,
@@ -31,6 +32,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         response,
         bindingDependencies,
         componentSpecificProps,
+        variables,
     } = props;
     const {
         backClickEvent,
@@ -45,6 +47,8 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     } = {
         ...componentSpecificProps,
     };
+    value = variables.get(bindingDependencies[0]);
+
     const { classes, cx } = useStyles({ "modifiable": modifiable });
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(value ?? undefined);
     const [isSubchildDisplayed, setIsSubchildDisplayed] = React.useState<boolean>(false);

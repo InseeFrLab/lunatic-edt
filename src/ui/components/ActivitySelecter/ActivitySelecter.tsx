@@ -42,6 +42,8 @@ type ActivitySelecterProps = {
     ];
     label: string;
     value: { [key: string]: string | boolean };
+    variables: Map<string, any>;
+    bindingDependencies: string[];
 };
 
 export enum FullScreenComponent {
@@ -51,7 +53,18 @@ export enum FullScreenComponent {
 }
 
 const ActivitySelecter = memo((props: ActivitySelecterProps) => {
-    let { handleChange, componentSpecificProps, responses, label, value } = props;
+    let {
+        handleChange,
+        componentSpecificProps,
+        responses,
+        label,
+        value,
+        bindingDependencies,
+        variables,
+    } = props;
+    bindingDependencies.forEach((bindingDependency: string) => {
+        value[bindingDependency] = variables.get(bindingDependency);
+    });
 
     const idBindingDep = responses[0].response;
     const suggesterIdBindingDep = responses[1].response;

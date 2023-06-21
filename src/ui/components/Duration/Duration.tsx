@@ -14,6 +14,8 @@ export type DurationProps = {
     minLabel?: string;
     response: { [name: string]: string };
     componentSpecificProps?: TimepickerSpecificProps;
+    variables: Map<string, any>;
+    bindingDependencies: string[];
 };
 
 const enum DurationEnum {
@@ -32,7 +34,7 @@ const getNumElements = (typeDuration: string) => {
 };
 
 const Duration = memo((props: DurationProps) => {
-    const {
+    let {
         handleChange,
         value,
         label,
@@ -41,10 +43,13 @@ const Duration = memo((props: DurationProps) => {
         minLabel,
         response,
         componentSpecificProps,
+        variables,
+        bindingDependencies,
     } = props;
 
-    const { classes } = useStyles();
+    value = variables.get(bindingDependencies[0]);
 
+    const { classes } = useStyles();
     const [hour, setHour] = React.useState("");
     const [minutes, setMinutes] = React.useState("");
 

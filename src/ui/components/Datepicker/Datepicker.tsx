@@ -20,7 +20,7 @@ export type DatepickerProps = {
 };
 
 const Datepicker = memo((props: DatepickerProps) => {
-    const { id, onChange, value, label, labelId, tipsLabel, componentSpecificProps } = props;
+    let { id, onChange, value, label, labelId, tipsLabel, componentSpecificProps } = props;
     const { classes } = useStyles();
     const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
 

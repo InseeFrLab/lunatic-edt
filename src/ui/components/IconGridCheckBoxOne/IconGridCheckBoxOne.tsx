@@ -15,10 +15,21 @@ type IconGridCheckBoxOneProps = {
     label: string;
     options: CheckboxOneCustomOption[];
     value: string;
+    variables: Map<string, any>;
+    bindingDependencies: string[];
 };
 
 const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
-    const { handleChange, componentSpecificProps, response, label, options, value } = props;
+    let {
+        handleChange,
+        componentSpecificProps,
+        response,
+        label,
+        options,
+        value,
+        variables,
+        bindingDependencies,
+    } = props;
     const {
         optionsIcons,
         backClickEvent,
@@ -30,6 +41,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         onSelectValue,
         modifiable = true,
     } = { ...componentSpecificProps };
+    value = variables.get(bindingDependencies[0]);
 
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
     let selectedValue: string | undefined = value;
