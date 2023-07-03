@@ -9,7 +9,7 @@ type AlertProps = {
     labels: {
         boldContent?: string;
         content: string;
-        cancel: string;
+        cancel: string | undefined;
         complete: string;
     };
     icon: string;
@@ -19,6 +19,21 @@ type AlertProps = {
 const Alert = memo((props: AlertProps) => {
     const { isAlertDisplayed, onCompleteCallBack, onCancelCallBack, labels, icon, errorIconAlt } = props;
     const { classes, cx } = useStyles();
+
+    const renderCancelButton = () => {
+        return (
+            labels.cancel && (
+                <Button
+                    className={classes.cancelButton}
+                    variant="outlined"
+                    onClick={() => onCancelCallBack(true)}
+                    id={"button-cancel"}
+                >
+                    {labels.cancel}
+                </Button>
+            )
+        );
+    };
 
     return (
         <>
@@ -42,14 +57,7 @@ const Alert = memo((props: AlertProps) => {
                             <Typography>{labels.content}</Typography>
                         </Box>
                         <Box className={classes.boxEvenly}>
-                            <Button
-                                className={classes.cancelButton}
-                                variant="outlined"
-                                onClick={() => onCancelCallBack(true)}
-                                id={"button-cancel"}
-                            >
-                                {labels.cancel}
-                            </Button>
+                            {renderCancelButton()}
                             <Button
                                 variant="contained"
                                 onClick={onCompleteCallBack}
