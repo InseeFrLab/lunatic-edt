@@ -66,12 +66,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         value[bindingDependency] = variables.get(bindingDependency);
     });
 
-    const idBindingDep = responses[0].response;
-    const suggesterIdBindingDep = responses[1].response;
-    const labelBindingDep = responses[2].response;
-    const isFullyCompletedBindingDep = responses[3].response;
-    const historyInputSuggesterDep = responses[4].response;
-    const historyActivitySelecterBindingDep = responses[5].response;
+    const idBindingDep = responses?.[0]?.response;
+    const suggesterIdBindingDep = responses?.[1]?.response;
+    const labelBindingDep = responses?.[2]?.response;
+    const isFullyCompletedBindingDep = responses?.[3]?.response;
+    const historyInputSuggesterDep = responses?.[4]?.response;
+    const historyActivitySelecterBindingDep = responses?.[5]?.response;
 
     let {
         backClickEvent,
@@ -247,6 +247,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         appendHistoryActivitySelecter(ActivitySelecterNavigationEnum.ADD_ACTIVITY_BUTTON);
         setFullScreenComponent(FullScreenComponent.FreeInput);
         setCreateActivityValue(activityLabel);
+        setNewValue(activityLabel);
     };
 
     const clickableListOnChange = (id: string | undefined, historyInputSuggester?: string) => {
