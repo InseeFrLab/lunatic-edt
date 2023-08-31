@@ -3,7 +3,11 @@ import { Box } from "@mui/system";
 import { WeeklyPlannerSpecificProps } from "interface";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
+import {
+    DayDetailType,
+    IODataStructure,
+    WeeklyPlannerDataType,
+} from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
 import {
     formateDateToFrenchFormat,
@@ -23,7 +27,6 @@ import {
     transformToIODataStructure,
     transformToWeeklyPlannerDataType,
 } from "./utils";
-
 export type WeeklyPlannerProps = {
     handleChange(response: { [name: string]: string }, value: IODataStructure[]): void;
     value: IODataStructure[];
@@ -113,9 +116,23 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         setDisplayedDayHeader(formateDateLabel(dayOverviewSelectedDate));
     }, [dayOverviewSelectedDate]);
 
+    const getTempProv = () => {
+        if (localStorage.getItem("temp-" + dayOverviewSelectedDate.getTime())) {
+            const temp = localStorage.getItem("temp-" + dayOverviewSelectedDate.getTime());
+            if (temp) {
+                const temp2 = temp.split(",").map(t => {
+                    const weeklyData = stringToweeklyplannerdata(t);
+                    return weeklyData;
+                });
+                return temp2;
+            }
+        }
+        return data ? [...data] : [];
+    };
+
     // Complete activity data with default values for all days of the week if it was not the case in data input
     useEffect(() => {
-        const temp: WeeklyPlannerDataType[] = data ? [...data] : [];
+        const temp: WeeklyPlannerDataType[] = getTempProv(); //data ? [...data] : [];
         dayList.forEach(date => {
             let dayBloc: WeeklyPlannerDataType | undefined = temp.find(
                 d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
@@ -138,8 +155,49 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
 
         setActivityData(clearedTemp);
         const toStore = transformToIODataStructure(clearedTemp);
-        handleChange({ name: "WEEKLYPLANNER" }, toStore);
+
+        if (localStorage.getItem("temp-" + dayOverviewSelectedDate.getTime())) {
+            const temp = localStorage.getItem("temp-" + dayOverviewSelectedDate.getTime());
+            if (temp) {
+                const temp2 = temp.split(",").map(t => {
+                    const weeklyData = stringToweeklyplannerdata(t);
+                    return weeklyData;
+                });
+
+                if (activityData.toString() != temp) {
+                    const toStore = transformToIODataStructure(temp2);
+                    handleChange({ name: "WEEKLYPLANNER" }, toStore);
+                }
+            }
+        } else {
+            handleChange({ name: "WEEKLYPLANNER" }, toStore);
+        }
     }, []);
+
+    const stringToweeklyplannerdata = (data: string) => {
+        const dataArray = data.split(";");
+
+        const splitDetails = dataArray[2].slice(1, dataArray[2].length - 1).split(",");
+
+        const details: DayDetailType[] = splitDetails.map(sD => {
+            const splitDetail = sD.split("-");
+            const duration = Number(splitDetail[2]);
+            const details: DayDetailType = {
+                start: splitDetail[0],
+                end: splitDetail[1],
+                duration: duration,
+            };
+            return details;
+        });
+
+        let weeklyData: WeeklyPlannerDataType = {
+            date: dataArray[0],
+            day: dataArray[1],
+            detail: splitDetails.length > 0 ? details : [],
+            hasBeenStarted: dataArray[3] == "true",
+        };
+        return weeklyData;
+    };
 
     useEffect(() => {
         setNeedSpinner(true);

@@ -205,7 +205,28 @@ const DayOverview = memo((props: DayOverviewProps) => {
         const toStore = transformToIODataStructure(temp);
         handleChangeData({ name: "WEEKLYPLANNER" }, toStore);
 
+        const tempString = temp.map(t => weeklyplannerdataToString(t)).toString();
+        localStorage.setItem("temp-" + date.getTime().toString(), tempString);
         setActivityData(temp);
+        return toStore;
+    };
+
+    const weeklyplannerdataToString = (data: WeeklyPlannerDataType) => {
+        return (
+            data.date +
+            ";" +
+            data.day +
+            ";" +
+            "[" +
+            data.detail
+                .map(d => {
+                    return d.start + "-" + d.end + "-" + d.duration;
+                })
+                .toString() +
+            "]" +
+            ";" +
+            data.hasBeenStarted
+        );
     };
 
     const renderRow = (h: TimeLineRowType): any => {
