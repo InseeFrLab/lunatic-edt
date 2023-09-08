@@ -36,9 +36,11 @@ export const getFrenchDayFromDate = (date: Date): string => {
 export const generateDateFromStringInput = (input: string): Date => {
     const splittedDate = input.split("-");
     const date = new Date();
-    date.setDate(Number(splittedDate[2]));
-    date.setUTCMonth(Number(splittedDate[1]) - 1, Number(splittedDate[2]));
+
+    date.setUTCDate(Number(splittedDate[2]) - 1);
+    date.setUTCMonth(Number(splittedDate[1]) - 1, Number(splittedDate[2]) - 1);
     date.setFullYear(Number(splittedDate[0]));
+
     return date;
 };
 
