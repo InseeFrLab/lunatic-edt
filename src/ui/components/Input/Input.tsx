@@ -5,7 +5,7 @@ import { makeStylesEdt } from "../../theme";
 export type InputProps = {
     id?: string;
     value?: string;
-    variables: Map<string, any>;
+    variables?: Map<string, any>;
     bindingDependencies: string[];
     disabled?: boolean;
     label?: string;
@@ -32,7 +32,7 @@ export const Input = memo((props: InputProps) => {
         onChange,
     } = props;
     const { classes } = useStyles();
-    const localValue = value ?? variables.get(bindingDependencies[0]);
+    const localValue = value ?? variables?.get(bindingDependencies[0]);
     return (
         <TextField
             id={id}
