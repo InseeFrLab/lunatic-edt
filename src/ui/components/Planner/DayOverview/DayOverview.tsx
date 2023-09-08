@@ -18,6 +18,7 @@ import { INTERVAL, transformToIODataStructure } from "../WeeklyPlanner/utils";
 
 export type DayOverviewProps = {
     date: Date;
+    surveyDate: Date;
     isDisplayed: boolean;
     rawTimeLineData: TimeLineRowType[];
     activityData: WeeklyPlannerDataType[];
@@ -92,6 +93,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
     const { classes, cx } = useStyles();
     const {
         date,
+        surveyDate,
         isDisplayed,
         rawTimeLineData,
         activityData,
@@ -206,7 +208,8 @@ const DayOverview = memo((props: DayOverviewProps) => {
         handleChangeData({ name: "WEEKLYPLANNER" }, toStore);
 
         const tempString = temp.map(t => weeklyplannerdataToString(t)).toString();
-        localStorage.setItem("temp-" + date.getTime().toString(), tempString);
+        localStorage.setItem("temp-" + surveyDate.getTime().toString(), tempString);
+        console.log("temp-" + surveyDate.getTime().toString());
         setActivityData(temp);
         return toStore;
     };

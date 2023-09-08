@@ -117,8 +117,8 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     }, [dayOverviewSelectedDate]);
 
     const getTempProv = () => {
-        if (localStorage.getItem("temp-" + dayOverviewSelectedDate.getTime())) {
-            const temp = localStorage.getItem("temp-" + dayOverviewSelectedDate.getTime());
+        if (localStorage.getItem("temp-" + startDateFormated.getTime())) {
+            const temp = localStorage.getItem("temp-" + startDateFormated.getTime());
             if (temp) {
                 const temp2 = temp.split(",").map(t => {
                     const weeklyData = stringToweeklyplannerdata(t);
@@ -155,9 +155,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
 
         setActivityData(clearedTemp);
         const toStore = transformToIODataStructure(clearedTemp);
+        console.log("temp-" + startDateFormated.getTime());
 
-        if (localStorage.getItem("temp-" + dayOverviewSelectedDate.getTime())) {
-            const temp = localStorage.getItem("temp-" + dayOverviewSelectedDate.getTime());
+        if (localStorage.getItem("temp-" + startDateFormated.getTime())) {
+            const temp = localStorage.getItem("temp-" + startDateFormated.getTime());
             if (temp) {
                 const temp2 = temp.split(",").map(t => {
                     const weeklyData = stringToweeklyplannerdata(t);
@@ -166,10 +167,12 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
 
                 if (activityData.toString() != temp) {
                     const toStore = transformToIODataStructure(temp2);
+                    console.log(toStore);
                     handleChange({ name: "WEEKLYPLANNER" }, toStore);
                 }
             }
         } else {
+            console.log(toStore);
             handleChange({ name: "WEEKLYPLANNER" }, toStore);
         }
     }, []);
@@ -226,6 +229,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         return (
             <DayOverview
                 isDisplayed={true}
+                surveyDate={startDateFormated}
                 date={dayOverviewSelectedDate}
                 rawTimeLineData={generateDayOverviewTimelineRawData()}
                 activityData={activityData}
@@ -254,6 +258,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 <DayOverview
                     isDisplayed={isSubChildDisplayed}
                     date={dayOverviewSelectedDate}
+                    surveyDate={startDateFormated}
                     rawTimeLineData={generateDayOverviewTimelineRawData()}
                     activityData={activityData}
                     setActivityData={setActivityData}
