@@ -99,10 +99,10 @@ export const transformToIODataStructure = (data: WeeklyPlannerDataType[]): IODat
     console.log(data);
     for (let i = 0; i < 7; i++) {
         const dayKey = `dateJ${i + 1}`;
-        result.push({ [dayKey]: data[i].date });
+        result.push({ [dayKey]: data[i]?.date });
         const dayStarted = `${dayKey}${DAY_TIME_SEPARATOR}${STARTED_LABEL}`;
-        result.push({ [dayStarted]: data[i].hasBeenStarted.toString() });
-        data[i].detail.forEach(d => {
+        result.push({ [dayStarted]: data[i]?.hasBeenStarted.toString() });
+        data[i]?.detail.forEach(d => {
             const time: Date = new Date();
             const splittedTime = d.start.split("h");
             time.setHours(Number(splittedTime[0]));

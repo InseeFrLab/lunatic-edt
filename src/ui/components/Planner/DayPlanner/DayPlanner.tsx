@@ -146,12 +146,6 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         } else {
             return (
                 <Box className={classes.buttonBox}>
-                    <Box className={classes.textBox}>
-                        <Typography className={classes.workTimeText}>
-                            {workSumLabel}
-                            <span className={classes.bold}>{getFormatedWorkedSum(workedHoursSum)}</span>
-                        </Typography>
-                    </Box>
                     <Button
                         className={cx(classes.button, classes.buttonFuture)}
                         onClick={buttonsOnClick}

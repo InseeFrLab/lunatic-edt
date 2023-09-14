@@ -96,14 +96,14 @@ describe("weeklyPlannerComponent", () => {
     });
 
     it("renders DayPlanner items with correct DayRelativeTime", () => {
-        expect(screen.getAllByText(workSumLabel)).toHaveLength(3);
+        expect(screen.getAllByText(workSumLabel)).toHaveLength(4);
         expect(screen.getAllByText(presentButtonLabel)).toHaveLength(1);
-        expect(screen.getAllByText(futureButtonLable)).toHaveLength(4);
+        expect(screen.getAllByText(futureButtonLable)).toHaveLength(3);
     });
 
     it("renders title and items with date current", () => {
         expect(screen.getByText(title)).toBeInTheDocument();
-        expect(screen.getAllByText(workSumLabel)).toHaveLength(3);
+        expect(screen.getAllByText(workSumLabel)).toHaveLength(4);
     });
 
     it("renders (non)selected hours and update them", async () => {
@@ -113,6 +113,7 @@ describe("weeklyPlannerComponent", () => {
         userEvent.click(screen.getByText(presentButtonLabel));
 
         await waitFor(() => expect(setIsSubChildDisplayed).toHaveBeenCalledTimes(1));
+        userEvent.click(screen.getAllByLabelText("hournotselected")[0]);
 
         expect(await screen.findAllByLabelText("hournotselected")).toHaveLength(92);
         expect(await screen.findAllByLabelText("hourselected")).toHaveLength(4);
@@ -142,6 +143,10 @@ describe("weeklyPlannerFunctions", () => {
         { "dateJ4_started": "true" },
         { "dateJ5": "2023-1-14" },
         { "dateJ5_started": "true" },
+        { "dateJ6": "2023-1-15" },
+        { "dateJ6_started": "true" },
+        { "dateJ7": "2023-1-16" },
+        { "dateJ7_started": "true" },
     ];
 
     const WeeklyPlannerData: WeeklyPlannerDataType[] = [
@@ -192,6 +197,18 @@ describe("weeklyPlannerFunctions", () => {
             day: "samedi",
             detail: [],
         },
+        {
+            hasBeenStarted: true,
+            date: "2023-1-15",
+            day: "dimanche",
+            detail: [],
+        },
+        {
+            hasBeenStarted: true,
+            date: "2023-1-16",
+            day: "lundi",
+            detail: [],
+        },
     ];
 
     it("transform to weekly planner type", () => {
@@ -199,6 +216,7 @@ describe("weeklyPlannerFunctions", () => {
     });
 
     it("transform to IO data structure", () => {
+        console.log(WeeklyPlannerData);
         expect(transformToIODataStructure(WeeklyPlannerData)).toEqual(IOData);
     });
 });
