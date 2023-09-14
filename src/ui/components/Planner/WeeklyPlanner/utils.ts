@@ -51,7 +51,7 @@ export const transformToWeeklyPlannerDataType = (
     input &&
         input.length > 1 &&
         input.forEach(i => {
-            const key = Object.keys(i)[0];
+            const key = Object.keys(i)?.[0];
             const value = Object.values(i)[0];
             if (!key.includes(DAY_TIME_SEPARATOR)) {
                 currentDay = keyWithoutSeparator(currentDetail, currentDay, value, language);
