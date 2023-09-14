@@ -96,7 +96,8 @@ export const transformToWeeklyPlannerDataType = (
 
 export const transformToIODataStructure = (data: WeeklyPlannerDataType[]): IODataStructure[] => {
     const result: IODataStructure[] = [];
-    for (let i = 0; i < data.length; i++) {
+    console.log(data);
+    for (let i = 0; i < 7; i++) {
         const dayKey = `dateJ${i + 1}`;
         result.push({ [dayKey]: data[i].date });
         const dayStarted = `${dayKey}${DAY_TIME_SEPARATOR}${STARTED_LABEL}`;

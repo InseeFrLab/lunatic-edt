@@ -1,5 +1,5 @@
 import { Box, List, Typography } from "@mui/material";
-import { InfoProps } from "interface";
+import { InfoProps, responseType } from "interface";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
@@ -22,7 +22,7 @@ export type DayOverviewProps = {
     rawTimeLineData: TimeLineRowType[];
     activityData: WeeklyPlannerDataType[];
     setActivityData(data: WeeklyPlannerDataType[]): void;
-    handleChangeData(response: { [name: string]: string }, value: IODataStructure[]): void;
+    handleChangeData(value: IODataStructure[]): void;
     infoLabels: InfoProps;
     workSumLabel: string;
     workedHoursSum: number;
@@ -36,6 +36,7 @@ export type DayOverviewProps = {
     expandMoreWhiteIcon: string;
     workIcon: string;
     workIconAlt: string;
+    handleChange(response: responseType, value: IODataStructure[]): void;
 };
 
 /**
@@ -97,6 +98,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
         activityData,
         setActivityData,
         handleChangeData,
+        handleChange,
         infoLabels,
         workSumLabel,
         workedHoursSum,
@@ -114,6 +116,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
     const [timeLineData, setTimeLineData] = React.useState<TimeLineRowType[]>(rawTimeLineData);
+    const [initStore, setInitStore] = React.useState<IODataStructure[]>([]);
 
     // Update timeLineData for HourCheckers from activityData
     useEffect(() => {
@@ -201,11 +204,12 @@ const DayOverview = memo((props: DayOverviewProps) => {
         }
 
         dayBloc.detail = details;
-
+        console.log(temp);
         const toStore = transformToIODataStructure(temp);
-        handleChangeData({ name: "WEEKLYPLANNER" }, toStore);
-
+        //handleChangeData({ name: "WEEKLYPLANNER" }, toStore);
+        handleChangeData(toStore);
         setActivityData(temp);
+        setInitStore(toStore);
     };
 
     const renderRow = (h: TimeLineRowType): any => {
@@ -249,6 +253,8 @@ const DayOverview = memo((props: DayOverviewProps) => {
                     expandMoreWhiteIcon={expandMoreWhiteIcon}
                     workIcon={workIcon}
                     workIconAlt={workIconAlt}
+                    store={initStore}
+                    handleChangeData={handleChange}
                 />
             </Box>
         );

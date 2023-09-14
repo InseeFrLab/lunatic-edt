@@ -3,6 +3,7 @@ import { HourCheckerOption } from "interface/HourCheckerOptions";
 import React, { memo, useCallback, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
+import { IODataStructure } from "interface/WeeklyPlannerTypes";
 
 export type HourCheckerProps = {
     handleChange?(response: { [name: string]: string }, value: boolean): void;
@@ -19,6 +20,8 @@ export type HourCheckerProps = {
     expandMoreWhiteIcon: string;
     workIcon: string;
     workIconAlt: string;
+    handleChangeData(response: { [name: string]: string }, value: IODataStructure[]): void;
+    store: IODataStructure[];
 };
 
 const getSelectAllValue = (value: { [key: string]: boolean }, responsesValues: string[]): boolean => {
@@ -81,6 +84,8 @@ const HourChecker = memo((props: HourCheckerProps) => {
         expandMoreWhiteIcon,
         workIcon,
         workIconAlt,
+        handleChangeData,
+        store,
     } = props;
     const [isOpen, setIsOpen] = React.useState(false);
 
@@ -115,6 +120,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
                 handleChange({ name: name }, value[name]);
             });
         }
+        console.log(responsesValues);
     };
 
     return (
