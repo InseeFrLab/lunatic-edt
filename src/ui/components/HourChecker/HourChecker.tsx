@@ -84,8 +84,6 @@ const HourChecker = memo((props: HourCheckerProps) => {
         expandMoreWhiteIcon,
         workIcon,
         workIconAlt,
-        handleChangeData,
-        store,
     } = props;
     const [isOpen, setIsOpen] = React.useState(false);
 

@@ -1,6 +1,6 @@
 import { CircularProgress, List } from "@mui/material";
 import { Box } from "@mui/system";
-import { WeeklyPlannerSpecificProps, responseType, responsesType } from "interface";
+import { WeeklyPlannerSpecificProps, responseType } from "interface";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
@@ -129,7 +129,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const [activityData, setActivityData] = React.useState<WeeklyPlannerDataType[]>([]);
     const [needSpinner, setNeedSpinner] = React.useState<boolean>(true);
     const [dataCopy, setDataCopy] = React.useState<IODataStructure[]>([]);
-    const [initStore, setInitStore] = React.useState<IODataStructure[]>([]);
 
     const formateDateLabel = (date: Date): string => {
         const formatedDate = formateDateToFrenchFormat(date, language);
