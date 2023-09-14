@@ -1,12 +1,13 @@
 import { Box, Button, CircularProgress, Popover, Typography } from "@mui/material";
 import React, { useCallback, useEffect } from "react";
-import { WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
+import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
 import {
     formateDateToFrenchFormat,
     generateDateFromStringInput,
     setDateTimeToZero,
 } from "../../../utils";
+import { responseType } from "interface";
 
 export type DayPlannerProps = {
     date: Date;
@@ -23,6 +24,8 @@ export type DayPlannerProps = {
     moreIcon: string;
     moreIconAlt: string;
     modifiable?: boolean;
+    dataCopy: IODataStructure[];
+    handleChange(response: responseType, value: IODataStructure[]): void;
 };
 
 enum DayRelativeTimeEnum {
@@ -67,11 +70,13 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         moreIcon,
         moreIconAlt,
         modifiable = true,
+        dataCopy,
+        handleChange,
     } = props;
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
     const [workedHoursSum, setWorkedHoursSum] = React.useState<number>(0);
-    const [hasBeenStarted, setHasBeenStarted] = React.useState<boolean>();
+    const [hasBeenStarted, setHasBeenStarted] = React.useState<boolean>(false);
 
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
     const openPopOver = Boolean(anchorEl);
@@ -90,7 +95,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         )[0];
         const sum: number = dayBloc?.detail.reduce((acc, val) => acc + val.duration, 0);
         setWorkedHoursSum(sum);
-        setHasBeenStarted(dayBloc?.hasBeenStarted);
+        setHasBeenStarted(dayBloc?.hasBeenStarted ?? false);
     }, [activityData]);
 
     /**
@@ -98,6 +103,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
      */
     const buttonsOnClick = useCallback((): void => {
         const temp = [...activityData];
+        console.log(activityData);
         const dayBloc: WeeklyPlannerDataType = temp.filter(
             d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
         )[0];
@@ -106,6 +112,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
 
         setDisplayDayOverview(true);
         setDayOverviewSelectedDate(date);
+        handleChange({ name: "WEEKLYPLANNER" }, dataCopy);
     }, []);
 
     const renderBottomPart = () => {

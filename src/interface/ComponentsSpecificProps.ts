@@ -1,6 +1,7 @@
 import { AutoCompleteActiviteOption, NomenclatureActivityOption } from "./ActivityTypes";
 import { CheckboxOneCustomOption } from "./CheckboxOptions";
 import { Activity } from "./TimepickerTypes";
+import { IODataStructure } from "./WeeklyPlannerTypes";
 
 export type ActivityLabelProps = {
     selectInCategory: string;
@@ -45,7 +46,7 @@ export type WeeklyPlannerSpecificProps = {
         editButtonLabel?: string;
         infoLabels: InfoProps;
     };
-    saveAll(): void;
+    saveAll(data: IODataStructure[]): void;
     language: string;
     helpStep?: number;
     moreIcon: string;
