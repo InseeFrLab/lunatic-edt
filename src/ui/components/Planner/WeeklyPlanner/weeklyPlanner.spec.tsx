@@ -96,14 +96,14 @@ describe("weeklyPlannerComponent", () => {
     });
 
     it("renders DayPlanner items with correct DayRelativeTime", () => {
-        expect(screen.getAllByText(workSumLabel)).toHaveLength(4);
+        expect(screen.getAllByText(workSumLabel)).toHaveLength(3);
         expect(screen.getAllByText(presentButtonLabel)).toHaveLength(1);
-        expect(screen.getAllByText(futureButtonLable)).toHaveLength(3);
+        expect(screen.getAllByText(futureButtonLable)).toHaveLength(4);
     });
 
     it("renders title and items with date current", () => {
         expect(screen.getByText(title)).toBeInTheDocument();
-        expect(screen.getAllByText(workSumLabel)).toHaveLength(4);
+        expect(screen.getAllByText(workSumLabel)).toHaveLength(3);
     });
 
     it("renders (non)selected hours and update them", async () => {
@@ -115,8 +115,8 @@ describe("weeklyPlannerComponent", () => {
         await waitFor(() => expect(setIsSubChildDisplayed).toHaveBeenCalledTimes(1));
         userEvent.click(screen.getAllByLabelText("hournotselected")[0]);
 
-        expect(await screen.findAllByLabelText("hournotselected")).toHaveLength(92);
-        expect(await screen.findAllByLabelText("hourselected")).toHaveLength(4);
+        expect(await screen.findAllByLabelText("hournotselected")).toHaveLength(88);
+        expect(await screen.findAllByLabelText("hourselected")).toHaveLength(8);
     });
 
     it("updates ProgressBar label", () => {
