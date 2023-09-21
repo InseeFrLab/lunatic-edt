@@ -204,9 +204,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
         }
 
         dayBloc.detail = details;
-        console.log(temp);
         const toStore = transformToIODataStructure(temp);
-        //handleChangeData({ name: "WEEKLYPLANNER" }, toStore);
         handleChangeData(toStore);
         setActivityData(temp);
         setInitStore(toStore);
@@ -234,7 +232,6 @@ const DayOverview = memo((props: DayOverviewProps) => {
                 "6h0": false,
             };
         }
-
         return (
             <Box className={cx(classes.rowContainer, helpPage ? classes.helpRow : "")} key={uuidv4()}>
                 <Box className={classes.rowLabel}>

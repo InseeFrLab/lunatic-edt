@@ -103,7 +103,6 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
      */
     const buttonsOnClick = useCallback((): void => {
         const temp = [...activityData];
-        console.log(activityData);
         const dayBloc: WeeklyPlannerDataType = temp.filter(
             d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
         )[0];

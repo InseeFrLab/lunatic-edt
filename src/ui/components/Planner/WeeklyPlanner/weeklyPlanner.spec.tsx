@@ -216,7 +216,6 @@ describe("weeklyPlannerFunctions", () => {
     });
 
     it("transform to IO data structure", () => {
-        console.log(WeeklyPlannerData);
         expect(transformToIODataStructure(WeeklyPlannerData)).toEqual(IOData);
     });
 });
