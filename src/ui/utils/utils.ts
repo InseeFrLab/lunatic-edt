@@ -38,9 +38,8 @@ export const generateDateFromStringInput = (input: string): Date => {
     const date = new Date();
 
     date.setUTCDate(Number(splittedDate[2]));
-    date.setUTCMonth(Number(splittedDate[1]) - 1, Number(splittedDate[2]) - 1);
+    date.setUTCMonth(Number(splittedDate[1]) - 1, Number(splittedDate[2]));
     date.setFullYear(Number(splittedDate[0]));
-
     return date;
 };
 
