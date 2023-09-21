@@ -96,7 +96,6 @@ export const transformToWeeklyPlannerDataType = (
 
 export const transformToIODataStructure = (data: WeeklyPlannerDataType[]): IODataStructure[] => {
     const result: IODataStructure[] = [];
-    console.log(data);
     for (let i = 0; i < 7; i++) {
         const dayKey = `dateJ${i + 1}`;
         result.push({ [dayKey]: data[i]?.date });

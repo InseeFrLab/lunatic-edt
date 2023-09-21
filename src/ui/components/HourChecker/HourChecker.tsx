@@ -118,7 +118,6 @@ const HourChecker = memo((props: HourCheckerProps) => {
                 handleChange({ name: name }, value[name]);
             });
         }
-        console.log(responsesValues);
     };
 
     return (
