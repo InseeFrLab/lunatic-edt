@@ -10,7 +10,6 @@ import { TimepickerSpecificProps } from "interface";
 export type DatepickerProps = {
     value?: string;
     onChange(value: string | null): void;
-    labelId?: string;
     label?: string;
     tipsLabel?: string;
     id?: string;
@@ -20,7 +19,7 @@ export type DatepickerProps = {
 };
 
 const Datepicker = memo((props: DatepickerProps) => {
-    let { id, onChange, value, label, labelId, tipsLabel, componentSpecificProps } = props;
+    let { id, onChange, value, tipsLabel, componentSpecificProps } = props;
     const { classes } = useStyles();
     const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
 
@@ -51,7 +50,6 @@ const Datepicker = memo((props: DatepickerProps) => {
                         openTo="day"
                         views={["day"]}
                         value={valueLocal}
-                        label={label ?? labelId}
                         onChange={useCallback(newValue => {
                             setValueLunatic(newValue);
                         }, [])}

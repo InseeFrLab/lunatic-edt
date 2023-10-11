@@ -4,7 +4,7 @@ import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../theme";
-import { important } from "../../utils";
+import { important, isUUID } from "../../utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Alert from "../Alert";
 
@@ -74,6 +74,13 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         (_event: React.MouseEvent<HTMLElement>, selectedOption: string) => {
             setCurrentOption(selectedOption);
             handleChange(response, selectedOption);
+            const listOptions = componentSpecificProps?.options ?? options;
+            const optSelected = listOptions.find(opt => opt.value == selectedOption);
+            if (isUUID(selectedOption) && optSelected) {
+                handleChange({ "name": bindingDependencies[0] }, optSelected.value);
+                handleChange({ "name": bindingDependencies[1] }, optSelected.label);
+            }
+
             if (onSelectValue && selectedOption != null) {
                 onSelectValue();
             }
