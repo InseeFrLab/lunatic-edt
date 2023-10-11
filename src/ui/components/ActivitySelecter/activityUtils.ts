@@ -338,6 +338,7 @@ export const updateNewValue = (
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
 ) => {
     onChange(true, undefined, undefined, value);
+    if (value) localStorage.setItem("selectionValue - label", value);
     inputValue = value;
 };
 
