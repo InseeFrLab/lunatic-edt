@@ -100,18 +100,25 @@ export const processActivityCategory = (
 ) => {
     const hasId: boolean = parsedValue.id != null;
     const hasLabel: boolean = parsedValue.label != null;
-
-    if (hasId && !hasLabel && value && categoriesAndActivitesNomenclature) {
+    if (hasId && value && categoriesAndActivitesNomenclature) {
         setSelectedId(parsedValue.id);
+        localStorage.setItem("selectedIdNewActivity", parsedValue?.id ?? "");
         const res = findItemInCategoriesNomenclature(parsedValue.id, categoriesAndActivitesNomenclature);
         const resParent = getParentFromSearchResult(res);
         const resItem = getItemFromSearchResult(res);
         const isFullyCompleted: boolean = parsedValue.isFullyCompleted;
-
         if (isFullyCompleted) {
             setSelectedCategories(resParent);
         } else {
             setSelectedCategories(resItem);
+        }
+
+        if (hasLabel && resItem) {
+            const findItem = resItem[0]?.subs?.find(opt => opt.label == parsedValue.label);
+            if (findItem) {
+                setSelectedId(findItem?.id);
+                localStorage.setItem("selectedIdNewActivity", findItem.id);
+            }
         }
     }
 };
@@ -153,7 +160,10 @@ export const processNewActivity = (
                 parsedValue.id,
                 categoriesAndActivitesNomenclature,
             );
-            const resItem = res?.item ? [res?.item] : [];
+            let resItem = res?.item ? [res?.item] : [];
+            if (parsedValue.label != null && parsedValue.isFullyCompleted) {
+                resItem = res?.parent ? [res?.parent] : [];
+            }
             setSelectedCategories(resItem);
         }
     }
