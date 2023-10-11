@@ -239,8 +239,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         };
         const label = selection.label ?? localStorage.getItem("selectionValue - label") ?? undefined;
         const idSelected = selection.id ?? localStorage.getItem("selectedIdNewActivity") ?? undefined;
-        
-        if(idSelected !=null) handleChange(idBindingDep, idSelected);
+
+        if (idSelected != null) handleChange(idBindingDep, idSelected);
         handleChange(suggesterIdBindingDep, newItemId.current);
         handleChange(labelBindingDep, label);
         handleChange(isFullyCompletedBindingDep, selection.isFullyCompleted);
