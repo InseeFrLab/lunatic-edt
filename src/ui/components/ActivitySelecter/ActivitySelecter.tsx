@@ -136,6 +136,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     }, [fullScreenComponent, selectedCategories]);
 
     useEffect(() => {
+        localStorage.removeItem("selectionValue - label");
+        localStorage.removeItem("selectedIdNewActivity");
+
         const parsedValue: SelectedActivity = {
             id: value[idBindingDep.name] as string,
             suggesterId: value[suggesterIdBindingDep.name] as string,
@@ -144,7 +147,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         };
         setNewValue(parsedValue.label);
         if (parsedValue.label) localStorage.setItem("selectionValue - label", parsedValue.label);
-
+        if (parsedValue.id) localStorage.setItem("selectedIdNewActivity", parsedValue.id);
         if (helpStep == 3) parsedValue.id = "100";
         setSelectRank1Category(findRank1Category(parsedValue, categoriesAndActivitesNomenclature));
 
@@ -237,11 +240,11 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             isFullyCompleted: isFullyCompleted,
             historyInputSuggester: historyInputSuggester,
         };
-        const label = selection.label ?? localStorage.getItem("selectionValue - label") ?? undefined;
+        const label = selection.label; // ?? localStorage.getItem("selectionValue - label") ?? undefined;
         const idSelected = selection.id ?? localStorage.getItem("selectedIdNewActivity") ?? undefined;
 
         if (idSelected != null) handleChange(idBindingDep, idSelected);
-        handleChange(suggesterIdBindingDep, newItemId.current);
+        handleChange(suggesterIdBindingDep, label ? newItemId.current : undefined);
         handleChange(labelBindingDep, label);
         handleChange(isFullyCompletedBindingDep, selection.isFullyCompleted);
         handleChange(historyInputSuggesterDep, selection.historyInputSuggester);
@@ -1047,7 +1050,6 @@ const nextStepFreeInput = (
             routeToGoal = false;
         }
         const label = states.freeInput ?? localStorage.getItem("selectionValue - label") ?? undefined;
-
         functions.addToReferentielCallBack(
             {
                 id: newItemId,
@@ -1057,6 +1059,7 @@ const nextStepFreeInput = (
             states.selectedCategories[states.selectedCategories.length - 1]?.id,
             newItemId,
         );
+        localStorage.setItem("selectedIdNewActivity", newItemId);
 
         functions.onChange(
             true,
@@ -1216,7 +1219,7 @@ const clickAutreButton = (
     if (selectedCategories.length > 0) {
         id = selectedCategories[selectedCategories.length - 1].id;
     }
-    onChange(false, id, undefined);
+    onChange(false, id, undefined, localStorage.getItem("selectionValue - label") ?? undefined);
 };
 
 const getTextTitle = (
