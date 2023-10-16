@@ -314,7 +314,7 @@ export const activitesFiltredMap = (optionsFiltered: AutoCompleteActiviteOption[
 
 export const CreateIndex = (optionsFiltered: AutoCompleteActiviteOption[]) => {
     const optionsFilteredMap = activitesFiltredMap(optionsFiltered);
-    const [index] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
+    const [index, ] = React.useState<Index<AutoCompleteActiviteOption>>(() => {
         elasticlunr.clearStopWords();
         elasticlunr.addStopWords(stopWords);
 
