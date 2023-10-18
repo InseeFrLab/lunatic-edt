@@ -7,7 +7,11 @@ import {
 import React from "react";
 import { ActivitySelecterNavigationEnum } from "../../../enumeration/ActivitySelecterNavigationEnum";
 import stopWords from "../ClickableList//stop_words_french.json";
-import { FullScreenComponent } from "./ActivitySelecter";
+import {
+    FullScreenComponent,
+    selectedIdNewActivity,
+    selectedLabelNewActivity,
+} from "./ActivitySelecter";
 import pairSynonymes from "./synonymes-misspellings.json";
 
 /**
@@ -102,7 +106,7 @@ export const processActivityCategory = (
     const hasLabel: boolean = parsedValue.label != null;
     if (hasId && value && categoriesAndActivitesNomenclature) {
         setSelectedId(parsedValue.id);
-        localStorage.setItem("selectedIdNewActivity", parsedValue?.id ?? "");
+        localStorage.setItem(selectedIdNewActivity, parsedValue?.id ?? "");
         const res = findItemInCategoriesNomenclature(parsedValue.id, categoriesAndActivitesNomenclature);
         const resParent = getParentFromSearchResult(res);
         const resItem = getItemFromSearchResult(res);
@@ -117,7 +121,7 @@ export const processActivityCategory = (
             const findItem = resItem[0]?.subs?.find(opt => opt.label == parsedValue.label);
             if (findItem) {
                 setSelectedId(findItem?.id);
-                localStorage.setItem("selectedIdNewActivity", findItem.id);
+                localStorage.setItem(selectedIdNewActivity, findItem.id);
             }
         }
     }
@@ -337,7 +341,7 @@ export const updateNewValue = (
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
 ) => {
     onChange(true, undefined, undefined, value);
-    if (value) localStorage.setItem("selectionValue - label", value);
+    if (value) localStorage.setItem(selectedLabelNewActivity, value);
     inputValue = value;
 };
 

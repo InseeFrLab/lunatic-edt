@@ -52,8 +52,8 @@ export enum FullScreenComponent {
     FreeInput,
 }
 
-const selectedIdNewActivity = "selectedIdNewActivity";
-const selectedValue = "selectionValue - label";
+export const selectedIdNewActivity = "selectedIdNewActivity";
+export const selectedLabelNewActivity = "selectionValue - label";
 
 const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     let {
@@ -139,7 +139,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     }, [fullScreenComponent, selectedCategories]);
 
     useEffect(() => {
-        localStorage.removeItem(selectedValue);
+        localStorage.removeItem(selectedLabelNewActivity);
         localStorage.removeItem(selectedIdNewActivity);
 
         const parsedValue: SelectedActivity = {
@@ -149,7 +149,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             isFullyCompleted: value[isFullyCompletedBindingDep.name] as boolean,
         };
         setNewValue(parsedValue.label);
-        if (parsedValue.label) localStorage.setItem(selectedValue, parsedValue.label);
+        if (parsedValue.label) localStorage.setItem(selectedLabelNewActivity, parsedValue.label);
         if (parsedValue.id) localStorage.setItem(selectedIdNewActivity, parsedValue.id);
         if (helpStep == 3) parsedValue.id = "100";
         setSelectRank1Category(findRank1Category(parsedValue, categoriesAndActivitesNomenclature));
@@ -243,7 +243,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             isFullyCompleted: isFullyCompleted,
             historyInputSuggester: historyInputSuggester,
         };
-        const label = selection.label; // ?? localStorage.getItem(selectedValue) ?? undefined;
+        const label = selection.label;
         const idSelected = selection.id ?? localStorage.getItem(selectedIdNewActivity) ?? undefined;
 
         if (idSelected != null) handleChange(idBindingDep, idSelected);
@@ -276,7 +276,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         setFullScreenComponent(FullScreenComponent.FreeInput);
         setCreateActivityValue(activityLabel);
         setNewValue(activityLabel);
-        localStorage.setItem(selectedValue, activityLabel);
+        localStorage.setItem(selectedLabelNewActivity, activityLabel);
     };
 
     const clickableListOnChange = (id: string | undefined, historyInputSuggester?: string) => {
@@ -1052,7 +1052,7 @@ const nextStepFreeInput = (
         if (states.selectedCategories[states.selectedCategories.length - 1]) {
             routeToGoal = false;
         }
-        const label = states.freeInput ?? localStorage.getItem(selectedValue) ?? undefined;
+        const label = states.freeInput ?? localStorage.getItem(selectedLabelNewActivity) ?? undefined;
         functions.addToReferentielCallBack(
             {
                 id: newItemId,
@@ -1222,7 +1222,7 @@ const clickAutreButton = (
     if (selectedCategories.length > 0) {
         id = selectedCategories[selectedCategories.length - 1].id;
     }
-    onChange(false, id, undefined, localStorage.getItem(selectedValue) ?? undefined);
+    onChange(false, id, undefined, localStorage.getItem(selectedLabelNewActivity) ?? undefined);
 };
 
 const getTextTitle = (

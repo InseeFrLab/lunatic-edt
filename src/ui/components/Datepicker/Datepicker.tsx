@@ -39,7 +39,7 @@ const Datepicker = memo((props: DatepickerProps) => {
                     <label>{tipsLabel}&nbsp;?</label>
                 </Box>
             )}
-            <LocalizationProvider adapterLocale={"fr"} dateAdapter={AdapterDayjs}>
+            <LocalizationProvider adapterLocale={"en"} dateAdapter={AdapterDayjs}>
                 <DatePicker
                     key={id}
                     disabled={!componentSpecificProps?.modifiable}
