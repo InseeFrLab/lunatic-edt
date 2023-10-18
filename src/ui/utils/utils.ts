@@ -1,3 +1,4 @@
+import { validate } from "uuid";
 import { TimeLineRowType } from "../../interface/DayOverviewTypes";
 
 export const important = (value: string): string => {
@@ -131,4 +132,8 @@ export const splitLabelWithParenthesis = (
         mainLabel: mainLabel,
         secondLabel: secondLabel,
     };
+};
+
+export const isUUID = (uuid: string) => {
+    return validate(uuid);
 };

@@ -10,7 +10,6 @@ import { TimepickerSpecificProps } from "interface";
 export type DatepickerProps = {
     value?: string;
     onChange(value: string | null): void;
-    labelId?: string;
     label?: string;
     tipsLabel?: string;
     id?: string;
@@ -20,63 +19,58 @@ export type DatepickerProps = {
 };
 
 const Datepicker = memo((props: DatepickerProps) => {
-    let { id, onChange, value, label, labelId, tipsLabel, componentSpecificProps } = props;
+    let { id, onChange, value, tipsLabel, componentSpecificProps } = props;
     const { classes } = useStyles();
-    const [valueLocal, setValue] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
+    const [valueLocal, setValueLocal] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
 
     useEffect(() => {
         onChange(valueLocal?.format("YYYY-MM-DD") || null);
     }, []);
 
     function setValueLunatic(newValue: Dayjs | null) {
-        setValue(newValue);
+        setValueLocal(newValue);
         onChange(newValue?.format("YYYY-MM-DD") || null);
     }
 
     return (
         <>
             {tipsLabel && (
-                <>
-                    <Box className={classes.labelSpacer}>
-                        <label>{tipsLabel}&nbsp;?</label>
-                    </Box>
-                </>
+                <Box className={classes.labelSpacer}>
+                    <label>{tipsLabel}&nbsp;?</label>
+                </Box>
             )}
-            <>
-                <LocalizationProvider adapterLocale={"fr"} dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                        key={id}
-                        disabled={!componentSpecificProps?.modifiable}
-                        readOnly={!componentSpecificProps?.modifiable}
-                        openTo="day"
-                        views={["day"]}
-                        value={valueLocal}
-                        label={label ?? labelId}
-                        onChange={useCallback(newValue => {
-                            setValueLunatic(newValue);
-                        }, [])}
-                        renderInput={useCallback(
-                            params => (
-                                <TextField
-                                    {...params}
-                                    sx={{
-                                        "& legend": { display: "none" },
-                                        "& fieldset": { top: 0 },
-                                        "& label": { display: "none" },
-                                    }}
-                                />
-                            ),
-                            [],
-                        )}
-                        componentsProps={{
-                            actionBar: {
-                                actions: ["accept"],
-                            },
-                        }}
-                        className={classes.input}
-                    />
-                </LocalizationProvider>
-            </>
+            <LocalizationProvider adapterLocale={"en"} dateAdapter={AdapterDayjs}>
+                <DatePicker
+                    key={id}
+                    disabled={!componentSpecificProps?.modifiable}
+                    readOnly={!componentSpecificProps?.modifiable}
+                    openTo="day"
+                    views={["day"]}
+                    value={valueLocal}
+                    onChange={useCallback(newValue => {
+                        setValueLunatic(newValue);
+                    }, [])}
+                    renderInput={useCallback(
+                        params => (
+                            <TextField
+                                {...params}
+                                sx={{
+                                    "& legend": { display: "none" },
+                                    "& fieldset": { top: 0 },
+                                    "& label": { display: "none" },
+                                }}
+                            />
+                        ),
+                        [],
+                    )}
+                    componentsProps={{
+                        actionBar: {
+                            actions: ["accept"],
+                        },
+                    }}
+                    className={classes.input}
+                />
+            </LocalizationProvider>
         </>
     );
 });

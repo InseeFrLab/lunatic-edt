@@ -75,7 +75,11 @@ export type ActivitySelecterSpecificProps = {
     categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
     labels: ActivityLabelProps;
     errorIcon: string;
-    addToReferentielCallBack(newItem: AutoCompleteActiviteOption): void;
+    addToReferentielCallBack(
+        newItem: AutoCompleteActiviteOption,
+        categoryId: string,
+        newActivity: string,
+    ): void;
     onSelectValue(): void;
     widthGlobal?: boolean;
     separatorSuggester: string;
