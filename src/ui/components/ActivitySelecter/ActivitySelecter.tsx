@@ -297,9 +297,14 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const appendHistoryActivitySelecter = (
         actionOrSelection: ActivitySelecterNavigationEnum | string,
     ) => {
-        historyActivitySelecterValue =
-            historyActivitySelecterValue + (actionOrSelection as string) + separatorSuggester;
-        handleChange(historyActivitySelecterBindingDep, historyActivitySelecterValue);
+        const allHistoryActivitiesValues = historyActivitySelecterValue.split(separatorSuggester);
+        const lastActivitySelected = allHistoryActivitiesValues[allHistoryActivitiesValues.length - 2];
+
+        if (lastActivitySelected != actionOrSelection) {
+            historyActivitySelecterValue =
+                historyActivitySelecterValue + (actionOrSelection as string) + separatorSuggester;
+            handleChange(historyActivitySelecterBindingDep, historyActivitySelecterValue);
+        }
     };
 
     /**
