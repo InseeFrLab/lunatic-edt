@@ -891,7 +891,7 @@ const renderClickableList = (
     const selectedvalue: AutoCompleteActiviteOption = inputs.activitesAutoCompleteRef.filter(
         e => e.id === inputs.selectedSuggesterId,
     )[0];
-    const index = CreateIndex(optionsFiltered);
+    const index = CreateIndex(optionsFiltered)[0];
 
     return (
         fullScreenComponent == FullScreenComponent.ClickableListComp && (
