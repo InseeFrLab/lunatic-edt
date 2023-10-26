@@ -13,6 +13,7 @@ import {
     selectedLabelNewActivity,
 } from "./ActivitySelecter";
 import pairSynonymes from "./synonymes-misspellings.json";
+import { validate } from "uuid";
 
 /**
  * Find category of activity
@@ -199,6 +200,19 @@ export const findRank1Category = (
     return isFullyCompleted ? category?.parent : category?.item;
 };
 
+const saveNewOrCurrentActivity = (
+    id: string | undefined,
+    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+    categoriesAndActivitesNomenclature: NomenclatureActivityOption[],
+    isFullyCompleted: boolean,
+) => {
+    if(validate(id ?? "")) {
+        const labelOfActivity = findItemInCategoriesNomenclature(id, categoriesAndActivitesNomenclature)?.item.label;
+        onChange(isFullyCompleted, id, id, labelOfActivity);
+    }
+    else onChange(isFullyCompleted, id, undefined, undefined);
+}
+
 export const selectSubCategory = (
     selection: NomenclatureActivityOption,
     selectedId: string | undefined,
@@ -206,13 +220,14 @@ export const selectSubCategory = (
     setSelectedCategories: (activities: NomenclatureActivityOption[]) => void,
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
+    categoriesAndActivitesNomenclature: NomenclatureActivityOption[],
 ) => {
     const id = selectedId == selection.id ? undefined : selection.id;
     const temp = [...selectedCategories];
     temp.push(selection);
     appendHistoryActivitySelecter(selection.label);
     setSelectedCategories(temp);
-    onChange(false, id, undefined, undefined);
+    saveNewOrCurrentActivity(id,onChange,categoriesAndActivitesNomenclature,false);
 };
 
 export const selectFinalCategory = (
@@ -226,10 +241,13 @@ export const selectFinalCategory = (
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     onSelectValue: () => void,
     appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
+    categoriesAndActivitesNomenclature: NomenclatureActivityOption[],
 ) => {
     const id = states.selectedId == selection.id ? undefined : selection.id;
     const label = states.labelOfSelectedId == selection.label ? undefined : selection.label;
-    onChange(true, id, undefined, undefined);
+    
+    saveNewOrCurrentActivity(id,onChange,categoriesAndActivitesNomenclature,true);
+    
     states.setSelectedId(id);
     states.setLabelOfSelectedId(label);
     appendHistoryActivitySelecter(label || "");
@@ -348,3 +366,16 @@ export const updateNewValue = (
 export const getInputValue = (): string | undefined => {
     return inputValue;
 };
+
+export const optionsFiltered = (activitesAutoCompleteRef: AutoCompleteActiviteOption[]) => {
+    return activitesFiltredUnique(activitesAutoCompleteRef);
+}
+
+export const indexSuggester = (activitesAutoCompleteRef: AutoCompleteActiviteOption[], selectedSuggesterId: string) => {
+    const options = optionsFiltered(activitesAutoCompleteRef);
+    const selectedvalue: AutoCompleteActiviteOption = activitesAutoCompleteRef.filter(
+        e => e.id === selectedSuggesterId,
+    )[0];
+    const index = CreateIndex(options);
+    return [index,options,selectedvalue];
+}

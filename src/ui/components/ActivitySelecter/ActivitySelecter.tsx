@@ -21,6 +21,8 @@ import {
     activitesFiltredUnique,
     findRank1Category,
     getInputValue,
+    indexSuggester,
+    optionsFiltered,
     processActivityAutocomplete,
     processActivityCategory,
     processNewActivity,
@@ -272,21 +274,33 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             activityLabel,
             historyInputSuggesterValue,
         );
+        console.log(newItemId.current, activityLabel, states.selectedCategories);
+
         appendHistoryActivitySelecter(ActivitySelecterNavigationEnum.ADD_ACTIVITY_BUTTON);
         setFullScreenComponent(FullScreenComponent.FreeInput);
         setCreateActivityValue(activityLabel);
         setNewValue(activityLabel);
+
+        const selectedCategory = states.selectedCategories[states.selectedCategories.length -1];
+        if(selectedCategory && selectedCategory.subs) {
+            selectedCategory.subs.push({
+                id: newItemId.current,
+                rang: selectedCategory.rang + 1,
+                label: activityLabel,
+            })
+        }
         localStorage.setItem(selectedLabelNewActivity, activityLabel);
     };
 
     const clickableListOnChange = (id: string | undefined, historyInputSuggester?: string) => {
+        console.log("select item of list", id, historyInputSuggester);
         setSelectedSuggesterId(id);
         let isFully = false;
         if (id) {
             isFully = true;
         }
         historyInputSuggesterValue += historyInputSuggester;
-        onChange(isFully, undefined, id, undefined, historyInputSuggesterValue);
+        onChange(isFully, undefined, id, historyInputSuggester, historyInputSuggesterValue);
     };
 
     const clickableListHistoryOnChange = (historyInputSuggester?: string) => {
@@ -337,6 +351,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         onChange,
                         onSelectValue,
                         appendHistoryActivitySelecter,
+                        categoriesAndActivitesNomenclature,
                         modifiable,
                     );
                 }}
@@ -589,6 +604,7 @@ const renderRank1Category = (
                     functions.onChange,
                     functions.onSelectValue,
                     functions.appendHistoryActivitySelecter,
+                    inputs.categoriesAndActivitesNomenclature,
                     inputs.modifiable,
                 )
             }
@@ -627,6 +643,7 @@ const categoriesActivitiesBoxClick = (
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     onSelectValue: () => void,
     appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
+    categoriesAndActivitesNomenclature: NomenclatureActivityOption[], 
     modifiable: boolean | undefined,
 ) => {
     if (modifiable) {
@@ -638,6 +655,7 @@ const categoriesActivitiesBoxClick = (
                 states.setSelectedCategories,
                 onChange,
                 appendHistoryActivitySelecter,
+                categoriesAndActivitesNomenclature,
             );
         } else {
             selectFinalCategory(
@@ -646,6 +664,7 @@ const categoriesActivitiesBoxClick = (
                 onChange,
                 onSelectValue,
                 appendHistoryActivitySelecter,
+                categoriesAndActivitesNomenclature,
             );
         }
     }
@@ -885,21 +904,15 @@ const renderClickableList = (
     iconSearch: string,
     iconSearchAlt: string,
 ) => {
-    const optionsFiltered: AutoCompleteActiviteOption[] = activitesFiltredUnique(
-        inputs.activitesAutoCompleteRef,
-    );
-    const selectedvalue: AutoCompleteActiviteOption = inputs.activitesAutoCompleteRef.filter(
-        e => e.id === inputs.selectedSuggesterId,
-    )[0];
-    const index = CreateIndex(optionsFiltered);
+    const indexInfo = indexSuggester(inputs.activitesAutoCompleteRef, inputs.indexSuggester);
 
     return (
         fullScreenComponent == FullScreenComponent.ClickableListComp && (
             <ClickableList
                 className={inputs.isMobile ? classes.clickableListMobile : classes.clickableList}
-                optionsFiltered={optionsFiltered}
-                index={index}
-                selectedValue={selectedvalue}
+                optionsFiltered={indexInfo[0]}
+                index={indexInfo[1]}
+                selectedValue={indexInfo[2]}
                 historyInputSuggesterValue={inputs.historyInputSuggesterValue}
                 handleChange={functions.clickableListOnChange}
                 handleChangeHistorySuggester={functions.clickableListHistoryOnChange}
@@ -988,6 +1001,7 @@ const nextStepClickableList = (
     displayAlert1: boolean,
     routeToGoal: boolean,
 ) => {
+    console.log("next step clickable");
     if (displayAlert1) {
         setDisplayAlert(true);
     } else {
@@ -1067,6 +1081,7 @@ const nextStepFreeInput = (
             states.selectedCategories[states.selectedCategories.length - 1]?.id,
             newItemId,
         );
+        console.log("newxt step free input");
         localStorage.setItem(selectedIdNewActivity, newItemId);
 
         functions.onChange(
@@ -1220,14 +1235,16 @@ const clickAutreButton = (
     onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     appendHistoryActivitySelecter: (actionOrSelection: ActivitySelecterNavigationEnum | string) => void,
 ) => {
+    console.log("click autre render clickable");
     appendHistoryActivitySelecter(ActivitySelecterNavigationEnum.OTHER_BUTTON);
-    setFullScreenComponent(FullScreenComponent.FreeInput);
+    setFullScreenComponent(FullScreenComponent.ClickableListComp);
+    
     // If we enter free input value from "Autre" button, then save id of last selected category
-    let id = undefined;
+    /*let id = undefined;
     if (selectedCategories.length > 0) {
         id = selectedCategories[selectedCategories.length - 1].id;
     }
-    onChange(false, id, undefined, localStorage.getItem(selectedLabelNewActivity) ?? undefined);
+    onChange(false, id, undefined, localStorage.getItem(selectedLabelNewActivity) ?? undefined);*/
 };
 
 const getTextTitle = (
