@@ -318,7 +318,7 @@ export const activitesFiltredMap = (optionsFiltered: AutoCompleteActiviteOption[
 
 export const CreateIndex = (optionsFiltered: AutoCompleteActiviteOption[]) => {
     const optionsFilteredMap = activitesFiltredMap(optionsFiltered);
-    return React.useState<Index<AutoCompleteActiviteOption>>(() => {
+    return (React.useState<Index<AutoCompleteActiviteOption>>(() => {
         elasticlunr.clearStopWords();
         elasticlunr.addStopWords(stopWords);
 
@@ -331,7 +331,7 @@ export const CreateIndex = (optionsFiltered: AutoCompleteActiviteOption[]) => {
             temp.addDoc(doc);
         }
         return temp;
-    });
+    }))[0];
 };
 
 let inputValue: string | undefined;
