@@ -169,9 +169,8 @@ export type TimepickerSpecificProps = {
     helpImage?: string;
     arrowDownIcon: string;
     arrowDownIconAlt: string;
-    //readOnly?: boolean;
-    //disabled?: boolean;
     modifiable?: boolean;
+    defaultLanguage: string;
 };
 
 export type CheckboxBooleanEdtSpecificProps = {

@@ -128,8 +128,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
 
     const newItemId = useRef(uuidv4());
     const { classes, cx } = useStyles({ "modifiable": modifiable });
-    //let historyInputSuggesterValue = "";
-    //let historyActivitySelecterValue =
 
     useEffect(() => {
         setDisplayStepper &&
@@ -426,7 +424,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             label,
                             isMobile,
                             newItemId: newItemId.current,
-                            displayAlert2:
+                            displayAlertNewActivity:
                                 fullScreenComponent == FullScreenComponent.FreeInput
                                     ? (createActivityValue === undefined ||
                                           createActivityValue === "") &&
@@ -802,7 +800,7 @@ const renderFreeInput = (
         label: string;
         isMobile: boolean;
         newItemId: string;
-        displayAlert2: boolean;
+        displayAlertNewActivity: boolean;
         routeToGoal: boolean;
         modifiable: boolean;
         separatorSuggester: string;
@@ -1081,11 +1079,11 @@ const nextStepFreeInput = (
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
         newItemId: string;
-        displayAlert2: boolean;
+        displayAlertNewActivity: boolean;
         routeToGoal: boolean;
     },
 ) => {
-    if (inputs.displayAlert2) {
+    if (inputs.displayAlertNewActivity) {
         functions.setDisplayAlert(true);
     } else {
         if (states.selectedCategories[states.selectedCategories.length - 1]) {
@@ -1209,7 +1207,7 @@ const nextStep = (
                 separatorSuggester: inputs.separatorSuggester,
                 historyActivitySelecterBindingDep: inputs.historyActivitySelecterBindingDep,
                 newItemId: inputs.newItemId,
-                displayAlert2: displayAlert,
+                displayAlertNewActivity: displayAlert,
                 routeToGoal,
             });
             break;
