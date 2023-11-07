@@ -9,7 +9,7 @@ export type SelectedActivity = {
     id?: string;
     suggesterId?: string;
     label?: string;
-    isFullyCompleted: boolean;
+    isFullyCompleted?: boolean;
     historyInputSuggester?: string;
 };
 

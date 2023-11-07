@@ -152,6 +152,26 @@ export type CheckboxOneSpecificProps = {
     extensionIcon: string;
     extensionIconAlt: string;
     modifiable?: boolean;
+    activitesAutoCompleteRef?: AutoCompleteActiviteOption[];
+    separatorSuggester?: string;
+    labelsClickableList?: {
+        clickableListPlaceholder: string;
+        clickableListNotFoundLabel: string;
+        clickableListNotFoundComment: string;
+        clickableListNotSearchLabel: string;
+        clickableListAddActivityButton: string;
+    };
+    icons?: {
+        clickableListIconNoResult: string;
+        clickableListIconNoResultAlt: string;
+        iconAddWhite: string;
+        iconAddLightBlue: string;
+        iconAddAlt: string;
+        iconExtension: string;
+        iconExtensionAlt: string;
+        iconSearch: string;
+        iconSearchAlt: string;
+    };
 };
 
 export type CheckBoxOneSpecificPropsLabels = {

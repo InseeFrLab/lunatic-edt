@@ -1,5 +1,7 @@
+import { AutoCompleteActiviteOption } from "interface";
 import { validate } from "uuid";
 import { TimeLineRowType } from "../../interface/DayOverviewTypes";
+import pairSynonymes from "../components/ActivitySelecter/synonymes-misspellings.json";
 
 export const important = (value: string): string => {
     return value + " !important";
@@ -50,7 +52,8 @@ export const generateDateFromStringInput = (input: string): Date => {
  * @returns
  */
 export const generateStringInputFromDate = (date: Date): string => {
-    return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    const day = date.getDate();
+    return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (day < 0 ? "0" : "") + day;
 };
 
 /**
@@ -136,4 +139,65 @@ export const splitLabelWithParenthesis = (
 
 export const isUUID = (uuid: string) => {
     return validate(uuid);
+};
+
+/**
+ * Remove accents
+ * @param value
+ * @returns
+ */
+export const removeAccents = (value: string) => {
+    return value
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .replace(/'/g, " ");
+};
+
+const pronounAbbreviations = ["l", "d", "m", "s", "t"];
+
+/**
+ * Activities with abbreviated pronouns (ex: de -> d')
+ * are not searched because pronouns are not skipped
+ * @param labelWithApostrophe
+ * @returns activity label with pronoun + apostroph replace
+ * with pronoun without abbreviation
+ */
+export const skipApostrophes = (labelWithApostrophe: string) => {
+    let label = labelWithApostrophe.toLowerCase();
+    pronounAbbreviations.forEach(abbrev => {
+        if (label != null && label.includes(abbrev + "’")) {
+            label = label.replace(abbrev + "’", abbrev + "e ");
+        }
+    });
+    return label;
+};
+
+/**
+ * Add synonymes of misspellings
+ * @param option
+ * @returns
+ */
+export const addMisspellings = (option: AutoCompleteActiviteOption) => {
+    let labelWithMisspelling = "";
+
+    pairSynonymes.forEach(pairSynonyme => {
+        const term = pairSynonyme.termination[0];
+        pairSynonyme.misspelling.forEach(misspelling => {
+            if (option.label.includes(term)) {
+                const labelToReplace = option.label.replaceAll(term, misspelling) + "; ";
+                labelWithMisspelling =
+                    labelWithMisspelling +
+                    (labelWithMisspelling.includes(labelToReplace) ? "" : labelToReplace);
+            }
+            if (option.label.includes(misspelling)) {
+                const labelToReplace = option.label.replaceAll(misspelling, term) + "; ";
+                labelWithMisspelling =
+                    labelWithMisspelling +
+                    (labelWithMisspelling.includes(labelToReplace) ? "" : labelToReplace);
+            }
+        });
+    });
+    option.synonymes = option.synonymes + "; " + labelWithMisspelling;
+
+    return option;
 };

@@ -4,9 +4,12 @@ import {
     NomenclatureActivityOption,
     SelectedActivity,
     responseType,
+    responsesType,
 } from "interface/ActivityTypes";
 import React from "react";
+import { validate } from "uuid";
 import { ActivitySelecterNavigationEnum } from "../../../enumeration/ActivitySelecterNavigationEnum";
+import { addMisspellings, removeAccents, skipApostrophes } from "../../utils/utils";
 import stopWords from "../ClickableList//stop_words_french.json";
 import {
     FullScreenComponent,
@@ -15,8 +18,6 @@ import {
     selectedIdNewActivity,
     selectedLabelNewActivity,
 } from "./ActivitySelecter";
-import pairSynonymes from "./synonymes-misspellings.json";
-import { validate } from "uuid";
 
 /**
  * Find category of activity
@@ -72,9 +73,9 @@ export const findItemInAutoCompleteRefByLabel = (
 const getParentFromSearchResult = (
     res:
         | {
-              item: NomenclatureActivityOption;
-              parent: NomenclatureActivityOption | undefined;
-          }
+            item: NomenclatureActivityOption;
+            parent: NomenclatureActivityOption | undefined;
+        }
         | undefined,
 ) => {
     return res?.parent ? [res?.parent] : [];
@@ -88,9 +89,9 @@ const getParentFromSearchResult = (
 const getItemFromSearchResult = (
     res:
         | {
-              item: NomenclatureActivityOption;
-              parent: NomenclatureActivityOption | undefined;
-          }
+            item: NomenclatureActivityOption;
+            parent: NomenclatureActivityOption | undefined;
+        }
         | undefined,
 ) => {
     return res?.item ? [res?.item] : [];
@@ -114,7 +115,7 @@ export const processActivityCategory = (
         const res = findItemInCategoriesNomenclature(parsedValue.id, categoriesAndActivitesNomenclature);
         const resParent = getParentFromSearchResult(res);
         const resItem = getItemFromSearchResult(res);
-        const isFullyCompleted: boolean = parsedValue.isFullyCompleted;
+        const isFullyCompleted: boolean = parsedValue.isFullyCompleted ?? false;
         if (isFullyCompleted) {
             setSelectedCategories(resParent);
         } else {
@@ -207,28 +208,31 @@ export const findRank1Category = (
 
 const saveNewOrCurrentActivity = (
     id: string | undefined,
-    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     categoriesAndActivitesNomenclature: NomenclatureActivityOption[],
     isFullyCompleted: boolean,
+    handleChange: (response: responseType, value: string | boolean | undefined) => void,
+    responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
+    newItemId: string,
 ) => {
     if (validate(id ?? "")) {
         const labelOfActivity = findItemInCategoriesNomenclature(id, categoriesAndActivitesNomenclature)
             ?.item.label;
-        onChange(isFullyCompleted, id, id, labelOfActivity);
-    } else onChange(isFullyCompleted, id, undefined, undefined);
+        onChange(handleChange, responses, newItemId, isFullyCompleted, id, id, labelOfActivity);
+    } else onChange(handleChange, responses, newItemId, isFullyCompleted, id, undefined, undefined);
 };
 
 export const selectSubCategory = (
     selectedId: string | undefined,
     selectedCategories: NomenclatureActivityOption[],
     setSelectedCategories: (activities: NomenclatureActivityOption[]) => void,
-    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
     inputs: {
         selection: NomenclatureActivityOption;
         categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
+        responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
+        newItemId: string,
     },
 ) => {
     const id = selectedId == inputs.selection.id ? undefined : inputs.selection.id;
@@ -241,7 +245,7 @@ export const selectSubCategory = (
         handleChange,
     );
     setSelectedCategories(temp);
-    saveNewOrCurrentActivity(id, onChange, inputs.categoriesAndActivitesNomenclature, false);
+    saveNewOrCurrentActivity(id, inputs.categoriesAndActivitesNomenclature, false, handleChange, inputs.responses, inputs.newItemId);
 };
 
 export const selectFinalCategory = (
@@ -251,13 +255,14 @@ export const selectFinalCategory = (
         setSelectedId: (id?: string) => void;
         setLabelOfSelectedId: (label?: string) => void;
     },
-    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
     onSelectValue: () => void,
     inputs: {
         selection: NomenclatureActivityOption;
         categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
+        responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
+        newItemId: string,
     },
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
 ) => {
@@ -265,7 +270,7 @@ export const selectFinalCategory = (
     const label =
         states.labelOfSelectedId == inputs.selection.label ? undefined : inputs.selection.label;
 
-    saveNewOrCurrentActivity(id, onChange, inputs.categoriesAndActivitesNomenclature, true);
+    saveNewOrCurrentActivity(id, inputs.categoriesAndActivitesNomenclature, true, handleChange, inputs.responses, inputs.newItemId);
 
     states.setSelectedId(id);
     states.setLabelOfSelectedId(label);
@@ -278,66 +283,6 @@ export const selectFinalCategory = (
     if (id != null) onSelectValue();
 };
 
-const pronounAbbreviations = ["l", "d", "m", "s", "t"];
-
-/**
- * Activities with abbreviated pronouns (ex: de -> d')
- * are not searched because pronouns are not skipped
- * @param labelWithApostrophe
- * @returns activity label with pronoun + apostroph replace
- * with pronoun without abbreviation
- */
-export const skipApostrophes = (labelWithApostrophe: string) => {
-    let label = labelWithApostrophe.toLowerCase();
-    pronounAbbreviations.forEach(abbrev => {
-        if (label != null && label.includes(abbrev + "’")) {
-            label = label.replace(abbrev + "’", abbrev + "e ");
-        }
-    });
-    return label;
-};
-
-/**
- * Remove accents
- * @param value
- * @returns
- */
-export const removeAccents = (value: string) => {
-    return value
-        .normalize("NFD")
-        .replace(/\p{Diacritic}/gu, "")
-        .replace(/'/g, " ");
-};
-
-/**
- * Add synonymes of misspellings
- * @param option
- * @returns
- */
-export const addMisspellings = (option: AutoCompleteActiviteOption) => {
-    let labelWithMisspelling = "";
-
-    pairSynonymes.forEach(pairSynonyme => {
-        const term = pairSynonyme.termination[0];
-        pairSynonyme.misspelling.forEach(misspelling => {
-            if (option.label.includes(term)) {
-                const labelToReplace = option.label.replaceAll(term, misspelling) + "; ";
-                labelWithMisspelling =
-                    labelWithMisspelling +
-                    (labelWithMisspelling.includes(labelToReplace) ? "" : labelToReplace);
-            }
-            if (option.label.includes(misspelling)) {
-                const labelToReplace = option.label.replaceAll(misspelling, term) + "; ";
-                labelWithMisspelling =
-                    labelWithMisspelling +
-                    (labelWithMisspelling.includes(labelToReplace) ? "" : labelToReplace);
-            }
-        });
-    });
-    option.synonymes = option.synonymes + "; " + labelWithMisspelling;
-
-    return option;
-};
 
 export const activitesFiltredUnique = (activitesAutoCompleteRef: AutoCompleteActiviteOption[]) => {
     const optionsFiltered: AutoCompleteActiviteOption[] = activitesAutoCompleteRef.filter(
@@ -380,9 +325,11 @@ let inputValue: string | undefined;
 
 export const updateNewValue = (
     value: string | undefined,
-    onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+    handleChange: (response: responseType, value: string | boolean | undefined) => void,
+    responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
+    newItemId: string,
 ) => {
-    onChange(true, undefined, undefined, value);
+    onChange(handleChange, responses, newItemId, true, undefined, undefined, value);
     if (value) localStorage.setItem(selectedLabelNewActivity, value);
     inputValue = value;
 };
@@ -409,16 +356,13 @@ export const indexSuggester = (
 
 export const clickableListOnChange = (
     id: string | undefined,
+    handleChange: (response: responseType, value: string | boolean | undefined) => void,
+    responses: [responsesType, responsesType, responsesType, responsesType | undefined, responsesType | undefined, responsesType | undefined],
+    newItemId: string,
     setSelectedSuggesterId: (id: string | undefined) => void,
-    onChange: (
-        isFullyCompleted: boolean,
-        id?: string,
-        suggesterId?: string,
-        label?: string,
-        historyInputSuggester?: string,
-    ) => void,
     historyInputSug?: string,
 ) => {
+    console.log(id, responses, newItemId);
     setSelectedSuggesterId(id);
     let isFully = false;
     if (id) {
@@ -427,7 +371,7 @@ export const clickableListOnChange = (
     let historyInputSuggesterValueLocal = localStorage.getItem(historyInputSuggester) ?? "";
     historyInputSuggesterValueLocal += historyInputSug;
 
-    onChange(isFully, undefined, id, historyInputSug, historyInputSuggesterValueLocal);
+    onChange(handleChange, responses, newItemId, responses[3] ? isFully : undefined, undefined, id, historyInputSug, responses[4] ? historyInputSuggesterValueLocal : undefined);
     localStorage.removeItem(historyInputSuggester);
 };
 
@@ -461,13 +405,8 @@ export const appendHistoryActivitySelecter = (
 
 export const createActivityCallBack = (
     states: {
-        selectedCategories: NomenclatureActivityOption[];
-        createActivityValue: string | undefined;
-        fullScreenComponent: FullScreenComponent;
-        selectedCategory: string | undefined;
-        selectedId: string | undefined;
-        suggesterId: string | undefined;
-        freeInput: string | undefined;
+        selectedCategoryId: string;
+        selectedCategories?: NomenclatureActivityOption[];
     },
     setters: {
         setCreateActivityValue: (value?: string) => void;
@@ -475,43 +414,43 @@ export const createActivityCallBack = (
         setNewValue: (value?: string) => void;
     },
     functions: {
-        onChange: (
-            isFullyCompleted: boolean,
-            id?: string,
-            suggesterId?: string,
-            activityLabel?: string,
-            historyInputSuggester?: string,
-        ) => void;
         handleChange: (response: responseType, value: string | boolean | undefined) => void;
     },
     inputs: {
         activityLabel: string;
         newItemId: string;
         separatorSuggester: string;
-        historyActivitySelecterBindingDep: responseType;
+        historyActivitySelecterBindingDep: responseType | undefined;
+        responses: [responsesType, responsesType, responsesType, responsesType | undefined, responsesType | undefined, responsesType | undefined],
     },
 ) => {
     let historyInputSuggesterValueLocal = localStorage.getItem(historyInputSuggester) ?? "";
 
-    functions.onChange(
+    onChange(
+        functions.handleChange,
+        inputs.responses,
+        inputs.newItemId,
         true,
-        states.selectedCategories[states.selectedCategories.length - 1]?.id,
+        states.selectedCategoryId,
         inputs.newItemId,
         inputs.activityLabel,
         historyInputSuggesterValueLocal,
     );
 
-    appendHistoryActivitySelecter(
-        ActivitySelecterNavigationEnum.ADD_ACTIVITY_BUTTON,
-        inputs.separatorSuggester,
-        inputs.historyActivitySelecterBindingDep,
-        functions.handleChange,
-    );
+    if (inputs.historyActivitySelecterBindingDep) {
+        appendHistoryActivitySelecter(
+            ActivitySelecterNavigationEnum.ADD_ACTIVITY_BUTTON,
+            inputs.separatorSuggester,
+            inputs.historyActivitySelecterBindingDep,
+            functions.handleChange,
+        );
+    }
+
     setters.setFullScreenComponent(FullScreenComponent.FreeInput);
     setters.setCreateActivityValue(inputs.activityLabel);
     setters.setNewValue(inputs.activityLabel);
 
-    const selectedCategory = states.selectedCategories[states.selectedCategories.length - 1];
+    const selectedCategory = states.selectedCategories && states.selectedCategories[states.selectedCategories.length - 1];
     if (selectedCategory && selectedCategory.subs) {
         selectedCategory.subs.push({
             id: inputs.newItemId,
@@ -520,4 +459,39 @@ export const createActivityCallBack = (
         });
     }
     localStorage.setItem(selectedLabelNewActivity, inputs.activityLabel);
+};
+
+export const onChange = (
+    handleChange: (response: responseType, value: string | boolean | undefined) => void,
+    responses: [responsesType, responsesType, responsesType, responsesType | undefined, responsesType | undefined, responsesType | undefined],
+    newItemId: string,
+    isFullyCompleted?: boolean,
+    id?: string,
+    suggesterId?: string,
+    activityLabel?: string,
+    historyInputSuggester?: string,
+) => {
+
+    const idBindingDep = responses?.[0]?.response;
+    const suggesterIdBindingDep = responses?.[1]?.response;
+    const labelBindingDep = responses?.[2]?.response;
+    const isFullyCompletedBindingDep = responses?.[3]?.response;
+    const historyInputSuggesterDep = responses?.[4]?.response;
+
+    const selection: SelectedActivity = {
+        id: id,
+        suggesterId: suggesterId,
+        label: activityLabel,
+        isFullyCompleted: isFullyCompleted,
+        historyInputSuggester: historyInputSuggester,
+    };
+    const label = selection.label;
+    const idSelected = selection.id ?? localStorage.getItem(selectedIdNewActivity) ?? undefined;
+    console.log(responses, idBindingDep, suggesterIdBindingDep, labelBindingDep, isFullyCompletedBindingDep);
+
+    if (idSelected != null) handleChange(idBindingDep, idSelected);
+    handleChange(suggesterIdBindingDep, label ? newItemId : undefined);
+    handleChange(labelBindingDep, label);
+    if (isFullyCompleted && isFullyCompletedBindingDep) handleChange(isFullyCompletedBindingDep, selection.isFullyCompleted);
+    if (historyInputSuggester && historyInputSuggesterDep) handleChange(historyInputSuggesterDep, selection.historyInputSuggester);
 };
