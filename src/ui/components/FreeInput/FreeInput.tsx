@@ -1,4 +1,4 @@
-import { Box, TextField } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import { NomenclatureActivityOption } from "interface/ActivityTypes";
 import { ActivityLabelProps } from "interface/ComponentsSpecificProps";
 import React, { memo, useCallback, useState } from "react";
@@ -8,8 +8,8 @@ import { FullScreenComponent } from "../ActivitySelecter/ActivitySelecter";
 
 type FreeInputProps = {
     states: {
-        selectedCategories: NomenclatureActivityOption[];
-        fullScreenComponent: FullScreenComponent;
+        selectedCategories?: NomenclatureActivityOption[];
+        fullScreenComponent?: FullScreenComponent;
         freeInput: string | undefined;
     };
     specifiqueProps: {
@@ -19,10 +19,9 @@ type FreeInputProps = {
     };
     functions: {
         nextClickCallback: (routeToGoal: boolean) => void;
-        freeInputOnChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
         onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void;
     };
-    renderTitle: (
+    renderTitle?: (
         fullScreenComponent: FullScreenComponent,
         selectedCategories: NomenclatureActivityOption[],
         labels: ActivityLabelProps,
@@ -49,17 +48,25 @@ const FreeInput = memo((props: FreeInputProps) => {
         [],
     );
 
+    const renderTitleFix = (
+        labels: ActivityLabelProps,
+    ) => {
+        return (
+            <Typography className={classes.title}> {labels.addActivity}</Typography>
+        );
+    };
+
     return (
         <Box className={cx(classes.root, specifiqueProps.isMobile ? classes.freeInputMobileBox : "")}>
             <Box className={classes.labelBox}>
-                {renderTitle(
-                    states.fullScreenComponent,
-                    states.selectedCategories,
+                {renderTitle ? renderTitle(
+                    states.fullScreenComponent ?? FullScreenComponent.FreeInput,
+                    states.selectedCategories ?? [],
                     specifiqueProps.labels,
                     specifiqueProps.labels.addActivity,
                     classes,
                     false,
-                )}
+                ) : renderTitleFix(specifiqueProps.labels)}
             </Box>
             <TextField
                 value={createActivityValue}
@@ -99,6 +106,13 @@ const useStyles = makeStylesEdt({ "name": { FreeInput } })(theme => ({
     },
     labelBox: {
         padding: "1rem",
+    },
+    title: {
+        color: theme.palette.info.main,
+        fontSize: "20px",
+        textAlign: "center",
+        marginTop: "2rem",
+        marginBottom: "1rem",
     },
 }));
 

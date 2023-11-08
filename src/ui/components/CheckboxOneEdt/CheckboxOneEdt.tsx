@@ -1,15 +1,16 @@
 import { Box, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { CheckboxOneSpecificProps, responsesType } from "interface";
+import { CheckboxOneSpecificProps, responseType, responsesType } from "interface";
 import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../theme";
 import { important, isUUID } from "../../utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import { FullScreenComponent, historyInputSuggester } from "../ActivitySelecter/ActivitySelecter";
-import { clickableListOnChange, createActivityCallBack, indexSuggester } from "../ActivitySelecter/activityUtils";
+import { FullScreenComponent, historyInputSuggester, selectedIdNewActivity, selectedLabelNewActivity } from "../ActivitySelecter/ActivitySelecter";
+import { clickableListOnChange, createActivityCallBack, getInputValue, indexSuggester, onChange, updateNewValue } from "../ActivitySelecter/activityUtils";
 import Alert from "../Alert";
 import ClickableList from "../ClickableList";
+import FreeInput from "../FreeInput";
 
 export type CheckboxOneProps = {
     handleChange(response: { [name: string]: string }, value: string | boolean | undefined): void;
@@ -65,18 +66,23 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     const selectedId = value[bindingDependencies[0]];
     const suggesterId = value[bindingDependencies[2]];
+    const labelNewValue = value[bindingDependencies[1]];
 
     const { classes, cx } = useStyles({ "modifiable": modifiable });
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(selectedId ?? undefined);
     const [isSubchildDisplayed, setIsSubchildDisplayed] = React.useState<boolean>(suggesterId ? true : false);
+    const [subComponent, setSubComponent] = React.useState<FullScreenComponent>(
+        suggesterId && labelNewValue ? FullScreenComponent.FreeInput :
+            (suggesterId ? FullScreenComponent.ClickableListComp : FullScreenComponent.Main));
+
     const [newOptionValue, setNewOptionValue] = React.useState<string | undefined>(undefined);
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
 
     const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 667);
 
     const [selectedSuggesterId, setSelectedSuggesterId] = useState<string | undefined>(suggesterId);
-    const [createActivityValue, setCreateActivityValue] = useState<string | undefined>();
-    const [newValue, setNewValue] = useState<string | undefined>();
+    const [createActivityValue, setCreateActivityValue] = useState<string | undefined>(labelNewValue);
+    const [newValue, setNewValue] = useState<string | undefined>(labelNewValue);
     const [fullScreenComponent, setFullScreenComponent] = useState<FullScreenComponent>(
         FullScreenComponent.Main,
     );
@@ -143,15 +149,8 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     const onAddNewOption = useCallback(() => {
         setIsSubchildDisplayed(true);
+        setSubComponent(FullScreenComponent.ClickableListComp);
     }, []);
-
-    /*
-    const newOptionOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setNewOptionValue(e.target.value);
-        handleChange({ "name": bindingDependencies[0] }, newItemId.current);
-        handleChange({ "name": bindingDependencies[1] }, e.target.value);
-    };
-    */
 
     const next = (
         continueWithUncompleted: boolean,
@@ -183,10 +182,36 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     const handleChangeClickableList = (id: string, label: string) => {
         console.log(id, label);
+        //setNewOptionValue(label);
+        handleChange({ "name": bindingDependencies[0] }, newItemId.current);
+        //handleChange({ "name": bindingDependencies[1] }, label);
+        clickableListOnChange(id, handleChange, responsesActivity, newItemId.current, setSelectedSuggesterId, label);
+    }
+
+    const createNewActivity = (label: string) => {
+        console.log(label, subComponent);
+        setSubComponent(FullScreenComponent.FreeInput);
         setNewOptionValue(label);
         handleChange({ "name": bindingDependencies[0] }, newItemId.current);
         handleChange({ "name": bindingDependencies[1] }, label);
-        clickableListOnChange(id, handleChange, responsesActivity, newItemId.current, setSelectedSuggesterId, label);
+
+        createActivityCallBack(
+            { selectedCategoryId: newItemId.current },
+            {
+                setFullScreenComponent,
+                setCreateActivityValue,
+                setNewValue
+            },
+            {
+                handleChange
+            },
+            {
+                activityLabel: label,
+                newItemId: newItemId.current,
+                separatorSuggester: separatorSuggester ?? "",
+                historyActivitySelecterBindingDep: undefined,
+                responses: responsesActivity
+            });
     }
 
     const renderSuggester = () => {
@@ -203,27 +228,11 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                     handleChangeClickableList(id, label)
                 }
                 handleChangeHistorySuggester={(value: string) => console.log(value)}
-                createActivity={(label: string) =>
-                    createActivityCallBack(
-                        { selectedCategoryId: newItemId.current },
-                        {
-                            setFullScreenComponent,
-                            setCreateActivityValue,
-                            setNewValue
-                        },
-                        {
-                            handleChange
-                        },
-                        {
-                            activityLabel: label,
-                            newItemId: newItemId.current,
-                            separatorSuggester: separatorSuggester ?? "",
-                            historyActivitySelecterBindingDep: undefined,
-                            responses: responsesActivity
-                        })
+                createActivity={(label: string) => createNewActivity(label)}
+                placeholder={labelsClickableList?.clickableListPlaceholder ?? ""
                 }
-                placeholder={labelsClickableList?.clickableListPlaceholder ?? ""}
-                notFoundLabel={labelsClickableList?.clickableListNotFoundLabel ?? ""}
+                notFoundLabel={labelsClickableList?.clickableListNotFoundLabel ?? ""
+                }
                 notFoundComment={labelsClickableList?.clickableListNotFoundComment ?? ""}
                 notSearchLabel={labelsClickableList?.clickableListNotSearchLabel ?? ""}
                 addActivityButtonLabel={labelsClickableList?.clickableListAddActivityButton ?? ""}
@@ -243,25 +252,86 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
             />
         )
     }
-    /*
-        const renderSubChild = () => {
-            isSubchildDisplayed && (
-                <Box>
-                    <Box className={classes.labelSpacer}>
-                        <label>{componentSpecificProps.labelsSpecifics?.subchildLabel}</label>
-                    </Box>
-                    <Box className={classes.centerBox}>
-                        <TextField
-                            value={newOptionValue}
-                            className={classes.newOptionTextField}
-                            onChange={newOptionOnChange}
-                            placeholder={componentSpecificProps.labelsSpecifics?.inputPlaceholder}
-                        ></TextField>
-                    </Box>
-                </Box>
-            )
+
+    const navNextStep = (
+        value: string | undefined,
+        nextClickCallback: () => void,
+        newItemId: string,
+        responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
+        handleChange: (response: responseType, value: string | boolean | undefined) => void,
+    ) => {
+        updateNewValue(value, handleChange, responses, newItemId);
+        nextClickCallback();
+    };
+
+    const nextStepFreeInput = (
+        states: {
+            createActivityValue: string | undefined;
+            freeInput: string | undefined;
+        },
+        displayAlertNewActivity: boolean
+    ) => {
+        if (displayAlertNewActivity) {
+            setDisplayAlert(true);
+        } else {
+            const label = states.freeInput ?? localStorage.getItem(selectedLabelNewActivity) ?? undefined;
+            if (addToReferentielCallBack) {
+                addToReferentielCallBack({
+                    label: newOptionValue || "",
+                    value: newItemId.current,
+                });
+            }
+            localStorage.setItem(selectedIdNewActivity, newItemId.current);
+
+            onChange(
+                handleChange,
+                responsesActivity,
+                newItemId.current,
+                true,
+                undefined,
+                newItemId.current,
+                label,
+            );
+            if (nextClickCallback) nextClickCallback();
         }
-    */
+    };
+
+    const renderFreeInput = () => {
+        return nextClickCallback && (
+            <Box className={cx(classes.freeInputBox, isMobile ? classes.freeInputBoxMobile : "")}>
+                <FreeInput
+                    states={{
+                        freeInput: newValue
+                    }}
+                    specifiqueProps={{ labels, label, isMobile }}
+                    functions={{ nextClickCallback, onChange }}
+                    updateNewValue={updateNewValue}
+                />
+                <Button
+                    className={classes.addActivityButton}
+                    variant="contained"
+                    startIcon={<img src={icons?.iconAddWhite} alt={icons?.iconAddAlt} />}
+                    onClick={() => {
+                        navNextStep(
+                            getInputValue(),
+                            nextClickCallback,
+                            newItemId.current,
+                            responses,
+                            handleChange
+                        );
+                        nextStepFreeInput(
+                            { freeInput: newValue, createActivityValue },
+                            false,
+                        );
+                    }}
+                    disabled={!modifiable}
+                >
+                    {labelsClickableList?.saveButton}
+                </Button>
+            </Box>
+        )
+    }
+
     return (
         <>
             {labels && (
@@ -351,7 +421,9 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                         )}
                 </Box>
             )}
-            {isSubchildDisplayed && renderSuggester()}
+
+            {isSubchildDisplayed && subComponent == FullScreenComponent.ClickableListComp && renderSuggester()}
+            {isSubchildDisplayed && subComponent == FullScreenComponent.FreeInput && renderFreeInput()}
         </>
     );
 });
@@ -431,6 +503,18 @@ const useStyles = makeStylesEdt<{ modifiable: boolean }>({ "name": { CheckboxOne
         clickableListMobile: {
             width: "100%",
             marginTop: "0rem",
+        },
+        freeInputBox: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+        },
+        freeInputBoxMobile: {
+            height: "85vh",
+            justifyContent: "center",
+        },
+        addActivityButton: {
+            margin: "2rem 0rem",
         },
     }),
 );

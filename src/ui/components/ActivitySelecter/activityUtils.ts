@@ -495,3 +495,73 @@ export const onChange = (
     if (isFullyCompleted && isFullyCompletedBindingDep) handleChange(isFullyCompletedBindingDep, selection.isFullyCompleted);
     if (historyInputSuggester && historyInputSuggesterDep) handleChange(historyInputSuggesterDep, selection.historyInputSuggester);
 };
+
+export const nextStepFreeInput = (
+    states: {
+        selectedCategories?: NomenclatureActivityOption[];
+        createActivityValue: string | undefined;
+        freeInput: string | undefined;
+    },
+    functions: {
+        setDisplayAlert: (display: boolean) => void;
+        nextClickCallback: (routeToGoal: boolean) => void;
+        addToReferentielCallBack: (
+            newItem: AutoCompleteActiviteOption,
+            categoryId: string | undefined,
+            newActivity: string,
+        ) => void;
+        handleChange: (response: responseType, value: string | boolean | undefined) => void;
+    },
+    inputs: {
+        separatorSuggester: string;
+        historyActivitySelecterBindingDep?: responseType;
+        newItemId: string;
+        displayAlertNewActivity: boolean;
+        routeToGoal: boolean;
+        responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
+    },
+) => {
+    if (inputs.displayAlertNewActivity) {
+        functions.setDisplayAlert(true);
+    } else {
+        if (states.selectedCategories && states.selectedCategories[states.selectedCategories.length - 1]) {
+            inputs.routeToGoal = false;
+        }
+        const label = states.freeInput ?? localStorage.getItem(selectedLabelNewActivity) ?? undefined;
+        functions.addToReferentielCallBack(
+            {
+                id: inputs.newItemId,
+                label: label ?? "",
+                synonymes: "",
+            },
+            states.selectedCategories ? states.selectedCategories[states.selectedCategories.length - 1]?.id : undefined,
+            inputs.newItemId,
+        );
+        localStorage.setItem(selectedIdNewActivity, inputs.newItemId);
+
+        onChange(
+            functions.handleChange,
+            inputs.responses,
+            inputs.newItemId,
+            true,
+            states.selectedCategories ? states.selectedCategories[states.selectedCategories.length - 1]?.id : undefined,
+            inputs.newItemId,
+            label,
+        );
+        if (inputs.historyActivitySelecterBindingDep) {
+            appendHistoryActivitySelecter(
+                ActivitySelecterNavigationEnum.SAVE_BUTTON,
+                inputs.separatorSuggester,
+                inputs.historyActivitySelecterBindingDep,
+                functions.handleChange,
+            );
+            appendHistoryActivitySelecter(
+                states.createActivityValue || "",
+                inputs.separatorSuggester,
+                inputs.historyActivitySelecterBindingDep,
+                functions.handleChange,
+            );
+        }
+        functions.nextClickCallback(inputs.routeToGoal);
+    }
+};

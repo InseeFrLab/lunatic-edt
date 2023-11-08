@@ -17,20 +17,21 @@ import Alert from "../Alert";
 import ClickableList from "../ClickableList";
 import FreeInput from "../FreeInput";
 import {
+    appendHistoryActivitySelecter,
     clickableListHistoryOnChange,
     clickableListOnChange,
+    createActivityCallBack,
     findRank1Category,
     getInputValue,
     indexSuggester,
+    nextStepFreeInput,
+    onChange,
     processActivityAutocomplete,
     processActivityCategory,
     processNewActivity,
     selectFinalCategory,
     selectSubCategory,
-    updateNewValue,
-    appendHistoryActivitySelecter,
-    createActivityCallBack,
-    onChange
+    updateNewValue
 } from "./activityUtils";
 
 type ActivitySelecterProps = {
@@ -793,7 +794,7 @@ const renderFreeInput = (
         nextClickCallback: (routeToGoal: boolean) => void;
         addToReferentielCallBack: (
             newItem: AutoCompleteActiviteOption,
-            categoryId: string,
+            categoryId: string | undefined,
             newActivity: string,
         ) => void;
         setDisplayAlert: (display: boolean) => void;
@@ -1036,77 +1037,7 @@ const navNextStep = (
     nextClickCallback(routeToGoal);
 };
 
-const nextStepFreeInput = (
-    states: {
-        selectedCategory: string | undefined;
-        selectedId: string | undefined;
-        suggesterId: string | undefined;
-        fullScreenComponent: FullScreenComponent;
-        selectedCategories: NomenclatureActivityOption[];
-        createActivityValue: string | undefined;
-        freeInput: string | undefined;
-    },
-    functions: {
-        setDisplayAlert: (display: boolean) => void;
-        nextClickCallback: (routeToGoal: boolean) => void;
-        addToReferentielCallBack: (
-            newItem: AutoCompleteActiviteOption,
-            categoryId: string,
-            newActivity: string,
-        ) => void;
-        handleChange: (response: responseType, value: string | boolean | undefined) => void;
-    },
-    inputs: {
-        separatorSuggester: string;
-        historyActivitySelecterBindingDep: responseType;
-        newItemId: string;
-        displayAlertNewActivity: boolean;
-        routeToGoal: boolean;
-        responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
-    },
-) => {
-    if (inputs.displayAlertNewActivity) {
-        functions.setDisplayAlert(true);
-    } else {
-        if (states.selectedCategories[states.selectedCategories.length - 1]) {
-            inputs.routeToGoal = false;
-        }
-        const label = states.freeInput ?? localStorage.getItem(selectedLabelNewActivity) ?? undefined;
-        functions.addToReferentielCallBack(
-            {
-                id: inputs.newItemId,
-                label: label ?? "",
-                synonymes: "",
-            },
-            states.selectedCategories[states.selectedCategories.length - 1]?.id,
-            inputs.newItemId,
-        );
-        localStorage.setItem(selectedIdNewActivity, inputs.newItemId);
 
-        onChange(
-            functions.handleChange,
-            inputs.responses,
-            inputs.newItemId,
-            true,
-            states.selectedCategories[states.selectedCategories.length - 1]?.id,
-            inputs.newItemId,
-            label,
-        );
-        appendHistoryActivitySelecter(
-            ActivitySelecterNavigationEnum.SAVE_BUTTON,
-            inputs.separatorSuggester,
-            inputs.historyActivitySelecterBindingDep,
-            functions.handleChange,
-        );
-        appendHistoryActivitySelecter(
-            states.createActivityValue || "",
-            inputs.separatorSuggester,
-            inputs.historyActivitySelecterBindingDep,
-            functions.handleChange,
-        );
-        functions.nextClickCallback(inputs.routeToGoal);
-    }
-};
 
 const nextStep = (
     states: {
@@ -1123,7 +1054,7 @@ const nextStep = (
         nextClickCallback: (routeToGoal: boolean) => void;
         addToReferentielCallBack: (
             newItem: AutoCompleteActiviteOption,
-            categoryId: string,
+            categoryId: string | undefined,
             newActivity: string,
         ) => void;
         handleChange: (response: responseType, value: string | boolean | undefined) => void;
@@ -1222,7 +1153,7 @@ const next = (
         nextClickCallback: (routeToGoal: boolean) => void;
         addToReferentielCallBack: (
             newItem: AutoCompleteActiviteOption,
-            categoryId: string,
+            categoryId: string | undefined,
             newActivity: string,
         ) => void;
         handleChange: (response: responseType, value: string | boolean | undefined) => void;

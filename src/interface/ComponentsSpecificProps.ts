@@ -77,7 +77,7 @@ export type ActivitySelecterSpecificProps = {
     errorIcon: string;
     addToReferentielCallBack(
         newItem: AutoCompleteActiviteOption,
-        categoryId: string,
+        categoryId: string | undefined,
         newActivity: string,
     ): void;
     onSelectValue(): void;
@@ -160,6 +160,9 @@ export type CheckboxOneSpecificProps = {
         clickableListNotFoundComment: string;
         clickableListNotSearchLabel: string;
         clickableListAddActivityButton: string;
+        otherButton: string;
+        saveButton: string;
+        addActivity: string;
     };
     icons?: {
         clickableListIconNoResult: string;
