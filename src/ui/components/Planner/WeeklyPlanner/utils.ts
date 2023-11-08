@@ -94,27 +94,37 @@ export const transformToWeeklyPlannerDataType = (
     return result;
 };
 
-export const transformToIODataStructure = (data: WeeklyPlannerDataType[]): IODataStructure[] => {
+export const transformToIODataStructure = (
+    data: WeeklyPlannerDataType[],
+): [IODataStructure[], string[], string[], any[]] => {
     const result: IODataStructure[] = [];
+    const datesWeek: string[] = new Array(7);
+    const datesWeekStarted: string[] = new Array(7);
+    const hourSetter = new Array(7);
     for (let i = 0; i < 7; i++) {
         const dayKey = `dateJ${i + 1}`;
         result.push({ [dayKey]: data[i]?.date });
         const dayStarted = `${dayKey}${DAY_TIME_SEPARATOR}${STARTED_LABEL}`;
         result.push({ [dayStarted]: data[i]?.hasBeenStarted.toString() });
+        datesWeek[i] = data[i].date;
+        datesWeekStarted[i] = data[i].hasBeenStarted.toString();
+
         data[i]?.detail.forEach(d => {
             const time: Date = new Date();
-            const splittedTime = d.start.split("h");
+            const splittedTime = d.start.split("H");
             time.setHours(Number(splittedTime[0]));
             time.setMinutes(Number(splittedTime[1]));
-
+            const times = [];
             for (let j = 0; j < d.duration / INTERVAL; j++) {
                 const timeKey = `${dayKey}${DAY_TIME_SEPARATOR}${convertTime(time)}`;
                 result.push({ [timeKey]: "true" });
                 time.setMinutes(time.getMinutes() + INTERVAL);
+                times.push(timeKey);
             }
+            hourSetter[i] = times;
         });
     }
-    return result;
+    return [result, datesWeek, datesWeekStarted, hourSetter];
 };
 
 /**

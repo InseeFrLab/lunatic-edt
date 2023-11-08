@@ -60,6 +60,15 @@ export type WeeklyPlannerSpecificProps = {
     workIcon: string;
     workIconAlt: string;
     modifiable?: boolean;
+    saveHours(response: responsesHourChecker): void;
+};
+
+export type responsesHourChecker = {
+    names: string[];
+    values: {
+        [key: string]: boolean;
+    };
+    date: string;
 };
 
 export type ActivitySelecterSpecificProps = {

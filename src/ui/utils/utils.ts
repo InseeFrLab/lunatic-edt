@@ -53,7 +53,7 @@ export const generateDateFromStringInput = (input: string): Date => {
  */
 export const generateStringInputFromDate = (date: Date): string => {
     const day = date.getDate();
-    return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (day < 0 ? "0" : "") + day;
+    return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (day < 10 ? "0" : "") + day;
 };
 
 /**
@@ -75,7 +75,11 @@ export const setDateTimeToZero = (date: Date): Date => {
  * @returns
  */
 export const convertTime = (t: Date): string => {
-    return t.getHours().toString() + "h" + t.getMinutes().toString();
+    let hour = t.getHours().toString();
+    hour = Number(hour) < 10 ? "0" + hour : hour;
+    let min = t.getMinutes().toString();
+    min = Number(min) < 10 ? "0" + min : min;
+    return hour + "H" + min;
 };
 
 /**
@@ -85,6 +89,7 @@ export const convertTime = (t: Date): string => {
  */
 export const generateDayOverviewTimelineRawData = (): TimeLineRowType[] => {
     const rowData: TimeLineRowType[] = [];
+
     for (let h = 0; h < 24; h++) {
         const date = new Date();
         date.setHours(h);
@@ -100,14 +105,21 @@ export const generateDayOverviewTimelineRawData = (): TimeLineRowType[] => {
         }
 
         for (let i = 1; i <= 4; i++) {
-            date.setMinutes(date.getMinutes() + 15);
-            const key = convertTime(date);
+            const dateCurrent = new Date();
+            dateCurrent.setHours(date.getHours());
+            dateCurrent.setMinutes(date.getMinutes());
+            const keyCurrent = convertTime(dateCurrent);
+
+            const dateAfter15Min = date;
+            dateAfter15Min.setMinutes(date.getMinutes() + 15);
+            const keyAfter15Min = convertTime(dateAfter15Min);
+
             row.options.push({
                 id: i.toString(),
-                label: key,
-                response: { name: key },
+                label: keyAfter15Min,
+                response: { name: keyCurrent },
             });
-            row.value[key] = false;
+            row.value[keyCurrent] = false;
         }
         rowData.push(row);
     }

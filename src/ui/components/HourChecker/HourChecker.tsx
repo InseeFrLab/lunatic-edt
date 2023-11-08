@@ -1,9 +1,10 @@
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { responsesHourChecker } from "interface";
 import { HourCheckerOption } from "interface/HourCheckerOptions";
+import { IODataStructure } from "interface/WeeklyPlannerTypes";
 import React, { memo, useCallback, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import { IODataStructure } from "interface/WeeklyPlannerTypes";
 
 export type HourCheckerProps = {
     handleChange?(response: { [name: string]: string }, value: boolean): void;
@@ -22,6 +23,8 @@ export type HourCheckerProps = {
     workIconAlt: string;
     handleChangeData(response: { [name: string]: string }, value: IODataStructure[]): void;
     store: IODataStructure[];
+    saveHours(response: responsesHourChecker): void;
+    currentDate: string;
 };
 
 const getSelectAllValue = (value: { [key: string]: boolean }, responsesValues: string[]): boolean => {
@@ -40,6 +43,9 @@ const calculateSelectAllValue = (
     setSelectAll(getSelectAllValue(value, responsesValues));
 };
 
+/**
+ * Select all line (hour complet)
+ */
 const selectOrUnselectAll = (
     currentlySelected: boolean,
     value: { [key: string]: boolean },
@@ -84,6 +90,8 @@ const HourChecker = memo((props: HourCheckerProps) => {
         expandMoreWhiteIcon,
         workIcon,
         workIconAlt,
+        saveHours,
+        currentDate,
     } = props;
     const [isOpen, setIsOpen] = React.useState(false);
 
@@ -113,9 +121,17 @@ const HourChecker = memo((props: HourCheckerProps) => {
     }, []);
 
     const saveLunaticData = () => {
+        const responses: responsesHourChecker = {
+            names: responsesValues,
+            values: value,
+            date: currentDate,
+        };
+        if (saveHours) {
+            saveHours(responses);
+        }
         if (handleChange) {
-            responsesValues.forEach((name: string) => {
-                handleChange({ name: name }, value[name]);
+            responsesValues.forEach((responseName: string) => {
+                handleChange({ name: responseName }, value[responseName]);
             });
         }
     };
