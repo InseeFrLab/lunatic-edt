@@ -14,7 +14,6 @@ import {
     setDateTimeToZero,
 } from "../../../utils";
 import { createCustomizableLunaticField } from "../../../utils/create-customizable-lunatic-field";
-import ProgressBar from "../../ProgressBar";
 import TooltipInfo from "../../TooltipInfo";
 import DayOverview from "../DayOverview/DayOverview";
 import DayPlanner from "../DayPlanner/DayPlanner";
@@ -165,6 +164,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     };
 
     useEffect(() => {
+        console.log("local");
         setNeedSpinner(false);
     }, [isSubChildDisplayed]);
 
@@ -241,6 +241,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
             handleChange(responses[0].response, dataCopy);
         }
     };
+
     const renderWeeklyPlanner = () => {
         return (
             <Box id="root-box">
@@ -270,16 +271,14 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 {activityData.length !== 0 && needSpinner ? (
                     <>
                         <Box display={getMainDisplay()}>
-                            <ProgressBar
-                                className={classes.progressBar}
-                                value={getProgressBarValue(activityData)}
-                                showlabel={true}
-                            />
-                            <TooltipInfo
-                                infoLabels={labels.infoLabels}
-                                titleLabels={titleLabels}
-                                displayTooltip={getProgressBarValue(activityData) == 0}
-                            />
+                            <Box className={classes.containerRoot}>
+                                <TooltipInfo
+                                    infoLabels={labels.infoLabels}
+                                    titleLabels={titleLabels}
+                                    displayTooltip={getProgressBarValue(activityData) == 0}
+                                />
+                            </Box>
+
                             <List className={classes.listContainer}>
                                 {dayList.map(d => (
                                     <DayPlanner
@@ -316,6 +315,9 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
 });
 
 const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
+    containerRoot: {
+        marginTop: "1rem",
+    },
     listContainer: {
         display: "flex",
         flexDirection: "column",
