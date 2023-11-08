@@ -48,25 +48,23 @@ const FreeInput = memo((props: FreeInputProps) => {
         [],
     );
 
-    const renderTitleFix = (
-        labels: ActivityLabelProps,
-    ) => {
-        return (
-            <Typography className={classes.title}> {labels.addActivity}</Typography>
-        );
+    const renderTitleFix = (labels: ActivityLabelProps) => {
+        return <Typography className={classes.title}> {labels.addActivity}</Typography>;
     };
 
     return (
         <Box className={cx(classes.root, specifiqueProps.isMobile ? classes.freeInputMobileBox : "")}>
             <Box className={classes.labelBox}>
-                {renderTitle ? renderTitle(
-                    states.fullScreenComponent ?? FullScreenComponent.FreeInput,
-                    states.selectedCategories ?? [],
-                    specifiqueProps.labels,
-                    specifiqueProps.labels.addActivity,
-                    classes,
-                    false,
-                ) : renderTitleFix(specifiqueProps.labels)}
+                {renderTitle
+                    ? renderTitle(
+                          states.fullScreenComponent ?? FullScreenComponent.FreeInput,
+                          states.selectedCategories ?? [],
+                          specifiqueProps.labels,
+                          specifiqueProps.labels.addActivity,
+                          classes,
+                          false,
+                      )
+                    : renderTitleFix(specifiqueProps.labels)}
             </Box>
             <TextField
                 value={createActivityValue}

@@ -31,7 +31,7 @@ import {
     processNewActivity,
     selectFinalCategory,
     selectSubCategory,
-    updateNewValue
+    updateNewValue,
 } from "./activityUtils";
 
 type ActivitySelecterProps = {
@@ -228,7 +228,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 continueWithUncompleted: false,
                 separatorSuggester,
                 historyActivitySelecterBindingDep,
-                responses
+                responses,
             },
         );
     }, [nextClickEvent]);
@@ -247,8 +247,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             window.removeEventListener("resize", handleSize);
         };
     });
-
-
 
     /**
      * Show categories of rank 2 or 3
@@ -285,7 +283,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             separatorSuggester,
                             historyActivitySelecterBindingDep,
                             responses,
-                            newItemId: newItemId.current
+                            newItemId: newItemId.current,
                         },
                     );
                 }}
@@ -335,7 +333,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                     continueWithUncompleted: true,
                                     separatorSuggester,
                                     historyActivitySelecterBindingDep,
-                                    responses
+                                    responses,
                                 },
                             )
                         }
@@ -377,7 +375,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             modifiable,
                             newItemId: newItemId.current,
                             historyActivitySelecterBindingDep,
-                            responses
+                            responses,
                         },
                         classes,
                         addLightBlueIcon,
@@ -407,12 +405,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             displayAlertNewActivity:
                                 fullScreenComponent == FullScreenComponent.FreeInput
                                     ? (createActivityValue === undefined ||
-                                        createActivityValue === "") &&
-                                    !true
+                                          createActivityValue === "") &&
+                                      !true
                                     : selectRank1Category?.id === undefined &&
-                                    selectedId === undefined &&
-                                    selectedSuggesterId === undefined &&
-                                    !true,
+                                      selectedId === undefined &&
+                                      selectedSuggesterId === undefined &&
+                                      !true,
                             routeToGoal: selectedCategories[selectedCategories.length - 1]
                                 ? false
                                 : true,
@@ -487,7 +485,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                     separatorSuggester,
                                     historyActivitySelecterBindingDep,
                                     responses,
-                                    newItemId: newItemId.current
+                                    newItemId: newItemId.current,
                                 },
                                 classes,
                                 cx,
@@ -530,8 +528,15 @@ const renderRank1Category = (
         modifiable: boolean | undefined;
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
-        newItemId: string,
+        responses: [
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+        ];
+        newItemId: string;
     },
     index: number,
     classes: any,
@@ -551,20 +556,15 @@ const renderRank1Category = (
             )}
             key={uuidv4()}
             onClick={() =>
-                categoriesActivitiesBoxClick(
-                    states,
-                    functions.handleChange,
-                    functions.onSelectValue,
-                    {
-                        selection: category,
-                        categoriesAndActivitesNomenclature: inputs.categoriesAndActivitesNomenclature,
-                        modifiable: inputs.modifiable,
-                        separatorSuggester: inputs.separatorSuggester,
-                        historyActivitySelecterBindingDep: inputs.historyActivitySelecterBindingDep,
-                        responses: inputs.responses,
-                        newItemId: inputs.newItemId,
-                    },
-                )
+                categoriesActivitiesBoxClick(states, functions.handleChange, functions.onSelectValue, {
+                    selection: category,
+                    categoriesAndActivitesNomenclature: inputs.categoriesAndActivitesNomenclature,
+                    modifiable: inputs.modifiable,
+                    separatorSuggester: inputs.separatorSuggester,
+                    historyActivitySelecterBindingDep: inputs.historyActivitySelecterBindingDep,
+                    responses: inputs.responses,
+                    newItemId: inputs.newItemId,
+                })
             }
             tabIndex={index + 1}
             id={"rankCategory-" + index}
@@ -605,8 +605,15 @@ const categoriesActivitiesBoxClick = (
         modifiable: boolean | undefined;
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
-        newItemId: string,
+        responses: [
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+        ];
+        newItemId: string;
     },
 ) => {
     if (inputs.modifiable) {
@@ -671,8 +678,15 @@ const renderCategories = (
         modifiable: boolean | undefined;
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
-        newItemId: string,
+        responses: [
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+        ];
+        newItemId: string;
     },
     classes: any,
     cx: any,
@@ -788,7 +802,14 @@ const renderFreeInput = (
         modifiable: boolean;
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
+        responses: [
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+        ];
     },
     functions: {
         nextClickCallback: (routeToGoal: boolean) => void;
@@ -826,7 +847,7 @@ const renderFreeInput = (
                             props.routeToGoal,
                             props.newItemId,
                             props.responses,
-                            functions.handleChange
+                            functions.handleChange,
                         );
                         nextStepFreeInput(states, functions, props);
                     }}
@@ -869,7 +890,14 @@ const renderClickableList = (
         modifiable: boolean;
         newItemId: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
+        responses: [
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+        ];
     },
     classes: any,
     iconAddLightBlue: string,
@@ -891,14 +919,22 @@ const renderClickableList = (
                 selectedValue={indexInfo[2]}
                 historyInputSuggesterValue={historyInputSuggesterValue}
                 handleChange={(id: string, label: string) =>
-                    clickableListOnChange(id, functions.handleChange, inputs.responses, inputs.newItemId, setters.setSelectedSuggesterId, label)
+                    clickableListOnChange(
+                        id,
+                        functions.handleChange,
+                        inputs.responses,
+                        inputs.newItemId,
+                        setters.setSelectedSuggesterId,
+                        label,
+                    )
                 }
                 handleChangeHistorySuggester={(value: string) => clickableListHistoryOnChange(value)}
                 createActivity={(label: string) =>
                     createActivityCallBack(
                         {
-                            selectedCategoryId: states.selectedCategories[states.selectedCategories.length - 1]?.id,
-                            selectedCategories: states.selectedCategories
+                            selectedCategoryId:
+                                states.selectedCategories[states.selectedCategories.length - 1]?.id,
+                            selectedCategories: states.selectedCategories,
                         },
                         setters,
                         functions,
@@ -907,8 +943,9 @@ const renderClickableList = (
                             newItemId: inputs.newItemId,
                             separatorSuggester: inputs.separatorSuggester,
                             historyActivitySelecterBindingDep: inputs.historyActivitySelecterBindingDep,
-                            responses: inputs.responses
-                        })
+                            responses: inputs.responses,
+                        },
+                    )
                 }
                 placeholder={inputs.labels.clickableListPlaceholder}
                 notFoundLabel={inputs.labels.clickableListNotFoundLabel}
@@ -1030,14 +1067,19 @@ const navNextStep = (
     nextClickCallback: (routeToGoal: boolean) => void,
     routeToGoal: boolean,
     newItemId: string,
-    responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
+    responses: [
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+    ],
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
 ) => {
     updateNewValue(value, handleChange, responses, newItemId);
     nextClickCallback(routeToGoal);
 };
-
-
 
 const nextStep = (
     states: {
@@ -1064,7 +1106,14 @@ const nextStep = (
         historyActivitySelecterBindingDep: responseType;
         newItemId: string;
         continueWithUncompleted: boolean;
-        responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
+        responses: [
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+        ];
     },
 ) => {
     let routeToGoal = true;
@@ -1073,11 +1122,11 @@ const nextStep = (
     let displayAlert =
         states.fullScreenComponent == FullScreenComponent.FreeInput
             ? (states.freeInput === undefined || states.freeInput === "") &&
-            !inputs.continueWithUncompleted
+              !inputs.continueWithUncompleted
             : states.selectedCategory === undefined &&
-            selectedActId === undefined &&
-            states.suggesterId === undefined &&
-            !inputs.continueWithUncompleted;
+              selectedActId === undefined &&
+              states.suggesterId === undefined &&
+              !inputs.continueWithUncompleted;
     switch (states.fullScreenComponent) {
         //option clickable list - when activity selected is one of sub category
         case FullScreenComponent.ClickableListComp:
@@ -1096,14 +1145,24 @@ const nextStep = (
                     states.selectedCategory === undefined &&
                     states.suggesterId === undefined &&
                     !inputs.continueWithUncompleted;
-                onChange(functions.handleChange, inputs.responses, inputs.newItemId, false, states.selectedCategory, undefined, undefined);
+                onChange(
+                    functions.handleChange,
+                    inputs.responses,
+                    inputs.newItemId,
+                    false,
+                    states.selectedCategory,
+                    undefined,
+                    undefined,
+                );
             } else {
                 displayAlert =
                     selectedActId === undefined &&
                     states.suggesterId === undefined &&
                     !inputs.continueWithUncompleted;
                 onChange(
-                    functions.handleChange, inputs.responses, inputs.newItemId,
+                    functions.handleChange,
+                    inputs.responses,
+                    inputs.newItemId,
                     states.selectedId != null,
                     states.selectedId ?? states.selectedCategory,
                     undefined,
@@ -1120,7 +1179,7 @@ const nextStep = (
                 newItemId: inputs.newItemId,
                 displayAlertNewActivity: displayAlert,
                 routeToGoal,
-                responses: inputs.responses
+                responses: inputs.responses,
             });
             break;
         default:
@@ -1163,7 +1222,14 @@ const next = (
         newItemId: string;
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [responsesType, responsesType, responsesType, responsesType, responsesType, responsesType],
+        responses: [
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+        ];
     },
 ) => {
     if (nextClickEvent) {
