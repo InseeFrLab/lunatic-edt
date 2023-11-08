@@ -26,24 +26,644 @@ describe("weeklyPlannerComponent", () => {
         border: false,
     };
 
+    const bindingDependencies = [
+        "WEEKLYPLANNER",
+        "DATES",
+        "DATES_STARTED",
+        "00H00",
+        "00H15",
+        "00H30",
+        "00H45",
+        "01H00",
+        "01H15",
+        "01H30",
+        "01H45",
+        "02H00",
+        "02H15",
+        "02H30",
+        "02H45",
+        "03H00",
+        "03H15",
+        "03H30",
+        "03H45",
+        "04H00",
+        "04H15",
+        "04H30",
+        "04H45",
+        "05H00",
+        "05H15",
+        "05H30",
+        "05H45",
+        "06H00",
+        "06H15",
+        "06H30",
+        "06H5",
+        "07H00",
+        "07H15",
+        "07H30",
+        "07H45",
+        "08H00",
+        "08H15",
+        "08H30",
+        "08H45",
+        "09H00",
+        "09H15",
+        "09H30",
+        "09H45",
+        "10H00",
+        "10H15",
+        "10H30",
+        "10H45",
+        "11H00",
+        "11H15",
+        "11H30",
+        "11H45",
+        "12H00",
+        "12H15",
+        "12H30",
+        "12H45",
+        "13H00",
+        "13H15",
+        "13H30",
+        "13H45",
+        "14H00",
+        "14H15",
+        "14H30",
+        "14H45",
+        "15H00",
+        "15H15",
+        "15H30",
+        "15H45",
+        "16H00",
+        "16H15",
+        "16H30",
+        "16H5",
+        "17H00",
+        "17H15",
+        "17H30",
+        "17H45",
+        "18H00",
+        "18H15",
+        "18H30",
+        "18H45",
+        "19H00",
+        "19H15",
+        "19H30",
+        "19H45",
+        "20H00",
+        "20H15",
+        "20H30",
+        "20H45",
+        "21H00",
+        "21H15",
+        "21H30",
+        "21H45",
+        "22H00",
+        "22H15",
+        "22H30",
+        "22H45",
+        "23H00",
+        "23H15",
+        "23H30",
+        "23H45",
+        "ISCLOSED",
+    ];
+
+    const responses = [
+        {
+            "response": {
+                "name": "WEEKLYPLANNER",
+            },
+        },
+        {
+            "response": {
+                "name": "DATES",
+            },
+        },
+        {
+            "response": {
+                "name": "DATES_STARTED",
+            },
+        },
+        {
+            "response": {
+                "name": "00H00",
+            },
+        },
+        {
+            "response": {
+                "name": "00H15",
+            },
+        },
+        {
+            "response": {
+                "name": "00H30",
+            },
+        },
+        {
+            "response": {
+                "name": "00H45",
+            },
+        },
+        {
+            "response": {
+                "name": "01H00",
+            },
+        },
+        {
+            "response": {
+                "name": "01H15",
+            },
+        },
+        {
+            "response": {
+                "name": "01H30",
+            },
+        },
+        {
+            "response": {
+                "name": "01H45",
+            },
+        },
+        {
+            "response": {
+                "name": "02H00",
+            },
+        },
+        {
+            "response": {
+                "name": "02H15",
+            },
+        },
+        {
+            "response": {
+                "name": "02H30",
+            },
+        },
+        {
+            "response": {
+                "name": "02H45",
+            },
+        },
+        {
+            "response": {
+                "name": "03H00",
+            },
+        },
+        {
+            "response": {
+                "name": "03H15",
+            },
+        },
+        {
+            "response": {
+                "name": "03H30",
+            },
+        },
+        {
+            "response": {
+                "name": "03H45",
+            },
+        },
+        {
+            "response": {
+                "name": "04H00",
+            },
+        },
+        {
+            "response": {
+                "name": "04H15",
+            },
+        },
+        {
+            "response": {
+                "name": "04H30",
+            },
+        },
+        {
+            "response": {
+                "name": "04H45",
+            },
+        },
+        {
+            "response": {
+                "name": "05H00",
+            },
+        },
+        {
+            "response": {
+                "name": "05H15",
+            },
+        },
+        {
+            "response": {
+                "name": "05H30",
+            },
+        },
+        {
+            "response": {
+                "name": "05H45",
+            },
+        },
+        {
+            "response": {
+                "name": "06H00",
+            },
+        },
+        {
+            "response": {
+                "name": "06H15",
+            },
+        },
+        {
+            "response": {
+                "name": "06H30",
+            },
+        },
+        {
+            "response": {
+                "name": "06H5",
+            },
+        },
+        {
+            "response": {
+                "name": "07H00",
+            },
+        },
+        {
+            "response": {
+                "name": "07H15",
+            },
+        },
+        {
+            "response": {
+                "name": "07H30",
+            },
+        },
+        {
+            "response": {
+                "name": "07H45",
+            },
+        },
+        {
+            "response": {
+                "name": "08H00",
+            },
+        },
+        {
+            "response": {
+                "name": "08H15",
+            },
+        },
+        {
+            "response": {
+                "name": "08H30",
+            },
+        },
+        {
+            "response": {
+                "name": "08H45",
+            },
+        },
+        {
+            "response": {
+                "name": "09H00",
+            },
+        },
+        {
+            "response": {
+                "name": "09H15",
+            },
+        },
+        {
+            "response": {
+                "name": "09H30",
+            },
+        },
+        {
+            "response": {
+                "name": "09H45",
+            },
+        },
+        {
+            "response": {
+                "name": "10H00",
+            },
+        },
+        {
+            "response": {
+                "name": "10H15",
+            },
+        },
+        {
+            "response": {
+                "name": "10H30",
+            },
+        },
+        {
+            "response": {
+                "name": "10H45",
+            },
+        },
+        {
+            "response": {
+                "name": "11H00",
+            },
+        },
+        {
+            "response": {
+                "name": "11H15",
+            },
+        },
+        {
+            "response": {
+                "name": "11H30",
+            },
+        },
+        {
+            "response": {
+                "name": "11H45",
+            },
+        },
+        {
+            "response": {
+                "name": "12H00",
+            },
+        },
+        {
+            "response": {
+                "name": "12H15",
+            },
+        },
+        {
+            "response": {
+                "name": "12H30",
+            },
+        },
+        {
+            "response": {
+                "name": "12H45",
+            },
+        },
+        {
+            "response": {
+                "name": "13H00",
+            },
+        },
+        {
+            "response": {
+                "name": "13H15",
+            },
+        },
+        {
+            "response": {
+                "name": "13H30",
+            },
+        },
+        {
+            "response": {
+                "name": "13H45",
+            },
+        },
+        {
+            "response": {
+                "name": "14H00",
+            },
+        },
+        {
+            "response": {
+                "name": "14H15",
+            },
+        },
+        {
+            "response": {
+                "name": "14H30",
+            },
+        },
+        {
+            "response": {
+                "name": "14H45",
+            },
+        },
+        {
+            "response": {
+                "name": "15H00",
+            },
+        },
+        {
+            "response": {
+                "name": "15H15",
+            },
+        },
+        {
+            "response": {
+                "name": "15H30",
+            },
+        },
+        {
+            "response": {
+                "name": "15H45",
+            },
+        },
+        {
+            "response": {
+                "name": "16H00",
+            },
+        },
+        {
+            "response": {
+                "name": "16H15",
+            },
+        },
+        {
+            "response": {
+                "name": "16H30",
+            },
+        },
+        {
+            "response": {
+                "name": "16H5",
+            },
+        },
+        {
+            "response": {
+                "name": "17H00",
+            },
+        },
+        {
+            "response": {
+                "name": "17H15",
+            },
+        },
+        {
+            "response": {
+                "name": "17H30",
+            },
+        },
+        {
+            "response": {
+                "name": "17H45",
+            },
+        },
+        {
+            "response": {
+                "name": "18H00",
+            },
+        },
+        {
+            "response": {
+                "name": "18H15",
+            },
+        },
+        {
+            "response": {
+                "name": "18H30",
+            },
+        },
+        {
+            "response": {
+                "name": "18H45",
+            },
+        },
+        {
+            "response": {
+                "name": "19H00",
+            },
+        },
+        {
+            "response": {
+                "name": "19H15",
+            },
+        },
+        {
+            "response": {
+                "name": "19H30",
+            },
+        },
+        {
+            "response": {
+                "name": "19H45",
+            },
+        },
+        {
+            "response": {
+                "name": "20H00",
+            },
+        },
+        {
+            "response": {
+                "name": "20H15",
+            },
+        },
+        {
+            "response": {
+                "name": "20H30",
+            },
+        },
+        {
+            "response": {
+                "name": "20H45",
+            },
+        },
+        {
+            "response": {
+                "name": "21H00",
+            },
+        },
+        {
+            "response": {
+                "name": "21H15",
+            },
+        },
+        {
+            "response": {
+                "name": "21H30",
+            },
+        },
+        {
+            "response": {
+                "name": "21H45",
+            },
+        },
+        {
+            "response": {
+                "name": "22H00",
+            },
+        },
+        {
+            "response": {
+                "name": "22H15",
+            },
+        },
+        {
+            "response": {
+                "name": "22H30",
+            },
+        },
+        {
+            "response": {
+                "name": "22H45",
+            },
+        },
+        {
+            "response": {
+                "name": "23H00",
+            },
+        },
+        {
+            "response": {
+                "name": "23H15",
+            },
+        },
+        {
+            "response": {
+                "name": "23H30",
+            },
+        },
+        {
+            "response": {
+                "name": "23H45",
+            },
+        },
+    ];
+
     // Set the surveyDate to today
     let surveyDate: Date = new Date();
     surveyDate.setDate(surveyDate.getDate() - 2);
     const surveyDateString: string = generateStringInputFromDate(surveyDate);
+    const dateCurrent = new Date();
 
-    const todayStringValue = generateStringInputFromDate(new Date());
+    const arrayDates = new Array(7);
+    const todayStringValue = generateStringInputFromDate(dateCurrent);
+
+    arrayDates[0] = todayStringValue;
+    for (let i = 1; i < 7; i++) {
+        const date = new Date();
+        date.setDate(dateCurrent.getDate() + i);
+        arrayDates[i] = generateStringInputFromDate(date);
+    }
+
     const setIsSubChildDisplayed = jest.fn();
     const setDisplayedDayHeader = jest.fn();
     const saveAll = jest.fn();
+    const saveHours = jest.fn();
 
-    const value: IODataStructure[] = [
-        { "dateJ1": todayStringValue },
-        { "dateJ1_started": "true" },
-        { "dateJ1_2h15": "true" },
-        { "dateJ1_2h30": "true" },
-        { "dateJ1_2h45": "true" },
-        { "dateJ1_3h0": "true" },
-    ];
+    const value: { [key: string]: string[] | IODataStructure[] } = {
+        "WEEKLYPLANNER": [
+            { "dateJ1": todayStringValue },
+            { "dateJ1_started": "true" },
+            { "dateJ1_02h15": "true" },
+            { "dateJ1_02h30": "true" },
+            { "dateJ1_02h45": "true" },
+            { "dateJ1_03h00": "true" },
+        ],
+        "DATES": arrayDates,
+        "DATES_STARTED": ["true", "false", "false", "false", "false", "false", "false"],
+        "02H00": ["true", "false", "false", "false", "false", "false", "false"],
+        "02H15": ["true", "false", "false", "false", "false", "false", "false"],
+        "02H30": ["true", "false", "false", "false", "false", "false", "false"],
+        "02H45": ["true", "false", "false", "false", "false", "false", "false"],
+    };
 
     const componentProps: WeeklyPlannerSpecificProps = {
         surveyDate: surveyDateString,
@@ -71,15 +691,18 @@ describe("weeklyPlannerComponent", () => {
         expandMoreWhiteIcon: "",
         workIcon: "",
         workIconAlt: "",
+        saveHours: saveHours,
     };
 
-    const renderElement = (valueData: IODataStructure[]): RenderResult => {
+    const renderElement = (valueData: { [key: string]: string[] | IODataStructure[] }): RenderResult => {
         return render(
             <ThemeProvider theme={theme}>
                 <WeeklyPlanner
                     handleChange={() => console.log("changed")}
                     value={valueData}
                     componentSpecificProps={componentProps}
+                    bindingDependencies={bindingDependencies}
+                    responses={responses}
                 ></WeeklyPlanner>
             </ThemeProvider>,
         );
@@ -126,86 +749,106 @@ describe("weeklyPlannerComponent", () => {
 
 describe("weeklyPlannerFunctions", () => {
     const IOData: IODataStructure[] = [
-        { "dateJ1": "2023-1-10" },
+        { "dateJ1": "2023-01-10" },
         { "dateJ1_started": "true" },
-        { "dateJ1_0h0": "true" },
-        { "dateJ1_2h15": "true" },
-        { "dateJ1_2h30": "true" },
-        { "dateJ2": "2023-1-11" },
+        { "dateJ1_00H00": "true" },
+        { "dateJ1_02H15": "true" },
+        { "dateJ1_02H30": "true" },
+        { "dateJ2": "2023-01-11" },
         { "dateJ2_started": "true" },
-        { "dateJ2_14h0": "true" },
-        { "dateJ2_14h15": "true" },
-        { "dateJ2_14h30": "true" },
-        { "dateJ2_14h45": "true" },
-        { "dateJ3": "2023-1-12" },
+        { "dateJ2_14H00": "true" },
+        { "dateJ2_14H15": "true" },
+        { "dateJ2_14H30": "true" },
+        { "dateJ2_14H45": "true" },
+        { "dateJ3": "2023-01-12" },
         { "dateJ3_started": "false" },
-        { "dateJ4": "2023-1-13" },
+        { "dateJ4": "2023-01-13" },
         { "dateJ4_started": "true" },
-        { "dateJ5": "2023-1-14" },
+        { "dateJ5": "2023-01-14" },
         { "dateJ5_started": "true" },
-        { "dateJ6": "2023-1-15" },
+        { "dateJ6": "2023-01-15" },
         { "dateJ6_started": "true" },
-        { "dateJ7": "2023-1-16" },
+        { "dateJ7": "2023-01-16" },
         { "dateJ7_started": "true" },
     ];
 
     const WeeklyPlannerData: WeeklyPlannerDataType[] = [
         {
             hasBeenStarted: true,
-            date: "2023-1-10",
+            date: "2023-01-10",
             day: "mardi",
             detail: [
                 {
-                    start: "0h0",
-                    end: "0h0",
+                    start: "00H00",
+                    end: "00H00",
                     duration: 15,
                 },
                 {
-                    start: "2h15",
-                    end: "2h30",
-                    duration: 30,
+                    start: "02H15",
+                    end: "02H15",
+                    duration: 15,
+                },
+                {
+                    start: "02H30",
+                    end: "02H30",
+                    duration: 15,
                 },
             ],
         },
         {
             hasBeenStarted: true,
-            date: "2023-1-11",
+            date: "2023-01-11",
             day: "mercredi",
             detail: [
                 {
-                    start: "14h0",
-                    end: "14h45",
-                    duration: 60,
+                    start: "14H00",
+                    end: "14H00",
+                    duration: 15,
+                },
+                {
+                    start: "14H15",
+                    end: "14H15",
+                    duration: 15,
+                },
+                {
+                    start: "14H30",
+                    end: "14H30",
+                    duration: 15,
+                },
+                {
+                    start: "14H45",
+                    end: "14H45",
+                    duration: 15,
                 },
             ],
         },
         {
             hasBeenStarted: false,
-            date: "2023-1-12",
+            date: "2023-01-12",
             day: "jeudi",
             detail: [],
         },
         {
             hasBeenStarted: true,
-            date: "2023-1-13",
+            date: "2023-01-13",
             day: "vendredi",
             detail: [],
         },
         {
             hasBeenStarted: true,
-            date: "2023-1-14",
+            date: "2023-01-14",
             day: "samedi",
             detail: [],
         },
         {
             hasBeenStarted: true,
-            date: "2023-1-15",
+            date: "2023-01-15",
             day: "dimanche",
             detail: [],
         },
         {
             hasBeenStarted: true,
-            date: "2023-1-16",
+            date: "2023-01-16",
             day: "lundi",
             detail: [],
         },
@@ -216,6 +859,6 @@ describe("weeklyPlannerFunctions", () => {
     });
 
     it("transform to IO data structure", () => {
-        expect(transformToIODataStructure(WeeklyPlannerData)).toEqual(IOData);
+        expect(transformToIODataStructure(WeeklyPlannerData)[0]).toEqual(IOData);
     });
 });
