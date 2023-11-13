@@ -29,7 +29,7 @@ export type CheckboxOneProps = {
     id?: string;
     label?: string;
     options: CheckboxOneCustomOption[];
-    value: { [key: string]: string };
+    value: { [key: string]: string } | string | null;
     responses: [
         responsesType,
         responsesType,
@@ -44,7 +44,7 @@ export type CheckboxOneProps = {
     variables: Map<string, any>;
 };
 
-const getComposantInit = (suggesterId: string, labelNewValue: string) => {
+const getComposantInit = (suggesterId: string | null, labelNewValue: string | null) => {
     if (suggesterId && labelNewValue) {
         return FullScreenComponent.FreeInput;
     } else {
@@ -84,17 +84,24 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     } = {
         ...componentSpecificProps,
     };
-    value[bindingDependencies[0]] = variables.get(bindingDependencies[0]);
 
-    const selectedId = value[bindingDependencies[0]];
-    const suggesterId = value[bindingDependencies[2]];
-    const labelNewValue = value[bindingDependencies[1]];
+    let selectedId = null;
+    let suggesterId = null;
+    let labelNewValue = null;
+
+    if (value && typeof value == "string") {
+        selectedId = variables.get(bindingDependencies[0]);
+    } else if (value && typeof value == "object") {
+        selectedId = variables.get(bindingDependencies[0]);
+        suggesterId = value[bindingDependencies[2]];
+        labelNewValue = value[bindingDependencies[1]];
+    }
 
     const { classes, cx } = useStyles({ "modifiable": modifiable });
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(
         selectedId ?? undefined,
     );
-    const [isSubchildDisplayed, setIsSubchildDisplayed] = React.useState<boolean>(suggesterId != "");
+    const [isSubchildDisplayed, setIsSubchildDisplayed] = React.useState<boolean>(selectedId != "");
     const [subComponent, setSubComponent] = React.useState<FullScreenComponent>(
         getComposantInit(suggesterId, labelNewValue),
     );
@@ -104,9 +111,13 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth <= 667);
 
-    const [selectedSuggesterId, setSelectedSuggesterId] = useState<string | undefined>(suggesterId);
-    const [createActivityValue, setCreateActivityValue] = useState<string | undefined>(labelNewValue);
-    const [newValue, setNewValue] = useState<string | undefined>(labelNewValue);
+    const [selectedSuggesterId, setSelectedSuggesterId] = useState<string | undefined>(
+        suggesterId ?? "",
+    );
+    const [createActivityValue, setCreateActivityValue] = useState<string | undefined>(
+        labelNewValue ?? "",
+    );
+    const [newValue, setNewValue] = useState<string | undefined>(labelNewValue ?? "");
     const [fullScreenComponent, setFullScreenComponent] = useState<FullScreenComponent>(
         FullScreenComponent.Main,
     );
