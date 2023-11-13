@@ -73,9 +73,9 @@ export const findItemInAutoCompleteRefByLabel = (
 const getParentFromSearchResult = (
     res:
         | {
-            item: NomenclatureActivityOption;
-            parent: NomenclatureActivityOption | undefined;
-        }
+              item: NomenclatureActivityOption;
+              parent: NomenclatureActivityOption | undefined;
+          }
         | undefined,
 ) => {
     return res?.parent ? [res?.parent] : [];
@@ -89,9 +89,9 @@ const getParentFromSearchResult = (
 const getItemFromSearchResult = (
     res:
         | {
-            item: NomenclatureActivityOption;
-            parent: NomenclatureActivityOption | undefined;
-        }
+              item: NomenclatureActivityOption;
+              parent: NomenclatureActivityOption | undefined;
+          }
         | undefined,
 ) => {
     return res?.item ? [res?.item] : [];
@@ -225,11 +225,21 @@ const saveNewOrCurrentActivity = (
         const labelOfActivity = findItemInCategoriesNomenclature(id, categoriesAndActivitesNomenclature)
             ?.item.label;
         onChange(handleChange, {
-            responses, newItemId, isFullyCompleted, id, suggesterId: id, activityLabel: labelOfActivity
+            responses,
+            newItemId,
+            isFullyCompleted,
+            id,
+            suggesterId: id,
+            activityLabel: labelOfActivity,
         });
-    } else onChange(handleChange, {
-        responses, newItemId, isFullyCompleted, id, suggesterId: undefined
-    });
+    } else
+        onChange(handleChange, {
+            responses,
+            newItemId,
+            isFullyCompleted,
+            id,
+            suggesterId: undefined,
+        });
 };
 
 export const selectSubCategory = (
@@ -375,7 +385,12 @@ export const updateNewValue = (
     newItemId: string,
 ) => {
     onChange(handleChange, {
-        responses, newItemId, isFullyCompleted: true, id: undefined, suggesterId: undefined, activityLabel: value
+        responses,
+        newItemId,
+        isFullyCompleted: true,
+        id: undefined,
+        suggesterId: undefined,
+        activityLabel: value,
     });
     if (value) localStorage.setItem(selectedLabelNewActivity, value);
     inputValue = value;
@@ -424,19 +439,15 @@ export const clickableListOnChange = (
     let historyInputSuggesterValueLocal = localStorage.getItem(historyInputSuggester) ?? "";
     historyInputSuggesterValueLocal += historyInputSug;
 
-    onChange(
-        handleChange,
-        {
-            responses,
-            newItemId,
-            isFullyCompleted: responses[3] ? isFully : undefined,
-            id: undefined,
-            suggesterId: id,
-            activityLabel: historyInputSug,
-            historyInputSuggester:
-                responses[4] ? historyInputSuggesterValueLocal : undefined,
-        }
-    );
+    onChange(handleChange, {
+        responses,
+        newItemId,
+        isFullyCompleted: responses[3] ? isFully : undefined,
+        id: undefined,
+        suggesterId: id,
+        activityLabel: historyInputSug,
+        historyInputSuggester: responses[4] ? historyInputSuggesterValueLocal : undefined,
+    });
     localStorage.removeItem(historyInputSuggester);
 };
 
@@ -498,18 +509,15 @@ export const createActivityCallBack = (
 ) => {
     let historyInputSuggesterValueLocal = localStorage.getItem(historyInputSuggester) ?? "";
 
-    onChange(
-        functions.handleChange,
-        {
-            responses: inputs.responses,
-            newItemId: inputs.newItemId,
-            isFullyCompleted: true,
-            id: states.selectedCategoryId,
-            suggesterId: inputs.newItemId,
-            activityLabel: inputs.activityLabel,
-            historyInputSuggester: historyInputSuggesterValueLocal
-        }
-    );
+    onChange(functions.handleChange, {
+        responses: inputs.responses,
+        newItemId: inputs.newItemId,
+        isFullyCompleted: true,
+        id: states.selectedCategoryId,
+        suggesterId: inputs.newItemId,
+        activityLabel: inputs.activityLabel,
+        historyInputSuggester: historyInputSuggesterValueLocal,
+    });
 
     if (inputs.historyActivitySelecterBindingDep) {
         appendHistoryActivitySelecter(
@@ -546,14 +554,14 @@ export const onChange = (
             responsesType | undefined,
             responsesType | undefined,
             responsesType | undefined,
-        ],
-        newItemId: string,
-        isFullyCompleted?: boolean,
-        id?: string,
-        suggesterId?: string,
-        activityLabel?: string,
-        historyInputSuggester?: string,
-    }
+        ];
+        newItemId: string;
+        isFullyCompleted?: boolean;
+        id?: string;
+        suggesterId?: string;
+        activityLabel?: string;
+        historyInputSuggester?: string;
+    },
 ) => {
     const idBindingDep = inputs.responses?.[0]?.response;
     const suggesterIdBindingDep = inputs.responses?.[1]?.response;
@@ -635,20 +643,16 @@ export const nextStepFreeInput = (
         );
         localStorage.setItem(selectedIdNewActivity, inputs.newItemId);
 
-        onChange(
-            functions.handleChange,
-            {
-                responses: inputs.responses,
-                newItemId: inputs.newItemId,
-                isFullyCompleted: true,
-                id: states.selectedCategories
-                    ? states.selectedCategories[states.selectedCategories.length - 1]?.id
-                    : undefined,
-                suggesterId: inputs.newItemId,
-                activityLabel: label,
-            }
-
-        );
+        onChange(functions.handleChange, {
+            responses: inputs.responses,
+            newItemId: inputs.newItemId,
+            isFullyCompleted: true,
+            id: states.selectedCategories
+                ? states.selectedCategories[states.selectedCategories.length - 1]?.id
+                : undefined,
+            suggesterId: inputs.newItemId,
+            activityLabel: label,
+        });
         if (inputs.historyActivitySelecterBindingDep) {
             appendHistoryActivitySelecter(
                 ActivitySelecterNavigationEnum.SAVE_BUTTON,

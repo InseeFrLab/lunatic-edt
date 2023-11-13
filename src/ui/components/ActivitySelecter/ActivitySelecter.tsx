@@ -405,12 +405,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             displayAlertNewActivity:
                                 fullScreenComponent == FullScreenComponent.FreeInput
                                     ? (createActivityValue === undefined ||
-                                        createActivityValue === "") &&
-                                    !true
+                                          createActivityValue === "") &&
+                                      !true
                                     : selectRank1Category?.id === undefined &&
-                                    selectedId === undefined &&
-                                    selectedSuggesterId === undefined &&
-                                    !true,
+                                      selectedId === undefined &&
+                                      selectedSuggesterId === undefined &&
+                                      !true,
                             routeToGoal: selectedCategories[selectedCategories.length - 1]
                                 ? false
                                 : true,
@@ -1122,11 +1122,11 @@ const nextStep = (
     let displayAlert =
         states.fullScreenComponent == FullScreenComponent.FreeInput
             ? (states.freeInput === undefined || states.freeInput === "") &&
-            !inputs.continueWithUncompleted
+              !inputs.continueWithUncompleted
             : states.selectedCategory === undefined &&
-            selectedActId === undefined &&
-            states.suggesterId === undefined &&
-            !inputs.continueWithUncompleted;
+              selectedActId === undefined &&
+              states.suggesterId === undefined &&
+              !inputs.continueWithUncompleted;
     switch (states.fullScreenComponent) {
         //option clickable list - when activity selected is one of sub category
         case FullScreenComponent.ClickableListComp:
@@ -1145,32 +1145,25 @@ const nextStep = (
                     states.selectedCategory === undefined &&
                     states.suggesterId === undefined &&
                     !inputs.continueWithUncompleted;
-                onChange(
-                    functions.handleChange,
-                    {
-                        responses: inputs.responses,
-                        newItemId: inputs.newItemId,
-                        isFullyCompleted: false,
-                        id: states.selectedCategory,
-                        suggesterId: undefined,
-                    }
-
-                );
+                onChange(functions.handleChange, {
+                    responses: inputs.responses,
+                    newItemId: inputs.newItemId,
+                    isFullyCompleted: false,
+                    id: states.selectedCategory,
+                    suggesterId: undefined,
+                });
             } else {
                 displayAlert =
                     selectedActId === undefined &&
                     states.suggesterId === undefined &&
                     !inputs.continueWithUncompleted;
-                onChange(
-                    functions.handleChange,
-                    {
-                        responses: inputs.responses,
-                        newItemId: inputs.newItemId,
-                        isFullyCompleted: states.selectedId != null,
-                        id: states.selectedId ?? states.selectedCategory,
-                        suggesterId: undefined,
-                    }
-                );
+                onChange(functions.handleChange, {
+                    responses: inputs.responses,
+                    newItemId: inputs.newItemId,
+                    isFullyCompleted: states.selectedId != null,
+                    id: states.selectedId ?? states.selectedCategory,
+                    suggesterId: undefined,
+                });
             }
             nextStepMain(functions.setDisplayAlert, functions.nextClickCallback, displayAlert);
             break;

@@ -52,7 +52,7 @@ const getComposantInit = (suggesterId: string, labelNewValue: string) => {
             ? FullScreenComponent.ClickableListComp
             : FullScreenComponent.Main;
     }
-}
+};
 
 const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     let {
@@ -94,11 +94,9 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(
         selectedId ?? undefined,
     );
-    const [isSubchildDisplayed, setIsSubchildDisplayed] = React.useState<boolean>(
-        suggesterId ? true : false,
-    );
+    const [isSubchildDisplayed, setIsSubchildDisplayed] = React.useState<boolean>(suggesterId != "");
     const [subComponent, setSubComponent] = React.useState<FullScreenComponent>(
-        getComposantInit(suggesterId, labelNewValue)
+        getComposantInit(suggesterId, labelNewValue),
     );
 
     const [newOptionValue, setNewOptionValue] = React.useState<string | undefined>(undefined);
@@ -109,7 +107,9 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     const [selectedSuggesterId, setSelectedSuggesterId] = useState<string | undefined>(suggesterId);
     const [createActivityValue, setCreateActivityValue] = useState<string | undefined>(labelNewValue);
     const [newValue, setNewValue] = useState<string | undefined>(labelNewValue);
-    const [fullScreenComponent, setFullScreenComponent] = useState<FullScreenComponent>(FullScreenComponent.Main);
+    const [fullScreenComponent, setFullScreenComponent] = useState<FullScreenComponent>(
+        FullScreenComponent.Main,
+    );
     const newItemId = useRef(uuidv4());
 
     const idBindingDep: responsesType = {
@@ -320,14 +320,13 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
             }
             localStorage.setItem(selectedIdNewActivity, newItemId.current);
 
-            onChange(
-                handleChange, {
+            onChange(handleChange, {
                 responses: responsesActivity,
                 newItemId: newItemId.current,
                 isFullyCompleted: true,
                 id: undefined,
                 suggesterId: newItemId.current,
-                activityLabel: label
+                activityLabel: label,
             });
             if (nextClickCallback) nextClickCallback();
         }
@@ -408,7 +407,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                     <ToggleButton
                                         className={
                                             componentSpecificProps?.icon ||
-                                                componentSpecificProps?.defaultIcon
+                                            componentSpecificProps?.defaultIcon
                                                 ? classes.MuiToggleButtonIcon
                                                 : classes.MuiToggleButton
                                         }
