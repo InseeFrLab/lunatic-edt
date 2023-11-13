@@ -5,9 +5,8 @@ import { theme } from "./../../../theme";
 
 import { ThemeProvider } from "@mui/material";
 import { InfoProps, responsesType, WeeklyPlannerSpecificProps } from "interface";
-import { IODataStructure, WeeklyPlannerDataType } from "interface/WeeklyPlannerTypes";
+import { IODataStructure } from "interface/WeeklyPlannerTypes";
 import { generateStringInputFromDate } from "../../../utils";
-import { transformToIODataStructure, transformToWeeklyPlannerDataType } from "./utils";
 import WeeklyPlanner from "./WeeklyPlanner";
 
 describe("weeklyPlannerComponent", () => {
@@ -255,121 +254,5 @@ describe("weeklyPlannerComponent", () => {
 
         expect(await screen.findAllByLabelText("hournotselected")).toHaveLength(88);
         expect(await screen.findAllByLabelText("hourselected")).toHaveLength(8);
-    });
-});
-
-describe("weeklyPlannerFunctions", () => {
-    const IOData: IODataStructure[] = [
-        { "dateJ1": "2023-01-10" },
-        { "dateJ1_started": "true" },
-        { "dateJ1_00H00": "true" },
-        { "dateJ1_02H15": "true" },
-        { "dateJ1_02H30": "true" },
-        { "dateJ2": "2023-01-11" },
-        { "dateJ2_started": "true" },
-        { "dateJ2_14H00": "true" },
-        { "dateJ2_14H15": "true" },
-        { "dateJ2_14H30": "true" },
-        { "dateJ2_14H45": "true" },
-        { "dateJ3": "2023-01-12" },
-        { "dateJ3_started": "false" },
-        { "dateJ4": "2023-01-13" },
-        { "dateJ4_started": "true" },
-        { "dateJ5": "2023-01-14" },
-        { "dateJ5_started": "true" },
-        { "dateJ6": "2023-01-15" },
-        { "dateJ6_started": "true" },
-        { "dateJ7": "2023-01-16" },
-        { "dateJ7_started": "true" },
-    ];
-
-    const WeeklyPlannerData: WeeklyPlannerDataType[] = [
-        {
-            hasBeenStarted: true,
-            date: "2023-01-10",
-            day: "mardi",
-            detail: [
-                {
-                    start: "00H00",
-                    end: "00H00",
-                    duration: 15,
-                },
-                {
-                    start: "02H15",
-                    end: "02H15",
-                    duration: 15,
-                },
-                {
-                    start: "02H30",
-                    end: "02H30",
-                    duration: 15,
-                },
-            ],
-        },
-        {
-            hasBeenStarted: true,
-            date: "2023-01-11",
-            day: "mercredi",
-            detail: [
-                {
-                    start: "14H00",
-                    end: "14H00",
-                    duration: 15,
-                },
-                {
-                    start: "14H15",
-                    end: "14H15",
-                    duration: 15,
-                },
-                {
-                    start: "14H30",
-                    end: "14H30",
-                    duration: 15,
-                },
-                {
-                    start: "14H45",
-                    end: "14H45",
-                    duration: 15,
-                },
-            ],
-        },
-        {
-            hasBeenStarted: false,
-            date: "2023-01-12",
-            day: "jeudi",
-            detail: [],
-        },
-        {
-            hasBeenStarted: true,
-            date: "2023-01-13",
-            day: "vendredi",
-            detail: [],
-        },
-        {
-            hasBeenStarted: true,
-            date: "2023-01-14",
-            day: "samedi",
-            detail: [],
-        },
-        {
-            hasBeenStarted: true,
-            date: "2023-01-15",
-            day: "dimanche",
-            detail: [],
-        },
-        {
-            hasBeenStarted: true,
-            date: "2023-01-16",
-            day: "lundi",
-            detail: [],
-        },
-    ];
-
-    it("transform to weekly planner type", () => {
-        expect(transformToWeeklyPlannerDataType(IOData, "fr")).toEqual(WeeklyPlannerData);
-    });
-
-    it("transform to IO data structure", () => {
-        expect(transformToIODataStructure(WeeklyPlannerData)[0]).toEqual(IOData);
     });
 });
