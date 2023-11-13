@@ -1,5 +1,5 @@
 import { Box, List, Typography } from "@mui/material";
-import { InfoProps, responseType } from "interface";
+import { InfoProps, responseType, responsesHourChecker } from "interface";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
@@ -10,7 +10,12 @@ import {
     WeeklyPlannerDataType,
 } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
-import { convertTime, generateDateFromStringInput, setDateTimeToZero } from "../../../utils";
+import {
+    convertTime,
+    generateDateFromStringInput,
+    generateStringInputFromDate,
+    setDateTimeToZero,
+} from "../../../utils";
 import HourChecker from "../../HourChecker";
 import ProgressBar from "../../ProgressBar";
 import TooltipInfo from "../../TooltipInfo";
@@ -37,6 +42,8 @@ export type DayOverviewProps = {
     workIcon: string;
     workIconAlt: string;
     handleChange(response: responseType, value: IODataStructure[]): void;
+    saveHours(response: responsesHourChecker): void;
+    values: { [key: string]: string[] | IODataStructure[] };
 };
 
 /**
@@ -112,6 +119,8 @@ const DayOverview = memo((props: DayOverviewProps) => {
         expandMoreWhiteIcon,
         workIcon,
         workIconAlt,
+        saveHours,
+        values,
     } = props;
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
@@ -124,13 +133,13 @@ const DayOverview = memo((props: DayOverviewProps) => {
         const dayBloc: WeeklyPlannerDataType | undefined = activityData.find(
             d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
         );
-        let values: LunaticMultiSelectionValues = {};
+        let valuesDetail: LunaticMultiSelectionValues = {};
 
         if (dayBloc) {
-            values = fromDayDetailsToValues(dayBloc.detail);
+            valuesDetail = fromDayDetailsToValues(dayBloc.detail);
         }
 
-        Object.entries(values).forEach(v => {
+        Object.entries(valuesDetail).forEach(v => {
             const row: TimeLineRowType | undefined = temp.find((t: TimeLineRowType) => {
                 return t.options.find(o => o.response.name === v[0]);
             });
@@ -139,6 +148,8 @@ const DayOverview = memo((props: DayOverviewProps) => {
             }
         });
         setTimeLineData(temp);
+
+        updatesValues(values, date);
     }, [date]);
 
     useEffect(() => {
@@ -147,6 +158,22 @@ const DayOverview = memo((props: DayOverviewProps) => {
         }
         isDisplayed ? setComponentDisplay("flex") : setComponentDisplay("none");
     }, [isDisplayed]);
+
+    const updatesValues = (values: { [key: string]: string[] | IODataStructure[] }, date: Date) => {
+        const dates = values["DATES"] as string[];
+        const currentDateIndex = dates.indexOf(generateStringInputFromDate(date));
+
+        rawTimeLineData.forEach(timeLine => {
+            timeLine.options.forEach(option => {
+                const name = option.response.name;
+                const valuesHour = values[option.response.name] as string[];
+                const valueQuartier = valuesHour ? valuesHour[currentDateIndex] : "false";
+                const valueIndex = valueQuartier === "true";
+                timeLine.value[name] = valueIndex;
+            });
+        });
+        setTimeLineData(rawTimeLineData);
+    };
 
     /**
      * Callback triggered when a value is changed in one HourChecker
@@ -167,6 +194,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
                     valuesList[key] = value;
                 });
             });
+        console.log(valuesList);
 
         let details: DayDetailType[] = [];
 
@@ -204,7 +232,9 @@ const DayOverview = memo((props: DayOverviewProps) => {
         }
 
         dayBloc.detail = details;
-        const toStore = transformToIODataStructure(temp);
+        const toStore = transformToIODataStructure(temp)[0];
+        updatesValues(values, date);
+
         handleChangeData(toStore);
         setActivityData(temp);
         setInitStore(toStore);
@@ -252,6 +282,8 @@ const DayOverview = memo((props: DayOverviewProps) => {
                     workIconAlt={workIconAlt}
                     store={initStore}
                     handleChangeData={handleChange}
+                    saveHours={saveHours}
+                    currentDate={generateStringInputFromDate(date)}
                 />
             </Box>
         );

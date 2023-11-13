@@ -60,6 +60,15 @@ export type WeeklyPlannerSpecificProps = {
     workIcon: string;
     workIconAlt: string;
     modifiable?: boolean;
+    saveHours(response: responsesHourChecker): void;
+};
+
+export type responsesHourChecker = {
+    names: string[];
+    values: {
+        [key: string]: boolean;
+    };
+    date: string;
 };
 
 export type ActivitySelecterSpecificProps = {
@@ -77,7 +86,7 @@ export type ActivitySelecterSpecificProps = {
     errorIcon: string;
     addToReferentielCallBack(
         newItem: AutoCompleteActiviteOption,
-        categoryId: string,
+        categoryId: string | undefined,
         newActivity: string,
     ): void;
     onSelectValue(): void;
@@ -152,6 +161,29 @@ export type CheckboxOneSpecificProps = {
     extensionIcon: string;
     extensionIconAlt: string;
     modifiable?: boolean;
+    activitesAutoCompleteRef?: AutoCompleteActiviteOption[];
+    separatorSuggester?: string;
+    labelsClickableList?: {
+        clickableListPlaceholder: string;
+        clickableListNotFoundLabel: string;
+        clickableListNotFoundComment: string;
+        clickableListNotSearchLabel: string;
+        clickableListAddActivityButton: string;
+        otherButton: string;
+        saveButton: string;
+        addActivity: string;
+    };
+    icons?: {
+        clickableListIconNoResult: string;
+        clickableListIconNoResultAlt: string;
+        iconAddWhite: string;
+        iconAddLightBlue: string;
+        iconAddAlt: string;
+        iconExtension: string;
+        iconExtensionAlt: string;
+        iconSearch: string;
+        iconSearchAlt: string;
+    };
 };
 
 export type CheckBoxOneSpecificPropsLabels = {

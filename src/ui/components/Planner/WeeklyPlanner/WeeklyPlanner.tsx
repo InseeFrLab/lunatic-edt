@@ -1,6 +1,6 @@
 import { CircularProgress, List } from "@mui/material";
 import { Box } from "@mui/system";
-import { WeeklyPlannerSpecificProps, responseType } from "interface";
+import { WeeklyPlannerSpecificProps, responsesType } from "interface";
 import React, { memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
@@ -14,7 +14,6 @@ import {
     setDateTimeToZero,
 } from "../../../utils";
 import { createCustomizableLunaticField } from "../../../utils/create-customizable-lunatic-field";
-import ProgressBar from "../../ProgressBar";
 import TooltipInfo from "../../TooltipInfo";
 import DayOverview from "../DayOverview/DayOverview";
 import DayPlanner from "../DayPlanner/DayPlanner";
@@ -25,10 +24,18 @@ import {
 } from "./utils";
 
 export type WeeklyPlannerProps = {
-    handleChange(response: responseType, value: IODataStructure[]): void;
-    value: IODataStructure[];
+    handleChange(response: { [name: string]: string }, value: IODataStructure[] | string[]): void;
+    value: { [key: string]: string[] | IODataStructure[] };
     componentSpecificProps: WeeklyPlannerSpecificProps;
-    response: responseType;
+    bindingDependencies: string[];
+    responses: [
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+    ];
 };
 
 /**
@@ -62,7 +69,7 @@ const getFormatedWorkedSum = (workedHoursSum: number): string => {
 };
 
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
-    let { value, handleChange, componentSpecificProps, response } = props;
+    let { value, handleChange, componentSpecificProps, responses } = props;
     const {
         surveyDate,
         isSubChildDisplayed,
@@ -83,13 +90,17 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         workIcon,
         workIconAlt,
         modifiable = true,
+        saveHours,
     } = {
         ...componentSpecificProps,
     };
     const { classes } = useStyles();
+    const dataWeeklyPlanner = value[responses[0].response.name] as IODataStructure[];
 
     const data: WeeklyPlannerDataType[] | undefined =
-        value.length > 1 ? transformToWeeklyPlannerDataType(value, language) : undefined;
+        dataWeeklyPlanner.length > 1
+            ? transformToWeeklyPlannerDataType(dataWeeklyPlanner, language)
+            : undefined;
 
     const startDate: string = surveyDate || "";
 
@@ -113,12 +124,29 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         const dayListAsString: string[] = dayList.map(d => generateStringInputFromDate(d));
         const clearedTemp = temp
             .filter(dayBloc => dayListAsString.includes(dayBloc.date))
+            .map(dayBlock => {
+                return {
+                    hasBeenStarted: dayBlock.hasBeenStarted,
+                    date: getDateWithZeros(dayBlock.date),
+                    day: dayBlock.day,
+                    detail: dayBlock.detail,
+                };
+            })
             .sort((a, b) => a.date.localeCompare(b.date));
-
         setActivityData(clearedTemp);
         const toStore = transformToIODataStructure(clearedTemp);
-        handleChange(response, toStore);
-        return toStore;
+        handleChange(responses[1].response, toStore[1]);
+        handleChange(responses[2].response, toStore[2]);
+
+        handleChange(responses[0].response, toStore[0]);
+        return toStore[0];
+    };
+
+    const getDateWithZeros = (date: string) => {
+        const yearMonthDay = date.split("-");
+        let day = yearMonthDay[2];
+        day = Number(day) < 10 && !day.includes("0", 0) ? "0" + day : day;
+        return yearMonthDay[0] + "-" + yearMonthDay[1] + "-" + day;
     };
 
     const startDateFormated: Date = setDateTimeToZero(generateDateFromStringInput(startDate));
@@ -136,6 +164,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     };
 
     useEffect(() => {
+        console.log("local");
         setNeedSpinner(false);
     }, [isSubChildDisplayed]);
 
@@ -173,7 +202,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     };
 
     useEffect(() => {
-        if (dataCopy.length > 0) handleChange(response, dataCopy);
+        if (dataCopy.length > 0) handleChange(responses[0].response, dataCopy);
         saveAll(dataCopy);
     }, [dataCopy]);
 
@@ -200,6 +229,8 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 workIcon={workIcon}
                 workIconAlt={workIconAlt}
                 handleChange={handleChange}
+                saveHours={saveHours}
+                values={value}
             ></DayOverview>
         );
     };
@@ -207,9 +238,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const handle = (dataCopy: IODataStructure[]) => {
         if (dataCopy.length > 0) {
             setDataCopy(dataCopy);
-            handleChange(response, dataCopy);
+            handleChange(responses[0].response, dataCopy);
         }
     };
+
     const renderWeeklyPlanner = () => {
         return (
             <Box id="root-box">
@@ -233,20 +265,20 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                     workIcon={workIcon}
                     workIconAlt={workIconAlt}
                     handleChange={handleChange}
+                    saveHours={saveHours}
+                    values={value}
                 ></DayOverview>
                 {activityData.length !== 0 && needSpinner ? (
                     <>
                         <Box display={getMainDisplay()}>
-                            <ProgressBar
-                                className={classes.progressBar}
-                                value={getProgressBarValue(activityData)}
-                                showlabel={true}
-                            />
-                            <TooltipInfo
-                                infoLabels={labels.infoLabels}
-                                titleLabels={titleLabels}
-                                displayTooltip={getProgressBarValue(activityData) == 0}
-                            />
+                            <Box className={classes.containerRoot}>
+                                <TooltipInfo
+                                    infoLabels={labels.infoLabels}
+                                    titleLabels={titleLabels}
+                                    displayTooltip={getProgressBarValue(activityData) == 0}
+                                />
+                            </Box>
+
                             <List className={classes.listContainer}>
                                 {dayList.map(d => (
                                     <DayPlanner
@@ -283,6 +315,9 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
 });
 
 const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
+    containerRoot: {
+        marginTop: "1rem",
+    },
     listContainer: {
         display: "flex",
         flexDirection: "column",

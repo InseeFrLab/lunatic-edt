@@ -1,5 +1,7 @@
+import { AutoCompleteActiviteOption } from "interface";
 import { validate } from "uuid";
 import { TimeLineRowType } from "../../interface/DayOverviewTypes";
+import pairSynonymes from "../components/ActivitySelecter/synonymes-misspellings.json";
 
 export const important = (value: string): string => {
     return value + " !important";
@@ -50,7 +52,8 @@ export const generateDateFromStringInput = (input: string): Date => {
  * @returns
  */
 export const generateStringInputFromDate = (date: Date): string => {
-    return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    const day = date.getDate();
+    return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (day < 10 ? "0" : "") + day;
 };
 
 /**
@@ -72,7 +75,11 @@ export const setDateTimeToZero = (date: Date): Date => {
  * @returns
  */
 export const convertTime = (t: Date): string => {
-    return t.getHours().toString() + "h" + t.getMinutes().toString();
+    let hour = t.getHours().toString();
+    hour = Number(hour) < 10 ? "0" + hour : hour;
+    let min = t.getMinutes().toString();
+    min = Number(min) < 10 ? "0" + min : min;
+    return hour + "H" + min;
 };
 
 /**
@@ -82,6 +89,7 @@ export const convertTime = (t: Date): string => {
  */
 export const generateDayOverviewTimelineRawData = (): TimeLineRowType[] => {
     const rowData: TimeLineRowType[] = [];
+
     for (let h = 0; h < 24; h++) {
         const date = new Date();
         date.setHours(h);
@@ -97,14 +105,21 @@ export const generateDayOverviewTimelineRawData = (): TimeLineRowType[] => {
         }
 
         for (let i = 1; i <= 4; i++) {
-            date.setMinutes(date.getMinutes() + 15);
-            const key = convertTime(date);
+            const dateCurrent = new Date();
+            dateCurrent.setHours(date.getHours());
+            dateCurrent.setMinutes(date.getMinutes());
+            const keyCurrent = convertTime(dateCurrent);
+
+            const dateAfter15Min = date;
+            dateAfter15Min.setMinutes(date.getMinutes() + 15);
+            const keyAfter15Min = convertTime(dateAfter15Min);
+
             row.options.push({
                 id: i.toString(),
-                label: key,
-                response: { name: key },
+                label: keyAfter15Min,
+                response: { name: keyCurrent },
             });
-            row.value[key] = false;
+            row.value[keyCurrent] = false;
         }
         rowData.push(row);
     }
@@ -136,4 +151,65 @@ export const splitLabelWithParenthesis = (
 
 export const isUUID = (uuid: string) => {
     return validate(uuid);
+};
+
+/**
+ * Remove accents
+ * @param value
+ * @returns
+ */
+export const removeAccents = (value: string) => {
+    return value
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .replace(/'/g, " ");
+};
+
+const pronounAbbreviations = ["l", "d", "m", "s", "t"];
+
+/**
+ * Activities with abbreviated pronouns (ex: de -> d')
+ * are not searched because pronouns are not skipped
+ * @param labelWithApostrophe
+ * @returns activity label with pronoun + apostroph replace
+ * with pronoun without abbreviation
+ */
+export const skipApostrophes = (labelWithApostrophe: string) => {
+    let label = labelWithApostrophe.toLowerCase();
+    pronounAbbreviations.forEach(abbrev => {
+        if (label?.includes(abbrev + "’")) {
+            label = label.replace(abbrev + "’", abbrev + "e ");
+        }
+    });
+    return label;
+};
+
+/**
+ * Add synonymes of misspellings
+ * @param option
+ * @returns
+ */
+export const addMisspellings = (option: AutoCompleteActiviteOption) => {
+    let labelWithMisspelling = "";
+
+    pairSynonymes.forEach(pairSynonyme => {
+        const term = pairSynonyme.termination[0];
+        pairSynonyme.misspelling.forEach(misspelling => {
+            if (option.label.includes(term)) {
+                const labelToReplace = option.label.replaceAll(term, misspelling) + "; ";
+                labelWithMisspelling =
+                    labelWithMisspelling +
+                    (labelWithMisspelling.includes(labelToReplace) ? "" : labelToReplace);
+            }
+            if (option.label.includes(misspelling)) {
+                const labelToReplace = option.label.replaceAll(misspelling, term) + "; ";
+                labelWithMisspelling =
+                    labelWithMisspelling +
+                    (labelWithMisspelling.includes(labelToReplace) ? "" : labelToReplace);
+            }
+        });
+    });
+    option.synonymes = option.synonymes + "; " + labelWithMisspelling;
+
+    return option;
 };
