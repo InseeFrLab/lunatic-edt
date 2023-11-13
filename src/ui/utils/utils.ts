@@ -177,7 +177,7 @@ const pronounAbbreviations = ["l", "d", "m", "s", "t"];
 export const skipApostrophes = (labelWithApostrophe: string) => {
     let label = labelWithApostrophe.toLowerCase();
     pronounAbbreviations.forEach(abbrev => {
-        if (label != null && label.includes(abbrev + "’")) {
+        if (label?.includes(abbrev + "’")) {
             label = label.replace(abbrev + "’", abbrev + "e ");
         }
     });

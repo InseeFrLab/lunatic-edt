@@ -44,6 +44,16 @@ export type CheckboxOneProps = {
     variables: Map<string, any>;
 };
 
+const getComposantInit = (suggesterId: string, labelNewValue: string) => {
+    if (suggesterId && labelNewValue) {
+        return FullScreenComponent.FreeInput;
+    } else {
+        return suggesterId && suggesterId != ""
+            ? FullScreenComponent.ClickableListComp
+            : FullScreenComponent.Main;
+    }
+}
+
 const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     let {
         id,
@@ -88,11 +98,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         suggesterId ? true : false,
     );
     const [subComponent, setSubComponent] = React.useState<FullScreenComponent>(
-        suggesterId && labelNewValue
-            ? FullScreenComponent.FreeInput
-            : suggesterId
-            ? FullScreenComponent.ClickableListComp
-            : FullScreenComponent.Main,
+        getComposantInit(suggesterId, labelNewValue)
     );
 
     const [newOptionValue, setNewOptionValue] = React.useState<string | undefined>(undefined);
@@ -103,7 +109,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     const [selectedSuggesterId, setSelectedSuggesterId] = useState<string | undefined>(suggesterId);
     const [createActivityValue, setCreateActivityValue] = useState<string | undefined>(labelNewValue);
     const [newValue, setNewValue] = useState<string | undefined>(labelNewValue);
-    const [, setFullScreenComponent] = useState<FullScreenComponent>(FullScreenComponent.Main);
+    const [fullScreenComponent, setFullScreenComponent] = useState<FullScreenComponent>(FullScreenComponent.Main);
     const newItemId = useRef(uuidv4());
 
     const idBindingDep: responsesType = {
@@ -315,14 +321,14 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
             localStorage.setItem(selectedIdNewActivity, newItemId.current);
 
             onChange(
-                handleChange,
-                responsesActivity,
-                newItemId.current,
-                true,
-                undefined,
-                newItemId.current,
-                label,
-            );
+                handleChange, {
+                responses: responsesActivity,
+                newItemId: newItemId.current,
+                isFullyCompleted: true,
+                id: undefined,
+                suggesterId: newItemId.current,
+                activityLabel: label
+            });
             if (nextClickCallback) nextClickCallback();
         }
     };
@@ -378,7 +384,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                     errorIconAlt={labels.alertAlticon}
                 ></Alert>
             )}
-            {!isSubchildDisplayed && (
+            {!isSubchildDisplayed && fullScreenComponent == FullScreenComponent.Main && (
                 <Box>
                     {label && (
                         <Box>
@@ -402,7 +408,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                     <ToggleButton
                                         className={
                                             componentSpecificProps?.icon ||
-                                            componentSpecificProps?.defaultIcon
+                                                componentSpecificProps?.defaultIcon
                                                 ? classes.MuiToggleButtonIcon
                                                 : classes.MuiToggleButton
                                         }

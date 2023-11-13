@@ -73,9 +73,9 @@ export const findItemInAutoCompleteRefByLabel = (
 const getParentFromSearchResult = (
     res:
         | {
-              item: NomenclatureActivityOption;
-              parent: NomenclatureActivityOption | undefined;
-          }
+            item: NomenclatureActivityOption;
+            parent: NomenclatureActivityOption | undefined;
+        }
         | undefined,
 ) => {
     return res?.parent ? [res?.parent] : [];
@@ -89,9 +89,9 @@ const getParentFromSearchResult = (
 const getItemFromSearchResult = (
     res:
         | {
-              item: NomenclatureActivityOption;
-              parent: NomenclatureActivityOption | undefined;
-          }
+            item: NomenclatureActivityOption;
+            parent: NomenclatureActivityOption | undefined;
+        }
         | undefined,
 ) => {
     return res?.item ? [res?.item] : [];
@@ -224,8 +224,12 @@ const saveNewOrCurrentActivity = (
     if (validate(id ?? "")) {
         const labelOfActivity = findItemInCategoriesNomenclature(id, categoriesAndActivitesNomenclature)
             ?.item.label;
-        onChange(handleChange, responses, newItemId, isFullyCompleted, id, id, labelOfActivity);
-    } else onChange(handleChange, responses, newItemId, isFullyCompleted, id, undefined, undefined);
+        onChange(handleChange, {
+            responses, newItemId, isFullyCompleted, id, suggesterId: id, activityLabel: labelOfActivity
+        });
+    } else onChange(handleChange, {
+        responses, newItemId, isFullyCompleted, id, suggesterId: undefined
+    });
 };
 
 export const selectSubCategory = (
@@ -370,7 +374,9 @@ export const updateNewValue = (
     ],
     newItemId: string,
 ) => {
-    onChange(handleChange, responses, newItemId, true, undefined, undefined, value);
+    onChange(handleChange, {
+        responses, newItemId, isFullyCompleted: true, id: undefined, suggesterId: undefined, activityLabel: value
+    });
     if (value) localStorage.setItem(selectedLabelNewActivity, value);
     inputValue = value;
 };
@@ -420,13 +426,16 @@ export const clickableListOnChange = (
 
     onChange(
         handleChange,
-        responses,
-        newItemId,
-        responses[3] ? isFully : undefined,
-        undefined,
-        id,
-        historyInputSug,
-        responses[4] ? historyInputSuggesterValueLocal : undefined,
+        {
+            responses,
+            newItemId,
+            isFullyCompleted: responses[3] ? isFully : undefined,
+            id: undefined,
+            suggesterId: id,
+            activityLabel: historyInputSug,
+            historyInputSuggester:
+                responses[4] ? historyInputSuggesterValueLocal : undefined,
+        }
     );
     localStorage.removeItem(historyInputSuggester);
 };
@@ -491,13 +500,15 @@ export const createActivityCallBack = (
 
     onChange(
         functions.handleChange,
-        inputs.responses,
-        inputs.newItemId,
-        true,
-        states.selectedCategoryId,
-        inputs.newItemId,
-        inputs.activityLabel,
-        historyInputSuggesterValueLocal,
+        {
+            responses: inputs.responses,
+            newItemId: inputs.newItemId,
+            isFullyCompleted: true,
+            id: states.selectedCategoryId,
+            suggesterId: inputs.newItemId,
+            activityLabel: inputs.activityLabel,
+            historyInputSuggester: historyInputSuggesterValueLocal
+        }
     );
 
     if (inputs.historyActivitySelecterBindingDep) {
@@ -527,41 +538,43 @@ export const createActivityCallBack = (
 
 export const onChange = (
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
-    responses: [
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType | undefined,
-        responsesType | undefined,
-        responsesType | undefined,
-    ],
-    newItemId: string,
-    isFullyCompleted?: boolean,
-    id?: string,
-    suggesterId?: string,
-    activityLabel?: string,
-    historyInputSuggester?: string,
+    inputs: {
+        responses: [
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType | undefined,
+            responsesType | undefined,
+            responsesType | undefined,
+        ],
+        newItemId: string,
+        isFullyCompleted?: boolean,
+        id?: string,
+        suggesterId?: string,
+        activityLabel?: string,
+        historyInputSuggester?: string,
+    }
 ) => {
-    const idBindingDep = responses?.[0]?.response;
-    const suggesterIdBindingDep = responses?.[1]?.response;
-    const labelBindingDep = responses?.[2]?.response;
-    const isFullyCompletedBindingDep = responses?.[3]?.response;
-    const historyInputSuggesterDep = responses?.[4]?.response;
+    const idBindingDep = inputs.responses?.[0]?.response;
+    const suggesterIdBindingDep = inputs.responses?.[1]?.response;
+    const labelBindingDep = inputs.responses?.[2]?.response;
+    const isFullyCompletedBindingDep = inputs.responses?.[3]?.response;
+    const historyInputSuggesterDep = inputs.responses?.[4]?.response;
 
     const selection: SelectedActivity = {
-        id: id,
-        suggesterId: suggesterId,
-        label: activityLabel,
-        isFullyCompleted: isFullyCompleted,
+        id: inputs.id,
+        suggesterId: inputs.suggesterId,
+        label: inputs.activityLabel,
+        isFullyCompleted: inputs.isFullyCompleted,
         historyInputSuggester: historyInputSuggester,
     };
     const label = selection.label;
     const idSelected = selection.id ?? localStorage.getItem(selectedIdNewActivity) ?? undefined;
 
     if (idSelected != null) handleChange(idBindingDep, idSelected);
-    handleChange(suggesterIdBindingDep, label ? newItemId : undefined);
+    handleChange(suggesterIdBindingDep, label ? inputs.newItemId : undefined);
     handleChange(labelBindingDep, label);
-    if (isFullyCompleted && isFullyCompletedBindingDep)
+    if (inputs.isFullyCompleted && isFullyCompletedBindingDep)
         handleChange(isFullyCompletedBindingDep, selection.isFullyCompleted);
     if (historyInputSuggester && historyInputSuggesterDep)
         handleChange(historyInputSuggesterDep, selection.historyInputSuggester);
@@ -624,14 +637,17 @@ export const nextStepFreeInput = (
 
         onChange(
             functions.handleChange,
-            inputs.responses,
-            inputs.newItemId,
-            true,
-            states.selectedCategories
-                ? states.selectedCategories[states.selectedCategories.length - 1]?.id
-                : undefined,
-            inputs.newItemId,
-            label,
+            {
+                responses: inputs.responses,
+                newItemId: inputs.newItemId,
+                isFullyCompleted: true,
+                id: states.selectedCategories
+                    ? states.selectedCategories[states.selectedCategories.length - 1]?.id
+                    : undefined,
+                suggesterId: inputs.newItemId,
+                activityLabel: label,
+            }
+
         );
         if (inputs.historyActivitySelecterBindingDep) {
             appendHistoryActivitySelecter(
@@ -641,7 +657,7 @@ export const nextStepFreeInput = (
                 functions.handleChange,
             );
             appendHistoryActivitySelecter(
-                states.createActivityValue || "",
+                states.createActivityValue ?? "",
                 inputs.separatorSuggester,
                 inputs.historyActivitySelecterBindingDep,
                 functions.handleChange,
