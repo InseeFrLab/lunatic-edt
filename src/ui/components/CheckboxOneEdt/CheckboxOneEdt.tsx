@@ -29,7 +29,7 @@ export type CheckboxOneProps = {
     id?: string;
     label?: string;
     options: CheckboxOneCustomOption[];
-    value: { [key: string]: string } | string | null;
+    value: { [key: string]: string } | string | null | undefined;
     responses: [
         responsesType,
         responsesType,
@@ -95,6 +95,8 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         selectedId = variables.get(bindingDependencies[0]);
         suggesterId = value[bindingDependencies[2]];
         labelNewValue = value[bindingDependencies[1]];
+    } else {
+        selectedId = value;
     }
 
     const { classes, cx } = useStyles({ "modifiable": modifiable });
@@ -104,7 +106,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     const [isSubchildDisplayed, setIsSubchildDisplayed] = React.useState<boolean>(selectedId != "");
     const [subComponent, setSubComponent] = React.useState<FullScreenComponent>(
         getComposantInit(suggesterId, labelNewValue),
-    );
+    )
 
     const [newOptionValue, setNewOptionValue] = React.useState<string | undefined>(undefined);
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
@@ -126,12 +128,15 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     const idBindingDep: responsesType = {
         response: { name: bindingDependencies[0] },
     };
-    const suggesterIdBindingDep: responsesType = {
-        response: { name: bindingDependencies[2] },
-    };
-    const labelBindingDep: responsesType = {
-        response: { name: bindingDependencies[1] },
-    };
+    const suggesterIdBindingDep: responsesType =
+        bindingDependencies.length ? {
+            response: { name: bindingDependencies[2] },
+        } : idBindingDep;
+
+    const labelBindingDep: responsesType =
+        bindingDependencies.length ? {
+            response: { name: bindingDependencies[1] },
+        } : idBindingDep;
 
     const responsesActivity: [
         responsesType,
@@ -176,6 +181,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
             handleChange(responses[0].response, selectedOption);
             const listOptions = componentSpecificProps?.options ?? options;
             const optSelected = listOptions.find(opt => opt.value == selectedOption);
+
             if (isUUID(selectedOption) && optSelected) {
                 handleChange({ "name": bindingDependencies[0] }, optSelected.value);
                 handleChange({ "name": bindingDependencies[1] }, optSelected.label);
@@ -307,6 +313,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         ],
         handleChange: (response: responseType, value: string | boolean | undefined) => void,
     ) => {
+        console.log(value);
         updateNewValue(value, handleChange, responses, newItemId);
         nextClickCallback();
     };
@@ -418,7 +425,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                     <ToggleButton
                                         className={
                                             componentSpecificProps?.icon ||
-                                            componentSpecificProps?.defaultIcon
+                                                componentSpecificProps?.defaultIcon
                                                 ? classes.MuiToggleButtonIcon
                                                 : classes.MuiToggleButton
                                         }
