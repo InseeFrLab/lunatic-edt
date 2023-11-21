@@ -130,14 +130,14 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     };
     const suggesterIdBindingDep: responsesType = bindingDependencies.length
         ? {
-              response: { name: bindingDependencies[2] },
-          }
+            response: { name: bindingDependencies[2] },
+        }
         : idBindingDep;
 
     const labelBindingDep: responsesType = bindingDependencies.length
         ? {
-              response: { name: bindingDependencies[1] },
-          }
+            response: { name: bindingDependencies[1] },
+        }
         : idBindingDep;
 
     const responsesActivity: [
@@ -186,7 +186,9 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
             if (isUUID(selectedOption) && optSelected) {
                 handleChange({ "name": bindingDependencies[0] }, optSelected.value);
-                handleChange({ "name": bindingDependencies[1] }, optSelected.label);
+                if (bindingDependencies.length > 1) {
+                    handleChange({ "name": bindingDependencies[1] }, optSelected.label);
+                }
             }
 
             if (onSelectValue && selectedOption != null) {
@@ -315,6 +317,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         ],
         handleChange: (response: responseType, value: string | boolean | undefined) => void,
     ) => {
+        console.log(value);
         updateNewValue(value, handleChange, responses, newItemId);
         nextClickCallback();
     };
@@ -426,7 +429,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                     <ToggleButton
                                         className={
                                             componentSpecificProps?.icon ||
-                                            componentSpecificProps?.defaultIcon
+                                                componentSpecificProps?.defaultIcon
                                                 ? classes.MuiToggleButtonIcon
                                                 : classes.MuiToggleButton
                                         }
