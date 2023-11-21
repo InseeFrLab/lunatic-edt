@@ -106,7 +106,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     const [isSubchildDisplayed, setIsSubchildDisplayed] = React.useState<boolean>(selectedId != "");
     const [subComponent, setSubComponent] = React.useState<FullScreenComponent>(
         getComposantInit(suggesterId, labelNewValue),
-    )
+    );
 
     const [newOptionValue, setNewOptionValue] = React.useState<string | undefined>(undefined);
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
@@ -128,15 +128,17 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     const idBindingDep: responsesType = {
         response: { name: bindingDependencies[0] },
     };
-    const suggesterIdBindingDep: responsesType =
-        bindingDependencies.length ? {
-            response: { name: bindingDependencies[2] },
-        } : idBindingDep;
+    const suggesterIdBindingDep: responsesType = bindingDependencies.length
+        ? {
+              response: { name: bindingDependencies[2] },
+          }
+        : idBindingDep;
 
-    const labelBindingDep: responsesType =
-        bindingDependencies.length ? {
-            response: { name: bindingDependencies[1] },
-        } : idBindingDep;
+    const labelBindingDep: responsesType = bindingDependencies.length
+        ? {
+              response: { name: bindingDependencies[1] },
+          }
+        : idBindingDep;
 
     const responsesActivity: [
         responsesType,
@@ -313,7 +315,6 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         ],
         handleChange: (response: responseType, value: string | boolean | undefined) => void,
     ) => {
-        console.log(value);
         updateNewValue(value, handleChange, responses, newItemId);
         nextClickCallback();
     };
@@ -425,7 +426,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                     <ToggleButton
                                         className={
                                             componentSpecificProps?.icon ||
-                                                componentSpecificProps?.defaultIcon
+                                            componentSpecificProps?.defaultIcon
                                                 ? classes.MuiToggleButtonIcon
                                                 : classes.MuiToggleButton
                                         }
