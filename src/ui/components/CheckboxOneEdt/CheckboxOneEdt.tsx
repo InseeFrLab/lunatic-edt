@@ -186,7 +186,9 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
             if (isUUID(selectedOption) && optSelected) {
                 handleChange({ "name": bindingDependencies[0] }, optSelected.value);
-                handleChange({ "name": bindingDependencies[1] }, optSelected.label);
+                if (bindingDependencies.length > 1) {
+                    handleChange({ "name": bindingDependencies[1] }, optSelected.label);
+                }
             }
 
             if (onSelectValue && selectedOption != null) {

@@ -13,6 +13,7 @@ const Info = memo((props: InfoProps) => {
         border,
         isAlertInfo,
         infoIconTop = false,
+        boldFirst = false,
     } = props;
     const { classes, cx } = useStyles();
 
@@ -36,12 +37,17 @@ const Info = memo((props: InfoProps) => {
                     </Box>
                 )}
                 <Box>
+                    {boldText && boldFirst && (
+                        <Box>
+                            <p className={classes.textBold}>{boldText}</p>
+                        </Box>
+                    )}
                     {normalText && (
                         <Box>
                             <p className={classes.text}>{normalText}</p>
                         </Box>
                     )}
-                    {boldText && (
+                    {boldText && !boldFirst && (
                         <Box>
                             <p className={classes.textBold}>{boldText}</p>
                         </Box>

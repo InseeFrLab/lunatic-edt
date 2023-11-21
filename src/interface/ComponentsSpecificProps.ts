@@ -30,6 +30,7 @@ export type InfoProps = {
     infoIconTooltipAlt: string;
     infoIconTop?: boolean;
     border: boolean;
+    boldFirst?: boolean;
 };
 
 export type WeeklyPlannerSpecificProps = {
