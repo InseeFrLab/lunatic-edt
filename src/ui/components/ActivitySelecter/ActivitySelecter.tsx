@@ -31,7 +31,7 @@ import {
     processNewActivity,
     selectFinalCategory,
     selectSubCategory,
-    updateNewValue,
+    updateNewValue
 } from "./activityUtils";
 
 type ActivitySelecterProps = {
@@ -128,7 +128,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const [newValue, setNewValue] = useState<string | undefined>();
 
     const newItemId = useRef(uuidv4());
-    const { classes, cx } = useStyles({ "modifiable": modifiable });
+    const { classes, cx } = useStyles({ "modifiable": modifiable, "innerHeight": window.innerHeight });
 
     useEffect(() => {
         setDisplayStepper &&
@@ -349,6 +349,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         fullScreenComponent,
                         {
                             handleChange,
+                            nextClickCallback,
+                            setDisplayAlert,
+                            nextStepClickableList
                         },
                         {
                             selectedCategory: selectRank1Category?.id,
@@ -405,12 +408,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             displayAlertNewActivity:
                                 fullScreenComponent == FullScreenComponent.FreeInput
                                     ? (createActivityValue === undefined ||
-                                          createActivityValue === "") &&
-                                      !true
+                                        createActivityValue === "") &&
+                                    !true
                                     : selectRank1Category?.id === undefined &&
-                                      selectedId === undefined &&
-                                      selectedSuggesterId === undefined &&
-                                      !true,
+                                    selectedId === undefined &&
+                                    selectedSuggesterId === undefined &&
+                                    !true,
                             routeToGoal: selectedCategories[selectedCategories.length - 1]
                                 ? false
                                 : true,
@@ -860,10 +863,87 @@ const renderFreeInput = (
     );
 };
 
+
+const renderButtonSaveClickableList = (
+    classes: any,
+    modifiable: boolean,
+    label: string,
+    functions: {
+        handleChange: (response: responseType, value: string | boolean | undefined) => void;
+        nextClickCallback: (routeToGoal: boolean) => void;
+        setDisplayAlert: (display: boolean) => void;
+        nextStepClickableList : (
+            states: {
+                selectedCategory: string | undefined;
+                selectedId: string | undefined;
+                suggesterId: string | undefined;
+                fullScreenComponent: FullScreenComponent;
+                selectedCategories: NomenclatureActivityOption[];
+                createActivityValue: string | undefined;
+            },
+            setDisplayAlert: (display: boolean) => void,
+            nextClickCallback: (routeToGoal: boolean) => void,
+            displayAlert1: boolean,
+            routeToGoal: boolean,
+        ) => void;
+    },
+    states: {
+        selectedCategories: NomenclatureActivityOption[];
+        createActivityValue: string | undefined;
+        fullScreenComponent: FullScreenComponent;
+        selectedCategory: string | undefined;
+        selectedId: string | undefined;
+        suggesterId: string | undefined;
+        freeInput: string | undefined;
+    },
+) => {
+
+    let selectedActId =
+        localStorage.getItem(selectedIdNewActivity) != "" || states.selectedId === undefined;
+    let displayAlert =
+        states.fullScreenComponent == FullScreenComponent.FreeInput
+            ? (states.freeInput === undefined || states.freeInput === "")
+            : states.selectedCategory === undefined &&
+            selectedActId === undefined &&
+            states.suggesterId === undefined;
+
+            return (
+                <Box className={classes.buttonSaveClickableList}>
+                    <Button
+                        className={classes.saveNewActivityButton}
+                        variant="contained"
+                        onClick={() => functions.nextStepClickableList(
+                            states, functions.setDisplayAlert, functions.nextClickCallback, displayAlert, true)
+                        }
+                        disabled={!modifiable}
+                    >
+                        {label}
+                    </Button>
+                </Box>
+            )
+        }
+
+
 const renderClickableList = (
     fullScreenComponent: FullScreenComponent,
     functions: {
         handleChange: (response: responseType, value: string | boolean | undefined) => void;
+        nextClickCallback: (routeToGoal: boolean) => void;
+        setDisplayAlert: (display: boolean) => void;
+        nextStepClickableList : (
+            states: {
+                selectedCategory: string | undefined;
+                selectedId: string | undefined;
+                suggesterId: string | undefined;
+                fullScreenComponent: FullScreenComponent;
+                selectedCategories: NomenclatureActivityOption[];
+                createActivityValue: string | undefined;
+            },
+            setDisplayAlert: (display: boolean) => void,
+            nextClickCallback: (routeToGoal: boolean) => void,
+            displayAlert1: boolean,
+            routeToGoal: boolean,
+        ) => void;
     },
     states: {
         selectedCategories: NomenclatureActivityOption[];
@@ -910,62 +990,66 @@ const renderClickableList = (
 ) => {
     const indexInfo = indexSuggester(inputs.activitesAutoCompleteRef, inputs.selectedSuggesterId);
     const historyInputSuggesterValue = localStorage.getItem(historyInputSuggester) ?? "";
+    
     return (
         fullScreenComponent == FullScreenComponent.ClickableListComp && (
-            <ClickableList
-                className={inputs.isMobile ? classes.clickableListMobile : classes.clickableList}
-                optionsFiltered={indexInfo[1]}
-                index={indexInfo[0]}
-                selectedValue={indexInfo[2]}
-                historyInputSuggesterValue={historyInputSuggesterValue}
-                handleChange={(id: string, label: string) =>
-                    clickableListOnChange(
-                        id,
-                        functions.handleChange,
-                        inputs.responses,
-                        inputs.newItemId,
-                        setters.setSelectedSuggesterId,
-                        label,
-                    )
-                }
-                handleChangeHistorySuggester={(value: string) => clickableListHistoryOnChange(value)}
-                createActivity={(label: string) =>
-                    createActivityCallBack(
-                        {
-                            selectedCategoryId:
-                                states.selectedCategories[states.selectedCategories.length - 1]?.id,
-                            selectedCategories: states.selectedCategories,
-                        },
-                        setters,
-                        functions,
-                        {
-                            activityLabel: label,
-                            newItemId: inputs.newItemId,
-                            separatorSuggester: inputs.separatorSuggester,
-                            historyActivitySelecterBindingDep: inputs.historyActivitySelecterBindingDep,
-                            responses: inputs.responses,
-                        },
-                    )
-                }
-                placeholder={inputs.labels.clickableListPlaceholder}
-                notFoundLabel={inputs.labels.clickableListNotFoundLabel}
-                notFoundComment={inputs.labels.clickableListNotFoundComment}
-                notSearchLabel={inputs.labels.clickableListNotSearchLabel}
-                addActivityButtonLabel={inputs.labels.clickableListAddActivityButton}
-                iconNoResult={inputs.clickableListIconNoResult}
-                iconNoResultAlt={inputs.labels.clickableListIconNoResultAlt}
-                autoFocus={true}
-                isMobile={inputs.isMobile}
-                separatorSuggester={inputs.separatorSuggester}
-                iconAddWhite={iconAddWhite}
-                iconAddLightBlue={iconAddLightBlue}
-                iconAddAlt={iconAddAlt}
-                iconExtension={iconExtension}
-                iconExtensionAlt={iconExtensionAlt}
-                iconSearch={iconSearch}
-                iconSearchAlt={iconSearchAlt}
-                modifiable={inputs.modifiable}
-            />
+            <Box className={classes.clickableListBox}>
+                <ClickableList
+                    className={inputs.isMobile ? classes.clickableListMobile : classes.clickableList}
+                    optionsFiltered={indexInfo[1]}
+                    index={indexInfo[0]}
+                    selectedValue={indexInfo[2]}
+                    historyInputSuggesterValue={historyInputSuggesterValue}
+                    handleChange={(id: string, label: string) =>
+                        clickableListOnChange(
+                            id,
+                            functions.handleChange,
+                            inputs.responses,
+                            inputs.newItemId,
+                            setters.setSelectedSuggesterId,
+                            label,
+                        )
+                    }
+                    handleChangeHistorySuggester={(value: string) => clickableListHistoryOnChange(value)}
+                    createActivity={(label: string) =>
+                        createActivityCallBack(
+                            {
+                                selectedCategoryId:
+                                    states.selectedCategories[states.selectedCategories.length - 1]?.id,
+                                selectedCategories: states.selectedCategories,
+                            },
+                            setters,
+                            functions,
+                            {
+                                activityLabel: label,
+                                newItemId: inputs.newItemId,
+                                separatorSuggester: inputs.separatorSuggester,
+                                historyActivitySelecterBindingDep: inputs.historyActivitySelecterBindingDep,
+                                responses: inputs.responses,
+                            },
+                        )
+                    }
+                    placeholder={inputs.labels.clickableListPlaceholder}
+                    notFoundLabel={inputs.labels.clickableListNotFoundLabel}
+                    notFoundComment={inputs.labels.clickableListNotFoundComment}
+                    notSearchLabel={inputs.labels.clickableListNotSearchLabel}
+                    addActivityButtonLabel={inputs.labels.clickableListAddActivityButton}
+                    iconNoResult={inputs.clickableListIconNoResult}
+                    iconNoResultAlt={inputs.labels.clickableListIconNoResultAlt}
+                    autoFocus={true}
+                    isMobile={inputs.isMobile}
+                    separatorSuggester={inputs.separatorSuggester}
+                    iconAddWhite={iconAddWhite}
+                    iconAddLightBlue={iconAddLightBlue}
+                    iconAddAlt={iconAddAlt}
+                    iconExtension={iconExtension}
+                    iconExtensionAlt={iconExtensionAlt}
+                    iconSearch={iconSearch}
+                    iconSearchAlt={iconSearchAlt}
+                    modifiable={inputs.modifiable}
+                />
+                {renderButtonSaveClickableList(classes, inputs.modifiable, inputs.labels.validateButton, functions, states)}
+            </Box>
         )
     );
 };
@@ -1122,11 +1206,11 @@ const nextStep = (
     let displayAlert =
         states.fullScreenComponent == FullScreenComponent.FreeInput
             ? (states.freeInput === undefined || states.freeInput === "") &&
-              !inputs.continueWithUncompleted
+            !inputs.continueWithUncompleted
             : states.selectedCategory === undefined &&
-              selectedActId === undefined &&
-              states.suggesterId === undefined &&
-              !inputs.continueWithUncompleted;
+            selectedActId === undefined &&
+            states.suggesterId === undefined &&
+            !inputs.continueWithUncompleted;
     switch (states.fullScreenComponent) {
         //option clickable list - when activity selected is one of sub category
         case FullScreenComponent.ClickableListComp:
@@ -1282,7 +1366,7 @@ const getSubRankCategoryClassName = (
     return cx(classes.subRankCategory, category.id == "130" ? classes.rank1CategoryHelp : "");
 };
 
-const useStyles = makeStylesEdt<{ modifiable: boolean }>({ "name": { ActivitySelecter } })(
+const useStyles = makeStylesEdt<{ modifiable: boolean, innerHeight: number }>({ "name": { ActivitySelecter } })(
     (theme, { modifiable }) => ({
         root: {
             display: "flex",
@@ -1432,6 +1516,21 @@ const useStyles = makeStylesEdt<{ modifiable: boolean }>({ "name": { ActivitySel
             height: "85vh",
             justifyContent: "center",
         },
+        buttonSaveClickableList: {
+            width: "100%",
+            display: "flex",
+            justifyContent: "center"
+        },
+        saveNewActivityButton: {
+            margin: "2rem 0rem",
+            width: "80%"
+        },
+        clickableListBox: {
+            height: innerHeight/2 + "px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+        }
     }),
 );
 
