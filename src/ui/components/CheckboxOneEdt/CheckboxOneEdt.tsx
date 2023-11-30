@@ -251,7 +251,6 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         setNewOptionValue(label);
         handleChange({ "name": bindingDependencies[0] }, newItemId.current);
         handleChange({ "name": bindingDependencies[1] }, label);
-        console.log(createNewActivity);
         createActivityCallBack(
             { selectedCategoryId: newItemId.current },
             {
