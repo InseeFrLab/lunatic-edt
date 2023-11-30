@@ -18,7 +18,7 @@ export type ActivityLabelProps = {
     clickableListNotSearchLabel: string;
     otherButton: string;
     saveButton: string;
-    validateButton: string;    
+    validateButton: string;
 };
 
 export type InfoProps = {
