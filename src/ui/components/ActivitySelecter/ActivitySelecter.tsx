@@ -112,6 +112,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     } = { ...componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
+    const [showSubCategories, setShowSubCategories] = useState<boolean>(false);
     const [selectRank1Category, setSelectRank1Category] = useState<
         NomenclatureActivityOption | undefined
     >(undefined);
@@ -273,6 +274,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             setSelectedId,
                             setLabelOfSelectedId,
                             setSelectedCategories,
+                            setShowSubCategories
                         },
                         handleChange,
                         onSelectValue,
@@ -469,9 +471,11 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                     fullScreenComponent,
                                     selectedCategory: selectRank1Category?.id,
                                     suggesterId: selectedSuggesterId,
+                                    showSubCategories,
                                     setSelectedCategories,
                                     setSelectedId,
                                     setLabelOfSelectedId,
+                                    setShowSubCategories,
                                 },
                                 {
                                     setFullScreenComponent,
@@ -519,6 +523,7 @@ const renderRank1Category = (
         setSelectedId: (id?: string) => void;
         setLabelOfSelectedId: (label?: string) => void;
         setSelectedCategories: (activities: NomenclatureActivityOption[]) => void;
+        setShowSubCategories: (show: boolean) => void;
     },
     functions: {
         onSelectValue: () => void;
@@ -599,6 +604,7 @@ const categoriesActivitiesBoxClick = (
         setSelectedId: (id?: string) => void;
         setLabelOfSelectedId: (label?: string) => void;
         setSelectedCategories: (activities: NomenclatureActivityOption[]) => void;
+        setShowSubCategories: (show: boolean) => void;
     },
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
     onSelectValue: () => void,
@@ -619,6 +625,7 @@ const categoriesActivitiesBoxClick = (
         newItemId: string;
     },
 ) => {
+    states.setShowSubCategories(true);
     if (inputs.modifiable) {
         if (inputs.selection.subs) {
             selectSubCategory(
@@ -663,9 +670,11 @@ const renderCategories = (
         fullScreenComponent: FullScreenComponent;
         selectedCategory: string | undefined;
         suggesterId: string | undefined;
+        showSubCategories: boolean;
         setSelectedId: (id?: string) => void;
         setLabelOfSelectedId: (label?: string) => void;
         setSelectedCategories: (activities: NomenclatureActivityOption[]) => void;
+        setShowSubCategories: (show: boolean) => void;
     },
     functions: {
         setFullScreenComponent: (comp: FullScreenComponent) => void;
@@ -694,7 +703,7 @@ const renderCategories = (
     classes: any,
     cx: any,
 ) => {
-    return states.selectedCategories.length === 0 ? (
+    return !states.showSubCategories ? (
         <Box className={classes.rank1CategoriesBox}>
             {inputs.categoriesAndActivitesNomenclature.map((d, index) => {
                 return renderRank1Category(
