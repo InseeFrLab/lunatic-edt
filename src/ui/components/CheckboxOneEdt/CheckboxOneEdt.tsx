@@ -232,10 +232,10 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
 
     const handleChangeClickableList = (id: string, label: string) => {
         setNewOptionValue(label);
-        
+
         handleChange({ "name": bindingDependencies[0] }, newItemId.current);
         handleChange({ "name": bindingDependencies[1] }, label);
-        
+
         clickableListOnChange(
             id,
             handleChange,
