@@ -192,6 +192,7 @@ export type CheckBoxOneSpecificPropsLabels = {
     otherButtonLabel?: string;
     subchildLabel?: string;
     inputPlaceholder?: string;
+    validateButton?: string;
 };
 
 export type TimepickerSpecificProps = {
