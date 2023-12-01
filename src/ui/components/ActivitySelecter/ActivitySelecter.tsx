@@ -112,6 +112,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     } = { ...componentSpecificProps };
 
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
+    const [showSubCategories, setShowSubCategories] = useState<boolean>(false);
     const [selectRank1Category, setSelectRank1Category] = useState<
         NomenclatureActivityOption | undefined
     >(undefined);
@@ -128,7 +129,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const [newValue, setNewValue] = useState<string | undefined>();
 
     const newItemId = useRef(uuidv4());
-    const { classes, cx } = useStyles({ "modifiable": modifiable });
+    const { classes, cx } = useStyles({ "modifiable": modifiable, "innerHeight": window.innerHeight });
 
     useEffect(() => {
         setDisplayStepper &&
@@ -273,6 +274,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             setSelectedId,
                             setLabelOfSelectedId,
                             setSelectedCategories,
+                            setShowSubCategories,
                         },
                         handleChange,
                         onSelectValue,
@@ -349,6 +351,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         fullScreenComponent,
                         {
                             handleChange,
+                            nextClickCallback,
+                            setDisplayAlert,
+                            nextStepClickableList,
                         },
                         {
                             selectedCategory: selectRank1Category?.id,
@@ -466,9 +471,11 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                     fullScreenComponent,
                                     selectedCategory: selectRank1Category?.id,
                                     suggesterId: selectedSuggesterId,
+                                    showSubCategories,
                                     setSelectedCategories,
                                     setSelectedId,
                                     setLabelOfSelectedId,
+                                    setShowSubCategories,
                                 },
                                 {
                                     setFullScreenComponent,
@@ -516,6 +523,7 @@ const renderRank1Category = (
         setSelectedId: (id?: string) => void;
         setLabelOfSelectedId: (label?: string) => void;
         setSelectedCategories: (activities: NomenclatureActivityOption[]) => void;
+        setShowSubCategories: (show: boolean) => void;
     },
     functions: {
         onSelectValue: () => void;
@@ -596,6 +604,7 @@ const categoriesActivitiesBoxClick = (
         setSelectedId: (id?: string) => void;
         setLabelOfSelectedId: (label?: string) => void;
         setSelectedCategories: (activities: NomenclatureActivityOption[]) => void;
+        setShowSubCategories: (show: boolean) => void;
     },
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
     onSelectValue: () => void,
@@ -616,6 +625,7 @@ const categoriesActivitiesBoxClick = (
         newItemId: string;
     },
 ) => {
+    states.setShowSubCategories(true);
     if (inputs.modifiable) {
         if (inputs.selection.subs) {
             selectSubCategory(
@@ -660,9 +670,11 @@ const renderCategories = (
         fullScreenComponent: FullScreenComponent;
         selectedCategory: string | undefined;
         suggesterId: string | undefined;
+        showSubCategories: boolean;
         setSelectedId: (id?: string) => void;
         setLabelOfSelectedId: (label?: string) => void;
         setSelectedCategories: (activities: NomenclatureActivityOption[]) => void;
+        setShowSubCategories: (show: boolean) => void;
     },
     functions: {
         setFullScreenComponent: (comp: FullScreenComponent) => void;
@@ -691,7 +703,7 @@ const renderCategories = (
     classes: any,
     cx: any,
 ) => {
-    return states.selectedCategories.length === 0 ? (
+    return !states.showSubCategories ? (
         <Box className={classes.rank1CategoriesBox}>
             {inputs.categoriesAndActivitesNomenclature.map((d, index) => {
                 return renderRank1Category(
@@ -860,10 +872,90 @@ const renderFreeInput = (
     );
 };
 
+const renderButtonSaveClickableList = (
+    classes: any,
+    modifiable: boolean,
+    label: string,
+    functions: {
+        handleChange: (response: responseType, value: string | boolean | undefined) => void;
+        nextClickCallback: (routeToGoal: boolean) => void;
+        setDisplayAlert: (display: boolean) => void;
+        nextStepClickableList: (
+            states: {
+                selectedCategory: string | undefined;
+                selectedId: string | undefined;
+                suggesterId: string | undefined;
+                fullScreenComponent: FullScreenComponent;
+                selectedCategories: NomenclatureActivityOption[];
+                createActivityValue: string | undefined;
+            },
+            setDisplayAlert: (display: boolean) => void,
+            nextClickCallback: (routeToGoal: boolean) => void,
+            displayAlert1: boolean,
+            routeToGoal: boolean,
+        ) => void;
+    },
+    states: {
+        selectedCategories: NomenclatureActivityOption[];
+        createActivityValue: string | undefined;
+        fullScreenComponent: FullScreenComponent;
+        selectedCategory: string | undefined;
+        selectedId: string | undefined;
+        suggesterId: string | undefined;
+        freeInput: string | undefined;
+    },
+) => {
+    let selectedActId =
+        localStorage.getItem(selectedIdNewActivity) != "" || states.selectedId === undefined;
+    let displayAlert =
+        states.fullScreenComponent == FullScreenComponent.FreeInput
+            ? states.freeInput === undefined || states.freeInput === ""
+            : states.selectedCategory === undefined &&
+              selectedActId === undefined &&
+              states.suggesterId === undefined;
+
+    return (
+        <Box className={classes.buttonSaveClickableList}>
+            <Button
+                className={classes.saveNewActivityButton}
+                variant="contained"
+                onClick={() =>
+                    functions.nextStepClickableList(
+                        states,
+                        functions.setDisplayAlert,
+                        functions.nextClickCallback,
+                        displayAlert,
+                        true,
+                    )
+                }
+                disabled={!modifiable}
+            >
+                {label}
+            </Button>
+        </Box>
+    );
+};
+
 const renderClickableList = (
     fullScreenComponent: FullScreenComponent,
     functions: {
         handleChange: (response: responseType, value: string | boolean | undefined) => void;
+        nextClickCallback: (routeToGoal: boolean) => void;
+        setDisplayAlert: (display: boolean) => void;
+        nextStepClickableList: (
+            states: {
+                selectedCategory: string | undefined;
+                selectedId: string | undefined;
+                suggesterId: string | undefined;
+                fullScreenComponent: FullScreenComponent;
+                selectedCategories: NomenclatureActivityOption[];
+                createActivityValue: string | undefined;
+            },
+            setDisplayAlert: (display: boolean) => void,
+            nextClickCallback: (routeToGoal: boolean) => void,
+            displayAlert1: boolean,
+            routeToGoal: boolean,
+        ) => void;
     },
     states: {
         selectedCategories: NomenclatureActivityOption[];
@@ -910,62 +1002,73 @@ const renderClickableList = (
 ) => {
     const indexInfo = indexSuggester(inputs.activitesAutoCompleteRef, inputs.selectedSuggesterId);
     const historyInputSuggesterValue = localStorage.getItem(historyInputSuggester) ?? "";
+
     return (
         fullScreenComponent == FullScreenComponent.ClickableListComp && (
-            <ClickableList
-                className={inputs.isMobile ? classes.clickableListMobile : classes.clickableList}
-                optionsFiltered={indexInfo[1]}
-                index={indexInfo[0]}
-                selectedValue={indexInfo[2]}
-                historyInputSuggesterValue={historyInputSuggesterValue}
-                handleChange={(id: string, label: string) =>
-                    clickableListOnChange(
-                        id,
-                        functions.handleChange,
-                        inputs.responses,
-                        inputs.newItemId,
-                        setters.setSelectedSuggesterId,
-                        label,
-                    )
-                }
-                handleChangeHistorySuggester={(value: string) => clickableListHistoryOnChange(value)}
-                createActivity={(label: string) =>
-                    createActivityCallBack(
-                        {
-                            selectedCategoryId:
-                                states.selectedCategories[states.selectedCategories.length - 1]?.id,
-                            selectedCategories: states.selectedCategories,
-                        },
-                        setters,
-                        functions,
-                        {
-                            activityLabel: label,
-                            newItemId: inputs.newItemId,
-                            separatorSuggester: inputs.separatorSuggester,
-                            historyActivitySelecterBindingDep: inputs.historyActivitySelecterBindingDep,
-                            responses: inputs.responses,
-                        },
-                    )
-                }
-                placeholder={inputs.labels.clickableListPlaceholder}
-                notFoundLabel={inputs.labels.clickableListNotFoundLabel}
-                notFoundComment={inputs.labels.clickableListNotFoundComment}
-                notSearchLabel={inputs.labels.clickableListNotSearchLabel}
-                addActivityButtonLabel={inputs.labels.clickableListAddActivityButton}
-                iconNoResult={inputs.clickableListIconNoResult}
-                iconNoResultAlt={inputs.labels.clickableListIconNoResultAlt}
-                autoFocus={true}
-                isMobile={inputs.isMobile}
-                separatorSuggester={inputs.separatorSuggester}
-                iconAddWhite={iconAddWhite}
-                iconAddLightBlue={iconAddLightBlue}
-                iconAddAlt={iconAddAlt}
-                iconExtension={iconExtension}
-                iconExtensionAlt={iconExtensionAlt}
-                iconSearch={iconSearch}
-                iconSearchAlt={iconSearchAlt}
-                modifiable={inputs.modifiable}
-            />
+            <Box className={classes.clickableListBox}>
+                <ClickableList
+                    className={inputs.isMobile ? classes.clickableListMobile : classes.clickableList}
+                    optionsFiltered={indexInfo[1]}
+                    index={indexInfo[0]}
+                    selectedValue={indexInfo[2]}
+                    historyInputSuggesterValue={historyInputSuggesterValue}
+                    handleChange={(id: string, label: string) =>
+                        clickableListOnChange(
+                            id,
+                            functions.handleChange,
+                            inputs.responses,
+                            inputs.newItemId,
+                            setters.setSelectedSuggesterId,
+                            label,
+                        )
+                    }
+                    handleChangeHistorySuggester={(value: string) => clickableListHistoryOnChange(value)}
+                    createActivity={(label: string) =>
+                        createActivityCallBack(
+                            {
+                                selectedCategoryId:
+                                    states.selectedCategories[states.selectedCategories.length - 1]?.id,
+                                selectedCategories: states.selectedCategories,
+                            },
+                            setters,
+                            functions,
+                            {
+                                activityLabel: label,
+                                newItemId: inputs.newItemId,
+                                separatorSuggester: inputs.separatorSuggester,
+                                historyActivitySelecterBindingDep:
+                                    inputs.historyActivitySelecterBindingDep,
+                                responses: inputs.responses,
+                            },
+                        )
+                    }
+                    placeholder={inputs.labels.clickableListPlaceholder}
+                    notFoundLabel={inputs.labels.clickableListNotFoundLabel}
+                    notFoundComment={inputs.labels.clickableListNotFoundComment}
+                    notSearchLabel={inputs.labels.clickableListNotSearchLabel}
+                    addActivityButtonLabel={inputs.labels.clickableListAddActivityButton}
+                    iconNoResult={inputs.clickableListIconNoResult}
+                    iconNoResultAlt={inputs.labels.clickableListIconNoResultAlt}
+                    autoFocus={true}
+                    isMobile={inputs.isMobile}
+                    separatorSuggester={inputs.separatorSuggester}
+                    iconAddWhite={iconAddWhite}
+                    iconAddLightBlue={iconAddLightBlue}
+                    iconAddAlt={iconAddAlt}
+                    iconExtension={iconExtension}
+                    iconExtensionAlt={iconExtensionAlt}
+                    iconSearch={iconSearch}
+                    iconSearchAlt={iconSearchAlt}
+                    modifiable={inputs.modifiable}
+                />
+                {renderButtonSaveClickableList(
+                    classes,
+                    inputs.modifiable,
+                    inputs.labels.validateButton,
+                    functions,
+                    states,
+                )}
+            </Box>
         )
     );
 };
@@ -1282,157 +1385,172 @@ const getSubRankCategoryClassName = (
     return cx(classes.subRankCategory, category.id == "130" ? classes.rank1CategoryHelp : "");
 };
 
-const useStyles = makeStylesEdt<{ modifiable: boolean }>({ "name": { ActivitySelecter } })(
-    (theme, { modifiable }) => ({
-        root: {
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-        },
-        title: {
-            color: theme.palette.info.main,
-            fontSize: "20px",
-            textAlign: "center",
-            marginTop: "2rem",
-            marginBottom: "1rem",
-        },
-        activityInput: {
-            width: "93%",
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "1rem",
-            backgroundColor: theme.variables.white,
-            borderRadius: "5px",
-        },
-        activityInputHelp: {
-            zIndex: "1400",
-        },
-        activityInputLabel: {
-            fontSize: "16px",
-            color: "#5A6C95",
-            margin: "1rem",
-        },
-        activityInputIcon: {
-            margin: "1rem",
-        },
-        clickableList: {
-            width: "300px",
-            marginTop: "1rem",
-        },
-        clickableListMobile: {
-            width: "100%",
-            marginTop: "0rem",
-        },
-        freeInputTextField: {
-            width: "100%",
-            backgroundColor: theme.variables.white,
-            borderRadius: "5px",
-        },
-        rank1CategoriesBox: {
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "space-evenly",
-            cursor: "pointer",
-            padding: "1rem",
-        },
-        rank1Category: {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            backgroundColor: theme.variables.white,
-            width: "45.5%",
-            marginTop: "4%",
-            borderRadius: "15px",
-        },
-        rank1CategoryHelp: {
-            zIndex: "1400",
-            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
-            cursor: !modifiable ? "default" : "",
-        },
-        rank1CategorySelected: {
-            border: "2px solid #4973D2 !important",
-            fontWeight: "bold",
-            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
-            cursor: !modifiable ? "default" : "",
-        },
-        icon: {
-            width: "80px",
-            height: "45px",
-            marginTop: "1rem",
-        },
-        rank1MainLabel: {
-            fontSize: "14px",
-            textAlign: "center",
-            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : theme.palette.text.secondary,
-            fontWeight: "bold",
-            marginTop: "1rem",
-            marginRight: "0.5rem",
-            marginBottom: "0.5rem",
-            marginLeft: "0.5rem",
-        },
-        rank1SecondLabel: {
-            fontSize: "12px",
-            textAlign: "center",
-            marginTop: "0.5rem",
-            marginRight: "0.5rem",
-            marginBottom: "1rem",
-            marginLeft: "0.5rem",
-            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
-        },
-        subRankCategory: {
-            border: "2px solid transparent",
-            display: "flex",
-            backgroundColor: theme.variables.white,
-            marginTop: "4%",
-            borderRadius: "6px",
-            width: "100%",
-            padding: "1rem",
-            alignItems: "center",
-            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
-            cursor: !modifiable ? "default" : "",
-        },
-        subRankCategoryMobile: {
-            marginTop: "3rem",
-        },
-        selectedSubRankCategory: {
-            borderColor: theme.palette.primary.main,
-            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
-            cursor: !modifiable ? "default" : "",
-        },
-        subRankLabel: {
-            fontSize: "14px",
-            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : theme.palette.text.secondary,
-            width: "80%",
-            paddingLeft: "0.5rem",
-        },
-        optionIcon: {
-            marginRight: "0.5rem",
-            color: theme.palette.primary.main,
-            width: "10%",
-        },
-        chevronIcon: {
-            color: theme.palette.primary.main,
-            width: "10%",
-        },
-        buttonOther: {
-            backgroundColor: theme.palette.primary.main,
-            width: "60%",
-            marginTop: "2rem",
-            color: theme.variables.white,
-        },
-        addActivityButton: {
-            margin: "2rem 0rem",
-        },
-        freeInputBox: {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-        },
-        freeInputBoxMobile: {
-            height: "85vh",
-            justifyContent: "center",
-        },
-    }),
-);
+const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
+    "name": { ActivitySelecter },
+})((theme, { modifiable }) => ({
+    root: {
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+    },
+    title: {
+        color: theme.palette.info.main,
+        fontSize: "20px",
+        textAlign: "center",
+        marginTop: "2rem",
+        marginBottom: "1rem",
+    },
+    activityInput: {
+        width: "93%",
+        display: "flex",
+        justifyContent: "space-between",
+        marginBottom: "1rem",
+        backgroundColor: theme.variables.white,
+        borderRadius: "5px",
+    },
+    activityInputHelp: {
+        zIndex: "1400",
+    },
+    activityInputLabel: {
+        fontSize: "16px",
+        color: "#5A6C95",
+        margin: "1rem",
+    },
+    activityInputIcon: {
+        margin: "1rem",
+    },
+    clickableList: {
+        width: "300px",
+        marginTop: "1rem",
+    },
+    clickableListMobile: {
+        width: "100%",
+        marginTop: "0rem",
+    },
+    freeInputTextField: {
+        width: "100%",
+        backgroundColor: theme.variables.white,
+        borderRadius: "5px",
+    },
+    rank1CategoriesBox: {
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "space-evenly",
+        cursor: "pointer",
+        padding: "1rem",
+    },
+    rank1Category: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        backgroundColor: theme.variables.white,
+        width: "45.5%",
+        marginTop: "4%",
+        borderRadius: "15px",
+    },
+    rank1CategoryHelp: {
+        zIndex: "1400",
+        color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+        cursor: !modifiable ? "default" : "",
+    },
+    rank1CategorySelected: {
+        border: "2px solid #4973D2 !important",
+        fontWeight: "bold",
+        color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+        cursor: !modifiable ? "default" : "",
+    },
+    icon: {
+        width: "80px",
+        height: "45px",
+        marginTop: "1rem",
+    },
+    rank1MainLabel: {
+        fontSize: "14px",
+        textAlign: "center",
+        color: !modifiable ? "rgba(0, 0, 0, 0.38)" : theme.palette.text.secondary,
+        fontWeight: "bold",
+        marginTop: "1rem",
+        marginRight: "0.5rem",
+        marginBottom: "0.5rem",
+        marginLeft: "0.5rem",
+    },
+    rank1SecondLabel: {
+        fontSize: "12px",
+        textAlign: "center",
+        marginTop: "0.5rem",
+        marginRight: "0.5rem",
+        marginBottom: "1rem",
+        marginLeft: "0.5rem",
+        color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+    },
+    subRankCategory: {
+        border: "2px solid transparent",
+        display: "flex",
+        backgroundColor: theme.variables.white,
+        marginTop: "4%",
+        borderRadius: "6px",
+        width: "100%",
+        padding: "1rem",
+        alignItems: "center",
+        color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+        cursor: !modifiable ? "default" : "",
+    },
+    subRankCategoryMobile: {
+        marginTop: "3rem",
+    },
+    selectedSubRankCategory: {
+        borderColor: theme.palette.primary.main,
+        color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+        cursor: !modifiable ? "default" : "",
+    },
+    subRankLabel: {
+        fontSize: "14px",
+        color: !modifiable ? "rgba(0, 0, 0, 0.38)" : theme.palette.text.secondary,
+        width: "80%",
+        paddingLeft: "0.5rem",
+    },
+    optionIcon: {
+        marginRight: "0.5rem",
+        color: theme.palette.primary.main,
+        width: "10%",
+    },
+    chevronIcon: {
+        color: theme.palette.primary.main,
+        width: "10%",
+    },
+    buttonOther: {
+        backgroundColor: theme.palette.primary.main,
+        width: "60%",
+        marginTop: "2rem",
+        color: theme.variables.white,
+    },
+    addActivityButton: {
+        margin: "2rem 0rem",
+    },
+    freeInputBox: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    freeInputBoxMobile: {
+        height: "85vh",
+        justifyContent: "center",
+    },
+    buttonSaveClickableList: {
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+    },
+    saveNewActivityButton: {
+        margin: "2rem 0rem",
+        width: "80%",
+    },
+    clickableListBox: {
+        height: innerHeight / 2 + "px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+    },
+}));
 
 export default createCustomizableLunaticField(ActivitySelecter, "ActivitySelecter");

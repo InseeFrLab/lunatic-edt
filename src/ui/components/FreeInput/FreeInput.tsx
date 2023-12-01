@@ -1,5 +1,5 @@
 import { Box, TextField, Typography } from "@mui/material";
-import { NomenclatureActivityOption } from "interface/ActivityTypes";
+import { NomenclatureActivityOption, responseType, responsesType } from "interface/ActivityTypes";
 import { ActivityLabelProps } from "interface/ComponentsSpecificProps";
 import React, { memo, useCallback, useState } from "react";
 import { makeStylesEdt } from "../../theme";
@@ -16,10 +16,20 @@ type FreeInputProps = {
         labels: ActivityLabelProps;
         label: string;
         isMobile: boolean;
+        newItemId: string;
+        responses: [
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+        ];
     };
     functions: {
         nextClickCallback: (routeToGoal: boolean) => void;
         onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void;
+        handleChange(response: responseType, value: string | boolean | undefined): void;
     };
     renderTitle?: (
         fullScreenComponent: FullScreenComponent,
@@ -31,7 +41,16 @@ type FreeInputProps = {
     ) => JSX.Element;
     updateNewValue: (
         value: string | undefined,
-        onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void,
+        handleChange: (response: responseType, value: string | boolean | undefined) => void,
+        responses: [
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+        ],
+        newItemId: string,
     ) => void;
 };
 
@@ -70,7 +89,14 @@ const FreeInput = memo((props: FreeInputProps) => {
                 value={createActivityValue}
                 className={classes.freeInputTextField}
                 onChange={freeInputOnChange}
-                onBlur={() => updateNewValue(createActivityValue, functions.onChange)}
+                onBlur={() =>
+                    updateNewValue(
+                        createActivityValue,
+                        functions.handleChange,
+                        specifiqueProps.responses,
+                        specifiqueProps.newItemId,
+                    )
+                }
                 placeholder={specifiqueProps.labels.clickableListPlaceholder}
                 label={specifiqueProps.label}
                 sx={{
