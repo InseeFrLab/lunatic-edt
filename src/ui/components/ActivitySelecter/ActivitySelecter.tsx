@@ -134,7 +134,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     useEffect(() => {
         setDisplayStepper &&
             setDisplayStepper(
-                fullScreenComponent === FullScreenComponent.Main && selectedCategories.length === 0,
+                fullScreenComponent === FullScreenComponent.Main &&
+                    (selectedCategories.length === 0 || !showSubCategories),
             );
 
         setDisplayHeader &&
@@ -186,6 +187,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         back(
             backClickEvent,
             selectedCategories,
+            showSubCategories,
             {
                 setSelectedId: setSelectedId,
                 setLabelOfSelectedId: setLabelOfSelectedId,
@@ -401,6 +403,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             selectedId: selectedId,
                             suggesterId: selectedSuggesterId,
                             freeInput: newValue,
+                            showSubCategories,
                         },
                         {
                             labels,
@@ -441,6 +444,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             {renderTitle(
                                 fullScreenComponent,
                                 selectedCategories,
+                                showSubCategories,
                                 labels,
                                 label,
                                 classes,
@@ -448,6 +452,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
 
                             {renderSearchInput(
                                 selectedCategories,
+                                showSubCategories,
                                 setFullScreenComponent,
                                 classes,
                                 cx,
@@ -644,12 +649,13 @@ const categoriesActivitiesBoxClick = (
 const renderTitle = (
     fullScreenComponent: FullScreenComponent,
     selectedCategories: NomenclatureActivityOption[],
+    showSubCategories: boolean,
     labels: ActivityLabelProps,
     label: string,
     classes: any,
     hasQuestionMark = true,
 ) => {
-    return selectedCategories.length === 0 ? (
+    return selectedCategories.length === 0 || !showSubCategories ? (
         <Typography className={classes.title}>
             {label}
             {hasQuestionMark ? <>&nbsp;?</> : <></>}
@@ -747,6 +753,7 @@ const renderCategories = (
 
 const renderSearchInput = (
     selectedCategories: NomenclatureActivityOption[],
+    showSubCategories: boolean,
     setFullScreenComponent: (comp: FullScreenComponent) => void,
     classes: any,
     cx: any,
@@ -763,7 +770,7 @@ const renderSearchInput = (
     },
 ) => {
     return (
-        selectedCategories.length === 0 && (
+        (selectedCategories.length === 0 || !showSubCategories) && (
             <Box
                 className={cx(
                     classes.activityInput,
@@ -803,6 +810,7 @@ const renderFreeInput = (
         selectedId: string | undefined;
         suggesterId: string | undefined;
         freeInput: string | undefined;
+        showSubCategories: boolean;
     },
     props: {
         labels: ActivityLabelProps;
@@ -1076,6 +1084,7 @@ const renderClickableList = (
 const back = (
     backClickEvent: React.MouseEvent | undefined,
     selectedCategories: NomenclatureActivityOption[],
+    showSubCategories: boolean,
     setters: {
         setSelectedId: (id?: string) => void;
         setLabelOfSelectedId: (label?: string) => void;
@@ -1096,7 +1105,10 @@ const back = (
 ) => {
     if (backClickEvent) {
         // Go back to previous page in application navigation
-        if (inputs.fullScreenComponent === FullScreenComponent.Main && selectedCategories.length === 0) {
+        if (
+            inputs.fullScreenComponent === FullScreenComponent.Main &&
+            (selectedCategories.length === 0 || !showSubCategories)
+        ) {
             functions.backClickCallback();
             return;
         }

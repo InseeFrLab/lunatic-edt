@@ -275,34 +275,41 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         const historyInputSuggesterValue = localStorage.getItem(historyInputSuggester) ?? "";
 
         return (
-            <ClickableList
-                className={isMobile ? classes.clickableListMobile : classes.clickableList}
-                optionsFiltered={indexInfo[1]}
-                index={indexInfo[0]}
-                selectedValue={indexInfo[2]}
-                historyInputSuggesterValue={historyInputSuggesterValue}
-                handleChange={(id: string, label: string) => handleChangeClickableList(id, label)}
-                handleChangeHistorySuggester={(value: string) => console.log(value)}
-                createActivity={(label: string) => createNewActivity(label)}
-                placeholder={labelsClickableList?.clickableListPlaceholder ?? ""}
-                notFoundLabel={labelsClickableList?.clickableListNotFoundLabel ?? ""}
-                notFoundComment={labelsClickableList?.clickableListNotFoundComment ?? ""}
-                notSearchLabel={labelsClickableList?.clickableListNotSearchLabel ?? ""}
-                addActivityButtonLabel={labelsClickableList?.clickableListAddActivityButton ?? ""}
-                iconNoResult={icons?.clickableListIconNoResult ?? ""}
-                iconNoResultAlt={icons?.clickableListIconNoResultAlt ?? ""}
-                autoFocus={true}
-                isMobile={isMobile}
-                separatorSuggester={separatorSuggester}
-                iconAddWhite={icons?.iconAddWhite ?? ""}
-                iconAddLightBlue={icons?.iconAddLightBlue ?? ""}
-                iconAddAlt={icons?.iconAddAlt ?? ""}
-                iconExtension={icons?.iconExtension ?? ""}
-                iconExtensionAlt={icons?.iconExtensionAlt ?? ""}
-                iconSearch={icons?.iconSearch ?? ""}
-                iconSearchAlt={icons?.iconSearchAlt ?? ""}
-                modifiable={modifiable}
-            />
+            <Box className={classes.clickableListBox}>
+                <ClickableList
+                    className={isMobile ? classes.clickableListMobile : classes.clickableList}
+                    optionsFiltered={indexInfo[1]}
+                    index={indexInfo[0]}
+                    selectedValue={indexInfo[2]}
+                    historyInputSuggesterValue={historyInputSuggesterValue}
+                    handleChange={(id: string, label: string) => handleChangeClickableList(id, label)}
+                    handleChangeHistorySuggester={(value: string) => console.log(value)}
+                    createActivity={(label: string) => createNewActivity(label)}
+                    placeholder={labelsClickableList?.clickableListPlaceholder ?? ""}
+                    notFoundLabel={labelsClickableList?.clickableListNotFoundLabel ?? ""}
+                    notFoundComment={labelsClickableList?.clickableListNotFoundComment ?? ""}
+                    notSearchLabel={labelsClickableList?.clickableListNotSearchLabel ?? ""}
+                    addActivityButtonLabel={labelsClickableList?.clickableListAddActivityButton ?? ""}
+                    iconNoResult={icons?.clickableListIconNoResult ?? ""}
+                    iconNoResultAlt={icons?.clickableListIconNoResultAlt ?? ""}
+                    autoFocus={true}
+                    isMobile={isMobile}
+                    separatorSuggester={separatorSuggester}
+                    iconAddWhite={icons?.iconAddWhite ?? ""}
+                    iconAddLightBlue={icons?.iconAddLightBlue ?? ""}
+                    iconAddAlt={icons?.iconAddAlt ?? ""}
+                    iconExtension={icons?.iconExtension ?? ""}
+                    iconExtensionAlt={icons?.iconExtensionAlt ?? ""}
+                    iconSearch={icons?.iconSearch ?? ""}
+                    iconSearchAlt={icons?.iconSearchAlt ?? ""}
+                    modifiable={modifiable}
+                />
+                {renderButtonSaveClickableList(
+                    classes,
+                    modifiable,
+                    componentSpecificProps?.labelsSpecifics?.validateButton ?? "",
+                )}
+            </Box>
         );
     };
 
@@ -385,6 +392,23 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                         disabled={!modifiable}
                     >
                         {labelsClickableList?.saveButton}
+                    </Button>
+                </Box>
+            )
+        );
+    };
+
+    const renderButtonSaveClickableList = (classes: any, modifiable: boolean, label: string) => {
+        return (
+            nextClickCallback && (
+                <Box className={classes.buttonSaveClickableList}>
+                    <Button
+                        className={classes.saveNewActivityButton}
+                        variant="contained"
+                        onClick={() => nextClickCallback()}
+                        disabled={!modifiable}
+                    >
+                        {label}
                     </Button>
                 </Box>
             )
@@ -576,6 +600,21 @@ const useStyles = makeStylesEdt<{ modifiable: boolean }>({ "name": { CheckboxOne
         },
         addActivityButton: {
             margin: "2rem 0rem",
+        },
+        buttonSaveClickableList: {
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+        },
+        saveNewActivityButton: {
+            margin: "2rem 0rem",
+            width: "80%",
+        },
+        clickableListBox: {
+            height: innerHeight / 2 + "px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
         },
     }),
 );
