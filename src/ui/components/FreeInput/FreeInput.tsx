@@ -11,6 +11,7 @@ type FreeInputProps = {
         selectedCategories?: NomenclatureActivityOption[];
         fullScreenComponent?: FullScreenComponent;
         freeInput: string | undefined;
+        showSubCategories: boolean;
     };
     specifiqueProps: {
         labels: ActivityLabelProps;
@@ -34,6 +35,7 @@ type FreeInputProps = {
     renderTitle?: (
         fullScreenComponent: FullScreenComponent,
         selectedCategories: NomenclatureActivityOption[],
+        showSubCategories: boolean,
         labels: ActivityLabelProps,
         label: string,
         classes: any,
@@ -78,6 +80,7 @@ const FreeInput = memo((props: FreeInputProps) => {
                     ? renderTitle(
                           states.fullScreenComponent ?? FullScreenComponent.FreeInput,
                           states.selectedCategories ?? [],
+                          states.showSubCategories,
                           specifiqueProps.labels,
                           specifiqueProps.labels.addActivity,
                           classes,
