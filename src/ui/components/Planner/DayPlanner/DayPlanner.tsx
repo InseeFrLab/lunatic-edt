@@ -1,4 +1,5 @@
 import { Box, Button, CircularProgress, Popover, Typography } from "@mui/material";
+import { responseType } from "interface";
 import React, { useCallback, useEffect } from "react";
 import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
@@ -7,7 +8,6 @@ import {
     generateDateFromStringInput,
     setDateTimeToZero,
 } from "../../../utils";
-import { responseType } from "interface";
 
 export type DayPlannerProps = {
     date: Date;
@@ -23,9 +23,10 @@ export type DayPlannerProps = {
     getFormatedWorkedSum: (workedHoursSum: number) => string;
     moreIcon: string;
     moreIconAlt: string;
-    modifiable?: boolean;
     dataCopy: IODataStructure[];
     handleChange(response: responseType, value: IODataStructure[]): void;
+    innerObject?: any;
+    setIsPlaceWorkDisplayed(display: boolean): void;
 };
 
 enum DayRelativeTimeEnum {
@@ -69,9 +70,9 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         getFormatedWorkedSum,
         moreIcon,
         moreIconAlt,
-        modifiable = true,
         dataCopy,
         handleChange,
+        setIsPlaceWorkDisplayed
     } = props;
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
@@ -95,13 +96,14 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         )[0];
         const sum: number = dayBloc?.detail.reduce((acc, val) => acc + val.duration, 0);
         setWorkedHoursSum(sum);
-        setHasBeenStarted(dayBloc?.hasBeenStarted ?? false);
+        const hasStarted = dayBloc?.hasBeenStarted ?? false;
+        setHasBeenStarted(hasStarted);
     }, [activityData]);
 
     /**
      * Callback for buttons and three dots icon
      */
-    const buttonsOnClick = useCallback((): void => {
+    const buttonsOnClick = useCallback((hasStarted: boolean) => () => {
         const temp = [...activityData];
         const dayBloc: WeeklyPlannerDataType = temp.filter(
             d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
@@ -111,6 +113,8 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
 
         setDisplayDayOverview(true);
         setDayOverviewSelectedDate(date);
+        setIsPlaceWorkDisplayed(!hasStarted);
+
         handleChange({ name: "WEEKLYPLANNER" }, dataCopy);
     }, []);
 
@@ -137,7 +141,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                             </Typography>
                         </Box>
                     )}
-                    <Button className={classes.button} onClick={buttonsOnClick}>
+                    <Button className={classes.button} onClick={buttonsOnClick(true)}>
                         {presentButtonLabel}
                     </Button>
                 </Box>
@@ -147,7 +151,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                 <Box className={classes.buttonBox}>
                     <Button
                         className={cx(classes.button, classes.buttonFuture)}
-                        onClick={buttonsOnClick}
+                        onClick={buttonsOnClick(false)}
                     >
                         {futureButtonLabel}
                     </Button>
@@ -159,8 +163,9 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     const getMainContainerComplementaryClass = () => {
         return dayRelativeTime === 0 ? classes.mainContainerPresent : "";
     };
+
     const getDayAndDotsClass = () => {
-        return dayRelativeTime === -1 ? classes.dayAndDotsContainer : "";
+        return (dayRelativeTime === -1 || hasBeenStarted) ? classes.dayAndDotsContainer : "";
     };
 
     const onEditCard = useCallback((e: React.MouseEvent) => {
@@ -177,7 +182,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     );
 
     const renderMoreIcon = () => {
-        return dayRelativeTime === -1 ? (
+        return (dayRelativeTime === -1 || hasBeenStarted) ? (
             <Box>
                 <img
                     src={moreIcon}
@@ -196,14 +201,12 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                     }}
                     className={classes.popOver}
                 >
-                    <Typography onClick={buttonsOnClick} className={classes.clickableText}>
+                    <Typography onClick={buttonsOnClick(false)} className={classes.clickableText}>
                         {editButtonLabel}
                     </Typography>
                 </Popover>
             </Box>
-        ) : (
-            <></>
-        );
+        ) : (<></>);
     };
 
     return (
@@ -217,7 +220,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                         <Typography className={cx(classes.dayLabel, classes.bold)}>
                             {renderDateLabel(date, language)}
                         </Typography>
-                        {modifiable && renderMoreIcon()}
+                        {renderMoreIcon()}
                     </Box>
                     {renderBottomPart()}
                 </Box>

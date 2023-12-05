@@ -14,6 +14,7 @@ import {
     setDateTimeToZero,
 } from "../../../utils";
 import { createCustomizableLunaticField } from "../../../utils/create-customizable-lunatic-field";
+import CheckboxGroupEdt from "../../CheckboxGroupEdt";
 import TooltipInfo from "../../TooltipInfo";
 import DayOverview from "../DayOverview/DayOverview";
 import DayPlanner from "../DayPlanner/DayPlanner";
@@ -24,8 +25,8 @@ import {
 } from "./utils";
 
 export type WeeklyPlannerProps = {
-    handleChange(response: { [name: string]: string }, value: IODataStructure[] | string[]): void;
-    value: { [key: string]: string[] | IODataStructure[] };
+    handleChange(response: { [name: string]: string }, value: IODataStructure[] | string[] | boolean[]): void;
+    value: { [key: string]: string[] | IODataStructure[] | boolean[] };
     componentSpecificProps: WeeklyPlannerSpecificProps;
     bindingDependencies: string[];
     responses: [
@@ -36,6 +37,19 @@ export type WeeklyPlannerProps = {
         responsesType,
         responsesType,
     ];
+    variables: Map<string, any>;
+    placeWork: {
+        bindingDependencies: string[];
+        responses: [
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+            responsesType,
+        ];
+        label: string;
+    };
 };
 
 /**
@@ -69,11 +83,13 @@ const getFormatedWorkedSum = (workedHoursSum: number): string => {
 };
 
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
-    let { value, handleChange, componentSpecificProps, responses } = props;
+    let { value, handleChange, componentSpecificProps, responses, variables, placeWork } = props;
     const {
         surveyDate,
         isSubChildDisplayed,
         setIsSubChildDisplayed,
+        isPlaceWorkDisplayed,
+        setIsPlaceWorkDisplayed,
         labels,
         saveAll,
         setDisplayedDayHeader,
@@ -89,8 +105,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         expandMoreWhiteIcon,
         workIcon,
         workIconAlt,
-        modifiable = true,
-        saveHours,
+        saveHours
     } = {
         ...componentSpecificProps,
     };
@@ -155,6 +170,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const [dayOverviewSelectedDate, setDayOverviewSelectedDate] =
         React.useState<Date>(startDateFormated);
     const [activityData, setActivityData] = React.useState<WeeklyPlannerDataType[]>([]);
+
     const [needSpinner, setNeedSpinner] = React.useState<boolean>(true);
     const [dataCopy, setDataCopy] = React.useState<IODataStructure[]>([]);
 
@@ -164,7 +180,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     };
 
     useEffect(() => {
-        console.log("local");
         setNeedSpinner(false);
     }, [isSubChildDisplayed]);
 
@@ -206,6 +221,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         saveAll(dataCopy);
     }, [dataCopy]);
 
+
     const renderHelp = () => {
         return (
             <DayOverview
@@ -231,6 +247,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 handleChange={handleChange}
                 saveHours={saveHours}
                 values={value}
+                setIsPlaceWorkDisplayed={setIsPlaceWorkDisplayed}
             ></DayOverview>
         );
     };
@@ -241,6 +258,34 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
             handleChange(responses[0].response, dataCopy);
         }
     };
+
+    const getIndexOfDayPlanner = () => {
+        const dates = value["DATES"] as string[];
+        const currentDate = generateStringInputFromDate(dayOverviewSelectedDate);
+        const index = dates.findIndex(date => date == currentDate);
+        const valuesForCheckbox: { [key: string]: (boolean | boolean[]) } = {};
+        placeWork.responses.forEach(response => {
+            const valueOfResponse = value[response.response.name] as boolean[];
+            valuesForCheckbox[response.response.name] = valueOfResponse;
+        });
+        return [valuesForCheckbox, index];
+    }
+
+    const renderOptions = () => {
+        const values = getIndexOfDayPlanner();
+        return (
+            <CheckboxGroupEdt
+                tipsLabel={placeWork.label}
+                handleChange={handleChange}
+                responses={placeWork.responses}
+                value={values[0]}
+                variables={variables}
+                bindingDependencies={placeWork.bindingDependencies}
+                componentSpecificProps={componentSpecificProps}
+                indexOfArray={values[1]}
+            />
+        );
+    }
 
     const renderWeeklyPlanner = () => {
         return (
@@ -267,6 +312,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                     handleChange={handleChange}
                     saveHours={saveHours}
                     values={value}
+                    setIsPlaceWorkDisplayed={setIsPlaceWorkDisplayed}
                 ></DayOverview>
                 {activityData.length !== 0 && needSpinner ? (
                     <>
@@ -296,9 +342,9 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                                         getFormatedWorkedSum={getFormatedWorkedSum}
                                         moreIcon={moreIcon}
                                         moreIconAlt={moreIconAlt}
-                                        modifiable={modifiable}
                                         dataCopy={dataCopy}
                                         handleChange={handleChange}
+                                        setIsPlaceWorkDisplayed={setIsPlaceWorkDisplayed}
                                     ></DayPlanner>
                                 ))}
                             </List>
@@ -311,7 +357,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         );
     };
 
-    return helpStep == null ? renderWeeklyPlanner() : renderHelp();
+    return helpStep == null ? (isPlaceWorkDisplayed && isSubChildDisplayed ? renderOptions() : renderWeeklyPlanner()) : renderHelp();
 });
 
 const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({

@@ -43,7 +43,8 @@ export type DayOverviewProps = {
     workIconAlt: string;
     handleChange(response: responseType, value: IODataStructure[]): void;
     saveHours(response: responsesHourChecker): void;
-    values: { [key: string]: string[] | IODataStructure[] };
+    values: { [key: string]: string[] | IODataStructure[] | boolean[] };
+    setIsPlaceWorkDisplayed(value: boolean): void;
 };
 
 /**
@@ -121,6 +122,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
         workIconAlt,
         saveHours,
         values,
+        setIsPlaceWorkDisplayed,
     } = props;
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
@@ -159,7 +161,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
         isDisplayed ? setComponentDisplay("flex") : setComponentDisplay("none");
     }, [isDisplayed]);
 
-    const updatesValues = (values: { [key: string]: string[] | IODataStructure[] }, date: Date) => {
+    const updatesValues = (values: { [key: string]: string[] | IODataStructure[] | boolean[] }, date: Date) => {
         const dates = values["DATES"] as string[];
         const currentDateIndex = dates.indexOf(generateStringInputFromDate(date));
 
@@ -194,7 +196,6 @@ const DayOverview = memo((props: DayOverviewProps) => {
                     valuesList[key] = value;
                 });
             });
-        console.log(valuesList);
 
         let details: DayDetailType[] = [];
 
@@ -284,6 +285,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
                     handleChangeData={handleChange}
                     saveHours={saveHours}
                     currentDate={generateStringInputFromDate(date)}
+                    setIsPlaceWorkDisplayed={setIsPlaceWorkDisplayed}
                 />
             </Box>
         );

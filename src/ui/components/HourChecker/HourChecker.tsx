@@ -25,6 +25,7 @@ export type HourCheckerProps = {
     store: IODataStructure[];
     saveHours(response: responsesHourChecker): void;
     currentDate: string;
+    setIsPlaceWorkDisplayed(value: boolean): void;
 };
 
 const getSelectAllValue = (value: { [key: string]: boolean }, responsesValues: string[]): boolean => {
@@ -92,6 +93,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
         workIconAlt,
         saveHours,
         currentDate,
+        setIsPlaceWorkDisplayed
     } = props;
     const [isOpen, setIsOpen] = React.useState(false);
 
@@ -107,6 +109,10 @@ const HourChecker = memo((props: HourCheckerProps) => {
             setIsOpen(true);
         }
     }, [isOpen]);
+
+    useEffect(() => {
+        localStorage.setItem("HOURCHECKED_DISPLAYED", "true");
+    }, []);
 
     const toggleHourChecker = (e: any) => {
         e.stopPropagation();

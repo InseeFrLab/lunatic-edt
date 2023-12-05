@@ -38,6 +38,8 @@ export type WeeklyPlannerSpecificProps = {
     surveyDate?: string;
     isSubChildDisplayed: boolean;
     setIsSubChildDisplayed(value: boolean): void;
+    isPlaceWorkDisplayed: boolean;
+    setIsPlaceWorkDisplayed(value: boolean): void;
     setDisplayedDayHeader(value: string): void;
     displayedDayHeader: string;
     labels: {
@@ -63,6 +65,7 @@ export type WeeklyPlannerSpecificProps = {
     workIconAlt: string;
     modifiable?: boolean;
     saveHours(response: responsesHourChecker): void;
+    optionsIcons: { [id: string]: { icon: string; altIcon: string } };
 };
 
 export type responsesHourChecker = {
