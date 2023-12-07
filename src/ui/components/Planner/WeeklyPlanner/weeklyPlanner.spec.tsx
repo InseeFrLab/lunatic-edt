@@ -157,6 +157,7 @@ describe("weeklyPlannerComponent", () => {
     }
 
     const setIsSubChildDisplayed = jest.fn();
+    const setIsPlaceWorkDisplayed = jest.fn();
     const setDisplayedDayHeader = jest.fn();
     const saveAll = jest.fn();
     const saveHours = jest.fn();
@@ -182,6 +183,8 @@ describe("weeklyPlannerComponent", () => {
         surveyDate: surveyDateString,
         isSubChildDisplayed: false,
         setIsSubChildDisplayed: setIsSubChildDisplayed,
+        isPlaceWorkDisplayed: false,
+        setIsPlaceWorkDisplayed: setIsPlaceWorkDisplayed,
         setDisplayedDayHeader: setDisplayedDayHeader,
         displayedDayHeader: "",
         labels: {
@@ -205,6 +208,12 @@ describe("weeklyPlannerComponent", () => {
         workIcon: "",
         workIconAlt: "",
         saveHours: saveHours,
+        optionsIcons: {
+            "1": {
+                icon: "",
+                altIcon: "",
+            },
+        },
     };
 
     const renderElement = (valueData: { [key: string]: string[] | IODataStructure[] }): RenderResult => {
