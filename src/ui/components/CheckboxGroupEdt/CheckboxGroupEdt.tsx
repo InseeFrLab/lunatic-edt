@@ -13,7 +13,7 @@ export type CheckboxGroupEdtProps = {
     handleChange(response: { [name: string]: string }, value: boolean | boolean[]): void;
     id?: string;
     responses: CheckboxOption[];
-    value: { [key: string]: (boolean | boolean[]) };
+    value: { [key: string]: boolean | boolean[] };
     className?: string;
     componentSpecificProps?: CheckboxGroupSpecificProps;
     variables: Map<string, any>;
@@ -63,8 +63,12 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
         for (const key in value) {
             let valueOfKey = value[key];
             if (valueOfKey) {
-                valueOfKey = Array.isArray(valueOfKey) && indexOfArray ?
-                    (indexOfArray > valueOfKey.length ? false : valueOfKey[indexOfArray]) : valueOfKey;
+                valueOfKey =
+                    Array.isArray(valueOfKey) && indexOfArray
+                        ? indexOfArray > valueOfKey.length
+                            ? false
+                            : valueOfKey[indexOfArray]
+                        : valueOfKey;
                 if (valueOfKey) {
                     options.push(key);
                 }

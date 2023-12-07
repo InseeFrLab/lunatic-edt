@@ -72,7 +72,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         moreIconAlt,
         dataCopy,
         handleChange,
-        setIsPlaceWorkDisplayed
+        setIsPlaceWorkDisplayed,
     } = props;
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
@@ -103,20 +103,23 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     /**
      * Callback for buttons and three dots icon
      */
-    const buttonsOnClick = useCallback((hasStarted: boolean) => () => {
-        const temp = [...activityData];
-        const dayBloc: WeeklyPlannerDataType = temp.filter(
-            d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
-        )[0];
-        dayBloc.hasBeenStarted = true;
-        setActivityData(temp);
+    const buttonsOnClick = useCallback(
+        (hasStarted: boolean) => () => {
+            const temp = [...activityData];
+            const dayBloc: WeeklyPlannerDataType = temp.filter(
+                d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
+            )[0];
+            dayBloc.hasBeenStarted = true;
+            setActivityData(temp);
 
-        setDisplayDayOverview(true);
-        setDayOverviewSelectedDate(date);
-        setIsPlaceWorkDisplayed(!hasStarted);
+            setDisplayDayOverview(true);
+            setDayOverviewSelectedDate(date);
+            setIsPlaceWorkDisplayed(!hasStarted);
 
-        handleChange({ name: "WEEKLYPLANNER" }, dataCopy);
-    }, []);
+            handleChange({ name: "WEEKLYPLANNER" }, dataCopy);
+        },
+        [],
+    );
 
     const renderBottomPart = () => {
         if (dayRelativeTime === -1) {
@@ -165,7 +168,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     };
 
     const getDayAndDotsClass = () => {
-        return (dayRelativeTime === -1 || hasBeenStarted) ? classes.dayAndDotsContainer : "";
+        return dayRelativeTime === -1 || hasBeenStarted ? classes.dayAndDotsContainer : "";
     };
 
     const onEditCard = useCallback((e: React.MouseEvent) => {
@@ -182,7 +185,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     );
 
     const renderMoreIcon = () => {
-        return (dayRelativeTime === -1 || hasBeenStarted) ? (
+        return dayRelativeTime === -1 || hasBeenStarted ? (
             <Box>
                 <img
                     src={moreIcon}
@@ -206,7 +209,9 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                     </Typography>
                 </Popover>
             </Box>
-        ) : (<></>);
+        ) : (
+            <></>
+        );
     };
 
     return (

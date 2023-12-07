@@ -25,7 +25,6 @@ export type HourCheckerProps = {
     store: IODataStructure[];
     saveHours(response: responsesHourChecker): void;
     currentDate: string;
-    setIsPlaceWorkDisplayed(value: boolean): void;
 };
 
 const getSelectAllValue = (value: { [key: string]: boolean }, responsesValues: string[]): boolean => {
@@ -93,7 +92,6 @@ const HourChecker = memo((props: HourCheckerProps) => {
         workIconAlt,
         saveHours,
         currentDate,
-        setIsPlaceWorkDisplayed
     } = props;
     const [isOpen, setIsOpen] = React.useState(false);
 

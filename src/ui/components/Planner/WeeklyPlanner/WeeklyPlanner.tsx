@@ -25,7 +25,10 @@ import {
 } from "./utils";
 
 export type WeeklyPlannerProps = {
-    handleChange(response: { [name: string]: string }, value: IODataStructure[] | string[] | boolean[]): void;
+    handleChange(
+        response: { [name: string]: string },
+        value: IODataStructure[] | string[] | boolean[],
+    ): void;
     value: { [key: string]: string[] | IODataStructure[] | boolean[] };
     componentSpecificProps: WeeklyPlannerSpecificProps;
     bindingDependencies: string[];
@@ -105,7 +108,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         expandMoreWhiteIcon,
         workIcon,
         workIconAlt,
-        saveHours
+        saveHours,
     } = {
         ...componentSpecificProps,
     };
@@ -221,7 +224,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         saveAll(dataCopy);
     }, [dataCopy]);
 
-
     const renderHelp = () => {
         return (
             <DayOverview
@@ -247,7 +249,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 handleChange={handleChange}
                 saveHours={saveHours}
                 values={value}
-                setIsPlaceWorkDisplayed={setIsPlaceWorkDisplayed}
             ></DayOverview>
         );
     };
@@ -263,13 +264,13 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         const dates = value["DATES"] as string[];
         const currentDate = generateStringInputFromDate(dayOverviewSelectedDate);
         const index = dates.findIndex(date => date == currentDate);
-        const valuesForCheckbox: { [key: string]: (boolean | boolean[]) } = {};
+        const valuesForCheckbox: { [key: string]: boolean | boolean[] } = {};
         placeWork.responses.forEach(response => {
             const valueOfResponse = value[response.response.name] as boolean[];
             valuesForCheckbox[response.response.name] = valueOfResponse;
         });
         return [valuesForCheckbox, index];
-    }
+    };
 
     const renderOptions = () => {
         const values = getIndexOfDayPlanner();
@@ -285,7 +286,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 indexOfArray={values[1]}
             />
         );
-    }
+    };
 
     const renderWeeklyPlanner = () => {
         return (
@@ -312,7 +313,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                     handleChange={handleChange}
                     saveHours={saveHours}
                     values={value}
-                    setIsPlaceWorkDisplayed={setIsPlaceWorkDisplayed}
                 ></DayOverview>
                 {activityData.length !== 0 && needSpinner ? (
                     <>
@@ -357,7 +357,11 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         );
     };
 
-    return helpStep == null ? (isPlaceWorkDisplayed && isSubChildDisplayed ? renderOptions() : renderWeeklyPlanner()) : renderHelp();
+    return helpStep == null
+        ? isPlaceWorkDisplayed && isSubChildDisplayed
+            ? renderOptions()
+            : renderWeeklyPlanner()
+        : renderHelp();
 });
 
 const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
