@@ -34,7 +34,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
         className,
         bindingDependencies,
         variables,
-        indexOfArray,
+        indexOfArray = 0,
     } = props;
 
     const {
@@ -63,12 +63,12 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
         for (const key in value) {
             let valueOfKey = value[key];
             if (valueOfKey) {
-                valueOfKey =
-                    Array.isArray(valueOfKey) && indexOfArray
-                        ? indexOfArray > valueOfKey.length
-                            ? false
-                            : valueOfKey[indexOfArray]
-                        : valueOfKey;
+                if (Array.isArray(valueOfKey)) {
+                    const valueOfKeyArray: boolean[] = valueOfKey;
+                    valueOfKey = indexOfArray > valueOfKeyArray.length
+                        ? false : valueOfKeyArray[indexOfArray];
+                }
+
                 if (valueOfKey) {
                     options.push(key);
                 }
@@ -94,8 +94,8 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
         setDisplayAlert: (display: boolean) => void,
         nextClickCallback: () => void,
     ) => {
-        const res = responses.filter(res => value[res.response.name] != null);
-        if (res.length == 0 && !continueWithUncompleted) {
+        const result = responses.filter(res => value[res.response.name] != null);
+        if (result.length == 0 && !continueWithUncompleted) {
             setDisplayAlert(true);
         } else {
             nextClickCallback();
@@ -110,9 +110,13 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
         setOptionsSelected(selectValue);
 
         for (const key in value) {
-            const values = value[key];
-            if (Array.isArray(values) && indexOfArray) {
+            let values = value[key];
+            if (Array.isArray(values)) {
                 values[indexOfArray] = selectValue.find(value => value == key) != null;
+            } else {
+                if (selectValue.find(select => select == key)) {
+                    values = true;
+                }
             }
             handleChange({ name: key }, values);
         }
