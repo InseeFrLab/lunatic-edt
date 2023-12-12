@@ -213,3 +213,23 @@ export const addMisspellings = (option: AutoCompleteActiviteOption) => {
 
     return option;
 };
+
+export const addArrayToSession = (nameItem: string, array: any[]) => {
+    let copyArray = "";
+    array.forEach(item => {
+        if (copyArray != "") copyArray += ";;";
+        copyArray += JSON.stringify(item);
+    });
+    let arrayToString = copyArray.toString();
+    sessionStorage.setItem(nameItem, arrayToString);
+}
+
+export const getArrayFromSession = (nameItem: string): any[] => {
+    let stringArray = sessionStorage.getItem(nameItem);
+    if (stringArray) {
+        let copyArrayString = stringArray.split(";;");
+        let array = copyArrayString.map(c => JSON.parse(c ?? "{}"));
+        return array;
+    } else return [];
+}
+

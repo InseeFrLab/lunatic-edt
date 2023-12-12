@@ -108,10 +108,6 @@ const HourChecker = memo((props: HourCheckerProps) => {
         }
     }, [isOpen]);
 
-    useEffect(() => {
-        localStorage.setItem("HOURCHECKED_DISPLAYED", "true");
-    }, []);
-
     const toggleHourChecker = (e: any) => {
         e.stopPropagation();
         setIsOpen(!isOpen);
