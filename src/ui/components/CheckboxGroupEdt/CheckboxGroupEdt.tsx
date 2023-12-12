@@ -65,8 +65,8 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
             if (valueOfKey) {
                 if (Array.isArray(valueOfKey)) {
                     const valueOfKeyArray: boolean[] = valueOfKey;
-                    valueOfKey = indexOfArray > valueOfKeyArray.length
-                        ? false : valueOfKeyArray[indexOfArray];
+                    valueOfKey =
+                        indexOfArray > valueOfKeyArray.length ? false : valueOfKeyArray[indexOfArray];
                 }
 
                 if (valueOfKey) {

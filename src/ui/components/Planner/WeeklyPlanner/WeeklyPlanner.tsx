@@ -286,7 +286,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         value: IODataStructure[] | string[] | boolean[],
     ) => {
         handleChange(response, value);
-    }
+    };
 
     const renderOptions = () => {
         const values = getIndexOfDayPlanner();

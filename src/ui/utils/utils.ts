@@ -222,7 +222,7 @@ export const addArrayToSession = (nameItem: string, array: any[]) => {
     });
     let arrayToString = copyArray.toString();
     sessionStorage.setItem(nameItem, arrayToString);
-}
+};
 
 export const getArrayFromSession = (nameItem: string): any[] => {
     let stringArray = sessionStorage.getItem(nameItem);
@@ -231,5 +231,4 @@ export const getArrayFromSession = (nameItem: string): any[] => {
         let array = copyArrayString.map(c => JSON.parse(c ?? "{}"));
         return array;
     } else return [];
-}
-
+};

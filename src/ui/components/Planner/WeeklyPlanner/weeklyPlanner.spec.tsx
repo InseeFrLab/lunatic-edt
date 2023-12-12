@@ -24,6 +24,8 @@ describe("weeklyPlannerComponent", () => {
         infoIconTooltipAlt: "",
         border: false,
     };
+    const dates = "DATES";
+    const datesStarted = "DATES_STARTED";
 
     const bindingDependencies = [
         "WEEKLYPLANNER",
@@ -194,6 +196,8 @@ describe("weeklyPlannerComponent", () => {
             futureButtonLabel: futureButtonLable,
             editButtonLabel: editButtonLabel,
             infoLabels: infoLabels,
+            dates: dates,
+            datesStarted: datesStarted,
         },
         saveAll: saveAll,
         language: "fr",
