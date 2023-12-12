@@ -10,14 +10,16 @@ import Alert from "../Alert";
 export type CheckboxGroupEdtProps = {
     label?: string;
     tipsLabel: string;
-    handleChange(response: { [name: string]: string }, value: boolean): void;
+    handleChange(response: { [name: string]: string }, value: boolean | boolean[]): void;
     id?: string;
     responses: CheckboxOption[];
-    value: { [key: string]: boolean };
+    value: { [key: string]: boolean | boolean[] };
     className?: string;
     componentSpecificProps?: CheckboxGroupSpecificProps;
     variables: Map<string, any>;
     bindingDependencies: string[];
+    isArray?: boolean;
+    indexOfArray?: number;
 };
 
 const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
@@ -32,6 +34,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
         className,
         bindingDependencies,
         variables,
+        indexOfArray,
     } = props;
 
     const {
@@ -58,8 +61,17 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
     useEffect(() => {
         const options = [];
         for (const key in value) {
-            if (value[key]) {
-                options.push(key);
+            let valueOfKey = value[key];
+            if (valueOfKey) {
+                valueOfKey =
+                    Array.isArray(valueOfKey) && indexOfArray
+                        ? indexOfArray > valueOfKey.length
+                            ? false
+                            : valueOfKey[indexOfArray]
+                        : valueOfKey;
+                if (valueOfKey) {
+                    options.push(key);
+                }
             }
         }
         setOptionsSelected(options);
@@ -96,8 +108,13 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
 
     const handleOptions = (_event: React.MouseEvent<HTMLElement>, selectValue: string[]) => {
         setOptionsSelected(selectValue);
+
         for (const key in value) {
-            handleChange({ name: key }, selectValue.find(value => value == key) != null);
+            const values = value[key];
+            if (Array.isArray(values) && indexOfArray) {
+                values[indexOfArray] = selectValue.find(value => value == key) != null;
+            }
+            handleChange({ name: key }, values);
         }
     };
 
