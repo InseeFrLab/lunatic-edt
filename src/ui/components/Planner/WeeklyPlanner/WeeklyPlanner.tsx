@@ -6,10 +6,12 @@ import { v4 as uuidv4 } from "uuid";
 import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
 import {
+    addArrayToSession,
     formateDateToFrenchFormat,
     generateDateFromStringInput,
     generateDayOverviewTimelineRawData,
     generateStringInputFromDate,
+    getArrayFromSession,
     getFrenchDayFromDate,
     setDateTimeToZero,
 } from "../../../utils";
@@ -155,9 +157,8 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         const toStore = transformToIODataStructure(clearedTemp);
         handleChange(responses[1].response, toStore[1]);
         handleChange(responses[2].response, toStore[2]);
-
         handleChange(responses[0].response, toStore[0]);
-        return toStore[0];
+        return toStore;
     };
 
     const getDateWithZeros = (date: string) => {
@@ -192,8 +193,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
 
     // Complete activity data with default values for all days of the week if it was not the case in data input
     useEffect(() => {
-        setDataCopy(initializeStore());
-        saveAll(dataCopy);
+        const init = initializeStore();
+        addArrayToSession(labels.dates, init[1]);
+        addArrayToSession(labels.datesStarted, init[2]);
+        saveAll(init[0]);
     }, []);
 
     useEffect(() => {
@@ -220,7 +223,9 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     };
 
     useEffect(() => {
-        if (dataCopy.length > 0) handleChange(responses[0].response, dataCopy);
+        if (dataCopy.length > 0) {
+            handleChange(responses[0].response, dataCopy);
+        }
         saveAll(dataCopy);
     }, [dataCopy]);
 
@@ -234,6 +239,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 setActivityData={setActivityData}
                 handleChangeData={handle}
                 infoLabels={labels.infoLabels}
+                datesLabel={labels.dates}
                 workSumLabel={labels.workSumLabel}
                 workedHoursSum={getWorkedHoursSum()}
                 getFormatedWorkedSum={getFormatedWorkedSum}
@@ -253,15 +259,18 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         );
     };
 
-    const handle = (dataCopy: IODataStructure[]) => {
-        if (dataCopy.length > 0) {
-            setDataCopy(dataCopy);
-            handleChange(responses[0].response, dataCopy);
+    const handle = (data: IODataStructure[]) => {
+        if (data.length > 0) {
+            setDataCopy(data);
+            handleChange(responses[0].response, data);
         }
     };
 
     const getIndexOfDayPlanner = () => {
-        const dates = value["DATES"] as string[];
+        let dates = value[labels.dates] as string[];
+        if (dates == null || dates.length < 7) {
+            dates = getArrayFromSession(labels.dates);
+        }
         const currentDate = generateStringInputFromDate(dayOverviewSelectedDate);
         const index = dates.findIndex(date => date == currentDate);
         const valuesForCheckbox: { [key: string]: boolean | boolean[] } = {};
@@ -272,12 +281,19 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         return [valuesForCheckbox, index];
     };
 
+    const handleChangeOptions = (
+        response: { [name: string]: string },
+        value: IODataStructure[] | string[] | boolean[],
+    ) => {
+        handleChange(response, value);
+    };
+
     const renderOptions = () => {
         const values = getIndexOfDayPlanner();
         return (
             <CheckboxGroupEdt
                 tipsLabel={placeWork.label}
-                handleChange={handleChange}
+                handleChange={handleChangeOptions}
                 responses={placeWork.responses}
                 value={values[0]}
                 variables={variables}
@@ -299,6 +315,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                     setActivityData={setActivityData}
                     handleChangeData={handle}
                     infoLabels={labels.infoLabels}
+                    datesLabel={labels.dates}
                     workSumLabel={labels.workSumLabel}
                     workedHoursSum={getWorkedHoursSum()}
                     getFormatedWorkedSum={getFormatedWorkedSum}
@@ -310,7 +327,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                     expandMoreWhiteIcon={expandMoreWhiteIcon}
                     workIcon={workIcon}
                     workIconAlt={workIconAlt}
-                    handleChange={handleChange}
+                    handleChange={handleChangeOptions}
                     saveHours={saveHours}
                     values={value}
                 ></DayOverview>
@@ -343,7 +360,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                                         moreIcon={moreIcon}
                                         moreIconAlt={moreIconAlt}
                                         dataCopy={dataCopy}
-                                        handleChange={handleChange}
+                                        handleChange={handleChangeOptions}
                                         setIsPlaceWorkDisplayed={setIsPlaceWorkDisplayed}
                                     ></DayPlanner>
                                 ))}

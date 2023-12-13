@@ -49,6 +49,8 @@ export type WeeklyPlannerSpecificProps = {
         futureButtonLabel: string;
         editButtonLabel?: string;
         infoLabels: InfoProps;
+        dates: string;
+        datesStarted: string;
     };
     saveAll(data: IODataStructure[]): void;
     language: string;

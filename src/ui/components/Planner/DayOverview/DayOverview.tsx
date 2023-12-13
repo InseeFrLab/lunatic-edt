@@ -14,6 +14,7 @@ import {
     convertTime,
     generateDateFromStringInput,
     generateStringInputFromDate,
+    getArrayFromSession,
     setDateTimeToZero,
 } from "../../../utils";
 import HourChecker from "../../HourChecker";
@@ -29,6 +30,7 @@ export type DayOverviewProps = {
     setActivityData(data: WeeklyPlannerDataType[]): void;
     handleChangeData(value: IODataStructure[]): void;
     infoLabels: InfoProps;
+    datesLabel: string;
     workSumLabel: string;
     workedHoursSum: number;
     getFormatedWorkedSum: (workedHoursSum: number) => string;
@@ -107,6 +109,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
         handleChangeData,
         handleChange,
         infoLabels,
+        datesLabel,
         workSumLabel,
         workedHoursSum,
         getFormatedWorkedSum,
@@ -163,7 +166,10 @@ const DayOverview = memo((props: DayOverviewProps) => {
         values: { [key: string]: string[] | IODataStructure[] | boolean[] },
         date: Date,
     ) => {
-        const dates = values["DATES"] as string[];
+        let dates = values[datesLabel] as string[];
+        if (dates == null || dates.length < 7) {
+            dates = getArrayFromSession(datesLabel);
+        }
         const currentDateIndex = dates.indexOf(generateStringInputFromDate(date));
 
         rawTimeLineData.forEach(timeLine => {
@@ -234,12 +240,11 @@ const DayOverview = memo((props: DayOverviewProps) => {
         }
 
         dayBloc.detail = details;
-        const toStore = transformToIODataStructure(temp)[0];
+        const toStore = transformToIODataStructure(temp);
         updatesValues(values, date);
-
-        handleChangeData(toStore);
+        handleChangeData(toStore[0]);
         setActivityData(temp);
-        setInitStore(toStore);
+        setInitStore(toStore[0]);
     };
 
     const renderRow = (h: TimeLineRowType): any => {
