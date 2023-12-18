@@ -167,10 +167,10 @@ const DayOverview = memo((props: DayOverviewProps) => {
         date: Date,
     ) => {
         let dates = values[datesLabel] as string[];
-        if (dates == null || dates.length < 7) {
+        if (dates == null || dates.length == undefined || dates.length < 7) {
             dates = getArrayFromSession(datesLabel);
         }
-        const currentDateIndex = dates.indexOf(generateStringInputFromDate(date));
+        const currentDateIndex = dates?.indexOf(generateStringInputFromDate(date));
 
         rawTimeLineData.forEach(timeLine => {
             timeLine.options.forEach(option => {
