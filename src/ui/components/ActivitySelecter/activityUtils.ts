@@ -73,9 +73,9 @@ export const findItemInAutoCompleteRefByLabel = (
 const getParentFromSearchResult = (
     res:
         | {
-            item: NomenclatureActivityOption;
-            parent: NomenclatureActivityOption | undefined;
-        }
+              item: NomenclatureActivityOption;
+              parent: NomenclatureActivityOption | undefined;
+          }
         | undefined,
 ) => {
     return res?.parent ? [res?.parent] : [];
@@ -89,9 +89,9 @@ const getParentFromSearchResult = (
 const getItemFromSearchResult = (
     res:
         | {
-            item: NomenclatureActivityOption;
-            parent: NomenclatureActivityOption | undefined;
-        }
+              item: NomenclatureActivityOption;
+              parent: NomenclatureActivityOption | undefined;
+          }
         | undefined,
 ) => {
     return res?.item ? [res?.item] : [];
