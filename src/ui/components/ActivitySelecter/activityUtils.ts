@@ -438,7 +438,6 @@ export const clickableListOnChange = (
     }
     let historyInputSuggesterValueLocal = localStorage.getItem(historyInputSuggester) ?? "";
     historyInputSuggesterValueLocal += historyInputSug;
-
     onChange(handleChange, {
         responses,
         newItemId,
@@ -578,9 +577,9 @@ export const onChange = (
     };
     const label = selection.label;
     const idSelected = selection.id ?? localStorage.getItem(selectedIdNewActivity) ?? undefined;
-
+    const suggesterId = inputs.suggesterId ?? inputs.newItemId;
     if (idSelected != null) handleChange(idBindingDep, idSelected);
-    handleChange(suggesterIdBindingDep, label ? inputs.newItemId : undefined);
+    handleChange(suggesterIdBindingDep, label ? suggesterId : undefined);
     handleChange(labelBindingDep, label);
     if (inputs.isFullyCompleted && isFullyCompletedBindingDep)
         handleChange(isFullyCompletedBindingDep, selection.isFullyCompleted);
