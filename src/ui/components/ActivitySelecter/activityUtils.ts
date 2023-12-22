@@ -106,6 +106,7 @@ export const processActivityCategory = (
     categoriesAndActivitesNomenclature: NomenclatureActivityOption[],
     setSelectedId: (id: string | undefined) => void,
     setSelectedCategories: (cats: NomenclatureActivityOption[]) => void,
+    setShowSubCategories: (show: boolean) => void,
 ) => {
     const hasId: boolean = parsedValue.id != null;
     const hasLabel: boolean = parsedValue.label != null;
@@ -120,6 +121,7 @@ export const processActivityCategory = (
             setSelectedCategories(resParent);
         } else {
             setSelectedCategories(resItem);
+            setShowSubCategories(true);
         }
 
         if (hasLabel && resItem) {

@@ -171,7 +171,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             categoriesAndActivitesNomenclature,
             setSelectedId,
             setSelectedCategories,
+            setShowSubCategories,
         );
+        console.log(selectedCategories, showSubCategories);
         processActivityAutocomplete(value, parsedValue, setFullScreenComponent, setSelectedSuggesterId);
         processNewActivity(
             value,
@@ -709,6 +711,7 @@ const renderCategories = (
     classes: any,
     cx: any,
 ) => {
+    console.log(states.selectedCategories, states.showSubCategories);
     return !states.showSubCategories ? (
         <Box className={classes.rank1CategoriesBox}>
             {inputs.categoriesAndActivitesNomenclature.map((d, index) => {
