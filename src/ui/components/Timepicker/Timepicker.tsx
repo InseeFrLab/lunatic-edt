@@ -92,7 +92,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                                         svg: { color: "#1F4076" },
                                         "& legend": { display: "none" },
                                         "& fieldset": { top: 0 },
-                                        "& label": { display: "none" },
+                                        "& label": { display: "grid", visibility: "hidden" },
                                     }}
                                 />
                             ),
@@ -107,6 +107,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                                     />
                                 </InputAdornment>
                             ),
+                            "aria-label": componentSpecificProps?.ariaLabelTimepicker,
                         }}
                         className={classes.input}
                         minutesStep={5}

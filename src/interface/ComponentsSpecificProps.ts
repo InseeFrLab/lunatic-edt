@@ -202,6 +202,7 @@ export type CheckBoxOneSpecificPropsLabels = {
 
 export type TimepickerSpecificProps = {
     activitiesAct: Activity[];
+    ariaLabelTimepicker: string;
     defaultValue?: boolean;
     gapToFillIndex?: number;
     constants: any;

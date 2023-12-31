@@ -1,9 +1,9 @@
 import { Box, InputLabel, MenuItem, Select } from "@mui/material";
 import "dayjs/locale/fr";
+import { TimepickerSpecificProps } from "interface";
 import React, { memo, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
-import { TimepickerSpecificProps } from "interface";
 
 export type DurationProps = {
     value?: string;
@@ -112,6 +112,10 @@ const Duration = memo((props: DurationProps) => {
                                 },
                             }}
                             disabled={!componentSpecificProps?.modifiable}
+                            inputProps={{
+                                "aria-label": "durationHour-label",
+                                "aria-labelledby": "durationHour-label",
+                            }}
                         >
                             {listHourElements?.map(option => {
                                 return (
@@ -149,6 +153,10 @@ const Duration = memo((props: DurationProps) => {
                                 },
                             }}
                             disabled={!componentSpecificProps?.modifiable}
+                            inputProps={{
+                                "aria-label": "",
+                                "aria-labelledby": "durationHour-label",
+                            }}
                         >
                             {listMinElements?.map(option => {
                                 return (
