@@ -23,8 +23,9 @@ export type HourCheckerProps = {
     workIconAlt: string;
     handleChangeData(response: { [name: string]: string }, value: IODataStructure[]): void;
     store: IODataStructure[];
-    saveHours(response: responsesHourChecker): void;
+    saveHours(idSurvey: string, response: responsesHourChecker): void;
     currentDate: string;
+    idSurvey: string;
 };
 
 const getSelectAllValue = (value: { [key: string]: boolean }, responsesValues: string[]): boolean => {
@@ -92,6 +93,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
         workIconAlt,
         saveHours,
         currentDate,
+        idSurvey,
     } = props;
     const [isOpen, setIsOpen] = React.useState(false);
 
@@ -127,7 +129,7 @@ const HourChecker = memo((props: HourCheckerProps) => {
             date: currentDate,
         };
         if (saveHours) {
-            saveHours(responses);
+            saveHours(idSurvey, responses);
         }
         if (handleChange) {
             responsesValues.forEach((responseName: string) => {

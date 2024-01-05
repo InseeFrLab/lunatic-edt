@@ -1,7 +1,7 @@
 import { CircularProgress, List } from "@mui/material";
 import { Box } from "@mui/system";
 import { WeeklyPlannerSpecificProps, responsesType } from "interface";
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
@@ -87,6 +87,41 @@ const getFormatedWorkedSum = (workedHoursSum: number): string => {
     );
 };
 
+const setDataWeeklyPlannerArray = (
+    variables: Map<string, any>,
+    responses: [
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+    ],
+) => {
+    return variables.get(responses[0].response.name) as IODataStructure[];
+};
+
+const setDataArray = (
+    variables: Map<string, any>,
+    responses: [
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+        responsesType,
+    ],
+    language: string,
+) => {
+    const dataWeeklyPlanner = setDataWeeklyPlannerArray(variables, responses);
+
+    const data: WeeklyPlannerDataType[] | undefined =
+        dataWeeklyPlanner.length > 1
+            ? transformToWeeklyPlannerDataType(dataWeeklyPlanner, language)
+            : undefined;
+    return data;
+};
+
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     let { value, handleChange, componentSpecificProps, responses, variables, placeWork } = props;
     const {
@@ -111,21 +146,33 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         workIcon,
         workIconAlt,
         saveHours,
+        idSurvey,
     } = {
         ...componentSpecificProps,
     };
     const { classes } = useStyles();
-    const dataWeeklyPlanner = value[responses[0].response.name] as IODataStructure[];
+    const [store, setStore] = React.useState<[IODataStructure[], string[], string[], any[]]>([
+        [],
+        [],
+        [],
+        [],
+    ]);
+    const [startDate, setStartDate] = React.useState<string>(surveyDate ?? "");
 
-    const data: WeeklyPlannerDataType[] | undefined =
-        dataWeeklyPlanner.length > 1
-            ? transformToWeeklyPlannerDataType(dataWeeklyPlanner, language)
-            : undefined;
+    const [startDateFormated, setStartDateFormated] = React.useState<Date>(
+        setDateTimeToZero(generateDateFromStringInput(startDate)),
+    );
+    const [dayList, setDayList] = React.useState<Date[]>(generateDayList(startDateFormated));
+    const [dayOverviewSelectedDate, setDayOverviewSelectedDate] =
+        React.useState<Date>(startDateFormated);
+    const [activityData, setActivityData] = React.useState<WeeklyPlannerDataType[]>([]);
+    const [needSpinner, setNeedSpinner] = React.useState<boolean>(true);
+    const [dataCopy, setDataCopy] = React.useState<IODataStructure[]>([]);
 
-    const startDate: string = surveyDate || "";
+    const setInit = () => {
+        const dataUpdated = setDataArray(variables, responses, language);
+        const temp: WeeklyPlannerDataType[] = dataUpdated ? [...dataUpdated] : [];
 
-    const initializeStore = () => {
-        const temp: WeeklyPlannerDataType[] = data ? [...data] : [];
         dayList.forEach(date => {
             let dayBloc: WeeklyPlannerDataType | undefined = temp.find(
                 d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
@@ -155,10 +202,21 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
             .sort((a, b) => a.date.localeCompare(b.date));
         setActivityData(clearedTemp);
         const toStore = transformToIODataStructure(clearedTemp);
-        handleChange(responses[1].response, toStore[1]);
-        handleChange(responses[2].response, toStore[2]);
-        handleChange(responses[0].response, toStore[0]);
+        setStore(toStore);
         return toStore;
+    };
+
+    useEffect(() => {
+        initializeStore();
+    }, [idSurvey]);
+
+    const initializeStore = () => {
+        const storeAct = setInit();
+        handleChange(responses[1].response, storeAct[1]);
+        handleChange(responses[2].response, storeAct[2]);
+        handleChange(responses[0].response, storeAct[0]);
+        setStore(storeAct);
+        return storeAct;
     };
 
     const getDateWithZeros = (date: string) => {
@@ -167,16 +225,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         day = Number(day) < 10 && !day.includes("0", 0) ? "0" + day : day;
         return yearMonthDay[0] + "-" + yearMonthDay[1] + "-" + day;
     };
-
-    const startDateFormated: Date = setDateTimeToZero(generateDateFromStringInput(startDate));
-    const dayList = generateDayList(startDateFormated);
-
-    const [dayOverviewSelectedDate, setDayOverviewSelectedDate] =
-        React.useState<Date>(startDateFormated);
-    const [activityData, setActivityData] = React.useState<WeeklyPlannerDataType[]>([]);
-
-    const [needSpinner, setNeedSpinner] = React.useState<boolean>(true);
-    const [dataCopy, setDataCopy] = React.useState<IODataStructure[]>([]);
 
     const formateDateLabel = (date: Date): string => {
         const formatedDate = formateDateToFrenchFormat(date, language);
@@ -193,15 +241,16 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
 
     // Complete activity data with default values for all days of the week if it was not the case in data input
     useEffect(() => {
+        setInit();
         const init = initializeStore();
         addArrayToSession(labels.dates, init[1]);
         addArrayToSession(labels.datesStarted, init[2]);
-        saveAll(init[0]);
+        saveAll(idSurvey, init);
     }, []);
 
     useEffect(() => {
         setNeedSpinner(true);
-        saveAll(dataCopy);
+        saveAll(idSurvey, store);
     }, [activityData]);
 
     const getMainDisplay = () => {
@@ -225,9 +274,13 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     useEffect(() => {
         if (dataCopy.length > 0) {
             handleChange(responses[0].response, dataCopy);
+            saveAll(idSurvey, [dataCopy, store[1], store[2], store[3]]);
         }
-        saveAll(dataCopy);
-    }, [dataCopy]);
+        if(store[1].length > 0) {
+            handleChange(responses[1].response, store[1]);
+            handleChange(responses[2].response, store[2]);
+        }
+    }, [dataCopy, idSurvey]);
 
     const renderHelp = () => {
         return (
@@ -255,19 +308,32 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 handleChange={handleChange}
                 saveHours={saveHours}
                 values={value}
+                idSurvey={idSurvey}
+                variables={variables}
             ></DayOverview>
         );
     };
 
-    const handle = (data: IODataStructure[]) => {
-        if (data.length > 0) {
-            setDataCopy(data);
-            handleChange(responses[0].response, data);
+    const handle = (data: [IODataStructure[], string[], string[], any[]]) => {
+        if (data[0].length > 0) {
+            setDataCopy(data[0]);
+            handleChange(responses[0].response, dataCopy);
         }
+        if(data[1].length > 0) {
+            handleChange(responses[1].response, data[1]);
+            handleChange(responses[2].response, data[2]);
+        }
+        let storeAct : [IODataStructure[], string[], string[], any[]] = [
+            data[0], 
+            data[1].length > 0 ? data[1] : store[1],
+            data[2].length > 0 ? data[2] : store[2],
+            data[3].length > 0 ? data[3] : store[3]
+        ]
+        setStore(storeAct);
     };
 
     const getIndexOfDayPlanner = () => {
-        let dates = value[labels.dates] as string[];
+        let dates = variables.get(labels.dates) as string[];
         if (dates == null || dates.length < 7) {
             dates = getArrayFromSession(labels.dates);
         }
@@ -275,7 +341,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         const index = dates.findIndex(date => date == currentDate);
         const valuesForCheckbox: { [key: string]: boolean | boolean[] } = {};
         placeWork.responses.forEach(response => {
-            const valueOfResponse = value[response.response.name] as boolean[];
+            const valueOfResponse = variables.get(response.response.name) as boolean[];
             valuesForCheckbox[response.response.name] = valueOfResponse;
         });
         return [valuesForCheckbox, index];
@@ -304,33 +370,36 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         );
     };
 
+    const propsDayOverview = {
+        isDisplayed: isSubChildDisplayed,
+        date: dayOverviewSelectedDate,
+        rawTimeLineData: generateDayOverviewTimelineRawData(),
+        activityData: activityData,
+        setActivityData: setActivityData,
+        handleChangeData: handle,
+        infoLabels: labels.infoLabels,
+        datesLabel: labels.dates,
+        workSumLabel: labels.workSumLabel,
+        workedHoursSum: getWorkedHoursSum(),
+        getFormatedWorkedSum: getFormatedWorkedSum,
+        expandLessIcon: expandLessIcon,
+        expandLessIconAlt: expandLessIconAlt,
+        expandMoreIcon: expandMoreIcon,
+        expandMoreIconAlt: expandMoreIconAlt,
+        expandLessWhiteIcon: expandLessWhiteIcon,
+        expandMoreWhiteIcon: expandMoreWhiteIcon,
+        workIcon: workIcon,
+        workIconAlt: workIconAlt,
+        handleChange: handleChangeOptions,
+        saveHours: saveHours,
+        values: value,
+        idSurvey: idSurvey,
+        variables: variables,
+    };
     const renderWeeklyPlanner = () => {
         return (
             <Box id="root-box">
-                <DayOverview
-                    isDisplayed={isSubChildDisplayed}
-                    date={dayOverviewSelectedDate}
-                    rawTimeLineData={generateDayOverviewTimelineRawData()}
-                    activityData={activityData}
-                    setActivityData={setActivityData}
-                    handleChangeData={handle}
-                    infoLabels={labels.infoLabels}
-                    datesLabel={labels.dates}
-                    workSumLabel={labels.workSumLabel}
-                    workedHoursSum={getWorkedHoursSum()}
-                    getFormatedWorkedSum={getFormatedWorkedSum}
-                    expandLessIcon={expandLessIcon}
-                    expandLessIconAlt={expandLessIconAlt}
-                    expandMoreIcon={expandMoreIcon}
-                    expandMoreIconAlt={expandMoreIconAlt}
-                    expandLessWhiteIcon={expandLessWhiteIcon}
-                    expandMoreWhiteIcon={expandMoreWhiteIcon}
-                    workIcon={workIcon}
-                    workIconAlt={workIconAlt}
-                    handleChange={handleChangeOptions}
-                    saveHours={saveHours}
-                    values={value}
-                ></DayOverview>
+                <DayOverview {...propsDayOverview}></DayOverview>
                 {activityData.length !== 0 && needSpinner ? (
                     <>
                         <Box display={getMainDisplay()}>
@@ -362,6 +431,9 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                                         dataCopy={dataCopy}
                                         handleChange={handleChangeOptions}
                                         setIsPlaceWorkDisplayed={setIsPlaceWorkDisplayed}
+                                        datesLabel={labels.dates}
+                                        variables={variables}
+                                        rawTimeLineData={generateDayOverviewTimelineRawData()}
                                     ></DayPlanner>
                                 ))}
                             </List>
@@ -374,11 +446,11 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         );
     };
 
-    return helpStep == null
-        ? isPlaceWorkDisplayed && isSubChildDisplayed
-            ? renderOptions()
-            : renderWeeklyPlanner()
-        : renderHelp();
+    const renderWeek = () => {
+        return isPlaceWorkDisplayed && isSubChildDisplayed ? renderOptions() : renderWeeklyPlanner();
+    };
+
+    return helpStep == null ? renderWeek() : renderHelp();
 });
 
 const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({

@@ -37,6 +37,7 @@ describe("hourchecker", () => {
                     handleChange={handleChange}
                     responses={responses}
                     value={value}
+                    idSurvey={""}
                 ></HourChecker>
             </ThemeProvider>,
         );
