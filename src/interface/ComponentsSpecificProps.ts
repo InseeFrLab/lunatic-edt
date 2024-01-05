@@ -52,7 +52,7 @@ export type WeeklyPlannerSpecificProps = {
         dates: string;
         datesStarted: string;
     };
-    saveAll(idSurvey: string, data: any): void;
+    saveAll(idSurvey: string, data: [IODataStructure[], string[], string[], any[]]): void;
     language: string;
     helpStep?: number;
     moreIcon: string;

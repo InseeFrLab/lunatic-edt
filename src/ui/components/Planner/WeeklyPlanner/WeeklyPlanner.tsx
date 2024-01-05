@@ -151,23 +151,16 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         ...componentSpecificProps,
     };
     const { classes } = useStyles();
-    const [store, setStore] = React.useState<[IODataStructure[], string[], string[], any[]]>([
-        [],
-        [],
-        [],
-        [],
-    ]);
-    const [startDate, setStartDate] = React.useState<string>(surveyDate ?? "");
 
-    const [startDateFormated, setStartDateFormated] = React.useState<Date>(
-        setDateTimeToZero(generateDateFromStringInput(startDate)),
-    );
-    const [dayList, setDayList] = React.useState<Date[]>(generateDayList(startDateFormated));
-    const [dayOverviewSelectedDate, setDayOverviewSelectedDate] =
-        React.useState<Date>(startDateFormated);
-    const [activityData, setActivityData] = React.useState<WeeklyPlannerDataType[]>([]);
-    const [needSpinner, setNeedSpinner] = React.useState<boolean>(true);
-    const [dataCopy, setDataCopy] = React.useState<IODataStructure[]>([]);
+    const startDate: string = surveyDate ?? "";
+    const startDateFormated: Date = setDateTimeToZero(generateDateFromStringInput(startDate));
+    const dayList: Date[] = generateDayList(startDateFormated);
+
+    const [store, setStore] = useState<[IODataStructure[], string[], string[], any[]]>([[], [], [], []]);
+    const [dayOverviewSelectedDate, setDayOverviewSelectedDate] = useState<Date>(startDateFormated);
+    const [activityData, setActivityData] = useState<WeeklyPlannerDataType[]>([]);
+    const [needSpinner, setNeedSpinner] = useState<boolean>(true);
+    const [dataCopy, setDataCopy] = useState<IODataStructure[]>([]);
 
     const setInit = () => {
         const dataUpdated = setDataArray(variables, responses, language);
