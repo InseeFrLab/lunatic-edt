@@ -276,7 +276,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
             handleChange(responses[0].response, dataCopy);
             saveAll(idSurvey, [dataCopy, store[1], store[2], store[3]]);
         }
-        if(store[1].length > 0) {
+        if (store[1].length > 0) {
             handleChange(responses[1].response, store[1]);
             handleChange(responses[2].response, store[2]);
         }
@@ -319,16 +319,16 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
             setDataCopy(data[0]);
             handleChange(responses[0].response, dataCopy);
         }
-        if(data[1].length > 0) {
+        if (data[1].length > 0) {
             handleChange(responses[1].response, data[1]);
             handleChange(responses[2].response, data[2]);
         }
-        let storeAct : [IODataStructure[], string[], string[], any[]] = [
-            data[0], 
+        let storeAct: [IODataStructure[], string[], string[], any[]] = [
+            data[0],
             data[1].length > 0 ? data[1] : store[1],
             data[2].length > 0 ? data[2] : store[2],
-            data[3].length > 0 ? data[3] : store[3]
-        ]
+            data[3].length > 0 ? data[3] : store[3],
+        ];
         setStore(storeAct);
     };
 

@@ -123,13 +123,9 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     }, [date]);
 
     useEffect(() => {
-        const dayBloc: WeeklyPlannerDataType = activityData.filter(
-            d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
-        )[0];
         const sum: number = calculWorkHours(date, variables, rawTimeLineData, datesLabel);
         setWorkedHoursSum(sum);
-        const hasStarted = dayBloc?.hasBeenStarted ?? false;
-        setHasBeenStarted(hasStarted);
+        setHasBeenStarted(sum > 0);
     }, [activityData]);
 
     /**
@@ -162,7 +158,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                     </Typography>
                 </Box>
             );
-        } else if (dayRelativeTime === 0 || hasBeenStarted) {
+        } else if (hasBeenStarted) {
             return (
                 <Box className={classes.buttonBox}>
                     {dayRelativeTime === 0 && (
@@ -175,7 +171,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                             </Typography>
                         </Box>
                     )}
-                    <Button className={classes.button} onClick={buttonsOnClick(true)}>
+                    <Button className={classes.button} onClick={buttonsOnClick(hasBeenStarted)}>
                         {presentButtonLabel}
                     </Button>
                 </Box>
