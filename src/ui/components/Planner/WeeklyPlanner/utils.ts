@@ -101,13 +101,14 @@ export const transformToIODataStructure = (
     const datesWeek: string[] = new Array(7);
     const datesWeekStarted: string[] = new Array(7);
     const hourSetter = new Array(7);
+    console.log(data);
     for (let i = 0; i < 7; i++) {
         const dayKey = `dateJ${i + 1}`;
         result.push({ [dayKey]: data[i]?.date });
         const dayStarted = `${dayKey}${DAY_TIME_SEPARATOR}${STARTED_LABEL}`;
         result.push({ [dayStarted]: data[i]?.hasBeenStarted.toString() });
-        datesWeek[i] = data[i].date;
-        datesWeekStarted[i] = data[i].hasBeenStarted.toString();
+        datesWeek[i] = data[i]?.date;
+        datesWeekStarted[i] = data[i]?.hasBeenStarted.toString();
 
         data[i]?.detail.forEach(d => {
             const time: Date = new Date();

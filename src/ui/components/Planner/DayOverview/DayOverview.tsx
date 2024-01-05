@@ -125,7 +125,6 @@ const DayOverview = memo((props: DayOverviewProps) => {
         workIcon,
         workIconAlt,
         saveHours,
-        values,
         idSurvey,
         variables,
     } = props;
@@ -133,7 +132,6 @@ const DayOverview = memo((props: DayOverviewProps) => {
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
     const [timeLineData, setTimeLineData] = React.useState<TimeLineRowType[]>(rawTimeLineData);
     const [initStore, setInitStore] = React.useState<IODataStructure[]>([]);
-    const [idSurveyPath, setIdSurveyPath] = React.useState(idSurvey);
 
     // Update timeLineData for HourCheckers from activityData
     useEffect(() => {

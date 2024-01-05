@@ -1,7 +1,7 @@
 import { CircularProgress, List } from "@mui/material";
 import { Box } from "@mui/system";
 import { WeeklyPlannerSpecificProps, responsesType } from "interface";
-import React, { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
@@ -151,28 +151,21 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         ...componentSpecificProps,
     };
     const { classes } = useStyles();
-    const [store, setStore] = React.useState<[IODataStructure[], string[], string[], any[]]>([
-        [],
-        [],
-        [],
-        [],
-    ]);
-    const [startDate, setStartDate] = React.useState<string>(surveyDate ?? "");
 
-    const [startDateFormated, setStartDateFormated] = React.useState<Date>(
-        setDateTimeToZero(generateDateFromStringInput(startDate)),
-    );
-    const [dayList, setDayList] = React.useState<Date[]>(generateDayList(startDateFormated));
-    const [dayOverviewSelectedDate, setDayOverviewSelectedDate] =
-        React.useState<Date>(startDateFormated);
-    const [activityData, setActivityData] = React.useState<WeeklyPlannerDataType[]>([]);
-    const [needSpinner, setNeedSpinner] = React.useState<boolean>(true);
-    const [dataCopy, setDataCopy] = React.useState<IODataStructure[]>([]);
+    const startDate: string = surveyDate ?? "";
+    const startDateFormated: Date = setDateTimeToZero(generateDateFromStringInput(startDate));
+    const dayList: Date[] = generateDayList(startDateFormated);
+
+    const [store, setStore] = useState<[IODataStructure[], string[], string[], any[]]>([[], [], [], []]);
+    const [dayOverviewSelectedDate, setDayOverviewSelectedDate] = useState<Date>(startDateFormated);
+    const [activityData, setActivityData] = useState<WeeklyPlannerDataType[]>([]);
+    const [needSpinner, setNeedSpinner] = useState<boolean>(true);
+    const [dataCopy, setDataCopy] = useState<IODataStructure[]>([]);
 
     const setInit = () => {
         const dataUpdated = setDataArray(variables, responses, language);
         const temp: WeeklyPlannerDataType[] = dataUpdated ? [...dataUpdated] : [];
-
+        console.log(dataUpdated);
         dayList.forEach(date => {
             let dayBloc: WeeklyPlannerDataType | undefined = temp.find(
                 d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
