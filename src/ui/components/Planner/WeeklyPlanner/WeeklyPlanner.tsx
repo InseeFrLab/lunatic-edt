@@ -165,7 +165,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const setInit = () => {
         const dataUpdated = setDataArray(variables, responses, language);
         const temp: WeeklyPlannerDataType[] = dataUpdated ? [...dataUpdated] : [];
-        console.log(dataUpdated);
         dayList.forEach(date => {
             let dayBloc: WeeklyPlannerDataType | undefined = temp.find(
                 d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),

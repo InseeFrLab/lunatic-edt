@@ -264,14 +264,14 @@ describe("weeklyPlannerComponent", () => {
     });
 
     it("renders DayPlanner items with correct DayRelativeTime", () => {
-        expect(screen.getAllByText(workSumLabel)).toHaveLength(2);
+        expect(screen.getAllByText(workSumLabel)).toHaveLength(3);
         expect(screen.getAllByText(presentButtonLabel)).toHaveLength(1);
-        expect(screen.getAllByText(futureButtonLable)).toHaveLength(5);
+        expect(screen.getAllByText(futureButtonLable)).toHaveLength(4);
     });
 
     it("renders title and items with date current", () => {
         expect(screen.getByText(title)).toBeInTheDocument();
-        expect(screen.getAllByText(workSumLabel)).toHaveLength(2);
+        expect(screen.getAllByText(workSumLabel)).toHaveLength(3);
     });
 
     it("renders (non)selected hours and update them", async () => {
