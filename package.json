@@ -1,6 +1,6 @@
 {
     "name": "@inseefrlab/lunatic-edt",
-    "version": "0.11.6",
+    "version": "0.11.7",
     "description": "Library of questionnaire components for EDT survey",
     "repository": {
         "type": "git",
