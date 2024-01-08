@@ -6,8 +6,11 @@ import { makeStylesEdt } from "../../../theme";
 import {
     formateDateToFrenchFormat,
     generateDateFromStringInput,
+    generateStringInputFromDate,
+    getArrayFromSession,
     setDateTimeToZero,
 } from "../../../utils";
+import { TimeLineRowType } from "interface/DayOverviewTypes";
 
 export type DayPlannerProps = {
     date: Date;
@@ -27,6 +30,9 @@ export type DayPlannerProps = {
     handleChange(response: responseType, value: IODataStructure[]): void;
     innerObject?: any;
     setIsPlaceWorkDisplayed(display: boolean): void;
+    datesLabel: string;
+    variables: Map<string, any>;
+    rawTimeLineData: TimeLineRowType[];
 };
 
 enum DayRelativeTimeEnum {
@@ -34,6 +40,29 @@ enum DayRelativeTimeEnum {
     Today = 0,
     Future = 1,
 }
+
+const calculWorkHours = (
+    date: Date,
+    variables: Map<string, any>,
+    rawTimeLineData: TimeLineRowType[],
+    datesLabel: string,
+) => {
+    let dates = variables.get(datesLabel) as string[];
+    if (dates == null || dates.length == undefined || dates.length < 7) {
+        dates = getArrayFromSession(datesLabel);
+    }
+    const currentDateIndex = dates?.indexOf(generateStringInputFromDate(date));
+    let duration = 0;
+    rawTimeLineData.forEach(timeLine => {
+        timeLine.options.forEach(option => {
+            const valuesHour = variables.get(option.response.name) as string[];
+            const valueQuartier = valuesHour ? valuesHour[currentDateIndex] : "false";
+            const valueIndex = valueQuartier === "true";
+            if (valueIndex) duration += 15;
+        });
+    });
+    return duration;
+};
 
 const renderDateLabel = (date: Date, language: string): string => {
     const formatedDate: string = formateDateToFrenchFormat(date, language);
@@ -73,6 +102,9 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         dataCopy,
         handleChange,
         setIsPlaceWorkDisplayed,
+        variables,
+        rawTimeLineData,
+        datesLabel,
     } = props;
 
     const [dayRelativeTime, setDayRelativeTime] = React.useState<DayRelativeTimeEnum>();
@@ -91,13 +123,9 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     }, [date]);
 
     useEffect(() => {
-        const dayBloc: WeeklyPlannerDataType = activityData.filter(
-            d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),
-        )[0];
-        const sum: number = dayBloc?.detail.reduce((acc, val) => acc + val.duration, 0);
+        const sum: number = calculWorkHours(date, variables, rawTimeLineData, datesLabel);
         setWorkedHoursSum(sum);
-        const hasStarted = dayBloc?.hasBeenStarted ?? false;
-        setHasBeenStarted(hasStarted);
+        setHasBeenStarted(sum > 0);
     }, [activityData]);
 
     /**
@@ -115,7 +143,6 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
             setDisplayDayOverview(true);
             setDayOverviewSelectedDate(date);
             setIsPlaceWorkDisplayed(!hasStarted);
-
             handleChange({ name: "WEEKLYPLANNER" }, dataCopy);
         },
         [],
@@ -131,7 +158,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                     </Typography>
                 </Box>
             );
-        } else if (dayRelativeTime === 0 || hasBeenStarted) {
+        } else if (hasBeenStarted) {
             return (
                 <Box className={classes.buttonBox}>
                     {dayRelativeTime === 0 && (
@@ -144,7 +171,7 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
                             </Typography>
                         </Box>
                     )}
-                    <Button className={classes.button} onClick={buttonsOnClick(true)}>
+                    <Button className={classes.button} onClick={buttonsOnClick(hasBeenStarted)}>
                         {presentButtonLabel}
                     </Button>
                 </Box>

@@ -52,7 +52,7 @@ export type WeeklyPlannerSpecificProps = {
         dates: string;
         datesStarted: string;
     };
-    saveAll(data: IODataStructure[]): void;
+    saveAll(idSurvey: string, data: [IODataStructure[], string[], string[], any[]]): void;
     language: string;
     helpStep?: number;
     moreIcon: string;
@@ -66,8 +66,9 @@ export type WeeklyPlannerSpecificProps = {
     workIcon: string;
     workIconAlt: string;
     modifiable?: boolean;
-    saveHours(response: responsesHourChecker): void;
+    saveHours(idSurvey: string, response: responsesHourChecker): void;
     optionsIcons: { [id: string]: { icon: string; altIcon: string } };
+    idSurvey: string;
 };
 
 export type responsesHourChecker = {
@@ -202,6 +203,7 @@ export type CheckBoxOneSpecificPropsLabels = {
 
 export type TimepickerSpecificProps = {
     activitiesAct: Activity[];
+    ariaLabelTimepicker: string;
     defaultValue?: boolean;
     gapToFillIndex?: number;
     constants: any;

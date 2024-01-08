@@ -99,7 +99,10 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         selectedId = value;
     }
 
-    const { classes, cx } = useStyles({ "modifiable": modifiable });
+    const { classes, cx } = useStyles({
+        "modifiable": modifiable,
+        "innerWidth": window.innerWidth,
+    });
     const [currentOption, setCurrentOption] = React.useState<string | undefined>(
         selectedId ?? undefined,
     );
@@ -513,110 +516,110 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     );
 });
 
-const useStyles = makeStylesEdt<{ modifiable: boolean }>({ "name": { CheckboxOneEdt } })(
-    (theme, { modifiable }) => ({
-        MuiToggleButton: {
-            marginBottom: "0.5rem",
-            border: important("2px solid #FFFFFF"),
-            borderRadius: important("6px"),
+const useStyles = makeStylesEdt<{ modifiable: boolean; innerWidth: number }>({
+    "name": { CheckboxOneEdt },
+})((theme, { modifiable, innerWidth }) => ({
+    MuiToggleButton: {
+        marginBottom: "0.5rem",
+        border: important("2px solid #FFFFFF"),
+        borderRadius: important("6px"),
+        backgroundColor: "#FFFFFF",
+        color: theme.palette.secondary.main,
+        "&.Mui-selected": {
+            borderColor: important(theme.palette.primary.main),
+            fontWeight: "bold",
             backgroundColor: "#FFFFFF",
             color: theme.palette.secondary.main,
-            "&.Mui-selected": {
-                borderColor: important(theme.palette.primary.main),
-                fontWeight: "bold",
-                backgroundColor: "#FFFFFF",
-                color: theme.palette.secondary.main,
-            },
         },
-        MuiToggleButtonIcon: {
-            marginBottom: "0.5rem",
-            border: important("2px solid #FFFFFF"),
-            borderRadius: important("6px"),
-            backgroundColor: "#FFFFFF",
-            color: theme.palette.secondary.main,
-            justifyContent: "flex-start",
-            textAlign: "left",
-            fontWeight: "bold",
-            "&.Mui-selected": {
-                borderColor: important(theme.palette.primary.main),
-            },
+    },
+    MuiToggleButtonIcon: {
+        marginBottom: "0.5rem",
+        border: important("2px solid #FFFFFF"),
+        borderRadius: important("6px"),
+        backgroundColor: "#FFFFFF",
+        color: theme.palette.secondary.main,
+        justifyContent: "flex-start",
+        textAlign: "left",
+        fontWeight: "bold",
+        "&.Mui-selected": {
+            borderColor: important(theme.palette.primary.main),
         },
-        labelSpacer: {
-            margin: "1rem 0rem",
-            textAlign: "center",
-        },
-        iconBox: {
-            marginRight: "0.5rem",
-            color: theme.palette.primary.main,
-            width: "25px",
-        },
-        labelBox: {
-            marginLeft: "0.25rem",
-            color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
-        },
-        titleBox: {
-            display: "flex",
-            alignItems: "center",
-        },
-        icon: {
-            width: "25px",
-            height: "25px",
-        },
-        toggleButtonGroup: {
-            marginTop: "1rem",
-            width: important("98%"),
-        },
-        centerBox: {
-            display: "flex",
-            justifyContent: "center",
-        },
-        newOptionTextField: {
-            width: "100%",
-            backgroundColor: theme.variables.white,
-            borderRadius: "5px",
-        },
-        h1: {
-            fontSize: "18px",
-            margin: 0,
-            lineHeight: "1.5rem",
-            fontWeight: "bold",
-        },
-        clickableList: {
-            width: "300px",
-            marginTop: "1rem",
-        },
-        clickableListMobile: {
-            width: "100%",
-            marginTop: "0rem",
-        },
-        freeInputBox: {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-        },
-        freeInputBoxMobile: {
-            height: "85vh",
-            justifyContent: "center",
-        },
-        addActivityButton: {
-            margin: "2rem 0rem",
-        },
-        buttonSaveClickableList: {
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-        },
-        saveNewActivityButton: {
-            margin: "2rem 0rem",
-            width: "80%",
-        },
-        clickableListBox: {
-            height: innerHeight / 2 + "px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-        },
-    }),
-);
+    },
+    labelSpacer: {
+        margin: "1rem 0rem",
+        textAlign: "center",
+    },
+    iconBox: {
+        marginRight: "0.5rem",
+        color: theme.palette.primary.main,
+        width: "25px",
+    },
+    labelBox: {
+        marginLeft: "0.25rem",
+        color: !modifiable ? "rgba(0, 0, 0, 0.38)" : "",
+    },
+    titleBox: {
+        display: "flex",
+        alignItems: "center",
+    },
+    icon: {
+        width: "25px",
+        height: "25px",
+    },
+    toggleButtonGroup: {
+        marginTop: "1rem",
+        width: important("98%"),
+    },
+    centerBox: {
+        display: "flex",
+        justifyContent: "center",
+    },
+    newOptionTextField: {
+        width: "100%",
+        backgroundColor: theme.variables.white,
+        borderRadius: "5px",
+    },
+    h1: {
+        fontSize: "18px",
+        margin: 0,
+        lineHeight: "1.5rem",
+        fontWeight: "bold",
+    },
+    clickableList: {
+        width: "300px",
+        marginTop: "1rem",
+    },
+    clickableListMobile: {
+        width: innerWidth - 5 + "px",
+        marginTop: "0rem",
+    },
+    freeInputBox: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+    },
+    freeInputBoxMobile: {
+        height: "85vh",
+        justifyContent: "center",
+    },
+    addActivityButton: {
+        margin: "2rem 0rem",
+    },
+    buttonSaveClickableList: {
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+    },
+    saveNewActivityButton: {
+        margin: "2rem 0rem",
+        width: "80%",
+    },
+    clickableListBox: {
+        height: innerHeight / 2 + "px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+    },
+}));
 
 export default createCustomizableLunaticField(CheckboxOneEdt, "CheckboxOneEdt");

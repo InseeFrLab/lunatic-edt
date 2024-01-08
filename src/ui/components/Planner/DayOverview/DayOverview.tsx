@@ -28,7 +28,7 @@ export type DayOverviewProps = {
     rawTimeLineData: TimeLineRowType[];
     activityData: WeeklyPlannerDataType[];
     setActivityData(data: WeeklyPlannerDataType[]): void;
-    handleChangeData(value: IODataStructure[]): void;
+    handleChangeData(value: any): void;
     infoLabels: InfoProps;
     datesLabel: string;
     workSumLabel: string;
@@ -44,8 +44,10 @@ export type DayOverviewProps = {
     workIcon: string;
     workIconAlt: string;
     handleChange(response: responseType, value: IODataStructure[]): void;
-    saveHours(response: responsesHourChecker): void;
+    saveHours(idSurvey: string, response: responsesHourChecker): void;
     values: { [key: string]: string[] | IODataStructure[] | boolean[] };
+    idSurvey: string;
+    variables: Map<string, any>;
 };
 
 /**
@@ -123,7 +125,8 @@ const DayOverview = memo((props: DayOverviewProps) => {
         workIcon,
         workIconAlt,
         saveHours,
-        values,
+        idSurvey,
+        variables,
     } = props;
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
@@ -151,8 +154,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
             }
         });
         setTimeLineData(temp);
-
-        updatesValues(values, date);
+        updatesValues(variables, date);
     }, [date]);
 
     useEffect(() => {
@@ -162,20 +164,30 @@ const DayOverview = memo((props: DayOverviewProps) => {
         isDisplayed ? setComponentDisplay("flex") : setComponentDisplay("none");
     }, [isDisplayed]);
 
-    const updatesValues = (
-        values: { [key: string]: string[] | IODataStructure[] | boolean[] },
-        date: Date,
-    ) => {
-        let dates = values[datesLabel] as string[];
+    useEffect(() => {
+        if (activityData.length !== 0 && !isDisplayed) {
+            updateValue();
+        }
+        isDisplayed ? setComponentDisplay("flex") : setComponentDisplay("none");
+    }, [location]);
+
+    useEffect(() => {
+        if (activityData.length !== 0 && !isDisplayed) {
+            updateValue();
+        }
+        isDisplayed ? setComponentDisplay("flex") : setComponentDisplay("none");
+    }, [idSurvey]);
+
+    const updatesValues = (values: Map<string, any>, date: Date) => {
+        let dates = values.get(datesLabel) as string[];
         if (dates == null || dates.length == undefined || dates.length < 7) {
             dates = getArrayFromSession(datesLabel);
         }
         const currentDateIndex = dates?.indexOf(generateStringInputFromDate(date));
-
         rawTimeLineData.forEach(timeLine => {
             timeLine.options.forEach(option => {
                 const name = option.response.name;
-                const valuesHour = values[option.response.name] as string[];
+                const valuesHour = values.get(option.response.name) as string[];
                 const valueQuartier = valuesHour ? valuesHour[currentDateIndex] : "false";
                 const valueIndex = valueQuartier === "true";
                 timeLine.value[name] = valueIndex;
@@ -241,8 +253,8 @@ const DayOverview = memo((props: DayOverviewProps) => {
 
         dayBloc.detail = details;
         const toStore = transformToIODataStructure(temp);
-        updatesValues(values, date);
-        handleChangeData(toStore[0]);
+        updatesValues(variables, date);
+        handleChangeData(toStore);
         setActivityData(temp);
         setInitStore(toStore[0]);
     };
@@ -291,11 +303,11 @@ const DayOverview = memo((props: DayOverviewProps) => {
                     handleChangeData={handleChange}
                     saveHours={saveHours}
                     currentDate={generateStringInputFromDate(date)}
+                    idSurvey={idSurvey}
                 />
             </Box>
         );
     };
-
     return (
         <Box className={classes.mainContainer} display={componentDisplay} aria-label="dayoverview">
             <Box className={classes.headerContainerBox}>

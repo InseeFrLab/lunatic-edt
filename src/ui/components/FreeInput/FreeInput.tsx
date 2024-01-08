@@ -105,7 +105,7 @@ const FreeInput = memo((props: FreeInputProps) => {
                 sx={{
                     "& legend": { display: "none" },
                     "& fieldset": { top: 0 },
-                    "& label": { display: "none" },
+                    "& label": { display: "grid", visibility: "hidden" },
                 }}
             ></TextField>
         </Box>

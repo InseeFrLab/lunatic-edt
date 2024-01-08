@@ -60,6 +60,7 @@ const ModalEdt = memo((props: ModalProps) => {
                                         className={classes.arrowIcon}
                                     />
                                 }
+                                aria-label={labels?.buttonLabel ?? ""}
                                 id="next-modal-button"
                             >
                                 {labels?.buttonLabel}

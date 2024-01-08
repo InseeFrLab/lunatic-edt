@@ -129,7 +129,10 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const [newValue, setNewValue] = useState<string | undefined>();
 
     const newItemId = useRef(uuidv4());
-    const { classes, cx } = useStyles({ "modifiable": modifiable, "innerHeight": window.innerHeight });
+    const { classes, cx } = useStyles({
+        "modifiable": modifiable,
+        "innerHeight": window.innerHeight,
+    });
 
     useEffect(() => {
         setDisplayStepper &&
@@ -171,7 +174,9 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             categoriesAndActivitesNomenclature,
             setSelectedId,
             setSelectedCategories,
+            setShowSubCategories,
         );
+        console.log(selectedCategories, showSubCategories);
         processActivityAutocomplete(value, parsedValue, setFullScreenComponent, setSelectedSuggesterId);
         processNewActivity(
             value,
@@ -709,6 +714,7 @@ const renderCategories = (
     classes: any,
     cx: any,
 ) => {
+    console.log(states.selectedCategories, states.showSubCategories);
     return !states.showSubCategories ? (
         <Box className={classes.rank1CategoriesBox}>
             {inputs.categoriesAndActivitesNomenclature.map((d, index) => {
@@ -1436,7 +1442,7 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
         marginTop: "1rem",
     },
     clickableListMobile: {
-        width: "100%",
+        width: innerWidth - 10 + "px",
         marginTop: "0rem",
     },
     freeInputTextField: {
