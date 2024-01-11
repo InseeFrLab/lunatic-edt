@@ -1,7 +1,7 @@
 import { CircularProgress, List } from "@mui/material";
 import { Box } from "@mui/system";
 import { WeeklyPlannerSpecificProps, responsesType } from "interface";
-import React, { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
@@ -165,7 +165,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const setInit = () => {
         const dataUpdated = setDataArray(variables, responses, language);
         const temp: WeeklyPlannerDataType[] = dataUpdated ? [...dataUpdated] : [];
-
         dayList.forEach(date => {
             let dayBloc: WeeklyPlannerDataType | undefined = temp.find(
                 d => setDateTimeToZero(generateDateFromStringInput(d.date)).getTime() === date.getTime(),

@@ -181,6 +181,22 @@ describe("weeklyPlannerComponent", () => {
         "02H45": ["true", "false", "false", "false", "false", "false", "false"],
     };
 
+    const variables: Map<string, any> = new Map();
+    variables.set("WEEKLYPLANNER", [
+        { "dateJ1": todayStringValue },
+        { "dateJ1_started": "true" },
+        { "dateJ1_02h15": "true" },
+        { "dateJ1_02h30": "true" },
+        { "dateJ1_02h45": "true" },
+        { "dateJ1_03h00": "true" },
+    ]);
+    variables.set("DATES", arrayDates);
+    variables.set("DATES_STARTED", ["true", "false", "false", "false", "false", "false", "false"]);
+    variables.set("02H00", ["true", "false", "false", "false", "false", "false", "false"]);
+    variables.set("02H15", ["true", "false", "false", "false", "false", "false", "false"]);
+    variables.set("02H30", ["true", "false", "false", "false", "false", "false", "false"]);
+    variables.set("02H45", ["true", "false", "false", "false", "false", "false", "false"]);
+
     const componentProps: WeeklyPlannerSpecificProps = {
         surveyDate: surveyDateString,
         isSubChildDisplayed: false,
@@ -218,6 +234,7 @@ describe("weeklyPlannerComponent", () => {
                 altIcon: "",
             },
         },
+        idSurvey: "",
     };
 
     const renderElement = (valueData: { [key: string]: string[] | IODataStructure[] }): RenderResult => {
@@ -229,6 +246,7 @@ describe("weeklyPlannerComponent", () => {
                     componentSpecificProps={componentProps}
                     bindingDependencies={bindingDependencies}
                     responses={responses}
+                    variables={variables}
                 ></WeeklyPlanner>
             </ThemeProvider>,
         );

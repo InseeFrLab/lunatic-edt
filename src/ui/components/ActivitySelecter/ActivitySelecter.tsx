@@ -129,7 +129,10 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     const [newValue, setNewValue] = useState<string | undefined>();
 
     const newItemId = useRef(uuidv4());
-    const { classes, cx } = useStyles({ "modifiable": modifiable, "innerHeight": window.innerHeight });
+    const { classes, cx } = useStyles({
+        "modifiable": modifiable,
+        "innerHeight": window.innerHeight,
+    });
 
     useEffect(() => {
         setDisplayStepper &&
@@ -1439,7 +1442,7 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
         marginTop: "1rem",
     },
     clickableListMobile: {
-        width: "100%",
+        width: innerWidth - 10 + "px",
         marginTop: "0rem",
     },
     freeInputTextField: {
