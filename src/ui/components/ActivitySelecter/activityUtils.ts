@@ -191,21 +191,24 @@ export const findRank1Category = (
 ) => {
     const idSelected = parsedValue.id;
     const isFullyCompleted = parsedValue.isFullyCompleted;
-    let category = undefined;
     //if category of 3nd rank, get category 2n rank, other get category 1r rank
-    const categorySecondRank = findItemInCategoriesNomenclature(
+    const categorySecondOrThirdRank = findItemInCategoriesNomenclature(
         idSelected,
         categoriesAndActivitesNomenclature,
     );
     //if category of 2nd rank, get category 1r rank, other undefined
-    const categoryFirstRank = findItemInCategoriesNomenclature(
-        categorySecondRank?.parent?.id,
+    const categoryFirstOrSecondRank = findItemInCategoriesNomenclature(
+        categorySecondOrThirdRank?.parent?.id,
         categoriesAndActivitesNomenclature,
     );
 
-    category = categoryFirstRank?.parent == null ? categorySecondRank : categoryFirstRank;
+    const category =
+        categoryFirstOrSecondRank?.parent == null
+            ? categorySecondOrThirdRank
+            : categoryFirstOrSecondRank;
+    const categoryFirstRank = category?.parent ?? category?.item;
 
-    return isFullyCompleted ? category?.parent : category?.item;
+    return isFullyCompleted ? categoryFirstRank : category?.item;
 };
 
 const saveNewOrCurrentActivity = (

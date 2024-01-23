@@ -251,7 +251,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
             });
         }
 
-        dayBloc.detail = details;
+        if (dayBloc) dayBloc.detail = details;
         const toStore = transformToIODataStructure(temp);
         updatesValues(variables, date);
         handleChangeData(toStore);

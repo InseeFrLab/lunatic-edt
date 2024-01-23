@@ -166,7 +166,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         if (parsedValue.label) localStorage.setItem(selectedLabelNewActivity, parsedValue.label);
         if (parsedValue.id) localStorage.setItem(selectedIdNewActivity, parsedValue.id);
         if (helpStep == 3) parsedValue.id = "100";
-        setSelectRank1Category(findRank1Category(parsedValue, categoriesAndActivitesNomenclature));
+        const rank1 = findRank1Category(parsedValue, categoriesAndActivitesNomenclature);
+        setSelectRank1Category(rank1);
 
         processActivityCategory(
             value,
@@ -176,7 +177,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             setSelectedCategories,
             setShowSubCategories,
         );
-        console.log(selectedCategories, showSubCategories);
         processActivityAutocomplete(value, parsedValue, setFullScreenComponent, setSelectedSuggesterId);
         processNewActivity(
             value,
@@ -189,6 +189,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
     }, []);
 
     useEffect(() => {
+        setShowSubCategories(false);
         back(
             backClickEvent,
             selectedCategories,
@@ -714,7 +715,6 @@ const renderCategories = (
     classes: any,
     cx: any,
 ) => {
-    console.log(states.selectedCategories, states.showSubCategories);
     return !states.showSubCategories ? (
         <Box className={classes.rank1CategoriesBox}>
             {inputs.categoriesAndActivitesNomenclature.map((d, index) => {
