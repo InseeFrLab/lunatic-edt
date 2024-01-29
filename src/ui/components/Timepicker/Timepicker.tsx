@@ -1,7 +1,8 @@
-import { InputAdornment, TextField } from "@mui/material";
+import { Button, DialogActions, InputAdornment, TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { PickersActionBarProps } from "@mui/x-date-pickers/PickersActionBar";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
 import { TimepickerSpecificProps } from "interface";
@@ -61,6 +62,15 @@ const Timepicker = memo((props: TimepickerProps) => {
         }
     }
 
+    const MyActionBar = ({ onAccept, onCancel }: PickersActionBarProps) => {
+        return (
+            <DialogActions>
+                <Button onClick={onCancel}> {componentSpecificProps?.labels.cancelLabel} </Button>
+                <Button onClick={onAccept}> {componentSpecificProps?.labels.validateLabel} </Button>
+            </DialogActions>
+        );
+    };
+
     return (
         <>
             {label && (
@@ -112,6 +122,9 @@ const Timepicker = memo((props: TimepickerProps) => {
                         className={classes.input}
                         minutesStep={5}
                         label={label ?? tipsLabel}
+                        components={{
+                            ActionBar: MyActionBar,
+                        }}
                     />
                 </LocalizationProvider>
             </Box>

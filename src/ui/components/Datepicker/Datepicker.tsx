@@ -3,9 +3,9 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
+import { TimepickerSpecificProps } from "interface";
 import React, { memo, useCallback, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
-import { TimepickerSpecificProps } from "interface";
 
 export type DatepickerProps = {
     value?: string;
@@ -72,6 +72,7 @@ const Datepicker = memo((props: DatepickerProps) => {
                         },
                     }}
                     className={classes.input}
+                    showToolbar={false}
                 />
             </LocalizationProvider>
         </>
