@@ -117,7 +117,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                                     />
                                 </InputAdornment>
                             ),
-                            "aria-label": componentSpecificProps?.ariaLabelTimepicker,
+                            "aria-label": componentSpecificProps?.labels.ariaLabelTimepicker,
                         }}
                         className={classes.input}
                         minutesStep={5}
