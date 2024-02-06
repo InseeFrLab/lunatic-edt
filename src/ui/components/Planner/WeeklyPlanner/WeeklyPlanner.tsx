@@ -114,9 +114,8 @@ const setDataArray = (
     language: string,
 ) => {
     const dataWeeklyPlanner = setDataWeeklyPlannerArray(variables, responses);
-
     const data: WeeklyPlannerDataType[] | undefined =
-        dataWeeklyPlanner.length > 1
+        dataWeeklyPlanner?.length > 1
             ? transformToWeeklyPlannerDataType(dataWeeklyPlanner, language)
             : undefined;
     return data;
@@ -388,6 +387,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         idSurvey: idSurvey,
         variables: variables,
     };
+
     const renderWeeklyPlanner = () => {
         return (
             <Box id="root-box">
