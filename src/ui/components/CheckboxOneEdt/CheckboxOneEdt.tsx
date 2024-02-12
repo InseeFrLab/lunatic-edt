@@ -89,14 +89,14 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     let suggesterId = null;
     let labelNewValue = null;
 
-    if (value && typeof value == "string") {
+    if (typeof value == "string") {
         selectedId = variables.get(bindingDependencies[0]);
-    } else if (value && typeof value == "object") {
+    } else if (typeof value == "object") {
         selectedId = variables.get(bindingDependencies[0]);
-        suggesterId = value[bindingDependencies[2]];
-        labelNewValue = value[bindingDependencies[1]];
+        suggesterId = variables.get(bindingDependencies[2]);
+        labelNewValue = variables.get(bindingDependencies[1]);
     } else {
-        selectedId = value;
+        selectedId = variables.get(bindingDependencies[0]);
     }
 
     const { classes, cx } = useStyles({
