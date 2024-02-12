@@ -349,7 +349,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         const values = getIndexOfDayPlanner();
         return (
             <CheckboxGroupEdt
-                tipsLabel={placeWork.label}
+                label={placeWork.label}
                 handleChange={handleChangeOptions}
                 responses={placeWork.responses}
                 value={values[0]}
