@@ -212,7 +212,7 @@ const useStyles = makeStylesEdt({ "name": { Duration } })(theme => ({
         },
     },
     menuSelectBox: {
-        height: "30%",
+        height: "45%",
     },
     h1: {
         fontSize: "18px",
