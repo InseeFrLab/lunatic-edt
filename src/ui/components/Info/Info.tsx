@@ -9,7 +9,6 @@ const Info = memo((props: InfoProps) => {
         normalText,
         boldText,
         infoIcon,
-        infoIconAlt,
         border,
         isAlertInfo,
         infoIconTop = false,
@@ -25,17 +24,9 @@ const Info = memo((props: InfoProps) => {
                 isAlertInfo ? classes.alert : classes.info,
             )}
         >
-            {infoIconTop && infoIcon && (
-                <Box className={classes.iconContainerTop}>
-                    <img src={infoIcon} alt={infoIconAlt} />
-                </Box>
-            )}
+            {infoIconTop && infoIcon && <Box className={classes.iconContainerTop}>{infoIcon}</Box>}
             <Box className={cx(classes.titleWithIcon)}>
-                {!infoIconTop && infoIcon && (
-                    <Box className={classes.iconContainer}>
-                        <img src={infoIcon} alt={infoIconAlt} />
-                    </Box>
-                )}
+                {!infoIconTop && infoIcon && <Box className={classes.iconContainer}>{infoIcon}</Box>}
                 <Box>
                     {boldText && boldFirst && (
                         <Box>

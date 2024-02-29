@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 import { AutoCompleteActiviteOption, NomenclatureActivityOption } from "./ActivityTypes";
 import { CheckboxOneCustomOption } from "./CheckboxOptions";
 import { Activity } from "./TimepickerTypes";
@@ -25,10 +26,8 @@ export type InfoProps = {
     normalText?: string;
     boldText?: string;
     isAlertInfo?: boolean;
-    infoIcon: string;
-    infoIconAlt: string;
-    infoIconTooltip: string;
-    infoIconTooltipAlt: string;
+    infoIcon?: ReactElement<any>;
+    infoIconTooltip?: ReactElement<any>;
     infoIconTop?: boolean;
     border: boolean;
     boldFirst?: boolean;

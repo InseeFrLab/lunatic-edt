@@ -18,10 +18,6 @@ describe("weeklyPlannerComponent", () => {
     const infoLabels: InfoProps = {
         normalText: "",
         boldText: "",
-        infoIconAlt: "",
-        infoIcon: "",
-        infoIconTooltip: "",
-        infoIconTooltipAlt: "",
         border: false,
     };
     const dates = "DATES";
