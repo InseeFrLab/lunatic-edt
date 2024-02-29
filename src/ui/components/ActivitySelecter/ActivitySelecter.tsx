@@ -7,7 +7,7 @@ import {
     responsesType,
 } from "interface/ActivityTypes";
 import { ActivityLabelProps, ActivitySelecterSpecificProps } from "interface/ComponentsSpecificProps";
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import React, { ReactElement, memo, useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ActivitySelecterNavigationEnum } from "../../../enumeration/ActivitySelecterNavigationEnum";
 import { makeStylesEdt } from "../../../ui/theme";
@@ -353,7 +353,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             complete: labels.alertComplete,
                         }}
                         icon={errorIcon}
-                        errorIconAlt={labels.alertAlticon}
                     ></Alert>
                     {renderClickableList(
                         fullScreenComponent,
@@ -989,7 +988,7 @@ const renderClickableList = (
     inputs: {
         activitesAutoCompleteRef: AutoCompleteActiviteOption[];
         selectedSuggesterId: string | undefined;
-        clickableListIconNoResult: string;
+        clickableListIconNoResult: ReactElement<any>;
         labels: ActivityLabelProps;
         isMobile: boolean;
         separatorSuggester: string;

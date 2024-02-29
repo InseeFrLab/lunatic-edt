@@ -134,8 +134,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                         cancel: labels.alertIgnore || "",
                         complete: labels.alertComplete || "",
                     }}
-                    icon={errorIcon || ""}
-                    errorIconAlt={labels.alertAlticon || ""}
+                    icon={errorIcon ?? <></>}
                 ></Alert>
             )}
             <div id={id}>

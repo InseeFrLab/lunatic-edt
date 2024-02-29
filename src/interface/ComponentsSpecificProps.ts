@@ -10,7 +10,6 @@ export type ActivityLabelProps = {
     alertMessage: string;
     alertIgnore: string;
     alertComplete: string;
-    alertAlticon: string;
     clickableListPlaceholder: string;
     clickableListNotFoundLabel: string;
     clickableListNotFoundComment: string;
@@ -80,7 +79,7 @@ export type responsesHourChecker = {
 
 export type ActivitySelecterSpecificProps = {
     categoriesIcons: { [id: string]: { icon: string; altIcon: string } };
-    clickableListIconNoResult: string;
+    clickableListIconNoResult: ReactElement<any>;
     activitesAutoCompleteRef: AutoCompleteActiviteOption[];
     backClickEvent: React.MouseEvent | undefined;
     nextClickEvent: React.MouseEvent | undefined;
@@ -90,7 +89,7 @@ export type ActivitySelecterSpecificProps = {
     setDisplayHeader?(value: boolean): void;
     categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
     labels: ActivityLabelProps;
-    errorIcon: string;
+    errorIcon: ReactElement<any>;
     addToReferentielCallBack(
         newItem: AutoCompleteActiviteOption,
         categoryId: string | undefined,
@@ -122,9 +121,8 @@ export type IconGridCheckBoxOneSpecificProps = {
         alertMessage: string;
         alertIgnore: string;
         alertComplete: string;
-        alertAlticon: string;
     };
-    errorIcon: string;
+    errorIcon: ReactElement<any>;
     onSelectValue?(): void;
     modifiable?: boolean;
 };
@@ -139,9 +137,8 @@ export type CheckboxGroupSpecificProps = {
         alertMessage?: string;
         alertIgnore?: string;
         alertComplete?: string;
-        alertAlticon?: string;
     };
-    errorIcon?: string;
+    errorIcon?: ReactElement<any>;
     helpStep?: number;
     modifiable?: boolean;
 };
@@ -156,13 +153,12 @@ export type CheckboxOneSpecificProps = {
         alertMessage: string;
         alertIgnore: string;
         alertComplete: string;
-        alertAlticon: string;
     };
     backClickEvent?: React.MouseEvent;
     nextClickEvent?: React.MouseEvent;
     backClickCallback?(): void;
     nextClickCallback?(): void;
-    errorIcon?: string;
+    errorIcon?: ReactElement<any>;
     addToReferentielCallBack?(newItem: CheckboxOneCustomOption): void;
     onSelectValue?(): void;
     extensionIcon: string;
@@ -227,9 +223,8 @@ export type CheckboxBooleanEdtSpecificProps = {
         alertMessage?: string;
         alertIgnore?: string;
         alertComplete?: string;
-        alertAlticon?: string;
     };
     onSelectValue?(): void;
-    errorIcon?: string;
+    errorIcon?: ReactElement<any>;
     modifiable?: boolean;
 };

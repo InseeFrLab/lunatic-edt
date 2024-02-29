@@ -110,8 +110,7 @@ const CheckboxBooleanEdt = memo((props: CheckboxBooleanEdtProps) => {
                         cancel: labels.alertIgnore || "",
                         complete: labels.alertComplete || "",
                     }}
-                    icon={errorIcon || ""}
-                    errorIconAlt={labels.alertAlticon || ""}
+                    icon={errorIcon ?? <></>}
                 ></Alert>
             )}
             <Box>

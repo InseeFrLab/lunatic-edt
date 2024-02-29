@@ -86,9 +86,12 @@ const useStyles = makeStylesEdt({ "name": { TooltipInfo } })(theme => ({
         padding: "0rem 0.5rem",
     },
     iconInfoBox: {
-        color: theme.palette.secondary.main,
-        height: "1.5rem",
-        marginBottom: "2px",
+        svg: {
+            color: theme.palette.secondary.main,
+            height: "1.5rem",
+            width: "1.5rem",
+            marginBottom: "2px",
+        },
     },
     hiddenBox: {
         display: "none",
