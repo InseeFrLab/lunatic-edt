@@ -112,7 +112,9 @@ export type ActivitySelecterSpecificProps = {
 };
 
 export type IconGridCheckBoxOneSpecificProps = {
-    optionsIcons: { [id: string]: { icon: string; altIcon: string } };
+    optionsIcons: {
+        [id: string]: { icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; altIcon: string };
+    };
     backClickEvent: React.MouseEvent | undefined;
     nextClickEvent: React.MouseEvent | undefined;
     backClickCallback(): void;
@@ -128,7 +130,9 @@ export type IconGridCheckBoxOneSpecificProps = {
 };
 
 export type CheckboxGroupSpecificProps = {
-    optionsIcons: { [id: string]: { icon: string; altIcon: string } };
+    optionsIcons: {
+        [id: string]: { icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; altIcon: string };
+    };
     backClickEvent?: React.MouseEvent;
     nextClickEvent?: React.MouseEvent;
     backClickCallback?(): void;
@@ -145,8 +149,9 @@ export type CheckboxGroupSpecificProps = {
 
 export type CheckboxOneSpecificProps = {
     options?: CheckboxOneCustomOption[];
-    icon?: string;
-    altIcon?: string;
+    //icon?: string;
+    //altIcon?: string;
+    icon: ReactElement<any>;
     defaultIcon?: boolean;
     labelsSpecifics?: CheckBoxOneSpecificPropsLabels;
     labels?: {
@@ -161,8 +166,9 @@ export type CheckboxOneSpecificProps = {
     errorIcon?: ReactElement<any>;
     addToReferentielCallBack?(newItem: CheckboxOneCustomOption): void;
     onSelectValue?(): void;
-    extensionIcon: string;
-    extensionIconAlt: string;
+    extensionIcon: ReactElement<any>;
+    //extensionIcon: string;
+    //extensionIconAlt: string;
     modifiable?: boolean;
     activitesAutoCompleteRef?: AutoCompleteActiviteOption[];
     separatorSuggester?: string;
@@ -177,7 +183,12 @@ export type CheckboxOneSpecificProps = {
         addActivity: string;
     };
     icons?: {
-        clickableListIconNoResult: string;
+        clickableListIconNoResult: ReactElement<any>;
+        iconAddWhite: ReactElement<any>;
+        iconAddLightBlue: ReactElement<any>;
+        iconExtension: ReactElement<any>;
+        iconSearch: ReactElement<any>;
+        /*clickableListIconNoResult: string;
         clickableListIconNoResultAlt: string;
         iconAddWhite: string;
         iconAddLightBlue: string;
@@ -185,7 +196,7 @@ export type CheckboxOneSpecificProps = {
         iconExtension: string;
         iconExtensionAlt: string;
         iconSearch: string;
-        iconSearchAlt: string;
+        iconSearchAlt: string;*/
     };
 };
 
