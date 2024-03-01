@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import elasticlunr from "elasticlunrjs";
 import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
-import React, { ReactNode, memo, useCallback } from "react";
+import React, { ReactElement, ReactNode, memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
@@ -30,18 +30,14 @@ export type ClickableListProps = {
     addActivityButtonLabel: string;
     notSearchLabel: string;
     iconNoResult: string;
-    iconNoResultAlt: string;
     separatorSuggester: string;
     className?: string;
     autoFocus?: boolean;
     isMobile?: boolean;
-    iconAddWhite: string;
-    iconAddLightBlue: string;
-    iconAddAlt: string;
-    iconExtension: string;
-    iconExtensionAlt: string;
-    iconSearch: string;
-    iconSearchAlt: string;
+    iconAddWhite: ReactElement<any>;
+    iconAddLightBlue: ReactElement<any>;
+    iconExtension: ReactElement<any>;
+    iconSearch: ReactElement<any>;
     modifiable?: boolean;
 };
 
@@ -60,18 +56,14 @@ const ClickableList = memo((props: ClickableListProps) => {
         addActivityButtonLabel,
         notSearchLabel,
         iconNoResult,
-        iconNoResultAlt,
         separatorSuggester,
         className,
         autoFocus = false,
         isMobile = false,
         iconAddWhite,
         iconAddLightBlue,
-        iconAddAlt,
         iconExtension,
-        iconExtensionAlt,
         iconSearch,
-        iconSearchAlt,
         modifiable = true,
     } = props;
 
@@ -145,12 +137,8 @@ const ClickableList = memo((props: ClickableListProps) => {
      * Render icon next to textfield
      * @returns
      */
-    const renderIcon = () => {
-        return displayAddIcon ? (
-            <img src={iconAddLightBlue} alt={iconAddAlt} />
-        ) : (
-            <img src={iconSearch} alt={iconSearchAlt} />
-        );
+    const renderIcon = (): ReactElement<any> => {
+        return displayAddIcon ? iconAddLightBlue : iconSearch;
     };
 
     /**
@@ -188,13 +176,13 @@ const ClickableList = memo((props: ClickableListProps) => {
     const renderNoResults = () => {
         return (
             <Box className={classes.noResults}>
-                <img src={iconNoResult} alt={iconNoResultAlt} />
+                {iconNoResult}
                 <h3>{notFoundLabel}</h3>
                 {notFoundComment}
                 <Button
                     className={classes.addActivityButton}
                     variant="contained"
-                    startIcon={<img src={iconAddWhite} alt={iconAddAlt} />}
+                    startIcon={iconAddWhite}
                     onClick={createActivityCallback}
                     disabled={!modifiable}
                 >
@@ -261,7 +249,7 @@ const ClickableList = memo((props: ClickableListProps) => {
                     <Button
                         className={classes.addActivityButton}
                         variant="contained"
-                        startIcon={<img src={iconAddWhite} alt={iconAddAlt} />}
+                        startIcon={iconAddWhite}
                         onClick={() => createActivity(currentInputValue)}
                         disabled={!modifiable}
                     >
@@ -281,7 +269,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             renderInput={params => renderTextField(params)}
             renderOption={(properties, option) => (
                 <li {...properties} className={classes.option}>
-                    <img src={iconExtension} alt={iconExtensionAlt} className={classes.optionIcon} />
+                    <Box className={classes.optionIcon}>{iconExtension}</Box>
                     {option.label}
                 </li>
             )}

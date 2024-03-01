@@ -14,7 +14,6 @@ export type ActivityLabelProps = {
     clickableListNotFoundLabel: string;
     clickableListNotFoundComment: string;
     clickableListAddActivityButton: string;
-    clickableListIconNoResultAlt: string;
     clickableListNotSearchLabel: string;
     otherButton: string;
     saveButton: string;
@@ -78,7 +77,9 @@ export type responsesHourChecker = {
 };
 
 export type ActivitySelecterSpecificProps = {
-    categoriesIcons: { [id: string]: { icon: string; altIcon: string } };
+    categoriesIcons: {
+        [id: string]: { icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; altIcon: string };
+    };
     clickableListIconNoResult: ReactElement<any>;
     activitesAutoCompleteRef: AutoCompleteActiviteOption[];
     backClickEvent: React.MouseEvent | undefined;
@@ -99,15 +100,14 @@ export type ActivitySelecterSpecificProps = {
     widthGlobal?: boolean;
     separatorSuggester: string;
     helpStep?: number;
-    chevronRightIcon: string;
+    chevronRightIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
     chevronRightIconAlt: string;
-    searchIcon: string;
+    searchIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
     searchIconAlt: string;
-    extensionIcon: string;
+    extensionIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
     extensionIconAlt: string;
-    addLightBlueIcon: string;
-    addWhiteIcon: string;
-    addIconAlt: string;
+    addLightBlueIcon: ReactElement<any>;
+    addWhiteIcon: ReactElement<any>;
     modifiable?: boolean;
 };
 
