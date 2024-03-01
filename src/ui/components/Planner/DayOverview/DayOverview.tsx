@@ -1,6 +1,6 @@
 import { Box, List, Typography } from "@mui/material";
 import { InfoProps, responseType, responsesHourChecker } from "interface";
-import React, { memo, useEffect } from "react";
+import React, { ReactElement, memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
 import { LunaticMultiSelectionValues } from "../../../../interface/LunaticMultiSelectionValues";
@@ -35,14 +35,11 @@ export type DayOverviewProps = {
     workedHoursSum: number;
     getFormatedWorkedSum: (workedHoursSum: number) => string;
     helpStep?: number;
-    expandLessIcon: string;
-    expandLessIconAlt: string;
-    expandMoreIcon: string;
-    expandMoreIconAlt: string;
-    expandLessWhiteIcon: string;
-    expandMoreWhiteIcon: string;
-    workIcon: string;
-    workIconAlt: string;
+    expandLessIcon: ReactElement<any>;
+    expandMoreIcon: ReactElement<any>;
+    expandLessWhiteIcon: ReactElement<any>;
+    expandMoreWhiteIcon: ReactElement<any>;
+    workIcon: ReactElement<any>;
     handleChange(response: responseType, value: IODataStructure[]): void;
     saveHours(idSurvey: string, response: responsesHourChecker): void;
     values: { [key: string]: string[] | IODataStructure[] | boolean[] };
@@ -117,13 +114,10 @@ const DayOverview = memo((props: DayOverviewProps) => {
         getFormatedWorkedSum,
         helpStep,
         expandLessIcon,
-        expandLessIconAlt,
         expandMoreIcon,
-        expandMoreIconAlt,
         expandLessWhiteIcon,
         expandMoreWhiteIcon,
         workIcon,
-        workIconAlt,
         saveHours,
         idSurvey,
         variables,
@@ -292,13 +286,10 @@ const DayOverview = memo((props: DayOverviewProps) => {
                     value={helpPage ? valueSelected : h.value}
                     helpStep={helpStep}
                     expandLessIcon={expandLessIcon}
-                    expandLessIconAlt={expandLessIconAlt}
                     expandMoreIcon={expandMoreIcon}
-                    expandMoreIconAlt={expandMoreIconAlt}
                     expandLessWhiteIcon={expandLessWhiteIcon}
                     expandMoreWhiteIcon={expandMoreWhiteIcon}
                     workIcon={workIcon}
-                    workIconAlt={workIconAlt}
                     store={initStore}
                     handleChangeData={handleChange}
                     saveHours={saveHours}

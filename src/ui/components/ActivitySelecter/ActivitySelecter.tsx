@@ -105,15 +105,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         searchIcon,
         searchIconAlt,
         extensionIcon,
-        extensionIconAlt,
         addWhiteIcon,
         addLightBlueIcon,
         modifiable = true,
     } = { ...componentSpecificProps };
 
     const SearchIcon = searchIcon as React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-    const ExtensionIcon = extensionIcon as React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-    const ChevronRightIcon = chevronRightIcon as React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
     const [showSubCategories, setShowSubCategories] = useState<boolean>(false);
@@ -304,7 +301,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 tabIndex={index + 1}
                 id={"subrankCategory-" + index}
             >
-                <Icon icon={extensionIcon} alt={extensionIconAlt} className={classes.optionIcon} />
+                <Box className={classes.optionIcon}>{extensionIcon} </Box>
                 <Typography className={classes.subRankLabel}>{category.label}</Typography>
                 {category.subs && (
                     <Icon
@@ -396,7 +393,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         classes,
                         addLightBlueIcon,
                         addWhiteIcon,
-                        <ExtensionIcon aria-label={extensionIconAlt} />,
+                        extensionIcon,
                         <SearchIcon aria-label={searchIconAlt} />,
                     )}
 
@@ -1529,9 +1526,10 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
         paddingLeft: "0.5rem",
     },
     optionIcon: {
-        marginRight: "0.5rem",
-        color: theme.palette.primary.main,
-        width: "10%",
+        svg: {
+            marginRight: "0.5rem",
+            color: theme.palette.primary.main,
+        },
     },
     chevronIcon: {
         color: theme.palette.primary.main,

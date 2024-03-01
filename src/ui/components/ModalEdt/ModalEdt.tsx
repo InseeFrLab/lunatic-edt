@@ -1,5 +1,5 @@
 import { Box, Button, Modal } from "@mui/material";
-import { Fragment, memo } from "react";
+import { Fragment, ReactElement, memo } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -12,22 +12,12 @@ type ModalProps = {
         endContent: string;
         buttonLabel: string;
     };
-    icon: string;
-    iconAlt: string;
-    arrowForwardIcon: string;
-    arrowForwardIconAlt: string;
+    icon: ReactElement<any>;
+    arrowForwardIcon: ReactElement<any>;
 };
 
 const ModalEdt = memo((props: ModalProps) => {
-    const {
-        isModalDisplayed,
-        onCompleteCallBack,
-        labels,
-        icon,
-        iconAlt,
-        arrowForwardIcon,
-        arrowForwardIconAlt,
-    } = props;
+    const { isModalDisplayed, onCompleteCallBack, labels, icon, arrowForwardIcon } = props;
     const { classes, cx } = useStyles();
 
     return (
@@ -36,9 +26,7 @@ const ModalEdt = memo((props: ModalProps) => {
             <Fragment>
                 <Modal open={isModalDisplayed} aria-labelledby={""} aria-describedby={""}>
                     <Box className={classes.errorBox}>
-                        <Box className={cx(classes.boxCenter, classes.titleBox)}>
-                            <img src={icon} alt={iconAlt} />
-                        </Box>
+                        <Box className={cx(classes.boxCenter, classes.titleBox)}>{icon}</Box>
                         <Box className={cx(classes.boxCenter)}>
                             <h2>{labels?.title}</h2>
                         </Box>
@@ -53,13 +41,7 @@ const ModalEdt = memo((props: ModalProps) => {
                                 variant="contained"
                                 onClick={onCompleteCallBack}
                                 className={classes.buttonNext}
-                                endIcon={
-                                    <img
-                                        src={arrowForwardIcon}
-                                        alt={arrowForwardIconAlt}
-                                        className={classes.arrowIcon}
-                                    />
-                                }
+                                endIcon={<Box className={classes.arrowIcon}>{arrowForwardIcon}</Box>}
                                 aria-label={labels?.buttonLabel ?? ""}
                                 id="next-modal-button"
                             >
@@ -118,7 +100,9 @@ const useStyles = makeStylesEdt({ "name": { Modal } })(theme => ({
         fontSize: "16px",
     },
     arrowIcon: {
-        color: theme.variables.white,
+        svg: {
+            color: theme.variables.white,
+        },
     },
 }));
 

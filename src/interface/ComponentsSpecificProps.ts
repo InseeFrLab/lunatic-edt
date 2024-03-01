@@ -52,19 +52,17 @@ export type WeeklyPlannerSpecificProps = {
     saveAll(idSurvey: string, data: [IODataStructure[], string[], string[], any[]]): void;
     language: string;
     helpStep?: number;
-    moreIcon: string;
-    moreIconAlt: string;
-    expandLessIcon: string;
-    expandLessIconAlt: string;
-    expandMoreIcon: string;
-    expandMoreIconAlt: string;
-    expandLessWhiteIcon: string;
-    expandMoreWhiteIcon: string;
-    workIcon: string;
-    workIconAlt: string;
+    moreIcon: ReactElement<any>;
+    expandLessIcon: ReactElement<any>;
+    expandMoreIcon: ReactElement<any>;
+    expandLessWhiteIcon: ReactElement<any>;
+    expandMoreWhiteIcon: ReactElement<any>;
+    workIcon: ReactElement<any>;
     modifiable?: boolean;
     saveHours(idSurvey: string, response: responsesHourChecker): void;
-    optionsIcons: { [id: string]: { icon: string; altIcon: string } };
+    optionsIcons: {
+        [id: string]: { icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; altIcon: string };
+    };
     idSurvey: string;
 };
 
@@ -104,8 +102,7 @@ export type ActivitySelecterSpecificProps = {
     chevronRightIconAlt: string;
     searchIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
     searchIconAlt: string;
-    extensionIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-    extensionIconAlt: string;
+    extensionIcon: ReactElement<any>;
     addLightBlueIcon: ReactElement<any>;
     addWhiteIcon: ReactElement<any>;
     modifiable?: boolean;
@@ -149,8 +146,6 @@ export type CheckboxGroupSpecificProps = {
 
 export type CheckboxOneSpecificProps = {
     options?: CheckboxOneCustomOption[];
-    //icon?: string;
-    //altIcon?: string;
     icon: ReactElement<any>;
     defaultIcon?: boolean;
     labelsSpecifics?: CheckBoxOneSpecificPropsLabels;
@@ -167,8 +162,6 @@ export type CheckboxOneSpecificProps = {
     addToReferentielCallBack?(newItem: CheckboxOneCustomOption): void;
     onSelectValue?(): void;
     extensionIcon: ReactElement<any>;
-    //extensionIcon: string;
-    //extensionIconAlt: string;
     modifiable?: boolean;
     activitesAutoCompleteRef?: AutoCompleteActiviteOption[];
     separatorSuggester?: string;
@@ -188,15 +181,6 @@ export type CheckboxOneSpecificProps = {
         iconAddLightBlue: ReactElement<any>;
         iconExtension: ReactElement<any>;
         iconSearch: ReactElement<any>;
-        /*clickableListIconNoResult: string;
-        clickableListIconNoResultAlt: string;
-        iconAddWhite: string;
-        iconAddLightBlue: string;
-        iconAddAlt: string;
-        iconExtension: string;
-        iconExtensionAlt: string;
-        iconSearch: string;
-        iconSearchAlt: string;*/
     };
 };
 
@@ -213,9 +197,8 @@ export type TimepickerSpecificProps = {
     gapToFillIndex?: number;
     constants: any;
     helpStep?: number;
-    helpImage?: string;
-    arrowDownIcon: string;
-    arrowDownIconAlt: string;
+    helpImage?: ReactElement<any>;
+    arrowDownIcon: ReactElement<any>;
     modifiable?: boolean;
     defaultLanguage: string;
     labels: {
