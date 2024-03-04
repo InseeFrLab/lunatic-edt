@@ -7,7 +7,7 @@ import {
     responsesType,
 } from "interface/ActivityTypes";
 import { ActivityLabelProps, ActivitySelecterSpecificProps } from "interface/ComponentsSpecificProps";
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import React, { ReactElement, memo, useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ActivitySelecterNavigationEnum } from "../../../enumeration/ActivitySelecterNavigationEnum";
 import { makeStylesEdt } from "../../../ui/theme";
@@ -16,6 +16,7 @@ import { createCustomizableLunaticField } from "../../utils/create-customizable-
 import Alert from "../Alert";
 import ClickableList from "../ClickableList";
 import FreeInput from "../FreeInput";
+import Icon from "../Icon";
 import {
     appendHistoryActivitySelecter,
     clickableListHistoryOnChange,
@@ -104,12 +105,12 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         searchIcon,
         searchIconAlt,
         extensionIcon,
-        extensionIconAlt,
         addWhiteIcon,
         addLightBlueIcon,
-        addIconAlt,
         modifiable = true,
     } = { ...componentSpecificProps };
+
+    const SearchIcon = searchIcon as React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
 
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
     const [showSubCategories, setShowSubCategories] = useState<boolean>(false);
@@ -300,11 +301,11 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 tabIndex={index + 1}
                 id={"subrankCategory-" + index}
             >
-                <img src={extensionIcon} alt={extensionIconAlt} className={classes.optionIcon} />
+                <Box className={classes.optionIcon}>{extensionIcon} </Box>
                 <Typography className={classes.subRankLabel}>{category.label}</Typography>
                 {category.subs && (
-                    <img
-                        src={chevronRightIcon}
+                    <Icon
+                        icon={chevronRightIcon}
                         alt={chevronRightIconAlt}
                         className={classes.chevronIcon}
                     />
@@ -353,7 +354,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             complete: labels.alertComplete,
                         }}
                         icon={errorIcon}
-                        errorIconAlt={labels.alertAlticon}
                     ></Alert>
                     {renderClickableList(
                         fullScreenComponent,
@@ -393,11 +393,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         classes,
                         addLightBlueIcon,
                         addWhiteIcon,
-                        addIconAlt,
                         extensionIcon,
-                        extensionIconAlt,
-                        searchIcon,
-                        searchIconAlt,
+                        <SearchIcon aria-label={searchIconAlt} />,
                     )}
 
                     {renderFreeInput(
@@ -442,7 +439,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         classes,
                         cx,
                         addWhiteIcon,
-                        addIconAlt,
                     )}
 
                     {fullScreenComponent === FullScreenComponent.Main && (
@@ -542,7 +538,12 @@ const renderRank1Category = (
     },
     inputs: {
         categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
-        categoriesIcons: { [id: string]: { icon: string; altIcon: string } };
+        categoriesIcons: {
+            [id: string]: {
+                icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+                altIcon: string;
+            };
+        };
         helpStep: number | undefined;
         modifiable: boolean | undefined;
         separatorSuggester: string;
@@ -588,9 +589,9 @@ const renderRank1Category = (
             tabIndex={index + 1}
             id={"rankCategory-" + index}
         >
-            <img
+            <Icon
                 className={classes.icon}
-                src={inputs.categoriesIcons[id].icon}
+                icon={inputs.categoriesIcons[id].icon}
                 alt={inputs.categoriesIcons[id].altIcon}
             />
             <Typography className={classes.rank1MainLabel}>{mainLabel}</Typography>
@@ -695,7 +696,12 @@ const renderCategories = (
         handleChange: (response: responseType, value: string | boolean | undefined) => void;
     },
     inputs: {
-        categoriesIcons: { [id: string]: { icon: string; altIcon: string } };
+        categoriesIcons: {
+            [id: string]: {
+                icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+                altIcon: string;
+            };
+        };
         categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
         labels: ActivityLabelProps;
         helpStep: number | undefined;
@@ -768,7 +774,7 @@ const renderSearchInput = (
         historyActivitySelecterBindingDep: responseType;
         labels: ActivityLabelProps;
         helpStep: number | undefined;
-        searchIcon: string;
+        searchIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
         searchIconAlt: string;
     },
     functions: {
@@ -797,8 +803,8 @@ const renderSearchInput = (
                         {inputs.labels.clickableListPlaceholder}
                     </Typography>
                 }
-                <img
-                    src={inputs.searchIcon}
+                <Icon
+                    icon={inputs.searchIcon}
                     alt={inputs.searchIconAlt}
                     className={classes.activityInputIcon}
                 />
@@ -849,8 +855,7 @@ const renderFreeInput = (
     },
     classes: any,
     cx: any,
-    addIcon: string,
-    addIconAlt: string,
+    addIcon: ReactElement<any>,
 ) => {
     return (
         states.fullScreenComponent === FullScreenComponent.FreeInput && (
@@ -865,7 +870,7 @@ const renderFreeInput = (
                 <Button
                     className={classes.addActivityButton}
                     variant="contained"
-                    startIcon={<img src={addIcon} alt={addIconAlt} />}
+                    startIcon={addIcon}
                     onClick={() => {
                         navNextStep(
                             getInputValue(),
@@ -989,7 +994,7 @@ const renderClickableList = (
     inputs: {
         activitesAutoCompleteRef: AutoCompleteActiviteOption[];
         selectedSuggesterId: string | undefined;
-        clickableListIconNoResult: string;
+        clickableListIconNoResult: ReactElement<any>;
         labels: ActivityLabelProps;
         isMobile: boolean;
         separatorSuggester: string;
@@ -1006,13 +1011,10 @@ const renderClickableList = (
         ];
     },
     classes: any,
-    iconAddLightBlue: string,
-    iconAddWhite: string,
-    iconAddAlt: string,
-    iconExtension: string,
-    iconExtensionAlt: string,
-    iconSearch: string,
-    iconSearchAlt: string,
+    iconAddLightBlue: ReactElement<any>,
+    iconAddWhite: ReactElement<any>,
+    iconExtension: ReactElement<any>,
+    iconSearch: ReactElement<any>,
 ) => {
     const indexInfo = indexSuggester(inputs.activitesAutoCompleteRef, inputs.selectedSuggesterId);
     const historyInputSuggesterValue = localStorage.getItem(historyInputSuggester) ?? "";
@@ -1062,17 +1064,13 @@ const renderClickableList = (
                     notSearchLabel={inputs.labels.clickableListNotSearchLabel}
                     addActivityButtonLabel={inputs.labels.clickableListAddActivityButton}
                     iconNoResult={inputs.clickableListIconNoResult}
-                    iconNoResultAlt={inputs.labels.clickableListIconNoResultAlt}
                     autoFocus={true}
                     isMobile={inputs.isMobile}
                     separatorSuggester={inputs.separatorSuggester}
                     iconAddWhite={iconAddWhite}
                     iconAddLightBlue={iconAddLightBlue}
-                    iconAddAlt={iconAddAlt}
                     iconExtension={iconExtension}
-                    iconExtensionAlt={iconExtensionAlt}
                     iconSearch={iconSearch}
-                    iconSearchAlt={iconSearchAlt}
                     modifiable={inputs.modifiable}
                 />
                 {renderButtonSaveClickableList(
@@ -1528,9 +1526,10 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
         paddingLeft: "0.5rem",
     },
     optionIcon: {
-        marginRight: "0.5rem",
-        color: theme.palette.primary.main,
-        width: "10%",
+        svg: {
+            marginRight: "0.5rem",
+            color: theme.palette.primary.main,
+        },
     },
     chevronIcon: {
         color: theme.palette.primary.main,

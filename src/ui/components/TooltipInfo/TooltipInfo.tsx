@@ -40,12 +40,11 @@ const TooltipInfo = memo((props: TooltipInfoProps) => {
                 )}
                 {titleLabels?.boldTitle && displayTitle()}
                 <Tooltip title="Info" className={displayTooltip ? classes.hiddenBox : classes.iconBox}>
-                    <IconButton onClick={() => setDisplayInfo(!displayInfo)}>
-                        <img
-                            src={infoLabels.infoIconTooltip}
-                            alt={infoLabels.infoIconTooltipAlt}
-                            className={classes.iconInfoBox}
-                        />
+                    <IconButton
+                        className={classes.iconInfoBox}
+                        onClick={() => setDisplayInfo(!displayInfo)}
+                    >
+                        {infoLabels.infoIconTooltip}
                     </IconButton>
                 </Tooltip>
             </Box>
@@ -87,9 +86,12 @@ const useStyles = makeStylesEdt({ "name": { TooltipInfo } })(theme => ({
         padding: "0rem 0.5rem",
     },
     iconInfoBox: {
-        color: theme.palette.secondary.main,
-        height: "1.5rem",
-        marginBottom: "2px",
+        svg: {
+            color: theme.palette.secondary.main,
+            height: "1.5rem",
+            width: "1.5rem",
+            marginBottom: "2px",
+        },
     },
     hiddenBox: {
         display: "none",

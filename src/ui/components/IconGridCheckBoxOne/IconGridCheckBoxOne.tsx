@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Alert from "../Alert";
+import Icon from "../Icon/Icon";
 
 type IconGridCheckBoxOneProps = {
     handleChange(response: { [name: string]: string }, value: string | undefined): void;
@@ -108,9 +109,9 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                 id={"icongridcheckboxone-" + index}
             >
                 {optionsIcons && (
-                    <img
+                    <Icon
                         className={classes.icon}
-                        src={optionsIcons[option.value].icon}
+                        icon={optionsIcons[option.value].icon}
                         alt={optionsIcons[option.value].altIcon}
                     />
                 )}
@@ -132,8 +133,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
                             cancel: labels.alertIgnore,
                             complete: labels.alertComplete,
                         }}
-                        icon={errorIcon || ""}
-                        errorIconAlt={labels.alertAlticon}
+                        icon={errorIcon ?? <></>}
                     ></Alert>
                     <Box className={classes.root}>
                         <Typography className={classes.title}>{label}&nbsp;?</Typography>

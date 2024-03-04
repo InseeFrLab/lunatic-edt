@@ -2,7 +2,7 @@ import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { responsesHourChecker } from "interface";
 import { HourCheckerOption } from "interface/HourCheckerOptions";
 import { IODataStructure } from "interface/WeeklyPlannerTypes";
-import React, { memo, useCallback, useEffect } from "react";
+import React, { ReactElement, memo, useCallback, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 
@@ -13,14 +13,11 @@ export type HourCheckerProps = {
     value: { [key: string]: boolean };
     label?: string;
     helpStep?: number;
-    expandLessIcon: string;
-    expandLessIconAlt: string;
-    expandMoreIcon: string;
-    expandMoreIconAlt: string;
-    expandLessWhiteIcon: string;
-    expandMoreWhiteIcon: string;
-    workIcon: string;
-    workIconAlt: string;
+    expandLessIcon: ReactElement<any>;
+    expandMoreIcon: ReactElement<any>;
+    expandLessWhiteIcon: ReactElement<any>;
+    expandMoreWhiteIcon: ReactElement<any>;
+    workIcon: ReactElement<any>;
     handleChangeData(response: { [name: string]: string }, value: IODataStructure[]): void;
     store: IODataStructure[];
     saveHours(idSurvey: string, response: responsesHourChecker): void;
@@ -84,13 +81,10 @@ const HourChecker = memo((props: HourCheckerProps) => {
         handleChange,
         helpStep,
         expandLessIcon,
-        expandLessIconAlt,
         expandMoreIcon,
-        expandMoreIconAlt,
         expandLessWhiteIcon,
         expandMoreWhiteIcon,
         workIcon,
-        workIconAlt,
         saveHours,
         currentDate,
         idSurvey,
@@ -166,18 +160,16 @@ const HourChecker = memo((props: HourCheckerProps) => {
                         aria-label={value[option.response.name] ? "hourselected" : "hournotselected"}
                     >
                         {index === 0 && (
-                            <img
-                                src={value[option.response.name] ? expandMoreWhiteIcon : expandMoreIcon}
-                                alt={expandMoreIconAlt}
+                            <Box
                                 className={classes.clickable}
                                 onClick={toggleHourChecker}
                                 aria-label="hourcheckertoogle"
-                            />
+                            >
+                                {value[option.response.name] ? expandMoreWhiteIcon : expandMoreIcon}
+                            </Box>
                         )}
                         {index === responses.length - 1 && (
-                            <div className={classes.iconRounder}>
-                                <img src={workIcon} alt={workIconAlt} />
-                            </div>
+                            <div className={classes.iconRounder}>{workIcon}</div>
                         )}
                     </Box>
                 ))}
@@ -206,17 +198,13 @@ const HourChecker = memo((props: HourCheckerProps) => {
                             <div className={classes.noIconSpacer}></div>
                         )}
                         {index === 0 && (
-                            <img
-                                src={value[option.response.name] ? expandLessWhiteIcon : expandLessIcon}
-                                alt={expandLessIconAlt}
-                                onClick={toggleHourChecker}
-                            />
+                            <Box onClick={toggleHourChecker}>
+                                {value[option.response.name] ? expandLessWhiteIcon : expandLessIcon}
+                            </Box>
                         )}
                         {index !== responses.length - 1 ? option.label : <span>&nbsp;</span>}
                         {index === responses.length - 1 && (
-                            <div className={classes.iconRounder}>
-                                <img src={workIcon} alt={workIconAlt} />
-                            </div>
+                            <div className={classes.iconRounder}>{workIcon}</div>
                         )}
                     </ToggleButton>
                 ))}
@@ -243,8 +231,10 @@ const useStyles = makeStylesEdt<{ width: string }>({ "name": { HourChecker } })(
         height: "0px",
     },
     clickable: {
-        cursor: "pointer",
-        index: "1",
+        svg: {
+            cursor: "pointer",
+            index: "1",
+        },
     },
     hourSelected: {
         color: theme.variables.white,

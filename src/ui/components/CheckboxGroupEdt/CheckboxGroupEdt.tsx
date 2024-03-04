@@ -6,6 +6,7 @@ import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Alert from "../Alert";
+import Icon from "../Icon";
 
 export type CheckboxGroupEdtProps = {
     label?: string;
@@ -134,8 +135,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                         cancel: labels.alertIgnore || "",
                         complete: labels.alertComplete || "",
                     }}
-                    icon={errorIcon || ""}
-                    errorIconAlt={labels.alertAlticon || ""}
+                    icon={errorIcon ?? <></>}
                 ></Alert>
             )}
             <div id={id}>
@@ -179,9 +179,11 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
                                     componentSpecificProps.optionsIcons &&
                                     componentSpecificProps.optionsIcons[option.id].icon && (
                                         <Box className={classes.iconBox}>
-                                            <img
+                                            <Icon
                                                 className={classes.icon}
-                                                src={componentSpecificProps.optionsIcons[option.id].icon}
+                                                icon={
+                                                    componentSpecificProps.optionsIcons[option.id].icon
+                                                }
                                                 alt={
                                                     componentSpecificProps.optionsIcons[option.id]
                                                         .altIcon

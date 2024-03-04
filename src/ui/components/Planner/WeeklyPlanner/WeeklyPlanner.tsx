@@ -135,15 +135,11 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         language,
         helpStep,
         moreIcon,
-        moreIconAlt,
         expandLessIcon,
-        expandLessIconAlt,
         expandMoreIcon,
-        expandMoreIconAlt,
         expandLessWhiteIcon,
         expandMoreWhiteIcon,
         workIcon,
-        workIconAlt,
         saveHours,
         idSurvey,
     } = {
@@ -289,13 +285,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 getFormatedWorkedSum={getFormatedWorkedSum}
                 helpStep={helpStep}
                 expandLessIcon={expandLessIcon}
-                expandLessIconAlt={expandLessIconAlt}
                 expandMoreIcon={expandMoreIcon}
-                expandMoreIconAlt={expandMoreIconAlt}
                 expandLessWhiteIcon={expandLessWhiteIcon}
                 expandMoreWhiteIcon={expandMoreWhiteIcon}
                 workIcon={workIcon}
-                workIconAlt={workIconAlt}
                 handleChange={handleChange}
                 saveHours={saveHours}
                 values={value}
@@ -374,13 +367,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         workedHoursSum: getWorkedHoursSum(),
         getFormatedWorkedSum: getFormatedWorkedSum,
         expandLessIcon: expandLessIcon,
-        expandLessIconAlt: expandLessIconAlt,
         expandMoreIcon: expandMoreIcon,
-        expandMoreIconAlt: expandMoreIconAlt,
         expandLessWhiteIcon: expandLessWhiteIcon,
         expandMoreWhiteIcon: expandMoreWhiteIcon,
         workIcon: workIcon,
-        workIconAlt: workIconAlt,
         handleChange: handleChangeOptions,
         saveHours: saveHours,
         values: value,
@@ -419,7 +409,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                                         language={language}
                                         getFormatedWorkedSum={getFormatedWorkedSum}
                                         moreIcon={moreIcon}
-                                        moreIconAlt={moreIconAlt}
                                         dataCopy={dataCopy}
                                         handleChange={handleChangeOptions}
                                         setIsPlaceWorkDisplayed={setIsPlaceWorkDisplayed}

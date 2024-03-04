@@ -111,10 +111,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">
-                                    <img
-                                        src={componentSpecificProps?.arrowDownIcon}
-                                        alt={componentSpecificProps?.arrowDownIconAlt}
-                                    />
+                                    {componentSpecificProps?.arrowDownIcon}
                                 </InputAdornment>
                             ),
                             "aria-label": componentSpecificProps?.labels.ariaLabelTimepicker,

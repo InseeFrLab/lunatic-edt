@@ -293,18 +293,14 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                     notFoundComment={labelsClickableList?.clickableListNotFoundComment ?? ""}
                     notSearchLabel={labelsClickableList?.clickableListNotSearchLabel ?? ""}
                     addActivityButtonLabel={labelsClickableList?.clickableListAddActivityButton ?? ""}
-                    iconNoResult={icons?.clickableListIconNoResult ?? ""}
-                    iconNoResultAlt={icons?.clickableListIconNoResultAlt ?? ""}
+                    iconNoResult={icons?.clickableListIconNoResult ?? <></>}
                     autoFocus={true}
                     isMobile={isMobile}
                     separatorSuggester={separatorSuggester}
-                    iconAddWhite={icons?.iconAddWhite ?? ""}
-                    iconAddLightBlue={icons?.iconAddLightBlue ?? ""}
-                    iconAddAlt={icons?.iconAddAlt ?? ""}
-                    iconExtension={icons?.iconExtension ?? ""}
-                    iconExtensionAlt={icons?.iconExtensionAlt ?? ""}
-                    iconSearch={icons?.iconSearch ?? ""}
-                    iconSearchAlt={icons?.iconSearchAlt ?? ""}
+                    iconAddWhite={icons?.iconAddWhite ?? <></>}
+                    iconAddLightBlue={icons?.iconAddLightBlue ?? <></>}
+                    iconExtension={icons?.iconExtension ?? <></>}
+                    iconSearch={icons?.iconSearch ?? <></>}
                     modifiable={modifiable}
                 />
                 {renderButtonSaveClickableList(
@@ -381,7 +377,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                     <Button
                         className={classes.addActivityButton}
                         variant="contained"
-                        startIcon={<img src={icons?.iconAddWhite} alt={icons?.iconAddAlt} />}
+                        startIcon={icons?.iconAddWhite}
                         onClick={() => {
                             navNextStep(
                                 getInputValue(),
@@ -430,8 +426,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                         cancel: labels.alertIgnore,
                         complete: labels.alertComplete,
                     }}
-                    icon={errorIcon || ""}
-                    errorIconAlt={labels.alertAlticon}
+                    icon={errorIcon ?? <></>}
                 ></Alert>
             )}
             {!isSubchildDisplayed && fullScreenComponent == FullScreenComponent.Main && (
@@ -469,20 +464,14 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                                         disabled={!modifiable}
                                     >
                                         {componentSpecificProps?.icon && (
-                                            <Box className={classes.iconBox}>
-                                                <img
-                                                    className={classes.icon}
-                                                    src={componentSpecificProps?.icon}
-                                                    alt={componentSpecificProps?.altIcon}
-                                                />
+                                            <Box className={cx(classes.iconBox, classes.icon)}>
+                                                {componentSpecificProps?.icon}
                                             </Box>
                                         )}
                                         {componentSpecificProps?.defaultIcon && (
-                                            <img
-                                                src={componentSpecificProps.extensionIcon}
-                                                alt={componentSpecificProps.extensionIconAlt}
-                                                className={classes.iconBox}
-                                            />
+                                            <Box className={classes.iconBox}>
+                                                {componentSpecificProps.extensionIcon}
+                                            </Box>
                                         )}
                                         <Box className={classes.labelBox}>{option.label}</Box>
                                     </ToggleButton>
@@ -550,9 +539,11 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerWidth: number }>({
         textAlign: "center",
     },
     iconBox: {
-        marginRight: "0.5rem",
-        color: theme.palette.primary.main,
-        width: "25px",
+        svg: {
+            marginRight: "0.5rem",
+            color: theme.palette.primary.main,
+            width: "25px",
+        },
     },
     labelBox: {
         marginLeft: "0.25rem",
@@ -563,8 +554,10 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerWidth: number }>({
         alignItems: "center",
     },
     icon: {
-        width: "25px",
-        height: "25px",
+        svg: {
+            width: "25px",
+            height: "25px",
+        },
     },
     toggleButtonGroup: {
         marginTop: "1rem",

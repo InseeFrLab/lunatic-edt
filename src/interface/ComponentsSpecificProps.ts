@@ -1,3 +1,4 @@
+import { ReactElement } from "react";
 import { AutoCompleteActiviteOption, NomenclatureActivityOption } from "./ActivityTypes";
 import { CheckboxOneCustomOption } from "./CheckboxOptions";
 import { Activity } from "./TimepickerTypes";
@@ -9,12 +10,10 @@ export type ActivityLabelProps = {
     alertMessage: string;
     alertIgnore: string;
     alertComplete: string;
-    alertAlticon: string;
     clickableListPlaceholder: string;
     clickableListNotFoundLabel: string;
     clickableListNotFoundComment: string;
     clickableListAddActivityButton: string;
-    clickableListIconNoResultAlt: string;
     clickableListNotSearchLabel: string;
     otherButton: string;
     saveButton: string;
@@ -25,10 +24,8 @@ export type InfoProps = {
     normalText?: string;
     boldText?: string;
     isAlertInfo?: boolean;
-    infoIcon: string;
-    infoIconAlt: string;
-    infoIconTooltip: string;
-    infoIconTooltipAlt: string;
+    infoIcon?: ReactElement<any>;
+    infoIconTooltip?: ReactElement<any>;
     infoIconTop?: boolean;
     border: boolean;
     boldFirst?: boolean;
@@ -55,19 +52,17 @@ export type WeeklyPlannerSpecificProps = {
     saveAll(idSurvey: string, data: [IODataStructure[], string[], string[], any[]]): void;
     language: string;
     helpStep?: number;
-    moreIcon: string;
-    moreIconAlt: string;
-    expandLessIcon: string;
-    expandLessIconAlt: string;
-    expandMoreIcon: string;
-    expandMoreIconAlt: string;
-    expandLessWhiteIcon: string;
-    expandMoreWhiteIcon: string;
-    workIcon: string;
-    workIconAlt: string;
+    moreIcon: ReactElement<any>;
+    expandLessIcon: ReactElement<any>;
+    expandMoreIcon: ReactElement<any>;
+    expandLessWhiteIcon: ReactElement<any>;
+    expandMoreWhiteIcon: ReactElement<any>;
+    workIcon: ReactElement<any>;
     modifiable?: boolean;
     saveHours(idSurvey: string, response: responsesHourChecker): void;
-    optionsIcons: { [id: string]: { icon: string; altIcon: string } };
+    optionsIcons: {
+        [id: string]: { icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; altIcon: string };
+    };
     idSurvey: string;
 };
 
@@ -80,8 +75,10 @@ export type responsesHourChecker = {
 };
 
 export type ActivitySelecterSpecificProps = {
-    categoriesIcons: { [id: string]: { icon: string; altIcon: string } };
-    clickableListIconNoResult: string;
+    categoriesIcons: {
+        [id: string]: { icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; altIcon: string };
+    };
+    clickableListIconNoResult: ReactElement<any>;
     activitesAutoCompleteRef: AutoCompleteActiviteOption[];
     backClickEvent: React.MouseEvent | undefined;
     nextClickEvent: React.MouseEvent | undefined;
@@ -91,7 +88,7 @@ export type ActivitySelecterSpecificProps = {
     setDisplayHeader?(value: boolean): void;
     categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
     labels: ActivityLabelProps;
-    errorIcon: string;
+    errorIcon: ReactElement<any>;
     addToReferentielCallBack(
         newItem: AutoCompleteActiviteOption,
         categoryId: string | undefined,
@@ -101,20 +98,20 @@ export type ActivitySelecterSpecificProps = {
     widthGlobal?: boolean;
     separatorSuggester: string;
     helpStep?: number;
-    chevronRightIcon: string;
+    chevronRightIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
     chevronRightIconAlt: string;
-    searchIcon: string;
+    searchIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
     searchIconAlt: string;
-    extensionIcon: string;
-    extensionIconAlt: string;
-    addLightBlueIcon: string;
-    addWhiteIcon: string;
-    addIconAlt: string;
+    extensionIcon: ReactElement<any>;
+    addLightBlueIcon: ReactElement<any>;
+    addWhiteIcon: ReactElement<any>;
     modifiable?: boolean;
 };
 
 export type IconGridCheckBoxOneSpecificProps = {
-    optionsIcons: { [id: string]: { icon: string; altIcon: string } };
+    optionsIcons: {
+        [id: string]: { icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; altIcon: string };
+    };
     backClickEvent: React.MouseEvent | undefined;
     nextClickEvent: React.MouseEvent | undefined;
     backClickCallback(): void;
@@ -123,15 +120,16 @@ export type IconGridCheckBoxOneSpecificProps = {
         alertMessage: string;
         alertIgnore: string;
         alertComplete: string;
-        alertAlticon: string;
     };
-    errorIcon: string;
+    errorIcon: ReactElement<any>;
     onSelectValue?(): void;
     modifiable?: boolean;
 };
 
 export type CheckboxGroupSpecificProps = {
-    optionsIcons: { [id: string]: { icon: string; altIcon: string } };
+    optionsIcons: {
+        [id: string]: { icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; altIcon: string };
+    };
     backClickEvent?: React.MouseEvent;
     nextClickEvent?: React.MouseEvent;
     backClickCallback?(): void;
@@ -140,34 +138,30 @@ export type CheckboxGroupSpecificProps = {
         alertMessage?: string;
         alertIgnore?: string;
         alertComplete?: string;
-        alertAlticon?: string;
     };
-    errorIcon?: string;
+    errorIcon?: ReactElement<any>;
     helpStep?: number;
     modifiable?: boolean;
 };
 
 export type CheckboxOneSpecificProps = {
     options?: CheckboxOneCustomOption[];
-    icon?: string;
-    altIcon?: string;
+    icon: ReactElement<any>;
     defaultIcon?: boolean;
     labelsSpecifics?: CheckBoxOneSpecificPropsLabels;
     labels?: {
         alertMessage: string;
         alertIgnore: string;
         alertComplete: string;
-        alertAlticon: string;
     };
     backClickEvent?: React.MouseEvent;
     nextClickEvent?: React.MouseEvent;
     backClickCallback?(): void;
     nextClickCallback?(): void;
-    errorIcon?: string;
+    errorIcon?: ReactElement<any>;
     addToReferentielCallBack?(newItem: CheckboxOneCustomOption): void;
     onSelectValue?(): void;
-    extensionIcon: string;
-    extensionIconAlt: string;
+    extensionIcon: ReactElement<any>;
     modifiable?: boolean;
     activitesAutoCompleteRef?: AutoCompleteActiviteOption[];
     separatorSuggester?: string;
@@ -182,15 +176,11 @@ export type CheckboxOneSpecificProps = {
         addActivity: string;
     };
     icons?: {
-        clickableListIconNoResult: string;
-        clickableListIconNoResultAlt: string;
-        iconAddWhite: string;
-        iconAddLightBlue: string;
-        iconAddAlt: string;
-        iconExtension: string;
-        iconExtensionAlt: string;
-        iconSearch: string;
-        iconSearchAlt: string;
+        clickableListIconNoResult: ReactElement<any>;
+        iconAddWhite: ReactElement<any>;
+        iconAddLightBlue: ReactElement<any>;
+        iconExtension: ReactElement<any>;
+        iconSearch: ReactElement<any>;
     };
 };
 
@@ -207,9 +197,8 @@ export type TimepickerSpecificProps = {
     gapToFillIndex?: number;
     constants: any;
     helpStep?: number;
-    helpImage?: string;
-    arrowDownIcon: string;
-    arrowDownIconAlt: string;
+    helpImage?: ReactElement<any>;
+    arrowDownIcon: ReactElement<any>;
     modifiable?: boolean;
     defaultLanguage: string;
     labels: {
@@ -228,9 +217,8 @@ export type CheckboxBooleanEdtSpecificProps = {
         alertMessage?: string;
         alertIgnore?: string;
         alertComplete?: string;
-        alertAlticon?: string;
     };
     onSelectValue?(): void;
-    errorIcon?: string;
+    errorIcon?: ReactElement<any>;
     modifiable?: boolean;
 };

@@ -1,5 +1,5 @@
 import { Box, Button, Modal, Typography } from "@mui/material";
-import { Fragment, memo } from "react";
+import { Fragment, ReactElement, memo } from "react";
 import { makeStylesEdt } from "../../theme";
 
 type AlertProps = {
@@ -12,12 +12,11 @@ type AlertProps = {
         cancel: string | undefined;
         complete: string;
     };
-    icon: string;
-    errorIconAlt: string;
+    icon: ReactElement<any>;
 };
 
 const Alert = memo((props: AlertProps) => {
-    const { isAlertDisplayed, onCompleteCallBack, onCancelCallBack, labels, icon, errorIconAlt } = props;
+    const { isAlertDisplayed, onCompleteCallBack, onCancelCallBack, labels, icon } = props;
     const { classes, cx } = useStyles();
 
     const renderCancelButton = () => {
@@ -45,9 +44,7 @@ const Alert = memo((props: AlertProps) => {
             <Fragment>
                 <Modal open={isAlertDisplayed} aria-labelledby={""} aria-describedby={""}>
                     <Box className={classes.errorBox}>
-                        <Box className={classes.boxCenter}>
-                            <img src={icon} alt={errorIconAlt} />
-                        </Box>
+                        <Box className={classes.boxCenter}>{icon}</Box>
                         <Box className={cx(classes.boxCenter, classes.errorMessageBox)}>
                             {labels.boldContent && (
                                 <Typography className={classes.boldText}>

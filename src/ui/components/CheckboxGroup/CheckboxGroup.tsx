@@ -3,6 +3,7 @@ import { CheckboxGroupSpecificProps } from "interface";
 import { CheckboxOption } from "interface/CheckboxOptions";
 import { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
+import Icon from "../Icon";
 
 export type CheckboxGroupProps = {
     handleChange(response: { [name: string]: string }, value: boolean): void;
@@ -29,9 +30,9 @@ const CheckboxGroup = memo((props: CheckboxGroupProps) => {
                         {componentSpecificProps &&
                             componentSpecificProps.optionsIcons &&
                             componentSpecificProps.optionsIcons[option.id].icon && (
-                                <img
+                                <Icon
                                     className={classes.icon}
-                                    src={componentSpecificProps.optionsIcons[option.id].icon}
+                                    icon={componentSpecificProps.optionsIcons[option.id].icon}
                                     alt={componentSpecificProps.optionsIcons[option.id].altIcon}
                                 />
                             )}

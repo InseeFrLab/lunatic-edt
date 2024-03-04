@@ -1,6 +1,7 @@
 import { Box, Button, CircularProgress, Popover, Typography } from "@mui/material";
 import { responseType } from "interface";
-import React, { useCallback, useEffect } from "react";
+import { TimeLineRowType } from "interface/DayOverviewTypes";
+import React, { ReactElement, useCallback, useEffect } from "react";
 import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
 import {
@@ -10,7 +11,6 @@ import {
     getArrayFromSession,
     setDateTimeToZero,
 } from "../../../utils";
-import { TimeLineRowType } from "interface/DayOverviewTypes";
 
 export type DayPlannerProps = {
     date: Date;
@@ -24,8 +24,7 @@ export type DayPlannerProps = {
     editButtonLabel?: string;
     language: string;
     getFormatedWorkedSum: (workedHoursSum: number) => string;
-    moreIcon: string;
-    moreIconAlt: string;
+    moreIcon: ReactElement<any>;
     dataCopy: IODataStructure[];
     handleChange(response: responseType, value: IODataStructure[]): void;
     innerObject?: any;
@@ -98,7 +97,6 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
         language,
         getFormatedWorkedSum,
         moreIcon,
-        moreIconAlt,
         dataCopy,
         handleChange,
         setIsPlaceWorkDisplayed,
@@ -214,12 +212,9 @@ const DayPlanner = React.memo((props: DayPlannerProps) => {
     const renderMoreIcon = () => {
         return dayRelativeTime === -1 || hasBeenStarted ? (
             <Box>
-                <img
-                    src={moreIcon}
-                    alt={moreIconAlt}
-                    className={classes.clickable}
-                    onClick={onEditCard}
-                />
+                <Box className={classes.clickable} onClick={onEditCard}>
+                    {moreIcon}
+                </Box>
                 <Popover
                     id={id}
                     open={openPopOver}
@@ -308,7 +303,9 @@ const useStyles = makeStylesEdt({ "name": { DayPlanner } })(theme => ({
         marginTop: "1rem",
     },
     clickable: {
-        cursor: "pointer",
+        svg: {
+            cursor: "pointer",
+        },
     },
     bold: {
         fontWeight: "bold",

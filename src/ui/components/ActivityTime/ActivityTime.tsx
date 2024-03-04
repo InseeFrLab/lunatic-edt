@@ -114,7 +114,7 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
                 componentSpecificProps={componentSpecificProps}
             />
             {componentSpecificProps?.helpStep != null && (
-                <img src={componentSpecificProps?.helpImage} className={classes.imageHelpBox} />
+                <Box className={classes.imageHelpBox}>{componentSpecificProps?.helpImage}</Box>
             )}
             {componentSpecificProps?.helpStep == null && (
                 <Timepicker
@@ -155,11 +155,13 @@ const useStyles = makeStylesEdt({ "name": { ActivityTime } })(theme => ({
         fontWeight: "bold",
     },
     imageHelpBox: {
-        zIndex: "4000",
-        position: "relative",
-        marginTop: "-3rem",
-        width: "85%",
-        marginLeft: "1.75rem",
+        svg: {
+            zIndex: "4000",
+            position: "relative",
+            marginTop: "-3rem",
+            width: "85%",
+            marginLeft: "1.75rem",
+        },
     },
 }));
 

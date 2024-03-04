@@ -18,10 +18,6 @@ describe("weeklyPlannerComponent", () => {
     const infoLabels: InfoProps = {
         normalText: "",
         boldText: "",
-        infoIconAlt: "",
-        infoIcon: "",
-        infoIconTooltip: "",
-        infoIconTooltipAlt: "",
         border: false,
     };
     const dates = "DATES";
@@ -217,20 +213,15 @@ describe("weeklyPlannerComponent", () => {
         },
         saveAll: saveAll,
         language: "fr",
-        moreIcon: "",
-        moreIconAlt: "",
-        expandLessIcon: "",
-        expandLessIconAlt: "",
-        expandMoreIcon: "",
-        expandMoreIconAlt: "",
-        expandLessWhiteIcon: "",
-        expandMoreWhiteIcon: "",
-        workIcon: "",
-        workIconAlt: "",
+        moreIcon: <></>,
+        expandLessIcon: <></>,
+        expandMoreIcon: <></>,
+        expandLessWhiteIcon: <></>,
+        expandMoreWhiteIcon: <></>,
+        workIcon: <></>,
         saveHours: saveHours,
         optionsIcons: {
             "1": {
-                icon: "",
                 altIcon: "",
             },
         },
