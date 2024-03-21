@@ -578,7 +578,7 @@ export const onChange = (
         suggesterId: inputs.suggesterId,
         label: inputs.activityLabel,
         isFullyCompleted: inputs.isFullyCompleted,
-        historyInputSuggester: historyInputSuggester,
+        historyInputSuggester: inputs.historyInputSuggester,
     };
     const label = selection.label;
     const idSelected = selection.id ?? localStorage.getItem(selectedIdNewActivity) ?? undefined;
