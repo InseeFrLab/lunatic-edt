@@ -15,8 +15,8 @@ import {
 import {
     clickableListOnChange,
     createActivityCallBack,
+    createIndexSuggester,
     getInputValue,
-    indexSuggester,
     onChange,
     updateNewValue,
 } from "../ActivitySelecter/activityUtils";
@@ -81,6 +81,8 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         separatorSuggester,
         labelsClickableList,
         icons,
+        indexSuggester,
+        CreateIndex,
     } = {
         ...componentSpecificProps,
     };
@@ -152,7 +154,12 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         undefined,
     ] = [idBindingDep, suggesterIdBindingDep, labelBindingDep, undefined, undefined, undefined];
 
-    const indexInfo = indexSuggester(activitesAutoCompleteRef ?? [], selectedSuggesterId);
+    const indexInfo = createIndexSuggester(
+        activitesAutoCompleteRef ?? [],
+        selectedSuggesterId,
+        CreateIndex,
+        indexSuggester,
+    );
 
     useEffect(() => {
         if (isSubchildDisplayed) {

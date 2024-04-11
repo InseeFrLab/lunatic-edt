@@ -106,6 +106,10 @@ export type ActivitySelecterSpecificProps = {
     addLightBlueIcon: ReactElement<any>;
     addWhiteIcon: ReactElement<any>;
     modifiable?: boolean;
+    CreateIndex(
+        optionsFiltered: AutoCompleteActiviteOption[],
+    ): elasticlunr.Index<AutoCompleteActiviteOption>;
+    indexSuggester: elasticlunr.Index<AutoCompleteActiviteOption>;
 };
 
 export type IconGridCheckBoxOneSpecificProps = {
@@ -182,6 +186,10 @@ export type CheckboxOneSpecificProps = {
         iconExtension: ReactElement<any>;
         iconSearch: ReactElement<any>;
     };
+    CreateIndex?(
+        optionsFiltered: AutoCompleteActiviteOption[],
+    ): elasticlunr.Index<AutoCompleteActiviteOption>;
+    indexSuggester?: elasticlunr.Index<AutoCompleteActiviteOption>;
 };
 
 export type CheckBoxOneSpecificPropsLabels = {
