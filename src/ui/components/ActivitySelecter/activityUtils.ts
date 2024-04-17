@@ -356,7 +356,7 @@ export const activitesFiltredMap = (optionsFiltered: AutoCompleteActiviteOption[
     return optionsFilteredMap;
 };
 
-export const CreateIndex = (optionsFiltered: AutoCompleteActiviteOption[]) => {
+export const CreateIndexation = (optionsFiltered: AutoCompleteActiviteOption[]) => {
     const optionsFilteredMap = activitesFiltredMap(optionsFiltered);
     return React.useState<Index<AutoCompleteActiviteOption>>(() => {
         elasticlunr.clearStopWords();
@@ -409,15 +409,19 @@ export const optionsFiltered = (activitesAutoCompleteRef: AutoCompleteActiviteOp
     return activitesFiltredUnique(activitesAutoCompleteRef);
 };
 
-export const indexSuggester = (
+export const createIndexSuggester = (
     activitesAutoCompleteRef: AutoCompleteActiviteOption[],
     selectedSuggesterId: string | undefined,
+    createIndex?: (
+        optionsFiltered: AutoCompleteActiviteOption[],
+    ) => elasticlunr.Index<AutoCompleteActiviteOption>,
+    indexSuggester?: elasticlunr.Index<AutoCompleteActiviteOption>,
 ) => {
     const options = optionsFiltered(activitesAutoCompleteRef);
     const selectedvalue: AutoCompleteActiviteOption = activitesAutoCompleteRef.filter(
         e => e.id === selectedSuggesterId,
     )[0];
-    const index = CreateIndex(options);
+    const index = createIndex ? indexSuggester ?? createIndex(options) : null;
     return [index, options, selectedvalue];
 };
 

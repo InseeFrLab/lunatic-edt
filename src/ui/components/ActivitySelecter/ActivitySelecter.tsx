@@ -22,9 +22,9 @@ import {
     clickableListHistoryOnChange,
     clickableListOnChange,
     createActivityCallBack,
+    createIndexSuggester,
     findRank1Category,
     getInputValue,
-    indexSuggester,
     nextStepFreeInput,
     onChange,
     processActivityAutocomplete,
@@ -108,6 +108,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         addWhiteIcon,
         addLightBlueIcon,
         modifiable = true,
+        CreateIndex,
+        indexSuggester,
     } = { ...componentSpecificProps };
 
     const SearchIcon = searchIcon as React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
@@ -362,6 +364,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             nextClickCallback,
                             setDisplayAlert,
                             nextStepClickableList,
+                            CreateIndex,
+                            indexSuggester,
                         },
                         {
                             selectedCategory: selectRank1Category?.id,
@@ -975,6 +979,10 @@ const renderClickableList = (
             displayAlert1: boolean,
             routeToGoal: boolean,
         ) => void;
+        CreateIndex(
+            optionsFiltered: AutoCompleteActiviteOption[],
+        ): elasticlunr.Index<AutoCompleteActiviteOption>;
+        indexSuggester: elasticlunr.Index<AutoCompleteActiviteOption>;
     },
     states: {
         selectedCategories: NomenclatureActivityOption[];
@@ -1016,7 +1024,12 @@ const renderClickableList = (
     iconExtension: ReactElement<any>,
     iconSearch: ReactElement<any>,
 ) => {
-    const indexInfo = indexSuggester(inputs.activitesAutoCompleteRef, inputs.selectedSuggesterId);
+    const indexInfo = createIndexSuggester(
+        inputs.activitesAutoCompleteRef,
+        inputs.selectedSuggesterId,
+        functions.CreateIndex,
+        functions.indexSuggester,
+    );
     const historyInputSuggesterValue = localStorage.getItem(historyInputSuggester) ?? "";
 
     return (
