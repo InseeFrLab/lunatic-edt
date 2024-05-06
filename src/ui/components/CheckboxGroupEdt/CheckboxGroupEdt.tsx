@@ -117,6 +117,8 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
             } else {
                 if (selectValue.find(select => select == key)) {
                     values = true;
+                } else {
+                    values = false;
                 }
             }
             handleChange({ name: key }, values);
