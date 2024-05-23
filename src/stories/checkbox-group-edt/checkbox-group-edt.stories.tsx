@@ -36,4 +36,5 @@ export const Default = getStory({
     handleChange: (newValue: any) => console.log(newValue),
     value: value,
     responses: options,
+    bindingDependencies: [],
 });
