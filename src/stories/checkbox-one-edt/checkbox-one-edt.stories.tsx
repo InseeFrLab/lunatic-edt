@@ -30,6 +30,8 @@ const { meta, getStory } = getStoryFactory({
     "wrappedComponent": { CheckboxOneEdt },
 });
 
+let variables = new Map<string, any>();
+
 export default meta;
 
 export const Default = getStory({
@@ -37,4 +39,6 @@ export const Default = getStory({
     value: value,
     options: options,
     componentSpecificProps: componentSpecificProps,
+    variables: variables,
+    bindingDependencies: [],
 });

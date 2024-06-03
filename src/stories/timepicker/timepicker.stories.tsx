@@ -8,4 +8,10 @@ const { meta, getStory } = getStoryFactory({
 
 export default meta;
 
-export const Default = getStory({ onChange: (value: any) => console.log(value) });
+export const Default = getStory({
+    onChange: (value: any) => console.log(value),
+    handleChange: (value: any) => console.log(value),
+    variables: new Map<string, any>(),
+    responses: [],
+    bindingDependencies: [],
+});
