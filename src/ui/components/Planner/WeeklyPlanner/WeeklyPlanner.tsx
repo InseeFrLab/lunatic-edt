@@ -124,57 +124,6 @@ const setDataArray = (
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     let { value, handleChange, componentSpecificProps, responses, variables, placeWork } = props;
     console.log("WeeklyPlanner placedWork", placeWork);
-    //TODO: temp fix for placeWork
-    if (!placeWork) {
-        placeWork = {
-            bindingDependencies: ["NOTWORK", "OTHER", "WORK", "HOME", "CLIENT"],
-            responses: [
-                {
-                    response: {
-                        name: "WORK"
-                    },
-                    id: "1",
-                    label: "Sur mon site de travail habituel (hors domicile) / dans mon établissement."
-                },
-                {
-                    response: {
-                        name: "HOME"
-                    },
-                    id: "2",
-                    label: "À domicile"
-                },
-                {
-                    response: {
-                        name: "CLIENT"
-                    },
-                    id: "3",
-                    label: "Chez des clients, livraisons, déplacement..."
-                },
-                {
-                    response: {
-                        name: "OTHER"
-                    },
-                    id: "4",
-                    label: "Autre situation"
-                },
-                {
-                    response: {
-                        name: "NOTWORK"
-                    },
-                    id: "5",
-                    label: "Non travaillé"
-                },
-                {
-                    response: {
-                        name: "NOTWORK"
-                    },
-                    id: "5",
-                    label: "Non travaillé"
-                }
-            ],
-            label: "Où avez-vous travaillé"
-        };
-    }
     const {
         surveyDate,
         isSubChildDisplayed,
@@ -485,7 +434,8 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     };
 
     const renderWeek = () => {
-        return isPlaceWorkDisplayed && isSubChildDisplayed ? renderOptions() : renderWeeklyPlanner();
+        //return isPlaceWorkDisplayed && isSubChildDisplayed ? renderOptions() : renderWeeklyPlanner();
+        return renderWeeklyPlanner();
     };
 
     return helpStep == null ? renderWeek() : renderHelp();
