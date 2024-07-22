@@ -54,11 +54,11 @@ export const transformToWeeklyPlannerDataType = (
             const key = Object.keys(i)?.[0];
             const value = Object.values(i)[0];
             if (!key.includes(DAY_TIME_SEPARATOR)) {
-                currentDay = keyWithoutSeparator(currentDetail, currentDay, value, language);
+                currentDay = keyWithoutSeparator(currentDetail, currentDay, value.COLLECTED, language);
                 currentDetail = undefined;
                 result.push(currentDay);
             } else if (key.includes(STARTED_LABEL)) {
-                currentDay.hasBeenStarted = value === "true";
+                currentDay.hasBeenStarted = value.COLLECTED === "true";
             } else {
                 const timeAsString = key.split(DAY_TIME_SEPARATOR)[1];
                 const timeAsDate = convertTimeAsDate(timeAsString);
@@ -96,16 +96,18 @@ export const transformToWeeklyPlannerDataType = (
 
 export const transformToIODataStructure = (
     data: WeeklyPlannerDataType[],
-): [IODataStructure[], string[], string[], any[]] => {
-    const result: IODataStructure[] = [];
+): [IODataStructure, string[], string[], any[]] => {
+    const result: IODataStructure = {};
     const datesWeek: string[] = new Array(7);
     const datesWeekStarted: string[] = new Array(7);
     const hourSetter = new Array(7);
     for (let i = 0; i < 7; i++) {
         const dayKey = `dateJ${i + 1}`;
-        result.push({ [dayKey]: data[i]?.date });
+        //result.push({ [dayKey]: { COLLECTED: data[i]?.date } });
+        result[dayKey] = { COLLECTED: data[i]?.date };
         const dayStarted = `${dayKey}${DAY_TIME_SEPARATOR}${STARTED_LABEL}`;
-        result.push({ [dayStarted]: data[i]?.hasBeenStarted.toString() });
+        //result.push({ [dayStarted]: data[i]?.hasBeenStarted.toString() });
+        result[dayStarted] = { COLLECTED: data[i]?.hasBeenStarted.toString() };
         datesWeek[i] = data[i]?.date;
         datesWeekStarted[i] = data[i]?.hasBeenStarted.toString();
 
@@ -117,7 +119,8 @@ export const transformToIODataStructure = (
             const times = [];
             for (let j = 0; j < d.duration / INTERVAL; j++) {
                 const timeKey = `${dayKey}${DAY_TIME_SEPARATOR}${convertTime(time)}`;
-                result.push({ [timeKey]: "true" });
+                //result.push({ [timeKey]: "true" });
+                result[timeKey] = { COLLECTED: "true" };
                 time.setMinutes(time.getMinutes() + INTERVAL);
                 times.push(timeKey);
             }
