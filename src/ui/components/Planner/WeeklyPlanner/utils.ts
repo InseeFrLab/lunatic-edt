@@ -5,6 +5,12 @@ export const INTERVAL = 15;
 const DAY_TIME_SEPARATOR = "_";
 const STARTED_LABEL = "started";
 
+/**
+ * Converts a time string in the format "HHhMM" to a Date object.
+ *
+ * @param {string} time - The time string to be converted.
+ * @returns {Date} - A Date object representing the given time on the current date.
+ */
 const convertTimeAsDate = (time: string): Date => {
     const result: Date = new Date();
     const splittedTime = time.split("h");
@@ -15,6 +21,15 @@ const convertTimeAsDate = (time: string): Date => {
     return result;
 };
 
+/**
+ * Updates the current day object with the given value and language, and pushes the current detail to the day's details.
+ *
+ * @param {DayDetailType | undefined} currentDetail - The current detail object (start-end-duration).
+ * @param {WeeklyPlannerDataType} currentDay - The current day to be updated.
+ * @param {string} value - The date value to be set for the current day.
+ * @param {string} language - The language to be used for formatting the day name.
+ * @returns {WeeklyPlannerDataType}
+ */
 const keyWithoutSeparator = (
     currentDetail: DayDetailType | undefined,
     currentDay: WeeklyPlannerDataType,
@@ -34,6 +49,13 @@ const keyWithoutSeparator = (
     return currentDay;
 };
 
+/**
+ * Transforms an array of collected datastructure into weekly planner data types.
+ *
+ * @param {IODataStructure[]} input - An array of IO data structures (collected data).
+ * @param {string} language - The language to be used for day names.
+ * @returns {WeeklyPlannerDataType[]} - An array of weekly planner data objects.
+ */
 export const transformToWeeklyPlannerDataType = (
     input: IODataStructure[],
     language: string,
@@ -94,6 +116,16 @@ export const transformToWeeklyPlannerDataType = (
     return result;
 };
 
+/**
+ * Transforms weekly planner data into an IO data structure.
+ *
+ * @param {WeeklyPlannerDataType[]} data - An array of weekly planner data objects.
+ * @returns {[IODataStructure, string[], string[], any[]]} - A tuple containing:
+ *   - IODataStructure: An object representing which date are to be collected.
+ *   - string[]: An array of dates for the week.
+ *   - string[]: An array of strings indicating whether each day has been started.
+ *   - any[]: An array of arrays, each containing time keys for the hours set for each day.
+ */
 export const transformToIODataStructure = (
     data: WeeklyPlannerDataType[],
 ): [IODataStructure, string[], string[], any[]] => {
@@ -125,6 +157,7 @@ export const transformToIODataStructure = (
             }
             hourSetter[i] = times;
         });
+        console.log('Collected values: ', result, datesWeek, datesWeekStarted, hourSetter);
     }
     return [result, datesWeek, datesWeekStarted, hourSetter];
 };
