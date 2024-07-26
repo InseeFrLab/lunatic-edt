@@ -103,10 +103,9 @@ export const transformToIODataStructure = (
     const hourSetter = new Array(7);
     for (let i = 0; i < 7; i++) {
         const dayKey = `dateJ${i + 1}`;
-        //result.push({ [dayKey]: { COLLECTED: data[i]?.date } });
+        // NOTE: Peut être pas obligé de nester un collected (à voir)
         result[dayKey] = { COLLECTED: data[i]?.date };
         const dayStarted = `${dayKey}${DAY_TIME_SEPARATOR}${STARTED_LABEL}`;
-        //result.push({ [dayStarted]: data[i]?.hasBeenStarted.toString() });
         result[dayStarted] = { COLLECTED: data[i]?.hasBeenStarted.toString() };
         datesWeek[i] = data[i]?.date;
         datesWeekStarted[i] = data[i]?.hasBeenStarted.toString();
