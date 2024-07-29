@@ -157,7 +157,7 @@ export const transformToIODataStructure = (
             }
             hourSetter[i] = times;
         });
-        console.log('Collected values: ', result, datesWeek, datesWeekStarted, hourSetter);
+        console.log("Collected values: ", result, datesWeek, datesWeekStarted, hourSetter);
     }
     return [result, datesWeek, datesWeekStarted, hourSetter];
 };

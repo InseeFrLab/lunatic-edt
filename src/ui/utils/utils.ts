@@ -162,7 +162,7 @@ export const isUUID = (uuid: string) => {
 export const removeAccents = (value: string) => {
     return value
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") 
+        .replace(/[\u0300-\u036f]/g, "")
         .replace(/'/g, " ");
 };
 
