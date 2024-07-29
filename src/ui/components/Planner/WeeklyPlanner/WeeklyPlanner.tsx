@@ -325,15 +325,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         const currentDate = generateStringInputFromDate(dayOverviewSelectedDate);
         const index = dates.findIndex(date => date == currentDate);
         const valuesForCheckbox: { [key: string]: boolean | boolean[] } = {};
-        console.log("placeWork", placeWork);
-        if (placeWork && placeWork.responses) {
-            placeWork.responses.forEach(response => {
-                if (response) {
-                    const valueOfResponse = variables.get(response.response.name) as boolean[];
-                    valuesForCheckbox[response.response.name] = valueOfResponse;
-                }
-            });
-        }
+        placeWork.responses.forEach(response => {
+            const valueOfResponse = variables.get(response.response.name) as boolean[];
+            valuesForCheckbox[response.response.name] = valueOfResponse;
+        });
         return [valuesForCheckbox, index];
     };
 
@@ -435,7 +430,6 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
 
     const renderWeek = () => {
         return isPlaceWorkDisplayed && isSubChildDisplayed ? renderOptions() : renderWeeklyPlanner();
-        //return renderWeeklyPlanner();
     };
 
     return helpStep == null ? renderWeek() : renderHelp();
