@@ -88,6 +88,7 @@ export const convertTime = (t: Date): string => {
  * @returns
  */
 export const generateDayOverviewTimelineRawData = (): TimeLineRowType[] => {
+    //TODO: Edit this to add S_
     const rowData: TimeLineRowType[] = [];
 
     for (let h = 0; h < 24; h++) {
@@ -161,7 +162,7 @@ export const isUUID = (uuid: string) => {
 export const removeAccents = (value: string) => {
     return value
         .normalize("NFD")
-        .replace(/\p{Diacritic}/gu, "")
+        .replace(/[\u0300-\u036f]/g, "")
         .replace(/'/g, " ");
 };
 

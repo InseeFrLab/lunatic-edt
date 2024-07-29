@@ -162,12 +162,14 @@ describe("weeklyPlannerComponent", () => {
 
     const value: { [key: string]: string[] | IODataStructure[] } = {
         "WEEKLYPLANNER": [
-            { "dateJ1": todayStringValue },
-            { "dateJ1_started": "true" },
-            { "dateJ1_02h15": "true" },
-            { "dateJ1_02h30": "true" },
-            { "dateJ1_02h45": "true" },
-            { "dateJ1_03h00": "true" },
+            {
+                "dateJ1": { COLLECTED: todayStringValue },
+                "dateJ1_started": { COLLECTED: "true" },
+                "dateJ1_02h15": { COLLECTED: "true" },
+                "dateJ1_02h30": { COLLECTED: "true" },
+                "dateJ1_02:45": { COLLECTED: "true" },
+                "dateJ1_03:00": { COLLECTED: "true" },
+            },
         ],
         "DATES": arrayDates,
         "DATES_STARTED": ["true", "false", "false", "false", "false", "false", "false"],
@@ -179,12 +181,14 @@ describe("weeklyPlannerComponent", () => {
 
     const variables: Map<string, any> = new Map();
     variables.set("WEEKLYPLANNER", [
-        { "dateJ1": todayStringValue },
-        { "dateJ1_started": "true" },
-        { "dateJ1_02h15": "true" },
-        { "dateJ1_02h30": "true" },
-        { "dateJ1_02h45": "true" },
-        { "dateJ1_03h00": "true" },
+        {
+            "dateJ1": { COLLECTED: todayStringValue },
+            "dateJ1_started": { COLLECTED: "true" },
+            "dateJ1_02h15": { COLLECTED: "true" },
+            "dateJ1_02h30": { COLLECTED: "true" },
+            "dateJ1_02:45": { COLLECTED: "true" },
+            "dateJ1_03:00": { COLLECTED: "true" },
+        },
     ]);
     variables.set("DATES", arrayDates);
     variables.set("DATES_STARTED", ["true", "false", "false", "false", "false", "false", "false"]);
