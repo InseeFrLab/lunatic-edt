@@ -25,4 +25,6 @@ export type responseType = {
 
 export type responsesType = {
     response: responseType;
+    id?: string;
+    label?: string;
 };

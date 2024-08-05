@@ -5,6 +5,12 @@ export const INTERVAL = 15;
 const DAY_TIME_SEPARATOR = "_";
 const STARTED_LABEL = "started";
 
+/**
+ * Converts a time string in the format "HHhMM" to a Date object.
+ *
+ * @param {string} time - The time string to be converted.
+ * @returns {Date} - A Date object representing the given time on the current date.
+ */
 const convertTimeAsDate = (time: string): Date => {
     const result: Date = new Date();
     const splittedTime = time.split("h");
@@ -15,6 +21,15 @@ const convertTimeAsDate = (time: string): Date => {
     return result;
 };
 
+/**
+ * Updates the current day object with the given value and language, and pushes the current detail to the day's details.
+ *
+ * @param {DayDetailType | undefined} currentDetail - The current detail object (start-end-duration).
+ * @param {WeeklyPlannerDataType} currentDay - The current day to be updated.
+ * @param {string} value - The date value to be set for the current day.
+ * @param {string} language - The language to be used for formatting the day name.
+ * @returns {WeeklyPlannerDataType}
+ */
 const keyWithoutSeparator = (
     currentDetail: DayDetailType | undefined,
     currentDay: WeeklyPlannerDataType,
@@ -61,11 +76,11 @@ export const transformToWeeklyPlannerDataType = (
             const key = Object.keys(i)?.[0];
             const value = Object.values(i)[0];
             if (!key.includes(DAY_TIME_SEPARATOR)) {
-                currentDay = keyWithoutSeparator(currentDetail, currentDay, value, language);
+                currentDay = keyWithoutSeparator(currentDetail, currentDay, value.COLLECTED, language);
                 currentDetail = undefined;
                 result.push(currentDay);
             } else if (key.includes(STARTED_LABEL)) {
-                currentDay.hasBeenStarted = value === "true";
+                currentDay.hasBeenStarted = value.COLLECTED === "true";
             } else {
                 const timeAsString = key.split(DAY_TIME_SEPARATOR)[1];
                 const timeAsDate = convertTimeAsDate(timeAsString);
@@ -113,16 +128,17 @@ export const transformToWeeklyPlannerDataType = (
  */
 export const transformToIODataStructure = (
     data: WeeklyPlannerDataType[],
-): [IODataStructure[], string[], string[], any[]] => {
-    const result: IODataStructure[] = [];
+): [IODataStructure, string[], string[], any[]] => {
+    const result: IODataStructure = {};
     const datesWeek: string[] = new Array(7);
     const datesWeekStarted: string[] = new Array(7);
     const hourSetter = new Array(7);
     for (let i = 0; i < 7; i++) {
         const dayKey = `dateJ${i + 1}`;
-        result.push({ [dayKey]: data[i]?.date });
+        // NOTE: Peut être pas obligé de nester un collected (à voir)
+        result[dayKey] = { COLLECTED: data[i]?.date };
         const dayStarted = `${dayKey}${DAY_TIME_SEPARATOR}${STARTED_LABEL}`;
-        result.push({ [dayStarted]: data[i]?.hasBeenStarted.toString() });
+        result[dayStarted] = { COLLECTED: data[i]?.hasBeenStarted.toString() };
         datesWeek[i] = data[i]?.date;
         datesWeekStarted[i] = data[i]?.hasBeenStarted.toString();
 
@@ -134,12 +150,14 @@ export const transformToIODataStructure = (
             const times = [];
             for (let j = 0; j < d.duration / INTERVAL; j++) {
                 const timeKey = `${dayKey}${DAY_TIME_SEPARATOR}${convertTime(time)}`;
-                result.push({ [timeKey]: "true" });
+                //result.push({ [timeKey]: "true" });
+                result[timeKey] = { COLLECTED: "true" };
                 time.setMinutes(time.getMinutes() + INTERVAL);
                 times.push(timeKey);
             }
             hourSetter[i] = times;
         });
+        console.log("Collected values: ", result, datesWeek, datesWeekStarted, hourSetter);
     }
     return [result, datesWeek, datesWeekStarted, hourSetter];
 };
