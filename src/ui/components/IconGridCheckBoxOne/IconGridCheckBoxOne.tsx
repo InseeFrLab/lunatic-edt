@@ -10,7 +10,7 @@ import Alert from "../Alert";
 import Icon from "../Icon/Icon";
 
 type IconGridCheckBoxOneProps = {
-    handleChange(response: { [name: string]: string }, value: string | undefined): void;
+    handleChange(response: { [name: string]: string }, value: string | undefined | number): void;
     componentSpecificProps: IconGridCheckBoxOneSpecificProps;
     response: { [name: string]: string };
     label: string;
@@ -45,7 +45,7 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
     value = variables.get(bindingDependencies[0]);
 
     const [displayAlert, setDisplayAlert] = useState<boolean>(false);
-    let selectedValue: string | undefined = value;
+    let selectedValue: string | number | undefined = value;
     const { classes, cx } = useStyles({ "modifiable": modifiable });
 
     useEffect(() => {

@@ -25,7 +25,10 @@ import ClickableList from "../ClickableList";
 import FreeInput from "../FreeInput";
 
 export type CheckboxOneProps = {
-    handleChange(response: { [name: string]: string }, value: string | boolean | undefined): void;
+    handleChange(
+        response: { [name: string]: string },
+        value: string | boolean | number | undefined,
+    ): void;
     id?: string;
     label?: string;
     options: CheckboxOneCustomOption[];
