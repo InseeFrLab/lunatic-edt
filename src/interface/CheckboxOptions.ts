@@ -10,6 +10,6 @@ export type CheckboxOptionResponse = {
 
 export type CheckboxOneCustomOption = {
     label: string;
-    value: string;
+    value: string | number;
     iconName?: string;
 };

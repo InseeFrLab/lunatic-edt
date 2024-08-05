@@ -34,6 +34,13 @@ const keyWithoutSeparator = (
     return currentDay;
 };
 
+/**
+ * Transforms the given IO data structure into a weekly planner data type.
+ *
+ * @param {IODataStructure[]} input - The IO data structure to transform.
+ * @param {string} language - The language to use for day names.
+ * @returns {WeeklyPlannerDataType[]} - An array of weekly planner data types.
+ */
 export const transformToWeeklyPlannerDataType = (
     input: IODataStructure[],
     language: string,
@@ -94,6 +101,16 @@ export const transformToWeeklyPlannerDataType = (
     return result;
 };
 
+/**
+ * Transforms the given weekly planner data into an IO data structure.
+ *
+ * @param {WeeklyPlannerDataType[]} data - The weekly planner data to transform.
+ * @returns {[IODataStructure[], string[], string[], any[]]} - A tuple containing:
+ *   - An array of IO data structures.
+ *   - An array of dates for the week.
+ *   - An array of dates for the week with started status.
+ *   - An array of hour setters.
+ */
 export const transformToIODataStructure = (
     data: WeeklyPlannerDataType[],
 ): [IODataStructure[], string[], string[], any[]] => {
