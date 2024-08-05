@@ -40,7 +40,7 @@ export type DayOverviewProps = {
     expandLessWhiteIcon: ReactElement<any>;
     expandMoreWhiteIcon: ReactElement<any>;
     workIcon: ReactElement<any>;
-    handleChange(response: responseType, value: IODataStructure): void;
+    handleChange(response: responseType, value: IODataStructure[]): void;
     saveHours(idSurvey: string, response: responsesHourChecker): void;
     values: { [key: string]: string[] | IODataStructure[] | boolean[] };
     idSurvey: string;
@@ -125,7 +125,7 @@ const DayOverview = memo((props: DayOverviewProps) => {
 
     const [componentDisplay, setComponentDisplay] = React.useState<string>("none");
     const [timeLineData, setTimeLineData] = React.useState<TimeLineRowType[]>(rawTimeLineData);
-    const [initStore, setInitStore] = React.useState<IODataStructure>({});
+    const [initStore, setInitStore] = React.useState<IODataStructure[]>([]);
 
     // Update timeLineData for HourCheckers from activityData
     useEffect(() => {

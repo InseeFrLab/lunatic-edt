@@ -25,8 +25,8 @@ export type DayPlannerProps = {
     language: string;
     getFormatedWorkedSum: (workedHoursSum: number) => string;
     moreIcon: ReactElement<any>;
-    dataCopy: IODataStructure;
-    handleChange(response: responseType, value: IODataStructure): void;
+    dataCopy: IODataStructure[];
+    handleChange(response: responseType, value: IODataStructure[]): void;
     innerObject?: any;
     setIsPlaceWorkDisplayed(display: boolean): void;
     datesLabel: string;
