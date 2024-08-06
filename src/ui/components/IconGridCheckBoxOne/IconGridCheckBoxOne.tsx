@@ -82,8 +82,8 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         } else {
             value = option.value;
         }
-        selectedValue = value;
-        handleChange(response, value);
+        selectedValue = value?.toString();
+        handleChange(response, value?.toString());
         if (onSelectValue && value != null) {
             onSelectValue();
         }
