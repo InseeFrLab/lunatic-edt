@@ -16,9 +16,5 @@ export type WeeklyPlannerValue = {
 };
 
 export type IODataStructure = {
-    [key: string]: CollectedValue;
+    [key: string]: string;
 };
-
-interface CollectedValue {
-    COLLECTED: string;
-}

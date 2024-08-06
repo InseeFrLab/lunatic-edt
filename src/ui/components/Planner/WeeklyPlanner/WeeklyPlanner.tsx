@@ -29,7 +29,7 @@ import {
 export type WeeklyPlannerProps = {
     handleChange(
         response: { [name: string]: string },
-        value: IODataStructure | string[] | boolean[],
+        value: IODataStructure[] | string[] | boolean[],
     ): void;
     value: { [key: string]: string[] | IODataStructure[] | boolean[] };
     componentSpecificProps: WeeklyPlannerSpecificProps;
@@ -123,7 +123,6 @@ const setDataArray = (
 
 const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     let { value, handleChange, componentSpecificProps, responses, variables, placeWork } = props;
-    console.log("WeeklyPlanner placedWork", placeWork);
     const {
         surveyDate,
         isSubChildDisplayed,
@@ -152,11 +151,11 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     const startDateFormated: Date = setDateTimeToZero(generateDateFromStringInput(startDate));
     const dayList: Date[] = generateDayList(startDateFormated);
 
-    const [store, setStore] = useState<[IODataStructure, string[], string[], any[]]>([{}, [], [], []]);
+    const [store, setStore] = useState<[IODataStructure[], string[], string[], any[]]>([[], [], [], []]);
     const [dayOverviewSelectedDate, setDayOverviewSelectedDate] = useState<Date>(startDateFormated);
     const [activityData, setActivityData] = useState<WeeklyPlannerDataType[]>([]);
     const [needSpinner, setNeedSpinner] = useState<boolean>(true);
-    const [dataCopy, setDataCopy] = useState<IODataStructure>({});
+    const [dataCopy, setDataCopy] = useState<IODataStructure[]>([]);
 
     const setInit = () => {
         const dataUpdated = setDataArray(variables, responses, language);
@@ -260,7 +259,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     };
 
     useEffect(() => {
-        if (dataCopy != null) {
+        if (dataCopy.length > 0) {
             handleChange(responses[0].response, dataCopy);
             saveAll(idSurvey, [dataCopy, store[1], store[2], store[3]]);
         }
@@ -299,8 +298,8 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         );
     };
 
-    const handle = (data: [IODataStructure, string[], string[], any[]]) => {
-        if (data[0] != null) {
+    const handle = (data: [IODataStructure[], string[], string[], any[]]) => {
+        if (data[0].length > 0) {
             setDataCopy(data[0]);
             handleChange(responses[0].response, dataCopy);
         }
@@ -308,7 +307,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
             handleChange(responses[1].response, data[1]);
             handleChange(responses[2].response, data[2]);
         }
-        let storeAct: [IODataStructure, string[], string[], any[]] = [
+        let storeAct: [IODataStructure[], string[], string[], any[]] = [
             data[0],
             data[1].length > 0 ? data[1] : store[1],
             data[2].length > 0 ? data[2] : store[2],
@@ -334,7 +333,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
 
     const handleChangeOptions = (
         response: { [name: string]: string },
-        value: IODataStructure | string[] | boolean[],
+        value: IODataStructure[] | string[] | boolean[],
     ) => {
         handleChange(response, value);
     };
@@ -343,12 +342,12 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         const values = getIndexOfDayPlanner();
         return (
             <CheckboxGroupEdt
-                label={placeWork?.label ?? ""}
+                label={placeWork.label}
                 handleChange={handleChangeOptions}
-                responses={placeWork?.responses ?? []}
+                responses={placeWork.responses}
                 value={values[0]}
                 variables={variables}
-                bindingDependencies={placeWork?.bindingDependencies ?? []}
+                bindingDependencies={placeWork.bindingDependencies}
                 componentSpecificProps={componentSpecificProps}
                 indexOfArray={values[1]}
             />
