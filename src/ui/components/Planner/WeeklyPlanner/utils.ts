@@ -116,7 +116,6 @@ export const transformToWeeklyPlannerDataType = (
     return result;
 };
 
-
 /**
  * Transforms weekly planner data into an IO data structure.
  *
