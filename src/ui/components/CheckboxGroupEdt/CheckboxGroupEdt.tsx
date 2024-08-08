@@ -96,7 +96,7 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
         nextClickCallback: () => void,
     ) => {
         const result = responses.filter(res => value[res.response.name] != null);
-        if (result.length == 0 && !continueWithUncompleted) {
+        if (result.length === 0 && !continueWithUncompleted) {
             setDisplayAlert(true);
         } else {
             nextClickCallback();
@@ -109,20 +109,15 @@ const CheckboxGroupEdt = memo((props: CheckboxGroupEdtProps) => {
 
     const handleOptions = (_event: React.MouseEvent<HTMLElement>, selectValue: string[]) => {
         setOptionsSelected(selectValue);
-
-        for (const key in value) {
+        Object.keys(value).forEach(key => {
             let values = value[key];
             if (Array.isArray(values)) {
-                values[indexOfArray] = selectValue.find(value => value == key) != null;
+                values[indexOfArray] = selectValue.includes(key);
             } else {
-                if (selectValue.find(select => select == key)) {
-                    values = true;
-                } else {
-                    values = false;
-                }
+                values = selectValue.includes(key);
             }
             handleChange({ name: key }, values);
-        }
+        });
     };
 
     return (

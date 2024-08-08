@@ -65,25 +65,21 @@ const IconGridCheckBoxOne = memo((props: IconGridCheckBoxOneProps) => {
         setDisplayAlert: (display: boolean) => void,
         nextClickCallback: () => void,
     ) => {
-        if (nextClickCallback) {
-            if ((selectedValue == null || selectedValue == "") && !continueWithUncompleted) {
-                handleChange(response, undefined);
-                setDisplayAlert(true);
-            } else {
-                nextClickCallback();
-            }
+        if (!nextClickCallback) return;
+
+        if ((selectedValue == null || selectedValue === "") && !continueWithUncompleted) {
+            handleChange(response, undefined);
+            setDisplayAlert(true);
+        } else {
+            nextClickCallback();
         }
     };
 
     const optionOnClick = (option: CheckboxOneCustomOption) => {
-        let value;
-        if (selectedValue != undefined) {
-            value = option.value == selectedValue ? undefined : option.value;
-        } else {
-            value = option.value;
-        }
-        selectedValue = value?.toString();
-        handleChange(response, value?.toString());
+        const value =
+            selectedValue !== undefined && option.value === selectedValue ? undefined : option.value;
+        selectedValue = value;
+        handleChange(response, value);
         if (onSelectValue && value != null) {
             onSelectValue();
         }
