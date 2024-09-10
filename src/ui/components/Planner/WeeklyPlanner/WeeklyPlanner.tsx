@@ -1,6 +1,5 @@
 import { CircularProgress, List } from "@mui/material";
 import { Box } from "@mui/system";
-import { WeeklyPlannerSpecificProps, responsesType } from "interface";
 import { memo, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
@@ -25,6 +24,7 @@ import {
     transformToIODataStructure,
     transformToWeeklyPlannerDataType,
 } from "./utils";
+import { responsesType, WeeklyPlannerSpecificProps } from "../../../../interface";
 
 export type WeeklyPlannerProps = {
     handleChange(
@@ -262,10 +262,12 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         if (dataCopy.length > 0) {
             handleChange(responses[0].response, dataCopy);
             saveAll(idSurvey, [dataCopy, store[1], store[2], store[3]]);
+            console.log('WeeklyPlanner useEffect dataCopy (lunatic-edt)', dataCopy);
         }
         if (store[1].length > 0) {
             handleChange(responses[1].response, store[1]);
             handleChange(responses[2].response, store[2]);
+            console.log('WeeklyPlanner useEffect store[1] (lunatic-edt)', store[1]);
         }
     }, [dataCopy, idSurvey]);
 
