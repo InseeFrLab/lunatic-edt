@@ -1464,7 +1464,7 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
     rank1CategoriesBox: {
         display: "grid",
         gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "1rem", 
+        gap: "1rem",
         cursor: "pointer",
         padding: "1rem",
     },
