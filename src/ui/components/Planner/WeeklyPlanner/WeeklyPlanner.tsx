@@ -262,12 +262,10 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         if (dataCopy.length > 0) {
             handleChange(responses[0].response, dataCopy);
             saveAll(idSurvey, [dataCopy, store[1], store[2], store[3]]);
-            console.log("WeeklyPlanner useEffect dataCopy (lunatic-edt)", dataCopy);
         }
         if (store[1].length > 0) {
             handleChange(responses[1].response, store[1]);
             handleChange(responses[2].response, store[2]);
-            console.log("WeeklyPlanner useEffect store[1] (lunatic-edt)", store[1]);
         }
     }, [dataCopy, idSurvey]);
 
