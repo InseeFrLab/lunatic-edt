@@ -1,20 +1,23 @@
-import React from "react";
+import React, { FC, memo, MemoExoticComponent } from 'react';
 
-const notLunaticComponents: Map<string, React.MemoExoticComponent<any>> = new Map();
+const notLunaticComponents: Map<string, MemoExoticComponent<FC<any>>> = new Map();
 
-function createCustomizableLunaticField(LunaticField: React.MemoExoticComponent<any>, name: string) {
-    const Memoized = React.memo(LunaticField);
-    notLunaticComponents.set(name, Memoized);
+function createCustomizableLunaticField<P extends object>(LunaticField: FC<P>, name: string) {
+    const Memoized = memo(LunaticField);
+    notLunaticComponents.set(name, Memoized);  
 
-    return function OverlayField(props: any) {
+    return function OverlayField(props: P & { custom?: { [key: string]: FC<P> } }) {
         const { custom, ...rest } = props;
-        if (typeof custom === "object" && name in custom) {
+
+        // If custom component is provided for this name, use it
+        if (custom && custom[name]) {
             const CustomComponent = custom[name];
-            return <CustomComponent {...rest} />;
+            return <CustomComponent {...(rest as P)} />;
         }
 
-        return <Memoized {...props} />;
+        // Otherwise, use the memoized default component
+        return <Memoized {...(rest as P)} />;
     };
 }
 
-export { createCustomizableLunaticField, notLunaticComponents };
+export default createCustomizableLunaticField;
