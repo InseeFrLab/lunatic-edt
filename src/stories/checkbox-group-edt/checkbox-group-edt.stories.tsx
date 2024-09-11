@@ -1,5 +1,5 @@
-import { getStoryFactory } from "stories/getStory";
-import { CheckboxGroupEdt } from "ui";
+import { getStoryFactory } from "../getStory";
+import { CheckboxGroupEdt } from "../../ui";
 
 const options = [
     {
@@ -37,4 +37,6 @@ export const Default = getStory({
     value: value,
     responses: options,
     bindingDependencies: [],
+    tipsLabel: "",
+    variables: undefined,
 });

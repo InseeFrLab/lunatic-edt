@@ -1,4 +1,4 @@
-import { getStoryFactory } from "stories/getStory";
+import { getStoryFactory } from "../getStory";
 import { Radio } from "../../ui";
 
 const { meta, getStory } = getStoryFactory({

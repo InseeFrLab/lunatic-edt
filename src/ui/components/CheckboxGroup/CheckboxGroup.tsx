@@ -1,9 +1,10 @@
 import { Checkbox, Paper, Typography } from "@mui/material";
-import { CheckboxGroupSpecificProps } from "interface";
-import { CheckboxOption } from "interface/CheckboxOptions";
+import { CheckboxGroupSpecificProps } from "../../../interface";
+
 import { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import Icon from "../Icon";
+import { CheckboxOption } from "../../../interface/CheckboxOptions";
 
 export type CheckboxGroupProps = {
     handleChange(response: { [name: string]: string }, value: boolean): void;

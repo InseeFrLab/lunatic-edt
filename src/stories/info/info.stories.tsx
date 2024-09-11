@@ -1,5 +1,5 @@
-import { getStoryFactory } from "stories/getStory";
-import { Info } from "ui";
+import { getStoryFactory } from "../getStory";
+import { Info } from "../../ui";
 import InfoIcon from "./info.svg";
 
 const { meta, getStory } = getStoryFactory({

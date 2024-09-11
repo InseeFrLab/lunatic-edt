@@ -1,18 +1,10 @@
 import { Box, Button, Typography } from "@mui/material";
-import {
-    AutoCompleteActiviteOption,
-    NomenclatureActivityOption,
-    SelectedActivity,
-    responseType,
-    responsesType,
-} from "interface/ActivityTypes";
-import { ActivityLabelProps, ActivitySelecterSpecificProps } from "interface/ComponentsSpecificProps";
+
 import React, { ReactElement, memo, useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { ActivitySelecterNavigationEnum } from "../../../enumeration/ActivitySelecterNavigationEnum";
 import { makeStylesEdt } from "../../../ui/theme";
 import { splitLabelWithParenthesis } from "../../../ui/utils";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Alert from "../Alert";
 import ClickableList from "../ClickableList";
 import FreeInput from "../FreeInput";
@@ -34,18 +26,21 @@ import {
     selectSubCategory,
     updateNewValue,
 } from "./activityUtils";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
+import {
+    ActivityLabelProps,
+    ActivitySelecterSpecificProps,
+    AutoCompleteActiviteOption,
+    NomenclatureActivityOption,
+    responsesType,
+    responseType,
+    SelectedActivity,
+} from "../../../interface";
 
 type ActivitySelecterProps = {
     handleChange(response: responseType, value: string | boolean | undefined): void;
     componentSpecificProps: ActivitySelecterSpecificProps;
-    responses: [
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-    ];
+    responses: responsesType[];
     label: string;
     value: { [key: string]: string | boolean };
     variables: Map<string, any>;
@@ -552,14 +547,7 @@ const renderRank1Category = (
         modifiable: boolean | undefined;
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ];
+        responses: responsesType[];
         newItemId: string;
     },
     index: number,
@@ -630,14 +618,7 @@ const categoriesActivitiesBoxClick = (
         modifiable: boolean | undefined;
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ];
+        responses: responsesType[];
         newItemId: string;
     },
 ) => {
@@ -712,14 +693,7 @@ const renderCategories = (
         modifiable: boolean | undefined;
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ];
+        responses: responsesType[];
         newItemId: string;
     },
     classes: any,
@@ -838,14 +812,7 @@ const renderFreeInput = (
         modifiable: boolean;
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ];
+        responses: responsesType[];
     },
     functions: {
         nextClickCallback: (routeToGoal: boolean) => void;
@@ -1009,14 +976,7 @@ const renderClickableList = (
         modifiable: boolean;
         newItemId: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ];
+        responses: responsesType[];
     },
     classes: any,
     iconAddLightBlue: ReactElement<any>,
@@ -1199,14 +1159,7 @@ const navNextStep = (
     nextClickCallback: (routeToGoal: boolean) => void,
     routeToGoal: boolean,
     newItemId: string,
-    responses: [
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-    ],
+    responses: responsesType[],
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
 ) => {
     updateNewValue(value, handleChange, responses, newItemId);
@@ -1238,14 +1191,7 @@ const nextStep = (
         historyActivitySelecterBindingDep: responseType;
         newItemId: string;
         continueWithUncompleted: boolean;
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ];
+        responses: responsesType[];
     },
 ) => {
     let routeToGoal = true;
@@ -1350,14 +1296,7 @@ const next = (
         newItemId: string;
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ];
+        responses: responsesType[];
     },
 ) => {
     if (nextClickEvent) {

@@ -1,4 +1,4 @@
-import { AutoCompleteActiviteOption, NomenclatureActivityOption } from "interface/ActivityTypes";
+import { NomenclatureActivityOption, AutoCompleteActiviteOption } from "../../../interface";
 import { findItemInAutoCompleteRef, findItemInCategoriesNomenclature } from "./activityUtils";
 
 describe("findItemInCategoriesNomenclature", () => {

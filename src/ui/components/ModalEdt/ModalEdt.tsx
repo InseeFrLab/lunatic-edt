@@ -1,7 +1,7 @@
 import { Box, Button, Modal } from "@mui/material";
 import { Fragment, ReactElement, memo } from "react";
 import { makeStylesEdt } from "../../theme";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
 
 type ModalProps = {
     isModalDisplayed: boolean;

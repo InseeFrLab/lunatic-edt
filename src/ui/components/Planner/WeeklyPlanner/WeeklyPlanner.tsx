@@ -14,7 +14,6 @@ import {
     getFrenchDayFromDate,
     setDateTimeToZero,
 } from "../../../utils";
-import { createCustomizableLunaticField } from "../../../utils/create-customizable-lunatic-field";
 import CheckboxGroupEdt from "../../CheckboxGroupEdt";
 import TooltipInfo from "../../TooltipInfo";
 import DayOverview from "../DayOverview/DayOverview";
@@ -25,6 +24,7 @@ import {
     transformToWeeklyPlannerDataType,
 } from "./utils";
 import { responsesType, WeeklyPlannerSpecificProps } from "../../../../interface";
+import createCustomizableLunaticField from "../../../utils/create-customizable-lunatic-field";
 
 export type WeeklyPlannerProps = {
     handleChange(
@@ -34,25 +34,11 @@ export type WeeklyPlannerProps = {
     value: { [key: string]: string[] | IODataStructure[] | boolean[] };
     componentSpecificProps: WeeklyPlannerSpecificProps;
     bindingDependencies: string[];
-    responses: [
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-    ];
+    responses: responsesType[];
     variables: Map<string, any>;
     placeWork: {
         bindingDependencies: string[];
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ];
+        responses: responsesType[];
         label: string;
     };
 };
@@ -87,32 +73,11 @@ const getFormatedWorkedSum = (workedHoursSum: number): string => {
     );
 };
 
-const setDataWeeklyPlannerArray = (
-    variables: Map<string, any>,
-    responses: [
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-    ],
-) => {
+const setDataWeeklyPlannerArray = (variables: Map<string, any>, responses: responsesType[]) => {
     return variables.get(responses[0].response.name) as IODataStructure[];
 };
 
-const setDataArray = (
-    variables: Map<string, any>,
-    responses: [
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-    ],
-    language: string,
-) => {
+const setDataArray = (variables: Map<string, any>, responses: responsesType[], language: string) => {
     const dataWeeklyPlanner = setDataWeeklyPlannerArray(variables, responses);
     const data: WeeklyPlannerDataType[] | undefined =
         dataWeeklyPlanner?.length > 1
@@ -246,6 +211,8 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
 
     const titleLabels = {
         normalTitle: labels.title,
+        boldTitle: labels.title,
+        typeTitle: labels.title,
     };
 
     const getWorkedHoursSum = () => {

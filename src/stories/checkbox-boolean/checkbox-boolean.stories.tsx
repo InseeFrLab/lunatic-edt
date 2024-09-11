@@ -1,5 +1,5 @@
-import { getStoryFactory } from "stories/getStory";
-import { CheckboxBoolean } from "ui";
+import { getStoryFactory } from "../getStory";
+import { CheckboxBoolean } from "../../ui";
 
 const { meta, getStory } = getStoryFactory({
     sectionName: "Composants",

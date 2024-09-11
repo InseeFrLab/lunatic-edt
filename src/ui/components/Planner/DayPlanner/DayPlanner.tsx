@@ -1,6 +1,5 @@
 import { Box, Button, CircularProgress, Popover, Typography } from "@mui/material";
-import { responseType } from "interface";
-import { TimeLineRowType } from "interface/DayOverviewTypes";
+
 import React, { ReactElement, useCallback, useEffect } from "react";
 import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
 import { makeStylesEdt } from "../../../theme";
@@ -11,6 +10,8 @@ import {
     getArrayFromSession,
     setDateTimeToZero,
 } from "../../../utils";
+import { responseType } from "../../../../interface";
+import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
 
 export type DayPlannerProps = {
     date: Date;

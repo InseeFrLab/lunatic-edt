@@ -1,5 +1,5 @@
-import { getStoryFactory } from "stories/getStory";
 import { ModalEdt } from "../../ui";
+import { getStoryFactory } from "../getStory";
 
 const labels = {
     title: "TITLE LABEL",

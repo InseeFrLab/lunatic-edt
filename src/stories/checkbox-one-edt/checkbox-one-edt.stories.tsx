@@ -1,6 +1,6 @@
-import { CheckboxOneCustomOption, CheckboxOneSpecificProps } from "interface";
-import { getStoryFactory } from "stories/getStory";
-import { CheckboxOneEdt } from "ui";
+import { getStoryFactory } from "../getStory";
+import { CheckboxOneEdt } from "../../ui";
+import { CheckboxOneCustomOption, CheckboxOneSpecificProps } from "../../interface";
 
 const options: CheckboxOneCustomOption[] = [
     {
@@ -41,4 +41,5 @@ export const Default = getStory({
     componentSpecificProps: componentSpecificProps,
     variables: variables,
     bindingDependencies: [],
+    responses: [],
 });

@@ -1,8 +1,8 @@
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { CheckboxOption } from "interface/CheckboxOptions";
 import React, { memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
+import { CheckboxOption } from "../../../interface/CheckboxOptions";
 
 export type CheckboxOneProps = {
     handleChange(response: { [name: string]: string }, value: boolean): void;

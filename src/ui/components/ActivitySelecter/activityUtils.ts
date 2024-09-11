@@ -1,11 +1,4 @@
 import elasticlunr, { Index } from "elasticlunrjs";
-import {
-    AutoCompleteActiviteOption,
-    NomenclatureActivityOption,
-    SelectedActivity,
-    responseType,
-    responsesType,
-} from "interface/ActivityTypes";
 import React from "react";
 import { validate } from "uuid";
 import { ActivitySelecterNavigationEnum } from "../../../enumeration/ActivitySelecterNavigationEnum";
@@ -18,6 +11,13 @@ import {
     selectedIdNewActivity,
     selectedLabelNewActivity,
 } from "./ActivitySelecter";
+import {
+    NomenclatureActivityOption,
+    AutoCompleteActiviteOption,
+    SelectedActivity,
+    responseType,
+    responsesType,
+} from "../../../interface";
 
 /**
  * Find category of activity
@@ -216,14 +216,7 @@ const saveNewOrCurrentActivity = (
     categoriesAndActivitesNomenclature: NomenclatureActivityOption[],
     isFullyCompleted: boolean,
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
-    responses: [
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-    ],
+    responses: responsesType[],
     newItemId: string,
 ) => {
     if (validate(id ?? "")) {
@@ -257,14 +250,7 @@ export const selectSubCategory = (
         categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ];
+        responses: responsesType[];
         newItemId: string;
     },
 ) => {
@@ -301,14 +287,7 @@ export const selectFinalCategory = (
         categoriesAndActivitesNomenclature: NomenclatureActivityOption[];
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ];
+        responses: responsesType[];
         newItemId: string;
     },
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
@@ -379,14 +358,7 @@ let inputValue: string | undefined;
 export const updateNewValue = (
     value: string | undefined,
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
-    responses: [
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-    ],
+    responses: responsesType[],
     newItemId: string,
 ) => {
     onChange(handleChange, {
@@ -421,7 +393,7 @@ export const createIndexSuggester = (
     const selectedvalue: AutoCompleteActiviteOption = activitesAutoCompleteRef.filter(
         e => e.id === selectedSuggesterId,
     )[0];
-    const index = createIndex ? indexSuggester ?? createIndex(options) : null;
+    const index = createIndex ? (indexSuggester ?? createIndex(options)) : null;
     return [index, options, selectedvalue];
 };
 
@@ -555,14 +527,7 @@ export const createActivityCallBack = (
 export const onChange = (
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
     inputs: {
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType | undefined,
-            responsesType | undefined,
-            responsesType | undefined,
-        ];
+        responses: responsesType[];
         newItemId: string;
         isFullyCompleted?: boolean;
         id?: string;
@@ -618,14 +583,7 @@ export const nextStepFreeInput = (
         newItemId: string;
         displayAlertNewActivity: boolean;
         routeToGoal: boolean;
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ];
+        responses: responsesType[];
     },
 ) => {
     if (inputs.displayAlertNewActivity) {

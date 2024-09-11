@@ -1,5 +1,5 @@
-import { getStoryFactory } from "stories/getStory";
-import { CheckboxGroup } from "ui";
+import { CheckboxGroup } from "../../ui";
+import { getStoryFactory } from "../getStory";
 
 const options = [
     {

@@ -1,7 +1,7 @@
-import { AutoCompleteActiviteOption } from "interface";
 import { validate } from "uuid";
 import { TimeLineRowType } from "../../interface/DayOverviewTypes";
 import pairSynonymes from "../components/ActivitySelecter/synonymes-misspellings.json";
+import { AutoCompleteActiviteOption } from "../../interface";
 
 export const important = (value: string): string => {
     return value + " !important";

@@ -1,10 +1,14 @@
 import { Box, TextField, Typography } from "@mui/material";
-import { NomenclatureActivityOption, responseType, responsesType } from "interface/ActivityTypes";
-import { ActivityLabelProps } from "interface/ComponentsSpecificProps";
 import React, { memo, useCallback, useState } from "react";
 import { makeStylesEdt } from "../../theme";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import { FullScreenComponent } from "../ActivitySelecter/ActivitySelecter";
+import {
+    NomenclatureActivityOption,
+    ActivityLabelProps,
+    responsesType,
+    responseType,
+} from "../../../interface";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
 
 type FreeInputProps = {
     states: {
@@ -18,14 +22,7 @@ type FreeInputProps = {
         label: string;
         isMobile: boolean;
         newItemId: string;
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ];
+        responses: responsesType[];
     };
     functions: {
         nextClickCallback: (routeToGoal: boolean) => void;
@@ -44,14 +41,7 @@ type FreeInputProps = {
     updateNewValue: (
         value: string | undefined,
         handleChange: (response: responseType, value: string | boolean | undefined) => void,
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ],
+        responses: responsesType[],
         newItemId: string,
     ) => void;
 };

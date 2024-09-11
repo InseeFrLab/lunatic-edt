@@ -1,5 +1,5 @@
-import { getStoryFactory } from "stories/getStory";
-import { TooltipInfo } from "ui";
+import { TooltipInfo } from "../../ui";
+import { getStoryFactory } from "../getStory";
 import infoIcon from "./info.svg";
 
 const infoLabels = {

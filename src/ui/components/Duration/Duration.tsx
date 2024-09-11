@@ -1,9 +1,9 @@
 import { Box, InputLabel, MenuItem, Select } from "@mui/material";
 import "dayjs/locale/fr";
-import { TimepickerSpecificProps } from "interface";
+import { TimepickerSpecificProps } from "../../../interface";
 import React, { memo, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
 
 export type DurationProps = {
     value?: string;

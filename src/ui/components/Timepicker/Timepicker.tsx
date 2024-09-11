@@ -1,14 +1,19 @@
 import { Button, DialogActions, InputAdornment, TextField } from "@mui/material";
 import { Box } from "@mui/system";
-import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
+import {
+    LocalizationProvider,
+    PickerChangeHandlerContext,
+    TimePicker,
+    TimeValidationError,
+} from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { PickersActionBarProps } from "@mui/x-date-pickers/PickersActionBar";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
-import { TimepickerSpecificProps } from "interface";
+import { TimepickerSpecificProps } from "../../../interface";
 import React, { memo, useCallback, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
 
 export type TimepickerProps = {
     value?: string;
@@ -50,17 +55,24 @@ const Timepicker = memo((props: TimepickerProps) => {
         } else return min;
     };
 
-    function setValueLunatic(newValue: Dayjs | null) {
-        if (newValue != undefined && newValue?.isValid()) {
-            const min = newValue.minute();
-            const newValueRound5 = newValue.set("minutes", round5(min));
+    function setValueLunatic(value: Dayjs, context: PickerChangeHandlerContext<TimeValidationError>) {
+        if (value != null && value.isValid()) {
+            const min = value.minute();
+            const newValueRound5 = value.set("minutes", round5(min));
             setValue(newValueRound5);
             handleChange(
                 response,
-                newValue?.format(componentSpecificProps?.constants.FORMAT_TIME) || null,
+                newValueRound5.format(componentSpecificProps?.constants.FORMAT_TIME) || null,
             );
         }
     }
+
+    const handleTimeChange = useCallback(
+        (value: Dayjs, context: PickerChangeHandlerContext<TimeValidationError>) => {
+            setValueLunatic(value, context);
+        },
+        [],
+    );
 
     const MyActionBar = ({ onAccept, onCancel }: PickersActionBarProps) => {
         return (
@@ -69,6 +81,21 @@ const Timepicker = memo((props: TimepickerProps) => {
                 <Button onClick={onAccept}> {componentSpecificProps?.labels.validateLabel} </Button>
             </DialogActions>
         );
+    };
+
+    const renderInput = (params: any) => (
+        <TextField
+            {...params}
+            sx={{
+                "& legend": { display: "none" },
+                "& fieldset": { top: 0 },
+                "& label": { display: "none" },
+            }}
+        />
+    );
+
+    const useRenderInputCallback = () => {
+        return useCallback(renderInput, []);
     };
 
     return (
@@ -90,24 +117,8 @@ const Timepicker = memo((props: TimepickerProps) => {
                         openTo="hours"
                         views={["hours", "minutes"]}
                         value={valueLocal}
-                        onChange={useCallback(newValue => {
-                            setValueLunatic(newValue);
-                        }, [])}
-                        renderInput={useCallback(
-                            params => (
-                                <TextField
-                                    size="small"
-                                    {...params}
-                                    sx={{
-                                        svg: { color: "#1F4076" },
-                                        "& legend": { display: "none" },
-                                        "& fieldset": { top: 0 },
-                                        "& label": { display: "grid", visibility: "hidden" },
-                                    }}
-                                />
-                            ),
-                            [],
-                        )}
+                        onChange={handleTimeChange}
+                        renderInput={useRenderInputCallback}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">

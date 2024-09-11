@@ -9,12 +9,12 @@ import {
     TextField,
 } from "@mui/material";
 import elasticlunr from "elasticlunrjs";
-import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
 import React, { ReactElement, ReactNode, memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import stopWords from "./stop_words_french.json";
+import { AutoCompleteActiviteOption } from "../../../interface";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
 
 export type ClickableListProps = {
     placeholder: string;
@@ -29,7 +29,7 @@ export type ClickableListProps = {
     notFoundComment: string;
     addActivityButtonLabel: string;
     notSearchLabel: string;
-    iconNoResult: string;
+    iconNoResult: Element;
     separatorSuggester: string;
     className?: string;
     autoFocus?: boolean;

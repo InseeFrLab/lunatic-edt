@@ -1,13 +1,12 @@
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { IconGridCheckBoxOneSpecificProps } from "interface";
-import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
+import { CheckboxOneCustomOption, IconGridCheckBoxOneSpecificProps } from "../../../interface";
 import { memo, useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../theme";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Alert from "../Alert";
 import Icon from "../Icon/Icon";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
 
 type IconGridCheckBoxOneProps = {
     handleChange(response: { [name: string]: string }, value: string | undefined | number): void;

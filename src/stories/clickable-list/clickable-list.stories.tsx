@@ -1,6 +1,6 @@
-import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
-import { getStoryFactory } from "stories/getStory";
-import { ClickableList } from "ui";
+import { AutoCompleteActiviteOption } from "../../interface";
+import { ClickableList } from "../../ui";
+import { getStoryFactory } from "../getStory";
 import activites from "./activites.json";
 import iconNoResult from "./puzzle.svg";
 
@@ -14,7 +14,7 @@ const { meta, getStory } = getStoryFactory({
 export default meta;
 
 export const Default = getStory({
-    options: options,
+    //options: options,
     handleChange: () => console.log("handleChange"),
     createActivity: () => console.log("createActivity"),
     placeholder: "Saisissez une activité",
@@ -23,5 +23,21 @@ export const Default = getStory({
         "Vous pourrez l'ajouter en cliquant sur le bouton ci-dessous, ou le bouton + ci-dessus",
     addActivityButtonLabel: "Ajouter l'activité",
     iconNoResult: iconNoResult,
-    iconNoResultAlt: "alt pour icon no result",
+    optionsFiltered: [],
+    index: undefined,
+    selectedValue: {
+        id: "",
+        label: "",
+        synonymes: "",
+    },
+    historyInputSuggesterValue: "",
+    handleChangeHistorySuggester: function (historyInputSuggester?: string): void {
+        throw new Error("Function not implemented.");
+    },
+    notSearchLabel: "",
+    separatorSuggester: "",
+    iconAddWhite: undefined,
+    iconAddLightBlue: undefined,
+    iconExtension: undefined,
+    iconSearch: undefined,
 });

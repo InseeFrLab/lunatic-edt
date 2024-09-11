@@ -1,10 +1,10 @@
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { responsesHourChecker } from "interface";
-import { HourCheckerOption } from "interface/HourCheckerOptions";
-import { IODataStructure } from "interface/WeeklyPlannerTypes";
+import { responsesHourChecker } from "../../../interface";
 import React, { ReactElement, memo, useCallback, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
+import { IODataStructure } from "../../../interface/WeeklyPlannerTypes";
+import { HourCheckerOption } from "../../../interface/HourCheckerOptions";
 
 export type HourCheckerProps = {
     handleChange?(response: { [name: string]: string }, value: boolean): void;

@@ -1,8 +1,8 @@
 import { Box } from "@mui/system";
-import { InfoProps } from "interface";
+import { InfoProps } from "../../../interface";
 import { memo } from "react";
 import { makeStylesEdt } from "../../theme";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
 
 const Info = memo((props: InfoProps) => {
     const {

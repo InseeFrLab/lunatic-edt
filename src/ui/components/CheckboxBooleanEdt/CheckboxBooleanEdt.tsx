@@ -1,9 +1,10 @@
 import { Box, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { CheckboxBooleanEdtSpecificProps } from "interface";
+import { CheckboxBooleanEdtSpecificProps } from "../../../interface";
 import React, { memo, useCallback, useEffect, useState } from "react";
 import { makeStylesEdt } from "../../theme";
-import { createCustomizableLunaticField, important } from "../../utils";
 import Alert from "../Alert";
+import { important } from "../../utils";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
 
 export type CheckboxBooleanEdtProps = {
     id?: string;

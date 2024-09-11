@@ -1,4 +1,8 @@
-import { DayDetailType, IODataStructure, WeeklyPlannerDataType } from "interface/WeeklyPlannerTypes";
+import {
+    DayDetailType,
+    WeeklyPlannerDataType,
+    IODataStructure,
+} from "../../../../interface/WeeklyPlannerTypes";
 import { convertTime, formateDateToFrenchFormat } from "../../../utils";
 
 export const INTERVAL = 15;
@@ -141,7 +145,7 @@ export const transformToIODataStructure = (
         datesWeek[i] = data[i]?.date;
         datesWeekStarted[i] = data[i]?.hasBeenStarted.toString();
 
-        data[i]?.detail.forEach(d => {
+        data[i]?.detail.forEach((d: { start: string; duration: number }) => {
             const time: Date = new Date();
             const splittedTime = d.start.split("H");
             time.setHours(Number(splittedTime[0]));

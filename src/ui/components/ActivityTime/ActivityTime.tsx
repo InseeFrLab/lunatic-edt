@@ -2,12 +2,12 @@ import { Box } from "@mui/system";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { TimepickerSpecificProps } from "interface";
-import { Activity } from "interface/TimepickerTypes";
+import { TimepickerSpecificProps } from "../../../interface";
 import React, { memo, useEffect } from "react";
 import { makeStylesEdt } from "../../theme";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
 import Timepicker from "../Timepicker/Timepicker";
+import { Activity } from "../../../interface/TimepickerTypes";
 
 export type ActivityTimeProps = {
     disabled?: boolean;

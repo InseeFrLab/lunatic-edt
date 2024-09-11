@@ -1,5 +1,5 @@
-import { getStoryFactory } from "stories/getStory";
-import { HourChecker } from "ui";
+import { getStoryFactory } from "../getStory";
+import { HourChecker } from "../../ui";
 
 const { meta, getStory } = getStoryFactory({
     sectionName: "Composants",

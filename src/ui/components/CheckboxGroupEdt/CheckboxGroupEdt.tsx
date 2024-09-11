@@ -1,12 +1,12 @@
 import { Box, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
-import { CheckboxGroupSpecificProps } from "interface";
-import { CheckboxOption } from "interface/CheckboxOptions";
+import { CheckboxGroupSpecificProps } from "../../../interface";
 import { memo, useCallback, useEffect, useState } from "react";
 import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
 import Alert from "../Alert";
 import Icon from "../Icon";
+import { CheckboxOption } from "../../../interface/CheckboxOptions";
 
 export type CheckboxGroupEdtProps = {
     label?: string;

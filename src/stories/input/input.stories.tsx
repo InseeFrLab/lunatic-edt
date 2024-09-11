@@ -1,4 +1,4 @@
-import { getStoryFactory } from "stories/getStory";
+import { getStoryFactory } from "../getStory";
 import { Input } from "../../ui";
 
 const { meta, getStory } = getStoryFactory({

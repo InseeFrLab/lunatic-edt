@@ -1,11 +1,14 @@
 import { Box, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
-import { CheckboxOneSpecificProps, responseType, responsesType } from "interface";
-import { CheckboxOneCustomOption } from "interface/CheckboxOptions";
+import {
+    CheckboxOneCustomOption,
+    CheckboxOneSpecificProps,
+    responseType,
+    responsesType,
+} from "../../../interface";
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { makeStylesEdt } from "../../theme";
 import { important, isUUID } from "../../utils";
-import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import {
     FullScreenComponent,
     historyInputSuggester,
@@ -23,6 +26,7 @@ import {
 import Alert from "../Alert";
 import ClickableList from "../ClickableList";
 import FreeInput from "../FreeInput";
+import createCustomizableLunaticField from "../../utils/create-customizable-lunatic-field";
 
 export type CheckboxOneProps = {
     handleChange(
@@ -306,7 +310,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                     iconNoResult={icons?.clickableListIconNoResult ?? <></>}
                     autoFocus={true}
                     isMobile={isMobile}
-                    separatorSuggester={separatorSuggester}
+                    separatorSuggester={separatorSuggester ?? ""}
                     iconAddWhite={icons?.iconAddWhite ?? <></>}
                     iconAddLightBlue={icons?.iconAddLightBlue ?? <></>}
                     iconExtension={icons?.iconExtension ?? <></>}
@@ -326,14 +330,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
         value: string | undefined,
         nextClickCallback: () => void,
         newItemId: string,
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType,
-        ],
+        responses: responsesType[],
         handleChange: (response: responseType, value: string | boolean | undefined) => void,
     ) => {
         updateNewValue(value, handleChange, responses, newItemId);

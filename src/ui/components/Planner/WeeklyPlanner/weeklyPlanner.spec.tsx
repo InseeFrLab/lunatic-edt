@@ -4,10 +4,11 @@ import userEvent from "@testing-library/user-event";
 import { theme } from "./../../../theme";
 
 import { ThemeProvider } from "@mui/material";
-import { InfoProps, responsesType, WeeklyPlannerSpecificProps } from "interface";
-import { IODataStructure } from "interface/WeeklyPlannerTypes";
+
 import { generateStringInputFromDate } from "../../../utils";
 import WeeklyPlanner from "./WeeklyPlanner";
+import { InfoProps, responsesType, WeeklyPlannerSpecificProps } from "../../../../interface";
+import { IODataStructure } from "../../../../interface/WeeklyPlannerTypes";
 
 describe("weeklyPlannerComponent", () => {
     const workSumLabel = "total travaillé";
@@ -238,6 +239,11 @@ describe("weeklyPlannerComponent", () => {
                     bindingDependencies={bindingDependencies}
                     responses={responses}
                     variables={variables}
+                    placeWork={{
+                        bindingDependencies: [],
+                        responses: [],
+                        label: "",
+                    }}
                 ></WeeklyPlanner>
             </ThemeProvider>,
         );

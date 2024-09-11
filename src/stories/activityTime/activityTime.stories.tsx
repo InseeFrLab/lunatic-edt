@@ -1,5 +1,5 @@
-import { getStoryFactory } from "stories/getStory";
 import { ActivityTime } from "../../ui";
+import { getStoryFactory } from "../getStory";
 
 const { meta, getStory } = getStoryFactory({
     sectionName: "Composants",
@@ -27,7 +27,7 @@ responses = [
 export default meta;
 
 export const Default = getStory({
-    onChange: (value: any) => console.log(value),
+    //onChange: (value: any) => console.log(value),
     handleChange: (value: any) => console.log(value),
     variables: variables,
     responses: responses,

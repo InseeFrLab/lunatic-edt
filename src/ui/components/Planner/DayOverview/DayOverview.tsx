@@ -1,5 +1,4 @@
 import { Box, List, Typography } from "@mui/material";
-import { InfoProps, responseType, responsesHourChecker } from "interface";
 import React, { ReactElement, memo, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { TimeLineRowType } from "../../../../interface/DayOverviewTypes";
@@ -21,6 +20,7 @@ import HourChecker from "../../HourChecker";
 import ProgressBar from "../../ProgressBar";
 import TooltipInfo from "../../TooltipInfo";
 import { INTERVAL, transformToIODataStructure } from "../WeeklyPlanner/utils";
+import { InfoProps, responsesHourChecker, responseType } from "../../../../interface";
 
 export type DayOverviewProps = {
     date: Date;

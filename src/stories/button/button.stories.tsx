@@ -1,5 +1,5 @@
-import { getStoryFactory } from "stories/getStory";
 import { Button } from "../../ui";
+import { getStoryFactory } from "../getStory";
 
 const { meta, getStory } = getStoryFactory({
     sectionName: "Composants",

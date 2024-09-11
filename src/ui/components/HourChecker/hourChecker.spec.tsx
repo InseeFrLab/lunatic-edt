@@ -5,6 +5,8 @@ import "@testing-library/jest-dom";
 
 import { ThemeProvider } from "@mui/material";
 import HourChecker from "./HourChecker";
+import { responsesHourChecker } from "../../../interface";
+import { IODataStructure } from "../../../interface/WeeklyPlannerTypes";
 
 describe("hourchecker", () => {
     const responses = [
@@ -38,6 +40,22 @@ describe("hourchecker", () => {
                     responses={responses}
                     value={value}
                     idSurvey={""}
+                    expandLessIcon={undefined}
+                    expandMoreIcon={undefined}
+                    expandLessWhiteIcon={undefined}
+                    expandMoreWhiteIcon={undefined}
+                    workIcon={undefined}
+                    handleChangeData={function (
+                        _response: { [name: string]: string },
+                        _value: IODataStructure[],
+                    ): void {
+                        throw new Error("Function not implemented.");
+                    }}
+                    store={[]}
+                    saveHours={function (_idSurvey: string, _response: responsesHourChecker): void {
+                        throw new Error("Function not implemented.");
+                    }}
+                    currentDate={""}
                 ></HourChecker>
             </ThemeProvider>,
         );
