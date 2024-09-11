@@ -1462,9 +1462,9 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
         borderRadius: "5px",
     },
     rank1CategoriesBox: {
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "space-evenly",
+        display: "grid",
+        gridTemplateColumns: "repeat(4, 1fr)",
+        gap: "1rem",
         cursor: "pointer",
         padding: "1rem",
     },
@@ -1473,8 +1473,6 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: theme.variables.white,
-        width: "45.5%",
-        marginTop: "4%",
         borderRadius: "15px",
     },
     rank1CategoryHelp: {

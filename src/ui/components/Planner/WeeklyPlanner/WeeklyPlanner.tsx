@@ -1,6 +1,5 @@
 import { CircularProgress, List } from "@mui/material";
 import { Box } from "@mui/system";
-import { WeeklyPlannerSpecificProps, responsesType } from "interface";
 import { memo, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { IODataStructure, WeeklyPlannerDataType } from "../../../../interface/WeeklyPlannerTypes";
@@ -25,6 +24,7 @@ import {
     transformToIODataStructure,
     transformToWeeklyPlannerDataType,
 } from "./utils";
+import { responsesType, WeeklyPlannerSpecificProps } from "../../../../interface";
 
 export type WeeklyPlannerProps = {
     handleChange(
