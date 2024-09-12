@@ -319,6 +319,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
                 bindingDependencies={placeWork.bindingDependencies}
                 componentSpecificProps={componentSpecificProps}
                 indexOfArray={values[1]}
+                tipsLabel={""}
             />
         );
     };

@@ -51,20 +51,15 @@ export type WeeklyPlannerSpecificProps = {
     };
     saveAll(idSurvey: string, data: [IODataStructure[], string[], string[], any[]]): void;
     language: string;
-    helpStep?: number;
     moreIcon: ReactElement<any>;
     expandLessIcon: ReactElement<any>;
     expandMoreIcon: ReactElement<any>;
     expandLessWhiteIcon: ReactElement<any>;
     expandMoreWhiteIcon: ReactElement<any>;
     workIcon: ReactElement<any>;
-    modifiable?: boolean;
     saveHours(idSurvey: string, response: responsesHourChecker): void;
-    optionsIcons: {
-        [id: string]: { icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>; altIcon: string };
-    };
     idSurvey: string;
-};
+} & CheckboxGroupSpecificProps;
 
 export type responsesHourChecker = {
     names: string[];
