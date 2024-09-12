@@ -388,7 +388,11 @@ export const createIndexSuggester = (
         optionsFiltered: AutoCompleteActiviteOption[],
     ) => elasticlunr.Index<AutoCompleteActiviteOption>,
     indexSuggester?: elasticlunr.Index<AutoCompleteActiviteOption>,
-) => {
+): [
+    elasticlunr.Index<AutoCompleteActiviteOption> | null,
+    AutoCompleteActiviteOption[],
+    AutoCompleteActiviteOption,
+] => {
     const options = optionsFiltered(activitesAutoCompleteRef);
     const selectedvalue: AutoCompleteActiviteOption = activitesAutoCompleteRef.filter(
         e => e.id === selectedSuggesterId,
@@ -400,14 +404,7 @@ export const createIndexSuggester = (
 export const clickableListOnChange = (
     id: string | undefined,
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
-    responses: [
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType | undefined,
-        responsesType | undefined,
-        responsesType | undefined,
-    ],
+    responses: responsesType[],
     newItemId: string,
     setSelectedSuggesterId: (id: string | undefined) => void,
     historyInputSug?: string,
@@ -477,14 +474,7 @@ export const createActivityCallBack = (
         newItemId: string;
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType | undefined;
-        responses: [
-            responsesType,
-            responsesType,
-            responsesType,
-            responsesType | undefined,
-            responsesType | undefined,
-            responsesType | undefined,
-        ];
+        responses: responsesType[];
     },
 ) => {
     let historyInputSuggesterValueLocal = localStorage.getItem(historyInputSuggester) ?? "";

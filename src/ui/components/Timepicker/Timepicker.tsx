@@ -1,11 +1,6 @@
 import { Button, DialogActions, InputAdornment, TextField } from "@mui/material";
 import { Box } from "@mui/system";
-import {
-    LocalizationProvider,
-    PickerChangeHandlerContext,
-    TimePicker,
-    TimeValidationError,
-} from "@mui/x-date-pickers";
+import { LocalizationProvider, TimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { PickersActionBarProps } from "@mui/x-date-pickers/PickersActionBar";
 import dayjs, { Dayjs } from "dayjs";
@@ -21,6 +16,8 @@ export type TimepickerProps = {
     label?: string;
     tipsLabel?: string;
     id?: string;
+    disabled?: boolean;
+    readOnly?: boolean;
     response: { [name: string]: string };
     componentSpecificProps?: TimepickerSpecificProps;
 };
@@ -55,24 +52,17 @@ const Timepicker = memo((props: TimepickerProps) => {
         } else return min;
     };
 
-    function setValueLunatic(value: Dayjs, context: PickerChangeHandlerContext<TimeValidationError>) {
-        if (value != null && value.isValid()) {
-            const min = value.minute();
-            const newValueRound5 = value.set("minutes", round5(min));
+    function setValueLunatic(newValue: Dayjs | null) {
+        if (newValue != undefined && newValue?.isValid()) {
+            const min = newValue.minute();
+            const newValueRound5 = newValue.set("minutes", round5(min));
             setValue(newValueRound5);
             handleChange(
                 response,
-                newValueRound5.format(componentSpecificProps?.constants.FORMAT_TIME) || null,
+                newValue?.format(componentSpecificProps?.constants.FORMAT_TIME) || null,
             );
         }
     }
-
-    const handleTimeChange = useCallback(
-        (value: Dayjs, context: PickerChangeHandlerContext<TimeValidationError>) => {
-            setValueLunatic(value, context);
-        },
-        [],
-    );
 
     const MyActionBar = ({ onAccept, onCancel }: PickersActionBarProps) => {
         return (
@@ -81,21 +71,6 @@ const Timepicker = memo((props: TimepickerProps) => {
                 <Button onClick={onAccept}> {componentSpecificProps?.labels.validateLabel} </Button>
             </DialogActions>
         );
-    };
-
-    const renderInput = (params: any) => (
-        <TextField
-            {...params}
-            sx={{
-                "& legend": { display: "none" },
-                "& fieldset": { top: 0 },
-                "& label": { display: "none" },
-            }}
-        />
-    );
-
-    const useRenderInputCallback = () => {
-        return useCallback(renderInput, []);
     };
 
     return (
@@ -117,8 +92,24 @@ const Timepicker = memo((props: TimepickerProps) => {
                         openTo="hours"
                         views={["hours", "minutes"]}
                         value={valueLocal}
-                        onChange={handleTimeChange}
-                        renderInput={useRenderInputCallback}
+                        onChange={useCallback((newValue: Dayjs | null) => {
+                            setValueLunatic(newValue);
+                        }, [])}
+                        renderInput={useCallback(
+                            params => (
+                                <TextField
+                                    size="small"
+                                    {...params}
+                                    sx={{
+                                        svg: { color: "#1F4076" },
+                                        "& legend": { display: "none" },
+                                        "& fieldset": { top: 0 },
+                                        "& label": { display: "grid", visibility: "hidden" },
+                                    }}
+                                />
+                            ),
+                            [],
+                        )}
                         InputProps={{
                             endAdornment: (
                                 <InputAdornment position="end">

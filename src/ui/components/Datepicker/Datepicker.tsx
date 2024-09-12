@@ -1,10 +1,5 @@
 import { Box, TextField } from "@mui/material";
-import {
-    DatePicker,
-    DateValidationError,
-    LocalizationProvider,
-    PickerChangeHandlerContext,
-} from "@mui/x-date-pickers";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/fr";
@@ -32,32 +27,10 @@ const Datepicker = memo((props: DatepickerProps) => {
         onChange(valueLocal?.format("YYYY-MM-DD") || null);
     }, []);
 
-    function setValueLunatic(value: Dayjs, context: PickerChangeHandlerContext<DateValidationError>) {
-        setValueLocal(value);
-        onChange(value?.format("YYYY-MM-DD") || null);
+    function setValueLunatic(newValue: Dayjs | null) {
+        setValueLocal(newValue);
+        onChange(newValue?.format("YYYY-MM-DD") || null);
     }
-
-    const handleTimeChange = useCallback(
-        (value: Dayjs, context: PickerChangeHandlerContext<DateValidationError>) => {
-            setValueLunatic(value, context);
-        },
-        [],
-    );
-
-    const renderInput = (params: any) => (
-        <TextField
-            {...params}
-            sx={{
-                "& legend": { display: "none" },
-                "& fieldset": { top: 0 },
-                "& label": { display: "none" },
-            }}
-        />
-    );
-
-    const useRenderInputCallback = () => {
-        return useCallback(renderInput, []);
-    };
 
     return (
         <>
@@ -77,8 +50,22 @@ const Datepicker = memo((props: DatepickerProps) => {
                     openTo="day"
                     views={["day"]}
                     value={valueLocal}
-                    onChange={handleTimeChange}
-                    renderInput={useRenderInputCallback}
+                    onChange={useCallback((newValue: Dayjs | null) => {
+                        setValueLunatic(newValue);
+                    }, [])}
+                    renderInput={useCallback(
+                        params => (
+                            <TextField
+                                {...params}
+                                sx={{
+                                    "& legend": { display: "none" },
+                                    "& fieldset": { top: 0 },
+                                    "& label": { display: "none" },
+                                }}
+                            />
+                        ),
+                        [],
+                    )}
                     componentsProps={{
                         actionBar: {
                             actions: ["accept"],

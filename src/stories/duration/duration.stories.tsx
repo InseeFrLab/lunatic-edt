@@ -13,9 +13,8 @@ variables.set("END_TIME", null);
 export default meta;
 
 export const Default = getStory({
-    //onChange: (value: any) => console.log(value),
     handleChange: (value: any) => console.log(value),
     variables: new Map<string, any>(),
-    responses: [],
     bindingDependencies: [],
+    response: {},
 });

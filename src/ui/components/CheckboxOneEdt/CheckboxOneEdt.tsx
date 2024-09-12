@@ -37,14 +37,7 @@ export type CheckboxOneProps = {
     label?: string;
     options: CheckboxOneCustomOption[];
     value: { [key: string]: string } | string | null | undefined;
-    responses: [
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-        responsesType,
-    ];
+    responses: responsesType[];
     bindingDependencies: string[];
     className?: string;
     componentSpecificProps: CheckboxOneSpecificProps;
@@ -152,14 +145,14 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
           }
         : idBindingDep;
 
-    const responsesActivity: [
-        responsesType,
-        responsesType,
-        responsesType,
+    const responsesActivity: responsesType[] = [
+        idBindingDep,
+        suggesterIdBindingDep,
+        labelBindingDep,
         undefined,
         undefined,
         undefined,
-    ] = [idBindingDep, suggesterIdBindingDep, labelBindingDep, undefined, undefined, undefined];
+    ];
 
     const indexInfo = createIndexSuggester(
         activitesAutoCompleteRef ?? [],
@@ -376,6 +369,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                     <FreeInput
                         states={{
                             freeInput: newValue,
+                            showSubCategories: true,
                         }}
                         specifiqueProps={{ labels, label, isMobile }}
                         functions={{ nextClickCallback, onChange }}

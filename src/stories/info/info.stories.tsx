@@ -14,4 +14,5 @@ export const Default = getStory({
     boldText:
         "this is bold text, Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     infoIcon: <img src={InfoIcon} aria-label={"alt pour info icon"} />,
+    border: false,
 });

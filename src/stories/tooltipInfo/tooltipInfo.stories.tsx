@@ -8,6 +8,7 @@ const infoLabels = {
         "this is bold text, Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     infoIcon: <img src={infoIcon} aria-label={"alt pour info icon"} />,
     infoIconAlt: "alt pour info icon",
+    border: false,
 };
 
 const titleLabel = "label title";
@@ -20,6 +21,5 @@ const { meta, getStory } = getStoryFactory({
 export default meta;
 
 export const Default = getStory({
-    titleLabel: titleLabel,
     infoLabels: infoLabels,
 });

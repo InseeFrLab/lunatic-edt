@@ -29,7 +29,7 @@ import createCustomizableLunaticField from "../../../utils/create-customizable-l
 export type WeeklyPlannerProps = {
     handleChange(
         response: { [name: string]: string },
-        value: IODataStructure[] | string[] | boolean[],
+        value: boolean | IODataStructure[] | string[] | boolean[],
     ): void;
     value: { [key: string]: string[] | IODataStructure[] | boolean[] };
     componentSpecificProps: WeeklyPlannerSpecificProps;
@@ -285,7 +285,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         setStore(storeAct);
     };
 
-    const getIndexOfDayPlanner = () => {
+    const getIndexOfDayPlanner = (): [{ [key: string]: boolean | boolean[] }, number] => {
         let dates = variables.get(labels.dates) as string[];
         if (dates == null || dates.length < 7) {
             dates = getArrayFromSession(labels.dates);
@@ -302,7 +302,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
 
     const handleChangeOptions = (
         response: { [name: string]: string },
-        value: IODataStructure[] | string[] | boolean[],
+        value: boolean | IODataStructure[] | string[] | boolean[],
     ) => {
         handleChange(response, value);
     };

@@ -20,5 +20,5 @@ export const Default = getStory({
     onCompleteCallBack: () => console.log("MODAL CALLBACK"),
     labels: labels,
     icon: null,
-    iconAlt: null,
+    arrowForwardIcon: undefined,
 });

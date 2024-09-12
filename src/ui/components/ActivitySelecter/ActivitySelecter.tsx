@@ -434,6 +434,14 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             addToReferentielCallBack,
                             setDisplayAlert,
                             handleChange,
+                            onChange: function (
+                                isFullyCompleted: boolean,
+                                id?: string,
+                                suggesterId?: string,
+                                label?: string,
+                            ): void {
+                                console.warn("Not implemented");
+                            },
                         },
                         classes,
                         cx,
@@ -823,6 +831,7 @@ const renderFreeInput = (
         ) => void;
         setDisplayAlert: (display: boolean) => void;
         handleChange(response: responseType, value: string | boolean | undefined): void;
+        onChange: (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void;
     },
     classes: any,
     cx: any,

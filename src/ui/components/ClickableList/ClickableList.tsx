@@ -29,7 +29,7 @@ export type ClickableListProps = {
     notFoundComment: string;
     addActivityButtonLabel: string;
     notSearchLabel: string;
-    iconNoResult: Element;
+    iconNoResult: ReactNode;
     separatorSuggester: string;
     className?: string;
     autoFocus?: boolean;

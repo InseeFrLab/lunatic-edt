@@ -1,5 +1,5 @@
 import { Box, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material";
-import { CheckboxGroupSpecificProps } from "../../../interface";
+import { CheckboxGroupSpecificProps, responsesType } from "../../../interface";
 import { memo, useCallback, useEffect, useState } from "react";
 import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
@@ -7,13 +7,17 @@ import createCustomizableLunaticField from "../../utils/create-customizable-luna
 import Alert from "../Alert";
 import Icon from "../Icon";
 import { CheckboxOption } from "../../../interface/CheckboxOptions";
+import { IODataStructure } from "../../../interface/WeeklyPlannerTypes";
 
 export type CheckboxGroupEdtProps = {
     label?: string;
     tipsLabel: string;
-    handleChange(response: { [name: string]: string }, value: boolean | boolean[]): void;
+    handleChange(
+        response: { [name: string]: string },
+        value: boolean | IODataStructure[] | string[] | boolean[],
+    ): void;
     id?: string;
-    responses: CheckboxOption[];
+    responses: CheckboxOption[] | responsesType[];
     value: { [key: string]: boolean | boolean[] };
     className?: string;
     componentSpecificProps?: CheckboxGroupSpecificProps;

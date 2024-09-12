@@ -1,5 +1,7 @@
 import { getStoryFactory } from "../getStory";
 import { HourChecker } from "../../ui";
+import { responsesHourChecker } from "../../interface";
+import { IODataStructure } from "../../interface/WeeklyPlannerTypes";
 
 const { meta, getStory } = getStoryFactory({
     sectionName: "Composants",
@@ -39,7 +41,21 @@ const value = {
 export default meta;
 
 export const Default = getStory({
-    handleChange: (newValue: string) => console.log(newValue),
+    handleChange: (response: { [name: string]: string }, value: boolean) => console.log(response, value),
     responses: responses,
     value: value,
+    expandLessIcon: undefined,
+    expandMoreIcon: undefined,
+    expandLessWhiteIcon: undefined,
+    expandMoreWhiteIcon: undefined,
+    workIcon: undefined,
+    handleChangeData: function (response: { [name: string]: string }, value: IODataStructure[]): void {
+        console.log(response, value);
+    },
+    store: [],
+    saveHours: function (idSurvey: string, response: responsesHourChecker): void {
+        console.log(idSurvey, response);
+    },
+    currentDate: "",
+    idSurvey: "",
 });
