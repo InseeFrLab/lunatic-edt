@@ -18,10 +18,11 @@ export type TimepickerProps = {
     id?: string;
     response: { [name: string]: string };
     componentSpecificProps?: TimepickerSpecificProps;
+    minTime?: string;
 };
 
 const Timepicker = memo((props: TimepickerProps) => {
-    const { id, response, handleChange, value, label, tipsLabel, componentSpecificProps } = props;
+    const { id, response, handleChange, value, label, tipsLabel, componentSpecificProps, minTime } = props;
     const { classes, cx } = useStyles();
 
     const [valueLocal, setValue] = React.useState<Dayjs | undefined>();
@@ -122,6 +123,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                         components={{
                             ActionBar: MyActionBar,
                         }}
+                        minTime={minTime ? minTime : undefined}
                     />
                 </LocalizationProvider>
             </Box>
