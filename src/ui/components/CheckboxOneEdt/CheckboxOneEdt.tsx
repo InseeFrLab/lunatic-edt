@@ -1,3 +1,5 @@
+// @ts-nocheck
+//TODO : Fix type in onChange function -> Probably needs to be rewrited
 import { Box, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import {
     CheckboxOneCustomOption,

@@ -5,19 +5,19 @@ import { Activity } from "./TimepickerTypes";
 import { IODataStructure } from "./WeeklyPlannerTypes";
 
 export type ActivityLabelProps = {
-    selectInCategory: string;
-    addActivity: string;
+    selectInCategory?: string;
+    addActivity?: string;
     alertMessage: string;
     alertIgnore: string;
     alertComplete: string;
-    clickableListPlaceholder: string;
-    clickableListNotFoundLabel: string;
-    clickableListNotFoundComment: string;
-    clickableListAddActivityButton: string;
-    clickableListNotSearchLabel: string;
-    otherButton: string;
-    saveButton: string;
-    validateButton: string;
+    clickableListPlaceholder?: string;
+    clickableListNotFoundLabel?: string;
+    clickableListNotFoundComment?: string;
+    clickableListAddActivityButton?: string;
+    clickableListNotSearchLabel?: string;
+    otherButton?: string;
+    saveButton?: string;
+    validateButton?: string;
 };
 
 export type InfoProps = {

@@ -514,6 +514,7 @@ export const createActivityCallBack = (
     localStorage.setItem(selectedLabelNewActivity, inputs.activityLabel);
 };
 
+//TODO: Expected type (isFullyCompleted: boolean, id?: string, suggesterId?: string, label?: string) => void
 export const onChange = (
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
     inputs: {

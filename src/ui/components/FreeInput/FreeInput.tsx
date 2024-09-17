@@ -21,8 +21,8 @@ type FreeInputProps = {
         labels: ActivityLabelProps;
         label: string;
         isMobile: boolean;
-        newItemId: string;
-        responses: responsesType[];
+        newItemId?: string;
+        responses?: responsesType[];
     };
     functions: {
         nextClickCallback: (routeToGoal: boolean) => void;
