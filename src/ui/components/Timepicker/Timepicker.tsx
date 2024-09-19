@@ -73,6 +73,12 @@ const Timepicker = memo((props: TimepickerProps) => {
         );
     };
 
+    const onChange = useCallback((newValue: string | null) => {
+        if (newValue == null) return;
+        const newValueDayjs = dayjs(newValue, componentSpecificProps?.constants.FORMAT_TIME);
+        setValueLunatic(newValueDayjs);
+    }, []);
+
     return (
         <>
             {label && (
@@ -92,9 +98,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                         openTo="hours"
                         views={["hours", "minutes"]}
                         value={valueLocal}
-                        onChange={useCallback(newValue => {
-                            setValueLunatic(newValue);
-                        }, [])}
+                        onChange={newValue => onChange(newValue)}
                         renderInput={useCallback(
                             params => (
                                 <TextField
