@@ -178,6 +178,7 @@ export const processNewActivity = (
                 resItem = res?.parent ? [res?.parent] : [];
             }
             setSelectedCategories(resItem);
+            localStorage.setItem(selectedIdNewActivity, parsedValue.id ?? '');
         }
     }
 };
