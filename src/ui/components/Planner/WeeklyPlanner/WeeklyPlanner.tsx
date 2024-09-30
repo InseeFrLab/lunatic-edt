@@ -442,6 +442,7 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
         display: "flex",
         flexDirection: "column",
         paddingBottom: "6rem",
+        alignItems: "center",
     },
     progressBar: {
         padding: "1rem",
