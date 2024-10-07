@@ -7,18 +7,11 @@
         "url": "git://github.com/InseeFrLab/lunatic-edt.git"
     },
     "type": "module",
-    "main": "dist/index.umd.cjs",
-    "module": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "exports": {
-        ".": {
-            "import": "./dist/index.d.ts",
-            "require": "./dist/index.js"
-        }
-    },
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "tsc",
         "build:watch": "tsc && vite build --watch",
         "serve": "vite preview",
         "test": "jest --env=jsdom ",
