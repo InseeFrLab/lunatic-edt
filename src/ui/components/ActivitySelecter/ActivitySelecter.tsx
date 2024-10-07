@@ -876,6 +876,7 @@ const renderFreeInput = (
                     variant="contained"
                     startIcon={addIcon}
                     onClick={() => {
+                        nextStepFreeInput(states, functions, props);
                         navNextStep(
                             getInputValue(),
                             functions.nextClickCallback,
@@ -884,7 +885,6 @@ const renderFreeInput = (
                             props.responses,
                             functions.handleChange,
                         );
-                        nextStepFreeInput(states, functions, props);
                     }}
                     disabled={!props.modifiable}
                 >

@@ -232,12 +232,12 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         const init = initializeStore();
         addArrayToSession(labels.dates, init[1]);
         addArrayToSession(labels.datesStarted, init[2]);
-        saveAll(idSurvey, init);
+        //saveAll(idSurvey, init);
     }, []);
 
     useEffect(() => {
         setNeedSpinner(true);
-        saveAll(idSurvey, store);
+        //saveAll(idSurvey, store);
     }, [activityData]);
 
     const getMainDisplay = () => {
@@ -442,6 +442,7 @@ const useStyles = makeStylesEdt({ "name": { WeeklyPlanner } })(theme => ({
         display: "flex",
         flexDirection: "column",
         paddingBottom: "6rem",
+        alignItems: "center",
     },
     progressBar: {
         padding: "1rem",

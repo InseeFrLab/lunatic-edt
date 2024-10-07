@@ -21,13 +21,13 @@ export type DatepickerProps = {
 const Datepicker = memo((props: DatepickerProps) => {
     let { id, onChange, value, tipsLabel, componentSpecificProps } = props;
     const { classes } = useStyles();
-    const [valueLocal, setValueLocal] = React.useState<Dayjs | null>(dayjs(value ?? dayjs()));
+    const [valueLocal, setValueLocal] = React.useState<Dayjs>(dayjs(value ?? dayjs()));
 
     useEffect(() => {
         onChange(valueLocal?.format("YYYY-MM-DD") || null);
     }, []);
 
-    function setValueLunatic(newValue: Dayjs | null) {
+    function setValueLunatic(newValue: Dayjs) {
         setValueLocal(newValue);
         onChange(newValue?.format("YYYY-MM-DD") || null);
     }
@@ -51,7 +51,7 @@ const Datepicker = memo((props: DatepickerProps) => {
                     views={["day"]}
                     value={valueLocal}
                     onChange={useCallback(newValue => {
-                        setValueLunatic(newValue);
+                        setValueLunatic(newValue ? dayjs(newValue) : dayjs());
                     }, [])}
                     renderInput={useCallback(
                         params => (

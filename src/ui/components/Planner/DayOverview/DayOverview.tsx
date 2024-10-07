@@ -71,25 +71,18 @@ const fromDayDetailsToValues = (details: DayDetailType[]): LunaticMultiSelection
 };
 
 const renderHeader = (
-    isDisplayed: boolean,
+    //isDisplayed: boolean,
     classes: any,
-    workSumLabel: string,
-    workedHoursSum: number,
-    getFormatedWorkedSum: (workedHoursSum: number) => string,
+    // workSumLabel: string,
+    // workedHoursSum: number,
+    // getFormatedWorkedSum: (workedHoursSum: number) => string,
 ) => {
-    return !isDisplayed ? (
+    return (
         <ProgressBar
             className={classes.progressBar}
             value={Math.round((new Date().getHours() / 24) * 100)}
             isPrimaryMainColor={true}
         />
-    ) : (
-        <Box className={classes.textBox}>
-            <Typography className={classes.workTimeText}>
-                {workSumLabel}
-                <span className={classes.bold}>{getFormatedWorkedSum(workedHoursSum)}</span>
-            </Typography>
-        </Box>
     );
 };
 
@@ -109,9 +102,6 @@ const DayOverview = memo((props: DayOverviewProps) => {
         handleChange,
         infoLabels,
         datesLabel,
-        workSumLabel,
-        workedHoursSum,
-        getFormatedWorkedSum,
         helpStep,
         expandLessIcon,
         expandMoreIcon,
@@ -304,11 +294,11 @@ const DayOverview = memo((props: DayOverviewProps) => {
             <Box className={classes.headerContainerBox}>
                 <Box className={classes.headerContainer}>
                     {renderHeader(
-                        isDisplayed,
+                        //isDisplayed,
                         classes,
-                        workSumLabel,
-                        workedHoursSum,
-                        getFormatedWorkedSum,
+                        //workSumLabel,
+                        //workedHoursSum,
+                        //getFormatedWorkedSum,
                     )}
                 </Box>
                 <TooltipInfo infoLabels={infoLabels} />
@@ -322,19 +312,28 @@ const DayOverview = memo((props: DayOverviewProps) => {
 const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     mainContainer: {
         flexDirection: "column",
+        alignContent: "center",
+        alignItems: "center",
+        display: "flex",
     },
     headerContainerBox: {
         zIndex: "1",
         position: "relative",
-        width: "100vw !important",
+        width: "100% !important",
         overflowX: "hidden",
         //Orchestrator content width is limited to 350px, 175px correspond to half of it
-        transform: "translateX(calc(175px - 50vw))",
+        //transform: "translateX(calc(175px - 50vw))",
+        alignContent: "center",
+        alignItems: "center",
+        display: "flex",
     },
     headerContainer: {
         backgroundColor: theme.variables.white,
         width: "100%",
         paddingBottom: "1rem",
+        alignContent: "center",
+        alignItems: "center",
+        display: "flex",
     },
     dayLabel: {
         color: theme.palette.info.main,
