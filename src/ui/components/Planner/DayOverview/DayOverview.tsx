@@ -71,26 +71,17 @@ const fromDayDetailsToValues = (details: DayDetailType[]): LunaticMultiSelection
 };
 
 const renderHeader = (
-    isDisplayed: boolean,
+    //isDisplayed: boolean,
     classes: any,
-    workSumLabel: string,
-    workedHoursSum: number,
-    getFormatedWorkedSum: (workedHoursSum: number) => string,
+    // workSumLabel: string,
+    // workedHoursSum: number,
+    // getFormatedWorkedSum: (workedHoursSum: number) => string,
 ) => {
-    return !isDisplayed ? (
-        <ProgressBar
-            className={classes.progressBar}
-            value={Math.round((new Date().getHours() / 24) * 100)}
-            isPrimaryMainColor={true}
-        />
-    ) : (
-        <Box className={classes.textBox}>
-            <Typography className={classes.workTimeText}>
-                {workSumLabel}
-                <span className={classes.bold}>{getFormatedWorkedSum(workedHoursSum)}</span>
-            </Typography>
-        </Box>
-    );
+    return <ProgressBar
+        className={classes.progressBar}
+        value={Math.round((new Date().getHours() / 24) * 100)}
+        isPrimaryMainColor={true}
+    />
 };
 
 /**
@@ -304,11 +295,11 @@ const DayOverview = memo((props: DayOverviewProps) => {
             <Box className={classes.headerContainerBox}>
                 <Box className={classes.headerContainer}>
                     {renderHeader(
-                        isDisplayed,
+                        //isDisplayed,
                         classes,
-                        workSumLabel,
-                        workedHoursSum,
-                        getFormatedWorkedSum,
+                        //workSumLabel,
+                        //workedHoursSum,
+                        //getFormatedWorkedSum,
                     )}
                 </Box>
                 <TooltipInfo infoLabels={infoLabels} />
