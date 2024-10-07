@@ -322,19 +322,28 @@ const DayOverview = memo((props: DayOverviewProps) => {
 const useStyles = makeStylesEdt({ "name": { DayOverview } })(theme => ({
     mainContainer: {
         flexDirection: "column",
+        alignContent: "center",
+        alignItems: "center",
+        display: "flex",
     },
     headerContainerBox: {
         zIndex: "1",
         position: "relative",
-        width: "100vw !important",
+        width: "100% !important",
         overflowX: "hidden",
         //Orchestrator content width is limited to 350px, 175px correspond to half of it
-        transform: "translateX(calc(175px - 50vw))",
+        //transform: "translateX(calc(175px - 50vw))",
+        alignContent: "center",
+        alignItems: "center",
+        display: "flex",
     },
     headerContainer: {
         backgroundColor: theme.variables.white,
         width: "100%",
         paddingBottom: "1rem",
+        alignContent: "center",
+        alignItems: "center",
+        display: "flex",
     },
     dayLabel: {
         color: theme.palette.info.main,
