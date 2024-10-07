@@ -77,11 +77,13 @@ const renderHeader = (
     // workedHoursSum: number,
     // getFormatedWorkedSum: (workedHoursSum: number) => string,
 ) => {
-    return <ProgressBar
-        className={classes.progressBar}
-        value={Math.round((new Date().getHours() / 24) * 100)}
-        isPrimaryMainColor={true}
-    />
+    return (
+        <ProgressBar
+            className={classes.progressBar}
+            value={Math.round((new Date().getHours() / 24) * 100)}
+            isPrimaryMainColor={true}
+        />
+    );
 };
 
 /**
@@ -100,9 +102,6 @@ const DayOverview = memo((props: DayOverviewProps) => {
         handleChange,
         infoLabels,
         datesLabel,
-        workSumLabel,
-        workedHoursSum,
-        getFormatedWorkedSum,
         helpStep,
         expandLessIcon,
         expandMoreIcon,

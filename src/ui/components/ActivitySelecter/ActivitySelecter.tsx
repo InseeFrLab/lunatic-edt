@@ -850,7 +850,7 @@ const renderFreeInput = (
     functions: {
         nextClickCallback: (routeToGoal: boolean) => void;
         addToReferentielCallBack: (
-            newItem: AutoCompleteActiviteOption, 
+            newItem: AutoCompleteActiviteOption,
             categoryId: string | undefined,
             newActivity: string,
         ) => void;
