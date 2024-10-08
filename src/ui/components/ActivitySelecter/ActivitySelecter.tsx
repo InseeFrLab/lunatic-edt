@@ -1474,6 +1474,8 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
         alignItems: "center",
         backgroundColor: theme.variables.white,
         borderRadius: "15px",
+        width: "55.5%",
+        marginTop: "4%",
     },
     rank1CategoryHelp: {
         zIndex: "1400",
