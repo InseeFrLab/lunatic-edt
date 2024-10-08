@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
-        "module": "CommonJS",
+        "module": "ESNext",
         "esModuleInterop": true,
         "baseUrl": "src",
-        "target": "ES2020",
-        "lib": ["es2015", "DOM", "esnext"],
+        "target": "ESNext",
+        "lib": ["es2015", "DOM", "ESNext"],
         "declaration": true,
         "outDir": "./dist",
         "sourceMap": true,
