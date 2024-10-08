@@ -1462,9 +1462,9 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
         borderRadius: "5px",
     },
     rank1CategoriesBox: {
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        gap: "1rem",
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "space-evenly",
         cursor: "pointer",
         padding: "1rem",
     },
@@ -1473,9 +1473,9 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: theme.variables.white,
-        borderRadius: "15px",
-        width: "55.5%",
+        width: "45.5%",
         marginTop: "4%",
+        borderRadius: "15px",
     },
     rank1CategoryHelp: {
         zIndex: "1400",
@@ -1582,5 +1582,4 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
         justifyContent: "space-between",
     },
 }));
-
 export default createCustomizableLunaticField(ActivitySelecter, "ActivitySelecter");
