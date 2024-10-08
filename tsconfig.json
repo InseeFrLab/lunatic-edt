@@ -17,7 +17,10 @@
         "jsx": "react-jsx",
         "noFallthroughCasesInSwitch": true,
         "allowJs": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "moduleResolution": "Node",
+        "skipLibCheck": true,
+        "noEmitOnError": true
     },
     "include": ["src"],
     "exclude": ["bin/", "src/test"]

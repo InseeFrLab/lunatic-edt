@@ -676,6 +676,14 @@ export const nextStepFreeInput = (
                 functions.handleChange,
             );
         }
+        saveNewOrCurrentActivity(
+            inputs.newItemId,
+            states.selectedCategories ?? [],
+            true,
+            functions.handleChange,
+            inputs.responses,
+            inputs.newItemId,
+        );
         functions.nextClickCallback(inputs.routeToGoal);
     }
 };
