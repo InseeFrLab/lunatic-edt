@@ -112,7 +112,6 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
                 id={id}
                 value={startTime}
                 componentSpecificProps={componentSpecificProps}
-                minTime={startTimeComputed.format(componentSpecificProps?.constants.FORMAT_TIME)}
             />
             {componentSpecificProps?.helpStep != null && (
                 <Box className={classes.imageHelpBox}>{componentSpecificProps?.helpImage}</Box>
