@@ -884,6 +884,7 @@ const renderFreeInput = (
                             props.newItemId,
                             props.responses,
                             functions.handleChange,
+                            states.selectedCategories,
                         );
                     }}
                     disabled={!props.modifiable}
@@ -1208,8 +1209,9 @@ const navNextStep = (
         responsesType,
     ],
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
+    states: NomenclatureActivityOption[],
 ) => {
-    updateNewValue(value, handleChange, responses, newItemId);
+    updateNewValue(value, handleChange, responses, newItemId, states);
     nextClickCallback(routeToGoal);
 };
 
