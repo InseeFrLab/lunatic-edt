@@ -401,14 +401,7 @@ export const updateNewValue = (
     });
     if (value) localStorage.setItem(selectedLabelNewActivity, value);
     inputValue = value;
-    saveNewOrCurrentActivity(
-        newItemId,
-        states ?? [],
-        true,
-        handleChange,
-        responses,
-        newItemId,
-    );
+    saveNewOrCurrentActivity(newItemId, states ?? [], true, handleChange, responses, newItemId);
 };
 
 export const getInputValue = (): string | undefined => {
@@ -594,7 +587,7 @@ export const onChange = (
         isFullyCompleted: inputs.isFullyCompleted,
         historyInputSuggester: inputs.historyInputSuggester,
     };
-    console.log('onChange with selection', selection);
+    console.log("onChange with selection", selection);
     const label = selection.label;
     const idSelected = selection.id ?? localStorage.getItem(selectedIdNewActivity) ?? undefined;
     const suggesterId = inputs.suggesterId ?? inputs.newItemId;
