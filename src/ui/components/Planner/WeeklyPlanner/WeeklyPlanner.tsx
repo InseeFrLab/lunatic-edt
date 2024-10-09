@@ -232,12 +232,12 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
         const init = initializeStore();
         addArrayToSession(labels.dates, init[1]);
         addArrayToSession(labels.datesStarted, init[2]);
-        //saveAll(idSurvey, init);
+        saveAll(idSurvey, init, true);
     }, []);
 
     useEffect(() => {
         setNeedSpinner(true);
-        //saveAll(idSurvey, store);
+        saveAll(idSurvey, store, true);
     }, [activityData]);
 
     const getMainDisplay = () => {
@@ -261,7 +261,7 @@ const WeeklyPlanner = memo((props: WeeklyPlannerProps) => {
     useEffect(() => {
         if (dataCopy.length > 0) {
             handleChange(responses[0].response, dataCopy);
-            saveAll(idSurvey, [dataCopy, store[1], store[2], store[3]]);
+            saveAll(idSurvey, [dataCopy, store[1], store[2], store[3]], false);
         }
         if (store[1].length > 0) {
             handleChange(responses[1].response, store[1]);
