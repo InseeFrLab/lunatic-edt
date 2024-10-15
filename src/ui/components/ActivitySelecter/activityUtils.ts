@@ -238,7 +238,7 @@ const saveNewOrCurrentActivity = (
             suggesterId: id,
             activityLabel: labelOfActivity,
         });
-    } else
+    } else {
         onChange(handleChange, {
             responses,
             newItemId,
@@ -246,6 +246,7 @@ const saveNewOrCurrentActivity = (
             id,
             suggesterId: undefined,
         });
+    }
 };
 
 export const selectSubCategory = (
@@ -314,9 +315,8 @@ export const selectFinalCategory = (
     },
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
 ) => {
-    const id = states.selectedId == inputs.selection.id ? undefined : inputs.selection.id;
-    const label =
-        states.labelOfSelectedId == inputs.selection.label ? undefined : inputs.selection.label;
+    const id = states.selectedId ? states.selectedId : inputs.selection.id;
+    const label = states.labelOfSelectedId ? states.labelOfSelectedId : inputs.selection.label;
 
     saveNewOrCurrentActivity(
         id,
@@ -326,7 +326,6 @@ export const selectFinalCategory = (
         inputs.responses,
         inputs.newItemId,
     );
-
     states.setSelectedId(id);
     states.setLabelOfSelectedId(label);
     appendHistoryActivitySelecter(
@@ -481,7 +480,6 @@ export const appendHistoryActivitySelecter = (
 
     const allHistoryActivitiesValues = historyActivitySelecterValue.split(separatorSuggester);
     const lastActivitySelected = allHistoryActivitiesValues[allHistoryActivitiesValues.length - 2];
-
     if (lastActivitySelected != actionOrSelection) {
         historyActivitySelecterValue =
             historyActivitySelecterValue + (actionOrSelection as string) + separatorSuggester;
@@ -519,7 +517,6 @@ export const createActivityCallBack = (
     },
 ) => {
     let historyInputSuggesterValueLocal = localStorage.getItem(historyInputSuggester) ?? "";
-
     onChange(functions.handleChange, {
         responses: inputs.responses,
         newItemId: inputs.newItemId,
@@ -587,7 +584,6 @@ export const onChange = (
         isFullyCompleted: inputs.isFullyCompleted,
         historyInputSuggester: inputs.historyInputSuggester,
     };
-    console.log("onChange with selection", selection);
     const label = selection.label;
     const idSelected = selection.id ?? localStorage.getItem(selectedIdNewActivity) ?? undefined;
     const suggesterId = inputs.suggesterId ?? inputs.newItemId;
@@ -615,6 +611,7 @@ export const nextStepFreeInput = (
             newActivity: string,
         ) => void;
         handleChange: (response: responseType, value: string | boolean | undefined) => void;
+        onSelectValue: () => void;
     },
     inputs: {
         separatorSuggester: string;
@@ -632,6 +629,8 @@ export const nextStepFreeInput = (
         ];
     },
 ) => {
+    console.log("Next Step Free input states", states);
+    console.log("Next Step Free input functions", inputs);
     if (inputs.displayAlertNewActivity) {
         functions.setDisplayAlert(true);
     } else {
@@ -654,7 +653,7 @@ export const nextStepFreeInput = (
             inputs.newItemId,
         );
         localStorage.setItem(selectedIdNewActivity, inputs.newItemId);
-
+        console.log("nextStepFreeInput -> onChange with label -> ", label);
         onChange(functions.handleChange, {
             responses: inputs.responses,
             newItemId: inputs.newItemId,
@@ -679,14 +678,6 @@ export const nextStepFreeInput = (
                 functions.handleChange,
             );
         }
-        saveNewOrCurrentActivity(
-            inputs.newItemId,
-            states.selectedCategories ?? [],
-            true,
-            functions.handleChange,
-            inputs.responses,
-            inputs.newItemId,
-        );
         functions.nextClickCallback(inputs.routeToGoal);
     }
 };

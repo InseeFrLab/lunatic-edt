@@ -234,6 +234,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 nextClickCallback,
                 addToReferentielCallBack,
                 handleChange,
+                onSelectValue,
             },
             {
                 newItemId: newItemId.current,
@@ -340,6 +341,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                                     nextClickCallback,
                                     addToReferentielCallBack,
                                     handleChange,
+                                    onSelectValue,
                                 },
                                 {
                                     newItemId: newItemId.current,
@@ -439,6 +441,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             addToReferentielCallBack,
                             setDisplayAlert,
                             handleChange,
+                            onSelectValue,
                         },
                         classes,
                         cx,
@@ -856,6 +859,7 @@ const renderFreeInput = (
         ) => void;
         setDisplayAlert: (display: boolean) => void;
         handleChange(response: responseType, value: string | boolean | undefined): void;
+        onSelectValue: () => void;
     },
     classes: any,
     cx: any,
@@ -884,7 +888,6 @@ const renderFreeInput = (
                             props.newItemId,
                             props.responses,
                             functions.handleChange,
-                            states.selectedCategories,
                         );
                     }}
                     disabled={!props.modifiable}
@@ -1194,7 +1197,6 @@ const nextStepMain = (
         setDisplayAlert(true);
     } else nextClickCallback(false);
 };
-
 const navNextStep = (
     value: string | undefined,
     nextClickCallback: (routeToGoal: boolean) => void,
@@ -1209,9 +1211,8 @@ const navNextStep = (
         responsesType,
     ],
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
-    states: NomenclatureActivityOption[],
 ) => {
-    updateNewValue(value, handleChange, responses, newItemId, states);
+    updateNewValue(value, handleChange, responses, newItemId);
     nextClickCallback(routeToGoal);
 };
 
@@ -1234,6 +1235,7 @@ const nextStep = (
             newActivity: string,
         ) => void;
         handleChange: (response: responseType, value: string | boolean | undefined) => void;
+        onSelectValue: () => void;
     },
     inputs: {
         separatorSuggester: string;
@@ -1346,6 +1348,7 @@ const next = (
             newActivity: string,
         ) => void;
         handleChange: (response: responseType, value: string | boolean | undefined) => void;
+        onSelectValue: () => void;
     },
     inputs: {
         continueWithUncompleted: boolean;
