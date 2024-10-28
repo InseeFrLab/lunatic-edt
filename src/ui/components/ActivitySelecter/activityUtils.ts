@@ -388,7 +388,6 @@ export const updateNewValue = (
         responsesType,
     ],
     newItemId: string,
-    states?: NomenclatureActivityOption[],
 ) => {
     onChange(handleChange, {
         responses,
