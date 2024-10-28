@@ -400,7 +400,6 @@ export const updateNewValue = (
     });
     if (value) localStorage.setItem(selectedLabelNewActivity, value);
     inputValue = value;
-    saveNewOrCurrentActivity(newItemId, states ?? [], true, handleChange, responses, newItemId);
 };
 
 export const getInputValue = (): string | undefined => {
@@ -629,8 +628,6 @@ export const nextStepFreeInput = (
         ];
     },
 ) => {
-    console.log("Next Step Free input states", states);
-    console.log("Next Step Free input functions", inputs);
     if (inputs.displayAlertNewActivity) {
         functions.setDisplayAlert(true);
     } else {
@@ -653,7 +650,6 @@ export const nextStepFreeInput = (
             inputs.newItemId,
         );
         localStorage.setItem(selectedIdNewActivity, inputs.newItemId);
-        console.log("nextStepFreeInput -> onChange with label -> ", label);
         onChange(functions.handleChange, {
             responses: inputs.responses,
             newItemId: inputs.newItemId,
