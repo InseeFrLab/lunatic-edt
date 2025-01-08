@@ -315,8 +315,8 @@ export const selectFinalCategory = (
     },
     handleChange: (response: responseType, value: string | boolean | undefined) => void,
 ) => {
-    const id = states.selectedId ? states.selectedId : inputs.selection.id;
-    const label = states.labelOfSelectedId ? states.labelOfSelectedId : inputs.selection.label;
+    const id = inputs.selection.id ? inputs.selection.id : states.selectedId;
+    const label = inputs.selection.label ?  inputs.selection.label : states.labelOfSelectedId;
 
     saveNewOrCurrentActivity(
         id,
