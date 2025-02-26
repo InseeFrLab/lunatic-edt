@@ -164,7 +164,7 @@ export const processNewActivity = (
     const hasLabel: boolean = parsedValue.label != null;
 
     if (hasLabel && value && categoriesAndActivitesNomenclature) {
-        setFullScreenComponent(FullScreenComponent.FreeInput);
+        setFullScreenComponent(FullScreenComponent.ClickableListComp);
         setCreateActivityValue(parsedValue.label);
         const hasId: boolean = parsedValue.id != null;
         if (hasId) {
@@ -534,7 +534,7 @@ export const createActivityCallBack = (
         );
     }
 
-    setters.setFullScreenComponent(FullScreenComponent.FreeInput);
+    setters.setFullScreenComponent(FullScreenComponent.ClickableListComp);
     setters.setCreateActivityValue(inputs.activityLabel);
     setters.setNewValue(inputs.activityLabel);
 

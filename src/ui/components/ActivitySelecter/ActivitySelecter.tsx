@@ -317,58 +317,20 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         );
     };
 
+    const isVisible = componentSpecificProps && categoriesAndActivitesNomenclature;
+
+    if (!isVisible) {
+        return <Box />;
+    }
+
     return (
         <Box>
-            {componentSpecificProps && categoriesAndActivitesNomenclature && (
-                <>
-                    <Alert
-                        isAlertDisplayed={displayAlert}
-                        onCompleteCallBack={() => setDisplayAlert(false)}
-                        onCancelCallBack={() =>
-                            next(
-                                nextClickEvent,
-                                {
-                                    selectedCategory: selectRank1Category?.id,
-                                    selectedId: selectedId,
-                                    suggesterId: selectedSuggesterId,
-                                    fullScreenComponent: fullScreenComponent,
-                                    selectedCategories: selectedCategories,
-                                    createActivityValue: createActivityValue,
-                                    freeInput: newValue,
-                                },
-                                {
-                                    setDisplayAlert,
-                                    nextClickCallback,
-                                    addToReferentielCallBack,
-                                    handleChange,
-                                    onSelectValue,
-                                },
-                                {
-                                    newItemId: newItemId.current,
-                                    continueWithUncompleted: true,
-                                    separatorSuggester,
-                                    historyActivitySelecterBindingDep,
-                                    responses,
-                                },
-                            )
-                        }
-                        labels={{
-                            content: labels.alertMessage,
-                            cancel: labels.alertIgnore,
-                            complete: labels.alertComplete,
-                        }}
-                        icon={errorIcon}
-                    ></Alert>
-                    {renderClickableList(
-                        fullScreenComponent,
-                        {
-                            handleChange,
-                            nextClickCallback,
-                            setDisplayAlert,
-                            nextStepClickableList,
-                            CreateIndex,
-                            indexSuggester,
-                        },
+            <Alert
+                isAlertDisplayed={displayAlert}
+                onCompleteCallBack={() => setDisplayAlert(false)}
+                onCancelCallBack={() =>
+                    next(
+                        nextClickEvent,
                         {
                             selectedCategory: selectRank1Category?.id,
                             selectedId: selectedId,
@@ -379,141 +341,177 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                             freeInput: newValue,
                         },
                         {
-                            setCreateActivityValue,
-                            setFullScreenComponent,
-                            setNewValue,
-                            setSelectedSuggesterId,
-                        },
-                        {
-                            activitesAutoCompleteRef,
-                            selectedSuggesterId,
-                            clickableListIconNoResult,
-                            labels,
-                            isMobile,
-                            separatorSuggester,
-                            modifiable,
-                            newItemId: newItemId.current,
-                            historyActivitySelecterBindingDep,
-                            responses,
-                        },
-                        classes,
-                        addLightBlueIcon,
-                        addWhiteIcon,
-                        extensionIcon,
-                        <SearchIcon aria-label={searchIconAlt} />,
-                    )}
-
-                    {renderFreeInput(
-                        {
-                            selectedCategories,
-                            createActivityValue,
-                            fullScreenComponent,
-                            selectedCategory: selectRank1Category?.id,
-                            selectedId: selectedId,
-                            suggesterId: selectedSuggesterId,
-                            freeInput: newValue,
-                            showSubCategories,
-                        },
-                        {
-                            labels,
-                            label,
-                            isMobile,
-                            newItemId: newItemId.current,
-                            displayAlertNewActivity:
-                                fullScreenComponent == FullScreenComponent.FreeInput
-                                    ? (createActivityValue === undefined ||
-                                          createActivityValue === "") &&
-                                      !true
-                                    : selectRank1Category?.id === undefined &&
-                                      selectedId === undefined &&
-                                      selectedSuggesterId === undefined &&
-                                      !true,
-                            routeToGoal: selectedCategories[selectedCategories.length - 1]
-                                ? false
-                                : true,
-                            modifiable: modifiable,
-                            separatorSuggester,
-                            historyActivitySelecterBindingDep,
-                            responses,
-                        },
-                        {
+                            setDisplayAlert,
                             nextClickCallback,
                             addToReferentielCallBack,
-                            setDisplayAlert,
                             handleChange,
                             onSelectValue,
                         },
+                        {
+                            newItemId: newItemId.current,
+                            continueWithUncompleted: true,
+                            separatorSuggester,
+                            historyActivitySelecterBindingDep,
+                            responses,
+                        },
+                    )
+                }
+                labels={{
+                    content: labels.alertMessage,
+                    cancel: labels.alertIgnore,
+                    complete: labels.alertComplete,
+                }}
+                icon={errorIcon}
+            ></Alert>
+            {renderClickableList(
+                fullScreenComponent,
+                {
+                    handleChange,
+                    nextClickCallback,
+                    setDisplayAlert,
+                    nextStepClickableList,
+                    CreateIndex,
+                    indexSuggester,
+                },
+                {
+                    selectedCategory: selectRank1Category?.id,
+                    selectedId: selectedId,
+                    suggesterId: selectedSuggesterId,
+                    fullScreenComponent: fullScreenComponent,
+                    selectedCategories: selectedCategories,
+                    createActivityValue: createActivityValue,
+                    freeInput: newValue,
+                },
+                {
+                    setCreateActivityValue,
+                    setFullScreenComponent,
+                    setNewValue,
+                    setSelectedSuggesterId,
+                },
+                {
+                    activitesAutoCompleteRef,
+                    selectedSuggesterId,
+                    clickableListIconNoResult,
+                    labels,
+                    isMobile,
+                    separatorSuggester,
+                    modifiable,
+                    newItemId: newItemId.current,
+                    historyActivitySelecterBindingDep,
+                    responses,
+                },
+                classes,
+                addLightBlueIcon,
+                addWhiteIcon,
+                extensionIcon,
+                <SearchIcon aria-label={searchIconAlt} />,
+            )}
+
+            {renderFreeInput(
+                {
+                    selectedCategories,
+                    createActivityValue,
+                    fullScreenComponent,
+                    selectedCategory: selectRank1Category?.id,
+                    selectedId: selectedId,
+                    suggesterId: selectedSuggesterId,
+                    freeInput: newValue,
+                    showSubCategories,
+                },
+                {
+                    labels,
+                    label,
+                    isMobile,
+                    newItemId: newItemId.current,
+                    displayAlertNewActivity:
+                        fullScreenComponent == FullScreenComponent.FreeInput
+                            ? (createActivityValue === undefined || createActivityValue === "") && !true
+                            : selectRank1Category?.id === undefined &&
+                              selectedId === undefined &&
+                              selectedSuggesterId === undefined &&
+                              !true,
+                    routeToGoal: selectedCategories[selectedCategories.length - 1] ? false : true,
+                    modifiable: modifiable,
+                    separatorSuggester,
+                    historyActivitySelecterBindingDep,
+                    responses,
+                },
+                {
+                    nextClickCallback,
+                    addToReferentielCallBack,
+                    setDisplayAlert,
+                    handleChange,
+                    onSelectValue,
+                },
+                classes,
+                cx,
+                addWhiteIcon,
+            )}
+
+            {fullScreenComponent === FullScreenComponent.Main && (
+                <Box className={classes.root}>
+                    {renderTitle(
+                        fullScreenComponent,
+                        selectedCategories,
+                        showSubCategories,
+                        labels,
+                        label,
+                        classes,
+                    )}
+
+                    {renderSearchInput(
+                        selectedCategories,
+                        showSubCategories,
+                        setFullScreenComponent,
                         classes,
                         cx,
-                        addWhiteIcon,
+                        {
+                            labels,
+                            helpStep,
+                            searchIcon,
+                            searchIconAlt,
+                            separatorSuggester,
+                            historyActivitySelecterBindingDep,
+                        },
+                        { handleChange },
                     )}
 
-                    {fullScreenComponent === FullScreenComponent.Main && (
-                        <Box className={classes.root}>
-                            {renderTitle(
-                                fullScreenComponent,
-                                selectedCategories,
-                                showSubCategories,
-                                labels,
-                                label,
-                                classes,
-                            )}
-
-                            {renderSearchInput(
-                                selectedCategories,
-                                showSubCategories,
-                                setFullScreenComponent,
-                                classes,
-                                cx,
-                                {
-                                    labels,
-                                    helpStep,
-                                    searchIcon,
-                                    searchIconAlt,
-                                    separatorSuggester,
-                                    historyActivitySelecterBindingDep,
-                                },
-                                { handleChange },
-                            )}
-
-                            {renderCategories(
-                                {
-                                    selectedCategories,
-                                    selectedId,
-                                    labelOfSelectedId,
-                                    createActivityValue,
-                                    fullScreenComponent,
-                                    selectedCategory: selectRank1Category?.id,
-                                    suggesterId: selectedSuggesterId,
-                                    showSubCategories,
-                                    setSelectedCategories,
-                                    setSelectedId,
-                                    setLabelOfSelectedId,
-                                    setShowSubCategories,
-                                },
-                                {
-                                    setFullScreenComponent,
-                                    renderSubRankCategory,
-                                    onSelectValue,
-                                    handleChange,
-                                },
-                                {
-                                    categoriesAndActivitesNomenclature,
-                                    labels,
-                                    categoriesIcons,
-                                    helpStep,
-                                    modifiable,
-                                    separatorSuggester,
-                                    historyActivitySelecterBindingDep,
-                                    responses,
-                                    newItemId: newItemId.current,
-                                },
-                                classes,
-                                cx,
-                            )}
-                        </Box>
+                    {renderCategories(
+                        {
+                            selectedCategories,
+                            selectedId,
+                            labelOfSelectedId,
+                            createActivityValue,
+                            fullScreenComponent,
+                            selectedCategory: selectRank1Category?.id,
+                            suggesterId: selectedSuggesterId,
+                            showSubCategories,
+                            setSelectedCategories,
+                            setSelectedId,
+                            setLabelOfSelectedId,
+                            setShowSubCategories,
+                        },
+                        {
+                            setFullScreenComponent,
+                            renderSubRankCategory,
+                            onSelectValue,
+                            handleChange,
+                        },
+                        {
+                            categoriesAndActivitesNomenclature,
+                            labels,
+                            categoriesIcons,
+                            helpStep,
+                            modifiable,
+                            separatorSuggester,
+                            historyActivitySelecterBindingDep,
+                            responses,
+                            newItemId: newItemId.current,
+                        },
+                        classes,
+                        cx,
                     )}
-                </>
+                </Box>
             )}
         </Box>
     );
