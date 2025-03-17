@@ -259,7 +259,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         return () => {
             window.removeEventListener("resize", handleSize);
         };
-    });
+    }, [handleSize]);
 
     /**
      * Show categories of rank 2 or 3

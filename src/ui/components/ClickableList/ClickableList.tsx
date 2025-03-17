@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import elasticlunr from "elasticlunrjs";
 import { AutoCompleteActiviteOption } from "interface/ActivityTypes";
-import React, { ReactElement, ReactNode, memo, useCallback } from "react";
+import React, { HTMLProps, ReactElement, ReactNode, memo, useCallback } from "react";
 import { makeStylesEdt } from "../../theme";
 import { important } from "../../utils";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
@@ -42,7 +42,7 @@ export type ClickableListProps = {
 };
 
 const ClickableList = memo((props: ClickableListProps) => {
-    let {
+    const {
         placeholder,
         optionsFiltered,
         index,
@@ -104,13 +104,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         ref: AutoCompleteActiviteOption[],
         state: FilterOptionsState<AutoCompleteActiviteOption>,
     ): AutoCompleteActiviteOption[] => {
-        if (state.inputValue.length > 1) {
-            setDisplayAddIcon(true);
-        } else {
-            setDisplayAddIcon(false);
-        }
         const inputValue = filterStopWords(state.inputValue);
-        setCurrentInputValue(state.inputValue);
 
         if (inputValue.length > 3) {
             const value = state.inputValue.replace("'", " ");
@@ -148,19 +142,17 @@ const ClickableList = memo((props: ClickableListProps) => {
      */
     const renderTextField = (params: AutocompleteRenderInputParams) => {
         return (
-            <>
-                <TextField
-                    {...params}
-                    autoFocus={autoFocus}
-                    placeholder={placeholder}
-                    label={placeholder}
-                    sx={{
-                        "& legend": { display: "none" },
-                        "& fieldset": { top: 0 },
-                        "& label": { display: "none" },
-                    }}
-                />
-            </>
+            <TextField
+                {...params}
+                autoFocus={autoFocus}
+                placeholder={placeholder}
+                label={placeholder}
+                sx={{
+                    "& legend": { display: "none" },
+                    "& fieldset": { top: 0 },
+                    "& label": { display: "none" },
+                }}
+            />
         );
     };
 
@@ -202,7 +194,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         let inputWithoutStopWords = value;
 
         stopWords.forEach(stopWord => {
-            if (inputWithoutStopWords != null && inputWithoutStopWords.includes(stopWord + " ")) {
+            if (inputWithoutStopWords?.includes(stopWord + " ")) {
                 inputWithoutStopWords = inputWithoutStopWords.replace(stopWord + " ", "");
             }
         });
@@ -241,7 +233,7 @@ const ClickableList = memo((props: ClickableListProps) => {
     /**
      * Render list of options and button for add new activity
      */
-    const renderListBoxComponent = (props: any) => {
+    const renderListBoxComponent = (props: HTMLProps<HTMLUListElement>) => {
         return (
             <>
                 <ul {...props} />
@@ -264,7 +256,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         <Autocomplete
             className={cx(classes.root, className)}
             options={optionsFiltered}
-            defaultValue={selectedValue}
+            value={selectedValue ?? null}
             onChange={(_event, value) => handleChange(value?.id, value?.label)}
             renderInput={params => renderTextField(params)}
             renderOption={(properties, option) => (
@@ -275,10 +267,18 @@ const ClickableList = memo((props: ClickableListProps) => {
             )}
             getOptionLabel={option => option.label}
             filterOptions={(options, inputValue) => filterOptions(options, inputValue)}
+            onInputChange={(_, value) => {
+                if (value.length > 1) {
+                    setDisplayAddIcon(true);
+                } else {
+                    setDisplayAddIcon(false);
+                }
+                setCurrentInputValue(value);
+            }}
             noOptionsText={renderNoOption()}
             onClose={() => setDisplayAddIcon(false)}
             fullWidth={true}
-            popupIcon={<Icon children={renderIcon()} onClick={createActivityCallback} />}
+            popupIcon={<Icon onClick={createActivityCallback}>{renderIcon()}</Icon>}
             classes={{ popupIndicator: classes.popupIndicator }}
             PaperComponent={({ children }) => renderListOptions(children)}
             ListboxComponent={listboxProps => renderListBoxComponent(listboxProps)}

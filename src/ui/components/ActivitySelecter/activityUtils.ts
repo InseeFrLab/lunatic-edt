@@ -480,7 +480,7 @@ export const appendHistoryActivitySelecter = (
     const lastActivitySelected = allHistoryActivitiesValues[allHistoryActivitiesValues.length - 2];
     if (lastActivitySelected != actionOrSelection) {
         historyActivitySelecterValue =
-            historyActivitySelecterValue + (actionOrSelection as string) + separatorSuggester;
+            historyActivitySelecterValue + actionOrSelection + separatorSuggester;
         localStorage.setItem(historyActivitySelecter, historyActivitySelecterValue);
         handleChange(historyActivitySelecterBindingDep, historyActivitySelecterValue);
     }
@@ -547,7 +547,6 @@ export const createActivityCallBack = (
             label: inputs.activityLabel,
         });
     }
-    localStorage.setItem(selectedLabelNewActivity, inputs.activityLabel);
 };
 
 export const onChange = (
@@ -592,6 +591,7 @@ export const onChange = (
         handleChange(isFullyCompletedBindingDep, selection.isFullyCompleted);
     if (historyInputSuggester && historyInputSuggesterDep)
         handleChange(historyInputSuggesterDep, selection.historyInputSuggester);
+    localStorage.setItem(selectedLabelNewActivity, inputs.activityLabel ?? "");
 };
 
 export const nextStepFreeInput = (
