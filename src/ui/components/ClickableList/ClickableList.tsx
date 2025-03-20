@@ -123,9 +123,22 @@ const ClickableList = memo((props: ClickableListProps) => {
                     expand: true,
                 }) || [];
 
-            const results: AutoCompleteActiviteOption[] = res.map(
-                r => ref.filter(o => o.id === r.ref)[0],
-            );
+            let results: AutoCompleteActiviteOption[] = res.map(r => ref.filter(o => o.id === r.ref)[0]);
+
+            // Handle the special case of "Dormir hors sieste" and "Dormir sieste"
+            // Search results are displayed in the order of the index following the search result (search by Levenshtein distance)
+            // but we want to display "Dormir hors sieste" first as it is the most relevant
+            const dormirHorsSieste = results.find(item => item.id === "111-1");
+            const dormirSieste = results.find(item => item.id === "114-2");
+
+            if (dormirHorsSieste && dormirSieste) {
+                results = results.filter(item => item.id !== "111-1" && item.id !== "114-2");
+
+                results.unshift(dormirSieste);
+
+                results.unshift(dormirHorsSieste);
+            }
+
             setInputSuggester(state.inputValue);
 
             return results;
