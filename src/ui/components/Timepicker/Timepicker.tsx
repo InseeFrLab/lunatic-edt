@@ -28,6 +28,7 @@ const Timepicker = memo((props: TimepickerProps) => {
 
     const [valueLocal, setValue] = React.useState<Dayjs | undefined>();
 
+
     useEffect(() => {
         setValue(dayjs(value, componentSpecificProps?.constants.FORMAT_TIME));
     }, [value]);
@@ -61,6 +62,10 @@ const Timepicker = memo((props: TimepickerProps) => {
                 response,
                 newValue?.format(componentSpecificProps?.constants.FORMAT_TIME) || null,
             );
+            console.log(
+                "Timepicker",
+                "setValueLunatic",
+                newValue?.format(componentSpecificProps?.constants.FORMAT_TIME) || null,);
         }
     }
 
@@ -75,7 +80,7 @@ const Timepicker = memo((props: TimepickerProps) => {
 
     const onChange = useCallback((newValue: string | null) => {
         if (newValue == null) return;
-        const newValueDayjs = dayjs(newValue, componentSpecificProps?.constants.FORMAT_TIME);
+        const newValueDayjs = dayjs(newValue);
         setValueLunatic(newValueDayjs);
     }, []);
 
