@@ -68,7 +68,9 @@ const ClickableList = memo((props: ClickableListProps) => {
     } = props;
 
     const [displayAddIcon, setDisplayAddIcon] = React.useState<boolean>(false);
-    const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>();
+    const [currentInputValue, setCurrentInputValue] = React.useState<string | undefined>(
+        selectedValue.label,
+    );
     const separator = separatorSuggester;
     let values = historyInputSuggesterValue;
 
@@ -256,7 +258,7 @@ const ClickableList = memo((props: ClickableListProps) => {
         <Autocomplete
             className={cx(classes.root, className)}
             options={optionsFiltered}
-            value={selectedValue ?? null}
+            defaultValue={selectedValue ?? null}
             onChange={(_event, value) => handleChange(value?.id, value?.label)}
             renderInput={params => renderTextField(params)}
             renderOption={(properties, option) => (
@@ -268,11 +270,7 @@ const ClickableList = memo((props: ClickableListProps) => {
             getOptionLabel={option => option.label}
             filterOptions={(options, inputValue) => filterOptions(options, inputValue)}
             onInputChange={(_, value) => {
-                if (value.length > 1) {
-                    setDisplayAddIcon(true);
-                } else {
-                    setDisplayAddIcon(false);
-                }
+                setDisplayAddIcon(value.length > 1);
                 setCurrentInputValue(value);
             }}
             noOptionsText={renderNoOption()}

@@ -9,7 +9,7 @@ import { createCustomizableLunaticField } from "../../utils/create-customizable-
 import {
     FullScreenComponent,
     historyInputSuggester,
-    selectedIdNewActivity,
+    selectedSuggesterIdNewActivity,
     selectedLabelNewActivity,
 } from "../ActivitySelecter/ActivitySelecter";
 import {
@@ -158,8 +158,14 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
     ] = [idBindingDep, suggesterIdBindingDep, labelBindingDep, undefined, undefined, undefined];
 
     const indexInfo = createIndexSuggester(
-        activitesAutoCompleteRef ?? [],
-        selectedSuggesterId,
+        {
+            activitesAutoCompleteRef: activitesAutoCompleteRef ?? [],
+            selectedSuggesterId,
+            newItemId: newItemId.current,
+        },
+        {
+            createActivityValue,
+        },
         CreateIndex,
         indexSuggester,
     );
@@ -273,6 +279,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
             },
             {
                 handleChange,
+                nextClickCallback,
             },
             {
                 activityLabel: label,
@@ -358,7 +365,7 @@ const CheckboxOneEdt = memo((props: CheckboxOneProps) => {
                     value: newItemId.current,
                 });
             }
-            localStorage.setItem(selectedIdNewActivity, newItemId.current);
+            localStorage.setItem(selectedSuggesterIdNewActivity, newItemId.current);
 
             onChange(handleChange, {
                 responses: responsesActivity,
