@@ -15,8 +15,9 @@ import {
     FullScreenComponent,
     historyActivitySelecter,
     historyInputSuggester,
-    selectedIdNewActivity,
+    selectedSuggesterIdNewActivity,
     selectedLabelNewActivity,
+    selectedIdNewActivity,
 } from "./ActivitySelecter";
 
 /**
@@ -113,6 +114,7 @@ export const processActivityCategory = (
     if (hasId && value && categoriesAndActivitesNomenclature) {
         setSelectedId(parsedValue.id);
         localStorage.setItem(selectedIdNewActivity, parsedValue?.id ?? "");
+        localStorage.setItem(selectedSuggesterIdNewActivity, parsedValue?.suggesterId ?? "");
         const res = findItemInCategoriesNomenclature(parsedValue.id, categoriesAndActivitesNomenclature);
         const resParent = getParentFromSearchResult(res);
         const resItem = getItemFromSearchResult(res);
@@ -140,12 +142,10 @@ export const processActivityCategory = (
 export const processActivityAutocomplete = (
     value: { [key: string]: string | boolean },
     parsedValue: SelectedActivity,
-    setFullScreenComponent: (screen: FullScreenComponent) => void,
     setSelectedSuggesterId: (id: string | undefined) => void,
 ) => {
     const hasSuggesterId: boolean = parsedValue.suggesterId != null;
     if (hasSuggesterId && value) {
-        setFullScreenComponent(FullScreenComponent.ClickableListComp);
         setSelectedSuggesterId(parsedValue.suggesterId);
     }
 };
@@ -157,14 +157,12 @@ export const processNewActivity = (
     value: { [key: string]: string | boolean },
     parsedValue: SelectedActivity,
     categoriesAndActivitesNomenclature: NomenclatureActivityOption[],
-    setFullScreenComponent: (screen: FullScreenComponent) => void,
     setCreateActivityValue: (val: string | undefined) => void,
     setSelectedCategories: (cats: NomenclatureActivityOption[]) => void,
 ) => {
     const hasLabel: boolean = parsedValue.label != null;
 
     if (hasLabel && value && categoriesAndActivitesNomenclature) {
-        setFullScreenComponent(FullScreenComponent.ClickableListComp);
         setCreateActivityValue(parsedValue.label);
         const hasId: boolean = parsedValue.id != null;
         if (hasId) {
@@ -329,7 +327,7 @@ export const selectFinalCategory = (
     states.setSelectedId(id);
     states.setLabelOfSelectedId(label);
     appendHistoryActivitySelecter(
-        label || "",
+        label ?? "",
         inputs.separatorSuggester,
         inputs.historyActivitySelecterBindingDep,
         handleChange,
@@ -410,19 +408,33 @@ export const optionsFiltered = (activitesAutoCompleteRef: AutoCompleteActiviteOp
 };
 
 export const createIndexSuggester = (
-    activitesAutoCompleteRef: AutoCompleteActiviteOption[],
-    selectedSuggesterId: string | undefined,
+    inputs: {
+        activitesAutoCompleteRef: AutoCompleteActiviteOption[];
+        selectedSuggesterId: string | undefined;
+        newItemId: string;
+    },
+    states: {
+        createActivityValue: string | undefined;
+    },
     createIndex?: (
         optionsFiltered: AutoCompleteActiviteOption[],
     ) => elasticlunr.Index<AutoCompleteActiviteOption>,
     indexSuggester?: elasticlunr.Index<AutoCompleteActiviteOption>,
 ) => {
-    const options = optionsFiltered(activitesAutoCompleteRef);
-    const selectedvalue: AutoCompleteActiviteOption = activitesAutoCompleteRef.filter(
-        e => e.id === selectedSuggesterId,
-    )[0];
-    const index = createIndex ? indexSuggester ?? createIndex(options) : null;
-    return [index, options, selectedvalue];
+    const options = optionsFiltered(inputs.activitesAutoCompleteRef);
+    const selectedvalue = inputs.activitesAutoCompleteRef.find(e => e.id === inputs.selectedSuggesterId);
+    if (selectedvalue) {
+        const index = createIndex ? indexSuggester ?? createIndex(options) : null;
+        return [index, options, selectedvalue] as const;
+    }
+    const newOptionValue = {
+        id: inputs.newItemId,
+        label: states.createActivityValue ?? "",
+        synonymes: states.createActivityValue ?? "",
+    } as AutoCompleteActiviteOption;
+    const newOptions = [...options, newOptionValue];
+    const index = createIndex ? indexSuggester ?? createIndex(newOptions) : null;
+    return [index, newOptions, newOptionValue] as const;
 };
 
 export const clickableListOnChange = (
@@ -480,7 +492,7 @@ export const appendHistoryActivitySelecter = (
     const lastActivitySelected = allHistoryActivitiesValues[allHistoryActivitiesValues.length - 2];
     if (lastActivitySelected != actionOrSelection) {
         historyActivitySelecterValue =
-            historyActivitySelecterValue + (actionOrSelection as string) + separatorSuggester;
+            historyActivitySelecterValue + actionOrSelection + separatorSuggester;
         localStorage.setItem(historyActivitySelecter, historyActivitySelecterValue);
         handleChange(historyActivitySelecterBindingDep, historyActivitySelecterValue);
     }
@@ -498,6 +510,7 @@ export const createActivityCallBack = (
     },
     functions: {
         handleChange: (response: responseType, value: string | boolean | undefined) => void;
+        nextClickCallback?: (routeToGoal?: boolean) => void;
     },
     inputs: {
         activityLabel: string;
@@ -538,16 +551,16 @@ export const createActivityCallBack = (
     setters.setCreateActivityValue(inputs.activityLabel);
     setters.setNewValue(inputs.activityLabel);
 
-    const selectedCategory =
-        states.selectedCategories && states.selectedCategories[states.selectedCategories.length - 1];
-    if (selectedCategory && selectedCategory.subs) {
+    const selectedCategory = states.selectedCategories?.[states.selectedCategories.length - 1];
+
+    if (selectedCategory?.subs) {
         selectedCategory.subs.push({
             id: inputs.newItemId,
             rang: selectedCategory.rang + 1,
             label: inputs.activityLabel,
         });
     }
-    localStorage.setItem(selectedLabelNewActivity, inputs.activityLabel);
+    functions.nextClickCallback?.(true);
 };
 
 export const onChange = (
@@ -583,15 +596,19 @@ export const onChange = (
         historyInputSuggester: inputs.historyInputSuggester,
     };
     const label = selection.label;
-    const idSelected = selection.id ?? localStorage.getItem(selectedIdNewActivity) ?? undefined;
-    const suggesterId = inputs.suggesterId ?? inputs.newItemId;
-    if (idSelected != null) handleChange(idBindingDep, idSelected);
+    const idSelected =
+        selection.id ?? inputs.newItemId ?? localStorage.getItem(selectedIdNewActivity) ?? undefined;
+    const suggesterId = inputs.suggesterId;
+    handleChange(idBindingDep, idSelected);
     handleChange(suggesterIdBindingDep, label ? suggesterId : undefined);
     handleChange(labelBindingDep, label);
     if (inputs.isFullyCompleted && isFullyCompletedBindingDep)
         handleChange(isFullyCompletedBindingDep, selection.isFullyCompleted);
     if (historyInputSuggester && historyInputSuggesterDep)
         handleChange(historyInputSuggesterDep, selection.historyInputSuggester);
+    localStorage.setItem(selectedIdNewActivity, idSelected ?? "");
+    localStorage.setItem(selectedSuggesterIdNewActivity, suggesterId ?? "");
+    localStorage.setItem(selectedLabelNewActivity, inputs.activityLabel ?? "");
 };
 
 export const nextStepFreeInput = (
@@ -630,10 +647,7 @@ export const nextStepFreeInput = (
     if (inputs.displayAlertNewActivity) {
         functions.setDisplayAlert(true);
     } else {
-        if (
-            states.selectedCategories &&
-            states.selectedCategories[states.selectedCategories.length - 1]
-        ) {
+        if (states.selectedCategories?.[states.selectedCategories.length - 1]) {
             inputs.routeToGoal = false;
         }
         const label = states.freeInput ?? localStorage.getItem(selectedLabelNewActivity) ?? undefined;
@@ -643,19 +657,15 @@ export const nextStepFreeInput = (
                 label: label ?? "",
                 synonymes: "",
             },
-            states.selectedCategories
-                ? states.selectedCategories[states.selectedCategories.length - 1]?.id
-                : undefined,
+            states.selectedCategories?.[states.selectedCategories.length - 1]?.id,
             inputs.newItemId,
         );
-        localStorage.setItem(selectedIdNewActivity, inputs.newItemId);
+        localStorage.setItem(selectedSuggesterIdNewActivity, inputs.newItemId);
         onChange(functions.handleChange, {
             responses: inputs.responses,
             newItemId: inputs.newItemId,
             isFullyCompleted: true,
-            id: states.selectedCategories
-                ? states.selectedCategories[states.selectedCategories.length - 1]?.id
-                : undefined,
+            id: states.selectedCategories?.[states.selectedCategories.length - 1]?.id,
             suggesterId: inputs.newItemId,
             activityLabel: label,
         });

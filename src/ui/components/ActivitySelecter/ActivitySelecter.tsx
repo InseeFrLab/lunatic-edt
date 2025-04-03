@@ -59,31 +59,20 @@ export enum FullScreenComponent {
 }
 
 export const selectedIdNewActivity = "selectedIdNewActivity";
+export const selectedSuggesterIdNewActivity = "selectedSuggesterIdNewActivity";
 export const selectedLabelNewActivity = "selectionValue - label";
 export const historyInputSuggester = "historyInputSuggester";
 export const historyActivitySelecter = "historyActivitySelecter";
 
 const ActivitySelecter = memo((props: ActivitySelecterProps) => {
-    let {
-        handleChange,
-        componentSpecificProps,
-        responses,
-        label,
-        value,
-        bindingDependencies,
-        variables,
-    } = props;
-    bindingDependencies.forEach((bindingDependency: string) => {
-        value[bindingDependency] = variables.get(bindingDependency);
-    });
-
+    const { handleChange, componentSpecificProps, responses, label, value } = props;
     const idBindingDep = responses?.[0]?.response;
     const suggesterIdBindingDep = responses?.[1]?.response;
     const labelBindingDep = responses?.[2]?.response;
     const isFullyCompletedBindingDep = responses?.[3]?.response;
     const historyActivitySelecterBindingDep = responses?.[5]?.response;
 
-    let {
+    const {
         backClickEvent,
         nextClickEvent,
         backClickCallback,
@@ -102,7 +91,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         helpStep,
         chevronRightIcon,
         chevronRightIconAlt,
-        searchIcon,
+        searchIcon: SearchIcon,
         searchIconAlt,
         extensionIcon,
         addWhiteIcon,
@@ -111,9 +100,6 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         CreateIndex,
         indexSuggester,
     } = { ...componentSpecificProps };
-
-    const SearchIcon = searchIcon as React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-
     const [selectedCategories, setSelectedCategories] = useState<NomenclatureActivityOption[]>([]);
     const [showSubCategories, setShowSubCategories] = useState<boolean>(false);
     const [selectRank1Category, setSelectRank1Category] = useState<
@@ -150,6 +136,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
 
     useEffect(() => {
         localStorage.removeItem(selectedLabelNewActivity);
+        localStorage.removeItem(selectedSuggesterIdNewActivity);
         localStorage.removeItem(selectedIdNewActivity);
 
         localStorage.setItem(
@@ -168,6 +155,8 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         setNewValue(parsedValue.label);
         if (parsedValue.label) localStorage.setItem(selectedLabelNewActivity, parsedValue.label);
         if (parsedValue.id) localStorage.setItem(selectedIdNewActivity, parsedValue.id);
+        if (parsedValue.suggesterId)
+            localStorage.setItem(selectedSuggesterIdNewActivity, parsedValue.suggesterId);
         if (helpStep == 3) parsedValue.id = "100";
         const rank1 = findRank1Category(parsedValue, categoriesAndActivitesNomenclature);
         setSelectRank1Category(rank1);
@@ -180,12 +169,11 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
             setSelectedCategories,
             setShowSubCategories,
         );
-        processActivityAutocomplete(value, parsedValue, setFullScreenComponent, setSelectedSuggesterId);
+        processActivityAutocomplete(value, parsedValue, setSelectedSuggesterId);
         processNewActivity(
             value,
             parsedValue,
             categoriesAndActivitesNomenclature,
-            setFullScreenComponent,
             setCreateActivityValue,
             setSelectedCategories,
         );
@@ -259,7 +247,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
         return () => {
             window.removeEventListener("resize", handleSize);
         };
-    });
+    }, [handleSize]);
 
     /**
      * Show categories of rank 2 or 3
@@ -367,7 +355,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                 fullScreenComponent,
                 {
                     handleChange,
-                    nextClickCallback,
+                    nextClickCallback: nextClickCallback as (routeToGoal?: boolean) => void,
                     setDisplayAlert,
                     nextStepClickableList,
                     CreateIndex,
@@ -430,7 +418,7 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                               selectedId === undefined &&
                               selectedSuggesterId === undefined &&
                               !true,
-                    routeToGoal: selectedCategories[selectedCategories.length - 1] ? false : true,
+                    routeToGoal: !selectedCategories[selectedCategories.length - 1],
                     modifiable: modifiable,
                     separatorSuggester,
                     historyActivitySelecterBindingDep,
@@ -466,9 +454,10 @@ const ActivitySelecter = memo((props: ActivitySelecterProps) => {
                         classes,
                         cx,
                         {
+                            value: newValue,
                             labels,
                             helpStep,
-                            searchIcon,
+                            searchIcon: SearchIcon,
                             searchIconAlt,
                             separatorSuggester,
                             historyActivitySelecterBindingDep,
@@ -775,6 +764,7 @@ const renderSearchInput = (
     classes: any,
     cx: any,
     inputs: {
+        value: string | boolean | undefined;
         separatorSuggester: string;
         historyActivitySelecterBindingDep: responseType;
         labels: ActivityLabelProps;
@@ -803,11 +793,13 @@ const renderSearchInput = (
                     setFullScreenComponent(FullScreenComponent.ClickableListComp);
                 }}
             >
-                {
-                    <Typography className={classes.activityInputLabel}>
+                {inputs.value ? (
+                    <Typography className={classes.activityInputLabel}>{inputs.value}</Typography>
+                ) : (
+                    <Typography className={classes.activityInputPlaceholderLabel}>
                         {inputs.labels.clickableListPlaceholder}
                     </Typography>
-                }
+                )}
                 <Icon
                     icon={inputs.searchIcon}
                     alt={inputs.searchIconAlt}
@@ -965,7 +957,7 @@ const renderClickableList = (
     fullScreenComponent: FullScreenComponent,
     functions: {
         handleChange: (response: responseType, value: string | boolean | undefined) => void;
-        nextClickCallback: (routeToGoal: boolean) => void;
+        nextClickCallback: (routeToGoal?: boolean) => void;
         setDisplayAlert: (display: boolean) => void;
         nextStepClickableList: (
             states: {
@@ -1027,8 +1019,8 @@ const renderClickableList = (
     iconSearch: ReactElement<any>,
 ) => {
     const indexInfo = createIndexSuggester(
-        inputs.activitesAutoCompleteRef,
-        inputs.selectedSuggesterId,
+        inputs,
+        states,
         functions.CreateIndex,
         functions.indexSuggester,
     );
@@ -1054,7 +1046,7 @@ const renderClickableList = (
                         )
                     }
                     handleChangeHistorySuggester={(value: string) => clickableListHistoryOnChange(value)}
-                    createActivity={(label: string) =>
+                    createActivity={(label: string) => {
                         createActivityCallBack(
                             {
                                 selectedCategoryId:
@@ -1071,8 +1063,8 @@ const renderClickableList = (
                                     inputs.historyActivitySelecterBindingDep,
                                 responses: inputs.responses,
                             },
-                        )
-                    }
+                        );
+                    }}
                     placeholder={inputs.labels.clickableListPlaceholder}
                     notFoundLabel={inputs.labels.clickableListNotFoundLabel}
                     notFoundComment={inputs.labels.clickableListNotFoundComment}
@@ -1275,6 +1267,18 @@ const nextStep = (
         //option page principal - when activity selected is one category of first rank
         case FullScreenComponent.Main:
             if (states.selectedCategories.length === 0) {
+                if (states.freeInput) {
+                    // option principal page - when no categories were selected and there already is an input in
+                    // the suggester, we take that instead of displaying an alert
+                    nextStepClickableList(
+                        states,
+                        functions.setDisplayAlert,
+                        functions.nextClickCallback,
+                        displayAlert,
+                        routeToGoal,
+                    );
+                    break;
+                }
                 displayAlert =
                     states.selectedCategory === undefined &&
                     states.suggesterId === undefined &&
@@ -1443,9 +1447,13 @@ const useStyles = makeStylesEdt<{ modifiable: boolean; innerHeight: number }>({
     activityInputHelp: {
         zIndex: "1400",
     },
-    activityInputLabel: {
+    activityInputPlaceholderLabel: {
         fontSize: "16px",
         color: "#5A6C95",
+        margin: "1rem",
+    },
+    activityInputLabel: {
+        fontSize: "16px",
         margin: "1rem",
     },
     activityInputIcon: {
