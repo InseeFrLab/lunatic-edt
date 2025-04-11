@@ -33,7 +33,7 @@ const Timepicker = memo((props: TimepickerProps) => {
     }, [value]);
 
     useEffect(() => {
-        if (valueLocal != undefined && valueLocal?.isValid())
+        if (valueLocal?.isValid())
             handleChange(
                 response,
                 valueLocal?.format(componentSpecificProps?.constants.FORMAT_TIME) || null,
@@ -53,7 +53,7 @@ const Timepicker = memo((props: TimepickerProps) => {
     };
 
     function setValueLunatic(newValue: Dayjs | null) {
-        if (newValue != undefined && newValue?.isValid()) {
+        if (newValue?.isValid()) {
             const min = newValue.minute();
             const newValueRound5 = newValue.set("minutes", round5(min));
             setValue(newValueRound5);
@@ -73,10 +73,9 @@ const Timepicker = memo((props: TimepickerProps) => {
         );
     };
 
-    const onChange = useCallback((newValue: string | null) => {
+    const onChange = useCallback((newValue: dayjs.Dayjs | null) => {
         if (newValue == null) return;
-        const newValueDayjs = dayjs(newValue, componentSpecificProps?.constants.FORMAT_TIME);
-        setValueLunatic(newValueDayjs);
+        setValueLunatic(newValue);
     }, []);
 
     return (
@@ -98,7 +97,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                         openTo="hours"
                         views={["hours", "minutes"]}
                         value={valueLocal}
-                        onChange={newValue => onChange(newValue)}
+                        onChange={newValue => onChange(newValue as unknown as Dayjs | null)}
                         renderInput={useCallback(
                             params => (
                                 <TextField
@@ -128,7 +127,7 @@ const Timepicker = memo((props: TimepickerProps) => {
                         components={{
                             ActionBar: MyActionBar,
                         }}
-                        minTime={minTime ? minTime : undefined}
+                        minTime={minTime ?? undefined}
                     />
                 </LocalizationProvider>
             </Box>
