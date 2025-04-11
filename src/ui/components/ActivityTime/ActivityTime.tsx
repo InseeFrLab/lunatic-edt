@@ -4,7 +4,7 @@ import "dayjs/locale/fr";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { TimepickerSpecificProps } from "interface";
 import { Activity } from "interface/TimepickerTypes";
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useMemo } from "react";
 import { makeStylesEdt } from "../../theme";
 import { createCustomizableLunaticField } from "../../utils/create-customizable-lunatic-field";
 import Timepicker from "../Timepicker/Timepicker";
@@ -38,10 +38,13 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
     } = props;
     const { classes } = useStyles();
 
-    const value = {
-        START_TIME: variables.get("START_TIME"),
-        END_TIME: variables.get("END_TIME"),
-    };
+    const value = useMemo(
+        () => ({
+            START_TIME: variables.get("START_TIME"),
+            END_TIME: variables.get("END_TIME"),
+        }),
+        [variables],
+    );
 
     const computeStartTime = (
         activities: Activity[] | undefined,
@@ -94,7 +97,7 @@ const ActivityTime = memo((props: ActivityTimeProps) => {
             let endTimeDay = startTimeComputed.add(5, componentSpecificProps?.constants.MINUTE_LABEL);
             setEndTime(endTimeDay.format(componentSpecificProps?.constants.FORMAT_TIME));
         }
-    }, [value?.START_TIME]);
+    }, []);
 
     return (
         <>
